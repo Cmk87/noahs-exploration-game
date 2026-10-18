@@ -18,7 +18,7 @@ function renderPower(bump){
   el.style.setProperty('--pct',(ready?100:power/DIG_COST*100).toFixed(1)+'%');
   el.classList.toggle('ready',ready);
   if(bump){el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');}
-  document.querySelectorAll('.tab[data-id="dig"]').forEach(b=>b.classList.toggle('ready',ready));
+  document.querySelectorAll('.hcard[data-id="dig"]').forEach(b=>b.classList.toggle('ready',ready));
 }
 $('power').addEventListener('animationend',e=>{if(e.animationName==='bump')$('power').classList.remove('bump');});
 $('power').onclick=()=>{ac();if(power>=DIG_COST)showTab('dig');};

@@ -509,3 +509,65 @@ button,.btn,input,select{font-family:'Nunito',system-ui,sans-serif}
 .gcard.locked{filter:grayscale(.6) brightness(.85)}
 .gcard.locked::after{font-size:30px;inset:auto;top:50%;left:50%;width:56px;height:56px;margin:-40px 0 0 -28px;
   background:rgba(255,255,255,.92);border-radius:50%;box-shadow:0 4px 10px rgba(0,0,0,.25)}
+
+/* =====================================================================
+   HOME SCREEN + 🏠 button (replaces the row of tabs)
+===================================================================== */
+#homeBtn{flex:0 0 auto;width:46px;height:46px;border:none;border-radius:16px;background:#fff;font-size:24px;line-height:1;padding:0;
+  cursor:pointer;box-shadow:var(--lift),var(--soft)}
+#homeBtn.on{background:var(--bolt);box-shadow:0 5px 0 #C99600,var(--soft)}
+#homeBtn:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(10,14,55,.30)}
+header{padding-top:max(9px,env(safe-area-inset-top));padding-bottom:8px}
+#v-home{padding:4px 14px 18px}
+#homeHello{font-size:min(7.4vw,30px);color:#fff;text-shadow:0 3px 0 rgba(5,8,40,.35);margin:6px 0 12px;text-align:center}
+#homeGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%}
+.hcard{position:relative;border:none;border-radius:26px;color:#fff;cursor:pointer;overflow:hidden;
+  min-height:min(30vw,128px);padding:12px 10px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  box-shadow:0 6px 0 var(--edge),0 14px 26px rgba(5,8,40,.30);font-family:'Baloo 2','Nunito',sans-serif}
+.hcard::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 20% 0%,rgba(255,255,255,.35),transparent 55%);pointer-events:none}
+.hcard:active{transform:translateY(5px);box-shadow:0 1px 0 var(--edge),0 6px 12px rgba(5,8,40,.25)}
+.hcard .hi{font-size:min(13vw,56px);line-height:1.05;filter:drop-shadow(0 4px 3px rgba(0,0,0,.22))}
+.hcard .hl{font-weight:800;font-size:min(5.6vw,24px);line-height:1.1;text-shadow:0 2px 0 rgba(0,0,0,.22)}
+.hcard .hx{font-weight:800;font-size:13px;background:rgba(255,255,255,.28);border-radius:999px;padding:0 10px;margin-top:2px}
+.hcard.wide{grid-column:1 / -1;flex-direction:row;gap:14px;min-height:min(26vw,108px)}
+.hcard.wide .hi{font-size:min(16vw,66px)}
+.hcard.wide .hl{font-size:min(7vw,30px)}
+.hcard.ready{animation:wig 1.4s ease-in-out infinite}
+.hcard.ready .hx{background:var(--bolt);color:var(--ink)}
+
+/* =====================================================================
+   CITY
+===================================================================== */
+#v-city{padding:0 0 max(8px,env(safe-area-inset-bottom));overflow:hidden}
+#v-city.on{display:flex}
+#cityBar{display:flex;align-items:center;gap:8px;width:100%;padding:4px 14px 8px}
+#cityBar button{width:46px;height:44px;border:none;border-radius:14px;background:#fff;font-size:22px;cursor:pointer;box-shadow:var(--lift),var(--soft)}
+#cityBar button.on{background:var(--bolt);box-shadow:0 5px 0 #C99600,var(--soft)}
+#cityBar button:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(10,14,55,.30)}
+#cityBar .sp{flex:1}
+#cPaws{font:800 18px 'Baloo 2',system-ui;color:#fff;background:rgba(255,255,255,.18);border-radius:999px;padding:4px 14px}
+#cityWrap{position:relative;flex:1 1 auto;min-height:0;width:calc(100% - 20px);margin:0 10px;border-radius:24px;overflow:hidden;
+  box-shadow:0 0 0 5px #fff,var(--soft);background:#93D46F}
+#cityCv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#cityQ{position:absolute;left:50%;top:10px;transform:translateX(-50%);display:none;align-items:center;gap:8px;z-index:2;
+  background:#fff;color:var(--ink);border-radius:22px;padding:6px 16px;font:800 21px 'Baloo 2',system-ui;white-space:nowrap;cursor:pointer;
+  box-shadow:0 5px 0 rgba(10,14,55,.22),0 10px 24px rgba(0,0,0,.18)}
+#cityQ.on{display:flex}
+#cityQ .st{font-size:15px;background:var(--bolt);border-radius:999px;padding:0 9px}
+#cityBub{position:absolute;left:0;top:0;pointer-events:none;z-index:2;opacity:0;transition:opacity .25s;color:var(--ink);
+  background:#fff;border-radius:18px;padding:5px 14px;font:800 20px 'Baloo 2',system-ui;white-space:nowrap;
+  box-shadow:0 4px 0 rgba(10,14,55,.2),0 8px 18px rgba(0,0,0,.18);transform:translate(-50%,-100%)}
+#cityBub::after{content:"";position:absolute;left:50%;bottom:-8px;margin-left:-8px;border:8px solid transparent;border-top-color:#fff;border-bottom:0}
+#cityBub.on{opacity:1}
+#cityZoom{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:8px;z-index:2}
+#cityZoom button{width:44px;height:44px;border:none;border-radius:14px;background:#fff;color:var(--ink);font:800 26px 'Baloo 2',system-ui;
+  box-shadow:var(--lift);cursor:pointer}
+#cityZoom button:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(10,14,55,.3)}
+header{gap:6px;padding-left:10px;padding-right:10px}
+.power{white-space:nowrap;padding:5px 12px}
+@media (max-width:370px){.lang button{padding:5px 7px;font-size:19px}}
+/* listening "starts with …?" cards: picture with its written word underneath */
+.card.withWord{flex-direction:column;gap:2px;padding:6px 4px}
+.card.withWord .cw{line-height:1.05}
+.card.withWord .cl{font:800 min(5.4vw,24px)/1.1 'Baloo 2','Nunito',sans-serif;color:var(--ink);max-width:100%;overflow-wrap:anywhere;text-align:center}
+.card.withWord .cl b{color:var(--blaze);font-size:1.3em}

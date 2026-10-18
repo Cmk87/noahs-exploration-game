@@ -8,24 +8,35 @@ const TABS=[
   {id:'ear',   icon:'👂', es:'Escucha', en:'Listen',  de:'Hören'},
   {id:'act',   icon:'🦖', es:'Dino Show',en:'Dino Show',de:'Dino-Show'},
   {id:'space', icon:'🪐', es:'Espacio', en:'Space',   de:'Weltall'},
+  {id:'city',  icon:'🏙️', es:'Ciudad',  en:'Town',    de:'Stadt'},
   {id:'geo',   icon:'🌍', es:'Mundo',   en:'World',   de:'Welt'},
   {id:'dig',   icon:'🎁', es:'Premios', en:'Prizes',  de:'Preise'}
 ];
-const ALLVIEWS=['adv','trace','words','ear','act','space','geo','dig','parent'];
+const ALLVIEWS=['home','adv','trace','words','ear','act','city','space','geo','dig','parent'];
 activeTab='trace';                 // declared in core.js so early animation loops can read it
-function buildTabs(){
-  const box=document.getElementById('tabs');box.innerHTML='';
+/* The home screen: one big card per section. 🏠 in the header always comes back here. */
+const CARD_COL={adv:['#FFB938','#FF8A3D'],trace:['#FF7A7A','#E8445A'],words:['#4FC3F7','#2F7FE0'],ear:['#B58CFF','#7A5AE0'],
+  act:['#6FD86A','#2EA84F'],city:['#3DD6C0','#1C9E9A'],geo:['#4FD1F5','#2A8BD0'],space:['#7A7FF0','#4A3FB8'],dig:['#FF8FC8','#E0559A']};
+function buildHome(){
+  const box=$('homeGrid');box.innerHTML='';
+  $('homeHello').textContent=kidName?{es:'¡Hola, ',en:'Hi, ',de:'Hallo, '}[lang]+kidName+'!':{es:'¿Qué jugamos?',en:'What shall we play?',de:'Was spielen wir?'}[lang];
   TABS.forEach(t=>{
-    const b=document.createElement('button');
-    b.className='tab'+(activeTab===t.id?' on':'')+(t.id==='dig'&&power>=DIG_COST?' ready':'');
-    b.dataset.id=t.id;
-    b.textContent=t.icon;b.title=t[lang];b.setAttribute('aria-label',t[lang]);
-    b.onclick=()=>{ac();if(activeTab!==t.id)say(t[lang]);showTab(t.id);};
+    const b=document.createElement('button'),c=CARD_COL[t.id];
+    b.className='hcard'+(t.id==='adv'?' wide':'')+(t.id==='dig'&&power>=DIG_COST?' ready':'');b.dataset.id=t.id;
+    b.style.background=`linear-gradient(150deg,${c[0]},${c[1]})`;b.style.setProperty('--edge',c[1]);
+    let extra='';
+    if(t.id==='adv'&&ADV)extra=ADV.done?'✅':`${ADV.idx+1} / ${ADV.plan.length}`;
+    if(t.id==='dig')extra=power>=DIG_COST?'🎁 !':`${power} / ${DIG_COST} ⚡`;
+    if(t.id==='city'&&window.CITY)extra='🐾 '+CITY.FOUND.size+' / 14';
+    b.innerHTML=`<span class="hi">${t.icon}</span><span class="hl">${t[lang]}</span>${extra?`<span class="hx">${extra}</span>`:''}`;
+    b.setAttribute('aria-label',t[lang]);
+    b.onclick=()=>{ac();say(t[lang]);showTab(t.id);};
     box.appendChild(b);
   });
 }
+$('homeBtn').onclick=()=>{ac();if(activeTab!=='home')showTab('home');};
 function showTab(id){
-  activeTab=id;buildTabs();window.scrollTo(0,0);if(typeof renderAdvBar==='function')renderAdvBar();
+  activeTab=id;$('homeBtn').classList.toggle('on',id==='home');if(id==='home')buildHome();window.scrollTo(0,0);if(typeof renderAdvBar==='function')renderAdvBar();
   const vEl=document.getElementById('v-'+id);if(vEl)vEl.scrollTop=0;
   ALLVIEWS.forEach(v=>document.getElementById('v-'+v).classList.toggle('on',v===id));
   if(id==='adv'){renderAdv();}
@@ -35,6 +46,7 @@ function showTab(id){
   if(id==='act'){showAct();}
   if(id==='space'){fitSky();selectPlanet(selected);}
   if(id==='geo'){showGeo();}
+  if(id==='city'){CITY.show();}
   if(id==='dig'){if(pane==='digLock')showDigLock();else resumeGame();}
   if(id==='parent'){renderParent();}
 }
@@ -42,7 +54,7 @@ function setLang(code,btn){
   lang=code;
   document.querySelectorAll('.lang button').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');ac();
-  buildTabs();gateText();
+  if(activeTab==='home')buildHome();gateText();
   if(mode==='abc')playlist=ALPHA[lang];
   else if(mode==='ABC')playlist=CAPS[lang];
   if(!playlist.includes(cur))cur=playlist[0];
@@ -53,6 +65,8 @@ function setLang(code,btn){
   else if(activeTab==='act')showAct();
   else if(activeTab==='space')selectPlanet(selected);
   else if(activeTab==='geo'){if(GEO.mode!=='explore')setGeoMode(GEO.mode);else showGeo();}
+  else if(activeTab==='city')CITY.onLang();
+  else if(activeTab==='home'){}
   else if(activeTab==='dig'){if(pane==='digLock')showDigLock();}
   else if(activeTab==='adv')renderAdv();
   else renderParent();
@@ -199,7 +213,7 @@ document.getElementById('earSkip').onclick=()=>{ac();newEarRound();};
   g.addEventListener('pointerdown',e=>{e.preventDefault();start();});
   ['pointerup','pointerleave','pointercancel'].forEach(ev=>g.addEventListener(ev,()=>{if(timer)stop();timer=null;}));
 })();
-document.getElementById('backBtn').onclick=()=>{ac();showTab('trace');};
+document.getElementById('backBtn').onclick=()=>{ac();showTab('home');};
 document.getElementById('zoomIn').onclick=()=>{ac();setZoom(zoom*1.45);};
 document.getElementById('zoomOut').onclick=()=>{ac();setZoom(zoom/1.45);};
 document.getElementById('zoomReset').onclick=()=>{ac();zoom=1;camX=0;camY=0;};
@@ -221,7 +235,7 @@ const gate=document.getElementById('gate');
 function unlock(e){
   e.preventDefault();ac();loadVoices();
   gate.style.display='none';
-  showTab('adv');advEnsure();
+  advEnsure();showTab('home');
   if(timeLimit&&logDay().sec>=(timeLimit+(logDay().extra||0))*60){goToSleep();return;}
   const hello=ADV.done?{es:'¡Hola! Ya has hecho tu aventura de hoy.',en:'Hi! You already did today\'s adventure.',de:'Hallo! Dein Abenteuer heute hast du schon geschafft.'}[lang]
     :{es:'¡Hola! ¿Empezamos la aventura?',en:'Hi! Shall we start the adventure?',de:'Hallo! Wollen wir das Abenteuer starten?'}[lang];
@@ -396,4 +410,4 @@ if('serviceWorker' in navigator&&location.protocol.startsWith('http'))
   window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 
 /* ---- boot ---- */
-gateText();buildTabs();renderPower(false);setMode('abc');fit();fitSky();draw();drawSky();
+gateText();renderPower(false);setMode('abc');fit();fitSky();draw();drawSky();

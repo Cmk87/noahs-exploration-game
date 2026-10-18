@@ -8,7 +8,7 @@
 ============================================================= */
 (()=>{
 const CW=1200,CH=1600,TAU=Math.PI*2;
-const cv=$('city'),g=cv.getContext('2d'),probe=document.createElement('canvas').getContext('2d');
+const cv=$('cityCv'),g=cv.getContext('2d'),probe=document.createElement('canvas').getContext('2d');
 let T=0,NIGHT=0,nightOn=false,LIT=[],LIGHTS=[],HITS=[];
 let seed=11;
 const sr=()=>{seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
@@ -138,7 +138,7 @@ const W={found:['Gefunden!','Found it!','¡Lo encontraste!'],yes:['Ja, richtig!'
 let SAVE={found:[],stars:0};try{SAVE=Object.assign(SAVE,JSON.parse(localStorage.getItem('sl_city')||'{}'));}catch(e){}
 const FOUND=new Set(SAVE.found);
 const store=()=>{SAVE.found=[...FOUND];try{localStorage.setItem('sl_city',JSON.stringify(SAVE));}catch(e){}};
-const paws=()=>{$('paws').textContent=`🐾 ${FOUND.size}/${ANIMALS.length}`;};
+const paws=()=>{$('cPaws').textContent=`🐾 ${FOUND.size}/${ANIMALS.length}`;};
 
 /* ---------- sounds ---------- */
 function swp(f0,f1,dur,type,vol,when){const a=ac();if(!a)return;const t=a.currentTime+(when||0);
@@ -929,9 +929,9 @@ const pend=e=>{if(!ptr.has(e.pointerId))return;const p=ptr.get(e.pointerId);ptr.
   if(!ptr.size)gs=null;};
 ['pointerup','pointercancel'].forEach(ev=>cv.addEventListener(ev,pend));
 cv.addEventListener('wheel',e=>{e.preventDefault();const p=pxy(e);camAnim=null;zoomAt(p[0],p[1],e.deltaY<0?1.2:1/1.2);},{passive:false});
-$('zIn').onclick=()=>{ac();camAnim=null;flyTo({k:CAM.k*1.6,x:CAM.x+VW/2/CAM.k-VW/2/(CAM.k*1.6),y:CAM.y+VH/2/CAM.k-VH/2/(CAM.k*1.6)},250);};
-$('zOut').onclick=()=>{ac();camAnim=null;flyTo({k:CAM.k/1.6,x:CAM.x+VW/2/CAM.k-VW/2*1.6/CAM.k,y:CAM.y+VH/2/CAM.k-VH/2*1.6/CAM.k},250);};
-$('bHome').onclick=()=>{ac();flyTo(homeView());};
+$('cZin').onclick=()=>{ac();camAnim=null;flyTo({k:CAM.k*1.6,x:CAM.x+VW/2/CAM.k-VW/2/(CAM.k*1.6),y:CAM.y+VH/2/CAM.k-VH/2/(CAM.k*1.6)},250);};
+$('cZout').onclick=()=>{ac();camAnim=null;flyTo({k:CAM.k/1.6,x:CAM.x+VW/2/CAM.k-VW/2*1.6/CAM.k,y:CAM.y+VH/2/CAM.k-VH/2*1.6/CAM.k},250);};
+$('cHome').onclick=()=>{ac();flyTo(homeView());};
 
 /* =============================================================
    WHAT A TAP DOES
@@ -994,14 +994,15 @@ function trigger(id,b,x,y,ref){
   TAP[id]&&TAP[id](ref,x,y);
   let line=lineFor(e);
   if(e.animal&&!FOUND.has(id)){FOUND.add(id);store();paws();line+=' '+W.found[li()];burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();
+    if(typeof addPower==='function')addPower(2);
     if(FOUND.size===ANIMALS.length)later(2.5,()=>{burst(x,y,'star',40,'#FFD23F',1.5);say(['Du hast alle Tiere gefunden! Super!','You found all the animals! Amazing!','¡Encontraste todos los animales! ¡Genial!'][li()]);});}
   say(line);bubble(e,b);
   if(CAM.k<kFit()*1.8){const cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,k=kFit()*2.8;flyTo({k,x:cx-VW/2/k,y:cy-VH/2/k});}}
 
 /* name bubble that follows its object */
 let BUB=null;
-function bubble(e,b){BUB={e,b,t:T};const el=$('bubble');el.textContent=e.ic+' '+cap(e.n[li()]);el.classList.add('on');}
-function placeBubble(){const el=$('bubble');if(!BUB)return;if(T-BUB.t>3){el.classList.remove('on');BUB=null;return;}
+function bubble(e,b){BUB={e,b,t:T};const el=$('cityBub');el.textContent=e.ic+' '+cap(e.n[li()]);el.classList.add('on');}
+function placeBubble(){const el=$('cityBub');if(!BUB)return;if(T-BUB.t>3){el.classList.remove('on');BUB=null;return;}
   const b=BUB.b,sx=((b[0]+b[2])/2-CAM.x)*CAM.k,sy=(b[1]-CAM.y)*CAM.k-10,w=el.offsetWidth/2+6;
   el.style.left=Math.max(w,Math.min(VW-w,sx))+'px';el.style.top=Math.max(el.offsetHeight+4,sy)+'px';}
 
@@ -1014,16 +1015,16 @@ function findNext(){
   const e=pool[Math.random()*pool.length|0];findHist.push(e.id);if(findHist.length>6)findHist.shift();
   FIND={id:e.id,miss:0};showQ();say(W.where(e.n[li()]));
   if(CAM.k>kFit()*1.3)flyTo(homeView());}
-function showQ(){const q=$('q');if(!FIND){q.classList.remove('on');return;}const e=ENT[FIND.id];
+function showQ(){const q=$('cityQ');if(!FIND){q.classList.remove('on');return;}const e=ENT[FIND.id];
   q.innerHTML='';const s=document.createElement('span');s.textContent=W.where(e.n[li()])+' 🔊';const st=document.createElement('span');st.className='st';st.textContent='⭐ '+SAVE.stars;
   q.append(s,st);q.classList.add('on');}
-$('q').onclick=()=>{if(FIND)say(W.where(ENT[FIND.id].n[li()]));};
+$('cityQ').onclick=()=>{if(FIND)say(W.where(ENT[FIND.id].n[li()]));};
 function findTap(e,b,x,y,ref){
   if(FIND.done)return;
-  if(e.id===FIND.id){FIND.done=true;SAVE.stars++;store();showQ();TAP[e.id]&&TAP[e.id](ref,x,y);
+  if(e.id===FIND.id){FIND.done=true;SAVE.stars++;store();showQ();if(typeof award==='function')award(Math.min(FIND.miss,2),1);TAP[e.id]&&TAP[e.id](ref,x,y);
     burst((b[0]+b[2])/2,(b[1]+b[3])/2,'star',22,'#FFD23F');SND.yay();bubble(e,b);say(W.yes[li()]+' '+cap(e.n[li()])+'!');later(3,()=>{if(FIND)findNext();});}
   else{FIND.miss++;nope();bubble(e,b);say(W.that(e.n[li()])+' '+W.where(ENT[FIND.id].n[li()]));}}
-$('bFind').onclick=()=>{ac();if(FIND){FIND=null;$('bFind').classList.remove('on');showQ();return;}$('bFind').classList.add('on');findNext();};
+$('cFind').onclick=()=>{ac();if(FIND){FIND=null;$('cFind').classList.remove('on');showQ();return;}$('cFind').classList.add('on');findNext();};
 function drawHint(){if(!FIND||FIND.miss<2||FIND.done)return;const b=ENT[FIND.id].at;if(!b)return;
   const cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,r=Math.max(b[2]-b[0],b[3]-b[1])/2+14+Math.sin(T*6)*5;
   g.strokeStyle='rgba(255,210,40,.95)';g.lineWidth=5/CAM.k*0.6+3;g.setLineDash([12,8]);g.lineDashOffset=-T*30;g.beginPath();g.arc(cx,cy,r,0,TAU);g.stroke();g.setLineDash([]);}
@@ -1031,11 +1032,11 @@ function drawHint(){if(!FIND||FIND.miss<2||FIND.done)return;const b=ENT[FIND.id]
 /* =============================================================
    NIGHT, LANGUAGE
 ============================================================= */
-$('bNight').onclick=()=>{ac();nightOn=!nightOn;$('bNight').textContent=nightOn?'☀️':'🌙';$('bNight').classList.toggle('on',nightOn);
+$('cNight').onclick=()=>{ac();nightOn=!nightOn;$('cNight').textContent=nightOn?'☀️':'🌙';$('cNight').classList.toggle('on',nightOn);
   say(nightOn?['Gute Nacht, Stadt!','Good night, town!','¡Buenas noches, ciudad!'][li()]:['Guten Morgen!','Good morning!','¡Buenos días!'][li()]);};
-document.querySelectorAll('#langs button').forEach(b=>b.onclick=()=>{ac();lang=b.dataset.l;
-  document.querySelectorAll('#langs button').forEach(x=>x.classList.toggle('on',x===b));document.documentElement.lang=lang;
-  if(FIND){showQ();say(W.where(ENT[FIND.id].n[li()]));}else say(['Hallo!','Hello!','¡Hola!'][li()]);});
+/* called by the app when the language changes or the tab opens */
+function onLang(){if(FIND){showQ();say(W.where(ENT[FIND.id].n[li()]));}else if(BUB)bubble(BUB.e,BUB.b);}
+function show(){fit();paws();say(['Willkommen in der Stadt! Tippe auf alles.','Welcome to the town! Tap on anything.','¡Bienvenido a la ciudad! Toca todo.'][li()]);}
 
 /* =============================================================
    MAIN LOOP
@@ -1095,11 +1096,11 @@ function render(now){
   placeBubble();
 }
 let last=performance.now();
-function frame(now){requestAnimationFrame(frame);if(document.hidden){last=now;return;}
+function frame(now){requestAnimationFrame(frame);if(document.hidden||activeTab!=='city'){last=now;return;}
   const dt=Math.min(0.05,(now-last)/1000);last=now;T+=dt;update(dt);render(now);}
 paws();
 if(document.fonts)document.fonts.load(FONT(20)).catch(()=>{});
 requestAnimationFrame(frame);
-window.CITY={ENT,FOUND,HITS:()=>HITS,trigger,tapAt,toScreen:(x,y)=>[(x-CAM.x)*CAM.k,(y-CAM.y)*CAM.k],flyTo,viewOf,CAM,TRAIN,VEH,
+window.CITY={show,onLang,ENT,FOUND,HITS:()=>HITS,trigger,tapAt,toScreen:(x,y)=>[(x-CAM.x)*CAM.k,(y-CAM.y)*CAM.k],flyTo,viewOf,CAM,TRAIN,VEH,
   setNight:v=>{nightOn=v;NIGHT=v?1:0;},act,FIND:()=>FIND,findNext,callTrain};
 })();

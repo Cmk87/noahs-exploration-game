@@ -325,7 +325,10 @@ function firstRound(L){
   earTarget=t;earFirst=c;
   $('earLetter').textContent=c.toUpperCase()+c;$('earLetter').classList.add('on');
   const g=document.getElementById('earGrid');g.innerHTML='';g.style.gridTemplateColumns=n===4?'repeat(2,1fr)':'repeat(3,1fr)';
-  shuffle(opts).forEach((o,i)=>{const b=document.createElement('div');b.className='card';b.textContent=o.e;b.style.animationDelay=(i*0.05)+'s';
+  /* the written word under each picture, first letter big and coloured, so he can match it to the letter above */
+  shuffle(opts).forEach((o,i)=>{const b=document.createElement('div');b.className='card withWord';b.dataset.e=o.e;b.style.animationDelay=(i*0.05)+'s';
+    const w=o[lang][1],pic=document.createElement('span'),lab=document.createElement('span'),f=document.createElement('b');
+    pic.className='cw';pic.textContent=o.e;lab.className='cl';f.textContent=w[0];lab.append(f,w.slice(1));b.append(pic,lab);
     b.onclick=()=>earPick(o,b);g.appendChild(b);});
   document.getElementById('earLevelPill').textContent='🎧 '+L;
   setTimeout(()=>{if(earFirst===c)sayAt(firstQ(),0.72);},400);   // the round may already be over
@@ -403,7 +406,7 @@ function earPick(o,el){
       setTimeout(()=>sayAt(`${earTarget[lang][1]}… ${earTarget.es[1]}`,0.6),500);
     else if(earMiss>=4){
       [...document.querySelectorAll('#earGrid .card')].forEach(c=>{
-        if(c.textContent===earTarget.e)c.classList.add('hint');});
+        if((c.dataset.e||c.textContent)===earTarget.e)c.classList.add('hint');});
       setTimeout(()=>earSay(0.55),400);
     }
   }

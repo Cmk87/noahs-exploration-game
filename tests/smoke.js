@@ -20,11 +20,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.reload();
   await page.mouse.click(180, 320);
   await page.waitForTimeout(300);
-  check(await page.evaluate(() => activeTab === 'adv'), 'opens on the adventure map');
+  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 9), 'opens on the home screen with 9 sections');
   check(await page.evaluate(() => lang === 'de'), 'starts in German');
 
   console.log('Layout');
-  for (const t of ['adv', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
+  for (const t of ['home', 'adv', 'city', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
     await page.evaluate(t => showTab(t), t);
     await page.waitForTimeout(150);
     await page.evaluate(() => { window.scrollTo(0, 500); const v = document.querySelector('.view.on'); v.lastElementChild && v.lastElementChild.scrollIntoView(); });
@@ -50,10 +50,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.evaluate(() => showTab('ear'));
   for (const L of [1, 4, 6]) {
     await page.evaluate(L => { SKILL['ear|de'] = { s: L + 0.2, n: 10, h: [] }; newEarRound(); }, L);
-    await page.evaluate(() => [...document.querySelectorAll('#earGrid .card')].find(c => c.textContent === earTarget.e).click());
+    await page.evaluate(() => [...document.querySelectorAll('#earGrid .card')].find(c => (c.dataset.e || c.textContent) === earTarget.e).click());
   }
   await page.evaluate(() => firstRound(4));
   check(await page.evaluate(() => !!earFirst), 'first-sound round builds');
+  check(await page.evaluate(() => [...document.querySelectorAll('#earGrid .card .cl')].every(l => l.textContent.length > 1)), 'first-sound cards show the written word');
 
   await page.evaluate(() => showTab('act'));
   const kinds = new Set();
@@ -113,19 +114,20 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.evaluate(() => showTab('parent'));
   check(await page.evaluate(() => $('repBars').children.length === 7), 'weekly report shows 7 days');
 
-  console.log('City (pilot)');
-  const city = await browser.newPage({ viewport: { width: 360, height: 640 }, isMobile: true, hasTouch: true });
-  city.on('pageerror', e => errors.push('city: ' + e.message));
-  await city.goto('file://' + path.resolve(__dirname, '..', 'city.html'));
-  await city.waitForTimeout(600);
-  await city.evaluate(() => Object.keys(CITY.ENT).forEach(id => {
+  console.log('City');
+  await page.evaluate(() => showTab('city'));
+  await page.waitForTimeout(400);
+  check(await page.evaluate(() => CITY.HITS().length > 50), 'city: the town is drawn');
+  await page.evaluate(() => Object.keys(CITY.ENT).forEach(id => {
     const h = CITY.HITS().find(h => h.id === id), b = (h && h.b) || CITY.ENT[id].at || [100, 100, 120, 120];
     CITY.trigger(id, b, (b[0] + b[2]) / 2, (b[1] + b[3]) / 2, h && h.ref);
   }));
-  await city.waitForTimeout(2500);
-  check(await city.evaluate(() => CITY.FOUND.size === 14), 'city: every animal can be found');
-  await city.click('#bFind');
-  check(await city.evaluate(() => !!CITY.FIND() && !!CITY.ENT[CITY.FIND().id].at), 'city: "where is …?" picks a target');
+  await page.waitForTimeout(2500);
+  check(await page.evaluate(() => CITY.FOUND.size === 14), 'city: every animal can be found');
+  await page.click('#cFind');
+  check(await page.evaluate(() => !!CITY.FIND() && !!CITY.ENT[CITY.FIND().id].at), 'city: "where is …?" picks a target');
+  await page.click('#homeBtn');
+  check(await page.evaluate(() => activeTab === 'home'), '🏠 goes back to the home screen');
 
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();

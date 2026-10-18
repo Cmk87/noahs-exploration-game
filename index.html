@@ -17,6 +17,7 @@
 <body>
 
 <header>
+  <button id="homeBtn" aria-label="Home">🏠</button>
   <div class="power display" id="power">⚡ 0</div>
   <button id="gearBtn" aria-label="settings">⚙</button>
   <div class="lang">
@@ -24,8 +25,13 @@
   </div>
 </header>
 
-<div class="tabs" id="tabs"></div>
 <div id="advBar"></div>
+
+<!-- ============ HOME: one big card per section ============ -->
+<div class="view" id="v-home">
+  <div id="homeHello" class="display"></div>
+  <div id="homeGrid"></div>
+</div>
 
 <!-- ============ ADVENTURE MAP ============ -->
 <div class="view" id="v-adv">
@@ -158,6 +164,20 @@
 </div>
 
 <!-- ============ PARENT ============ -->
+<!-- ============ CITY ============ -->
+<div class="view" id="v-city">
+  <div id="cityBar">
+    <button id="cFind" aria-label="Find">🔎</button><button id="cNight" aria-label="Night">🌙</button><button id="cHome" aria-label="Whole town">🧭</button>
+    <span class="sp"></span><span id="cPaws">🐾 0/14</span>
+  </div>
+  <div id="cityWrap">
+    <canvas id="cityCv"></canvas>
+    <div id="cityQ"></div>
+    <div id="cityBub"></div>
+    <div id="cityZoom"><button id="cZin" aria-label="Zoom in">+</button><button id="cZout" aria-label="Zoom out">−</button></div>
+  </div>
+</div>
+
 <div class="view" id="v-parent"><div id="parent">
   <div class="panel">
     <h3 id="pReportTitle">📊</h3>
@@ -244,6 +264,7 @@
 <script src="js/prizes.js"></script>
 <script src="js/world-data.js"></script>
 <script src="js/world.js"></script>
+<script src="js/city.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
