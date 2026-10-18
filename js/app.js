@@ -98,6 +98,7 @@ function renderParent(){
   $('pBackupText').textContent={es:'Todo el progreso vive solo en este móvil. Guarda una copia de vez en cuando (Archivos, Drive, WhatsApp…) y cárgala en un móvil nuevo.',
     en:'All progress lives only on this phone. Save a copy now and then (Files, Drive, WhatsApp…) and load it on a new phone.',
     de:'Der ganze Fortschritt liegt nur auf diesem Handy. Ab und zu eine Kopie speichern (Dateien, Drive, WhatsApp…) und auf einem neuen Handy laden.'}[lang];
+  $('pBackupText').textContent+=' '+(storageSafe?{es:'✅ Este móvil guarda el progreso de forma protegida.',en:'✅ This phone keeps the progress in protected storage.',de:'✅ Dieses Handy speichert den Fortschritt geschützt.'}[lang]:'');
   $('backupSave').textContent={es:'💾 Guardar',en:'💾 Save',de:'💾 Speichern'}[lang];
   $('backupLoad').textContent={es:'📂 Cargar',en:'📂 Load',de:'📂 Laden'}[lang];
   $('pLevelTitle').textContent={es:'Niveles automáticos (aciertos a la primera, últimas 20)',en:'Automatic levels (first-try right, last 20)',de:'Automatische Level (beim ersten Versuch richtig, letzte 20)'}[lang];
@@ -231,6 +232,11 @@ function unlock(e){
 }
 gate.addEventListener('pointerdown',unlock,{once:true});
 gate.addEventListener('click',unlock,{once:true});
+
+/* ---- ask the browser to keep our saved progress even when the phone is low on space ---- */
+let storageSafe=false;
+if(navigator.storage&&navigator.storage.persist)
+  navigator.storage.persisted().then(p=>p||navigator.storage.persist()).then(p=>{storageSafe=!!p;}).catch(()=>{});
 
 /* ---- the page itself must never scroll (only the tabs' content does) ---- */
 window.addEventListener('scroll',()=>{if(window.scrollY||window.scrollX)window.scrollTo(0,0);});

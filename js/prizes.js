@@ -199,6 +199,9 @@ function startGame(k,card){
   if(k==='dig')startDig();else if(k==='mem')startMem();else if(k==='bal')startBal();else startFw();
 }
 function resumeGame(){
+  const over=(pane==='digPlay'&&(!DIG||DIG.done))||(pane==='memPlay'&&(!MEM||MEM.done))||
+             (pane==='balPlay'&&(!BAL||BAL.done))||(pane==='fwPlay'&&(!FW||FW.done));
+  if(over){showDigLock();return;}            // a finished game is never resumed — back to the prize menu
   if(pane==='digPlay'&&DIG)requestAnimationFrame(digLoop);
   else if(pane==='balPlay'&&BAL){BAL.last=0;requestAnimationFrame(balLoop);}
   else if(pane==='fwPlay'&&FW){FW.last=0;FW.clear=true;requestAnimationFrame(fwLoop);}
@@ -895,9 +898,9 @@ function balLoop(now){
   BAL.clouds.forEach(c=>{c.x+=c.v*dt;if(c.x>1.25)c.x=-0.3;cloud(bx,c.x*W,c.y*H,c.s*W/400);});
   bx.fillStyle='#6CD45B';bx.beginPath();bx.ellipse(W*0.25,H*1.02,W*0.5,H*0.1,0,0,7);bx.fill();
   bx.fillStyle='#4DBA45';bx.beginPath();bx.ellipse(W*0.8,H*1.04,W*0.55,H*0.12,0,0,7);bx.fill();
-  if(!BAL.done&&now>BAL.next&&BAL.b.length<7){
-    BAL.next=now+rnd(500,900);const r=W*rnd(0.085,0.11);
-    BAL.b.push({x:rnd(r,W-r),y:H+r*1.6,r,vy:H*rnd(0.13,0.22),ph:rnd(0,6),c:pick(BCOL),
+  if(!BAL.done&&now>BAL.next&&BAL.b.length<4){
+    BAL.next=now+rnd(1400,2100);const r=W*rnd(0.085,0.11);   // slow enough that each word can be heard
+    BAL.b.push({x:rnd(r,W-r),y:H+r*1.6,r,vy:H*rnd(0.065,0.105),ph:rnd(0,6),c:pick(BCOL),
       it:pick(VOCAB.filter(v=>v.c!=='form')),gold:Math.random()<0.08});
   }
   BAL.b.forEach(b=>{b.y-=b.vy*dt*(BAL.done?2.5:1);b.ph+=dt*2;});
@@ -912,6 +915,8 @@ function balLoop(now){
     bx.fillStyle=col;bx.beginPath();bx.moveTo(x,y+r*0.98);bx.lineTo(x-r*0.12,y+r*1.18);bx.lineTo(x+r*0.12,y+r*1.18);bx.closePath();bx.fill();bx.stroke();
     bx.font=`${r*0.95}px serif`;bx.textAlign='center';bx.textBaseline='middle';bx.fillText(b.gold?'⭐':b.it.e,x,y+r*0.05);
   });
+  if(BAL.queue&&BAL.queue.length){let busy=true;try{busy=speechSynthesis.speaking||speechSynthesis.pending;}catch(e){busy=false;}
+    if(!busy&&now>(BAL.qt||0)){BAL.qt=now+400;say(BAL.queue.shift());}}
   BAL.fx=BAL.fx.filter(f=>now-f.t<900);
   BAL.fx.forEach(f=>{const life=(now-f.t)/900;bx.globalAlpha=1-life;
     if(f.txt){f.y+=f.vy*dt;bx.font=`${W*0.12*(1+life*0.4)}px serif`;bx.fillText(f.txt,f.x,f.y);}
@@ -926,16 +931,21 @@ bc.addEventListener('pointerdown',e=>{
   for(let i=BAL.b.length-1;i>=0;i--){const b=BAL.b[i],u=(x-b.dx)/(b.r*0.95),v=(y-b.y)/(b.r*1.05);
     if(u*u+v*v<=1.35){balPop(b,i);return;}}
 });
+/* words wait their turn: a new pop never cuts off the word still being spoken */
+function balSay(w){
+  let busy=false;try{busy=speechSynthesis.speaking||speechSynthesis.pending;}catch(e){}
+  if(busy){BAL.queue=(BAL.queue||[]).concat(w).slice(-2);}else say(w);
+}
 function balPop(b,i){
   BAL.b.splice(i,1);popFx();const now=performance.now();
   for(let k=0;k<(b.gold?40:18);k++){const a=rnd(0,6.28),s=rnd(80,260);
     BAL.fx.push({x:b.dx,y:b.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,c:b.gold?pick(BCOL):b.c,t:now,r:rnd(3,7)});}
   BAL.fx.push({x:b.dx,y:b.y,txt:b.gold?'⭐':b.it.e,t:now,vy:-60});
   if(b.gold){BAL.pops+=3;chime();say({es:'¡Estrella de oro!',en:'Gold star!',de:'Goldstern!'}[lang]);}
-  else{BAL.pops++;say(b.it[lang][1]);}
+  else{BAL.pops++;balSay(b.it[lang][1]);}
   if(!BAL.done&&BAL.pops>=BAL.goal){BAL.done=true;BAL.pops=BAL.goal;
-    setTimeout(()=>{bigWin();rainEmoji(['🎈','🎉','⭐'],28);
-      say({es:'¡Genial! ¡Todos los globos!',en:'Great! All the balloons!',de:'Super! Alle Ballons!'}[lang]);},300);}
+    setTimeout(()=>{BAL.queue=[];bigWin();rainEmoji(['🎈','🎉','⭐'],28);
+      say({es:'¡Genial! ¡Todos los globos!',en:'Great! All the balloons!',de:'Super! Alle Ballons!'}[lang]);},1600);}
   balText();
 }
 
