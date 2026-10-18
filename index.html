@@ -164,6 +164,13 @@
   .panel h3{margin:0 0 8px;font-family:Impact,sans-serif;letter-spacing:1px;font-size:19px}
   .row{display:flex;justify-content:space-between;padding:3px 0;font-size:15px;border-bottom:1px dotted #bbb}
   .row:last-child{border:0}
+  #repBars{display:flex;align-items:flex-end;gap:6px;height:120px;padding:6px 0 0;border-bottom:2px solid var(--ink)}
+  .repDay{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:11px;font-weight:bold}
+  .repBar{width:100%;max-width:34px;background:var(--beam);border:2px solid var(--ink);border-bottom:0;border-radius:6px 6px 0 0;min-height:2px}
+  .repDay.today .repBar{background:var(--bolt)}
+  #repLabels{display:flex;gap:6px;font-size:11px;margin-top:3px}
+  #repLabels div{flex:1;text-align:center}
+  #repWords{font-size:14px;margin-top:10px;line-height:1.5}
   #voiceSel{width:100%;font-size:16px;padding:8px;border:3px solid var(--ink);border-radius:6px;font-family:inherit;background:#fff;color:var(--ink)}
   #nameInput{width:100%;font-size:20px;padding:9px;border:3px solid var(--ink);border-radius:6px;
     font-family:inherit;text-align:center;letter-spacing:2px}
@@ -527,6 +534,11 @@
 
 <!-- ============ PARENT ============ -->
 <div class="view" id="v-parent"><div id="parent">
+  <div class="panel">
+    <h3 id="pReportTitle">📊</h3>
+    <div id="repBars"></div>
+    <div id="repWords"></div>
+  </div>
   <div class="panel">
     <h3 id="pNameTitle">Name for the tracing tab</h3>
     <input id="nameInput" value="" maxlength="12" placeholder="MAX">
@@ -2972,6 +2984,8 @@ function actChoose(correct,el){
   }else{
     actMiss++;nope();el.classList.remove('wrong');void el.offsetWidth;el.classList.add('wrong');
     const T=actTarget;
+    if(actMiss===1){const w=T.kind==='prep'?PREPS[T.p][lang]:T.kind==='adj'?aW(T.a):T.kind==='obj'?T.word:T.v?vW(T.v):'';
+      if(w){const k=lang+'|🦖 '+w;stats[k]=(stats[k]||0)+1;saveStats();}}
     if(actMiss===1)actAsk();
     else if(actMiss===2&&lang!=='es'){       // bridge through his strong language
       const own=T.kind==='prep'?PREPS[T.p][lang]:T.kind==='adj'?aW(T.a):T.kind==='obj'?T.word:vW(T.v),
@@ -4382,6 +4396,24 @@ function renderParent(){
            de:['Name für den 🦸 Tab','Level','Meist verfehlte Wörter','Zurücksetzen']}[lang];
   document.getElementById('pNameTitle').textContent=L[0];
   renderVoices();
+  /* ---- this week ---- */
+  $('pReportTitle').textContent={es:'📊 Esta semana',en:'📊 This week',de:'📊 Diese Woche'}[lang];
+  const days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d);}
+  const key=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+  const recs=days.map(d=>LOG[key(d)]||{sec:0,ok:0,miss:0,adv:0}),maxMin=Math.max(10,...recs.map(r=>r.sec/60));
+  const loc={es:'es-ES',en:'en-GB',de:'de-DE'}[lang];
+  $('repBars').innerHTML=recs.map((r,i)=>{const m=Math.round(r.sec/60);
+    return `<div class="repDay${i===6?' today':''}"><span>${m?m+'′':''}</span><div class="repBar" style="height:${Math.round(m/maxMin*88)}px"></div></div>`;}).join('')+'';
+  $('repBars').insertAdjacentHTML('afterend','');
+  const labels=recs.map((r,i)=>{const t=r.ok+r.miss,acc=t?Math.round(r.ok/t*100)+'%':'–';
+    return `<div>${days[i].toLocaleDateString(loc,{weekday:'short'})}<br><small>${acc}</small></div>`;}).join('');
+  let lab=$('repLabels');if(!lab){lab=document.createElement('div');lab.id='repLabels';$('repBars').after(lab);}lab.innerHTML=labels;
+  const wk=recs.reduce((a,r)=>({min:a.min+r.sec/60,adv:a.adv+(r.adv||0)}),{min:0,adv:0});
+  const W={es:['seguras','aprendiendo','min en total','aventuras'],en:['known','learning','min in total','adventures'],de:['sicher','am Lernen','Min. insgesamt','Abenteuer']}[lang];
+  $('repWords').innerHTML=`<b>${Math.round(wk.min)} ${W[2]} · 🗺️ ${wk.adv} ${W[3]}</b><br>`+
+    [['🇩🇪','de'],['🇬🇧','en'],['🇪🇸','es']].map(([f,c])=>{const R=Object.values(SRS[c]||{});
+      return `${f} ${W[0]}: <b>${R.filter(r=>r.b>=4).length}</b> · ${W[1]}: <b>${R.filter(r=>r.b>0&&r.b<=2).length}</b>`;}).join('<br>')+
+    `<br><small>${{es:'% = acertadas a la primera',en:'% = right on the first try',de:'% = beim ersten Versuch richtig'}[lang]}</small>`;
   $('pLimitTitle').textContent={es:'⏰ Tiempo de juego al día',en:'⏰ Play time per day',de:'⏰ Spielzeit pro Tag'}[lang];
   const lb=$('limitBtns');lb.innerHTML='';
   [0,15,20,30,45].forEach(m=>{const b=document.createElement('button');b.className='seg'+(timeLimit===m?' on':'');
