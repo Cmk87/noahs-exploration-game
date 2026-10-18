@@ -203,6 +203,14 @@
   .acard.hint{box-shadow:0 0 0 5px var(--beam),5px 5px 0 var(--ink);animation:pulse .5s ease-in-out infinite alternate}
   @keyframes cardIn{from{transform:scale(.3) rotate(-8deg);opacity:0}to{transform:none;opacity:1}}
   .card{animation:cardIn .4s cubic-bezier(.2,1.6,.4,1) both}
+  .art{display:inline-block;padding:0 .28em;border-radius:.3em;color:#fff;-webkit-text-stroke:0;text-shadow:none;
+    border:2px solid var(--ink);line-height:1.15}
+  .art.g-m,.artBtn.g-m{background:#2F6BFF}.art.g-f,.artBtn.g-f{background:#FF3B30}
+  .art.g-n,.artBtn.g-n{background:#13B85E}.art.g-pl{background:#FF8A00}
+  #actSentence .art,#playSentence .art{font-size:.95em;color:#fff}
+  .artPic{grid-column:1 / span 3;aspect-ratio:auto!important;height:min(34vw,22dvh,170px);font-size:min(26vw,17dvh,130px)!important}
+  .artBtn{color:#fff!important;font:bold min(9vw,40px) Impact,"Arial Black",sans-serif!important;aspect-ratio:auto!important;padding:18px 0;
+    text-shadow:2px 2px 0 var(--ink)}
   #grid.nine .card{font-size:min(10vw,48px)}
   #actSentence,#playSentence{min-height:46px;margin:12px 14px 0;font-size:min(6vw,26px);text-align:center;font-weight:bold;color:#fff;
     text-shadow:2px 2px 0 var(--ink)}
@@ -1536,20 +1544,39 @@ function noteMiss(item){
   stats[k]=(stats[k]||0)+1;saveStats();
 }
 const AND={es:'y',en:'and',de:'und'};
-function promptText(){
+/* Grammatical gender in colour, always the same: der blue, die red, das
+   green, plural orange (Spanish el/la get the same colours). Seeing the
+   colour every time a noun appears is how the article gets remembered. */
+function artClass(art,plural){
+  const a=(art||'').split(' ')[0].toLowerCase();
+  if(plural&&(a==='die'||a==='los'||a==='las'))return 'g-pl';
+  return {der:'g-m',den:'g-m',dem:'g-m',die:'g-f',das:'g-n',el:'g-m',la:'g-f',los:'g-pl',las:'g-pl'}[a]||'';
+}
+function artTag(art,plural){
+  const c=artClass(art,plural);if(!c)return art;
+  const sp=art.indexOf(' ');
+  return `<span class="art ${c}">${sp<0?art:art.slice(0,sp)}</span>${sp<0?'':art.slice(sp)}`;
+}
+const nounHTML=it=>artTag(it[lang][0],it.p)+' '+it[lang][1];
+let artMode=false;
+function promptText(html){
+  const A=it=>html?artTag(it[lang][0],it.p):it[lang][0];
+  if(artMode)return html?`<span class="art g-m">der</span>, <span class="art g-f">die</span> oder <span class="art g-n">das</span>?`
+                        :`Der, die oder das: ${target.de[1]}?`;
   if(targets.length>1){const [a,b]=targets;
-    if(lang==='es')return `¿Dónde están ${a.es.join(' ')} y ${b.es.join(' ')}?`;
-    if(lang==='de')return `Wo sind ${a.de.join(' ')} und ${b.de.join(' ')}?`;
+    if(lang==='es')return `¿Dónde están ${A(a)} ${a.es[1]} y ${A(b)} ${b.es[1]}?`;
+    if(lang==='de')return `Wo sind ${A(a)} ${a.de[1]} und ${A(b)} ${b.de[1]}?`;
     return `Where are ${a.en.join(' ')} and ${b.en.join(' ')}?`;}
-  const [art,word]=target[lang],pl=!!target.p;
+  const word=target[lang][1],art=A(target),pl=!!target.p;
   if(lang==='es')return `¿Dónde ${pl?'están':'está'} ${art} ${word}?`;
   if(lang==='de')return `Wo ${pl?'sind':'ist'} ${art} ${word}?`;
   return `Where ${pl?'are':'is'} ${art} ${word}?`;
 }
-function sayPrompt(){if(target)say(promptText());}
+function sayPrompt(){if(!target)return;say(artMode?`Der, die oder das… ${target.de[1]}?`:promptText());}
 function newRound(){
-  misses=0;roundDone=false;gotT=[];
+  misses=0;roundDone=false;gotT=[];artMode=false;
   const L=level('words',8),cfg=WLVL[L],SET=catPool();
+  if(lang==='de'&&L>=3&&Math.random()<0.2&&artRound(SET,L))return;
   let pool=SET.filter(v=>!recent.includes(v.e));
   if(pool.length<Math.min(8,SET.length)){recent=[];pool=SET.slice();}
   target=srsPick(pool);recent.push(target.e);if(recent.length>12)recent.shift();
@@ -1569,12 +1596,39 @@ function newRound(){
   options=shuffle([...targets,...picked]);
   document.getElementById('grid').style.gridTemplateColumns=options.length===4?'repeat(2,1fr)':'repeat(3,1fr)';
   document.getElementById('grid').classList.toggle('nine',options.length>6);
-  document.getElementById('quizPrompt').textContent=promptText();
+  document.getElementById('quizPrompt').innerHTML=promptText(true);
   document.getElementById('levelPill').textContent='🎯 '+L;
   const g=document.getElementById('grid');g.innerHTML='';
   options.forEach((o,i)=>{const b=document.createElement('div');b.className='card';b.textContent=o.e;
     b.style.animationDelay=(i*0.04)+'s';b.onclick=()=>choose(o,b);g.appendChild(b);});
   sayPrompt();
+}
+function artRound(SET,L){
+  const pool=SET.filter(v=>!v.p&&v.c!=='form'&&['der','die','das'].includes(v.de[0])&&!recent.includes(v.e));
+  if(pool.length<3)return false;
+  artMode=true;target=pick(pool);targets=[target];recent.push(target.e);if(recent.length>12)recent.shift();
+  const g=document.getElementById('grid');g.innerHTML='';g.style.gridTemplateColumns='repeat(3,1fr)';g.classList.remove('nine');
+  const pic=document.createElement('div');pic.className='card artPic';pic.textContent=target.e;g.appendChild(pic);
+  [['der','g-m'],['die','g-f'],['das','g-n']].forEach(([a,c],i)=>{
+    const b=document.createElement('div');b.className='card artBtn '+c;b.textContent=a;b.style.animationDelay=(0.15+i*0.07)+'s';
+    b.onclick=()=>artChoose(a,b);g.appendChild(b);});
+  document.getElementById('quizPrompt').innerHTML=promptText(true);
+  document.getElementById('levelPill').textContent='🎯 '+L;
+  say(`Der, die oder das… ${target.de[1]}?`);
+  return true;
+}
+function artChoose(a,el){
+  ac();if(roundDone)return;
+  if(a===target.de[0]){
+    roundDone=true;el.classList.add('right');bigWin();award(misses);
+    levelFx(document.getElementById('levelPill'),adapt('words',8,misses===0));
+    showWin(target.e,nounHTML(target),target.de.join(' '),true);
+    setTimeout(newRound,2600);
+  }else{
+    misses++;nope();el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),450);
+    if(misses===1)say(`Der, die oder das… ${target.de[1]}?`);
+    else{[...document.querySelectorAll('#grid .artBtn')].forEach(c=>{if(c.textContent===target.de[0])c.classList.add('hint');});say(target.de.join(' '));}
+  }
 }
 function choose(o,el){
   ac();if(roundDone||el.classList.contains('right'))return;
@@ -1583,8 +1637,8 @@ function choose(o,el){
     if(gotT.length<targets.length){beep(880,0,0.12,'triangle',0.16);say(o[lang][1]);return;}
     roundDone=true;bigWin();award(misses);targets.forEach(t=>srsRecord(t,misses===0));
     levelFx(document.getElementById('levelPill'),adapt('words',8,misses===0));
-    const label=targets.map(t=>t[lang].join(' ')).join(' '+AND[lang]+' ');
-    showWin(targets.map(t=>t.e).join(''),label,targets.map(t=>t[lang][1]).join(' '+AND[lang]+' '));
+    const label=targets.map(nounHTML).join(' '+AND[lang]+' ');
+    showWin(targets.map(t=>t.e).join(''),label,targets.map(t=>t[lang][1]).join(' '+AND[lang]+' '),true);
     setTimeout(newRound,2600);
   }else{
     misses++;targets.forEach(noteMiss);
@@ -1596,9 +1650,9 @@ function choose(o,el){
       if(todo.some(t=>t.e===c.textContent))c.classList.add('hint');});sayPrompt();}
   }
 }
-function showWin(emoji,label,speak){
+function showWin(emoji,label,speak,html){
   document.getElementById('quizFace').textContent=emoji;
-  document.getElementById('quizWord').textContent=label;
+  document.getElementById('quizWord')[html?'innerHTML':'textContent']=label;
   document.getElementById('quizWin').classList.add('on');
   if(speak)say(speak);
   setTimeout(()=>document.getElementById('quizWin').classList.remove('on'),2500);
@@ -1681,7 +1735,7 @@ function earPick(o,el){
   if(o.e===earTarget.e){
     earDone=true;el.classList.add('right');bigWin();award(earMiss);srsRecord(earTarget,earMiss===0);
     levelFx(document.getElementById('earLevelPill'),adapt('ear',6,earMiss===0));
-    showWin(earTarget.e,earTarget[lang].join(' '),null);
+    showWin(earTarget.e,nounHTML(earTarget),null,true);
     setTimeout(newEarRound,2400);
   }else{
     earMiss++;noteMiss(earTarget);nope();
@@ -2552,16 +2606,17 @@ const deAdj=(stem,acc)=>stem+(stem.endsWith('e')?(acc?'n':''):(acc?'en':'e'));
 const ADJ_ORDER={mood:0,size:1,age:2,wet:3,dirt:3,color:4,speed:5,loud:5};
 const aW=a=>lang==='es'?a.es[0]:a[lang];
 const vW=v=>lang==='de'?v.de[0]:v[lang];
-function nounPhrase(adjs,acc,hl){
-  hl=hl||(x=>x);adjs=adjs.slice().sort((a,b)=>ADJ_ORDER[a.dim]-ADJ_ORDER[b.dim]);
-  if(lang==='de')return (acc?'den ':'der ')+adjs.map(a=>hl(deAdj(a.de,acc))+' ').join('')+'Dino';
-  if(lang==='en')return 'the '+adjs.map(a=>hl(a.en)+' ').join('')+'dino';
+function nounPhrase(adjs,acc,hl,cap){
+  const html=!!hl;hl=hl||(x=>x);adjs=adjs.slice().sort((a,b)=>ADJ_ORDER[a.dim]-ADJ_ORDER[b.dim]);
+  const C=w=>cap?capFirst(w):w,T=w=>html&&lang!=='en'?`<span class="art g-m">${C(w)}</span>`:C(w);
+  if(lang==='de')return T(acc?'den':'der')+' '+adjs.map(a=>hl(deAdj(a.de,acc))+' ').join('')+'Dino';
+  if(lang==='en')return C('the')+' '+adjs.map(a=>hl(a.en)+' ').join('')+'dino';
   const w=adjs.map(a=>hl(a.es[0]));
-  return 'el dino'+(w.length?' '+(w.length>1?w.slice(0,-1).join(', ')+' y '+w[w.length-1]:w[0]):'');
+  return T('el')+' dino'+(w.length?' '+(w.length>1?w.slice(0,-1).join(', ')+' y '+w[w.length-1]:w[0]):'');
 }
 /* "Der kleine rote Dino springt!" — adjs attributive, verb conjugated */
 function dSentence(adjs,v,hl){
-  hl=hl||(x=>x);const np=capFirst(nounPhrase(adjs,false,hl));
+  const np=nounPhrase(adjs,false,hl,true);hl=hl||(x=>x);
   if(!v)return '';
   if(lang==='de')return `${np} ${hl(v.de[0])}!`;
   if(lang==='en')return `${np} is ${hl(v.en)}!`;
@@ -2569,10 +2624,10 @@ function dSentence(adjs,v,hl){
 }
 /* "Der Dino ist klein!" — predicative, no ending */
 function dIs(a,hl){
-  hl=hl||(x=>x);
-  if(lang==='de')return `Der Dino ist ${hl(a.de)}!`;
+  const html=!!hl;hl=hl||(x=>x);const T=w=>html?`<span class="art g-m">${w}</span>`:w;
+  if(lang==='de')return `${T('Der')} Dino ist ${hl(a.de)}!`;
   if(lang==='en')return `The dino is ${hl(a.en)}!`;
-  return `¡El dino ${a.es[1]} ${hl(a.es[0])}!`;
+  return `¡${T('El')} dino ${a.es[1]} ${hl(a.es[0])}!`;
 }
 const stripTags=s=>s.replace(/<[^>]+>/g,'');
 
@@ -2720,7 +2775,7 @@ function playAdjs(){return Object.values(PLAY.adjs).map(k=>DA(k));}
 function playState(){return stOf(PLAY.verb==='stand'?null:DVERBS.find(v=>v.k===PLAY.verb),playAdjs(),0);}
 function playSay(){
   const v=DVERBS.find(x=>x.k===PLAY.verb),hl=x=>`<b>${x}</b>`;
-  const html=v?dSentence(playAdjs(),v,hl):capFirst(nounPhrase(playAdjs(),false,hl))+(lang==='es'?'.':'.');
+  const html=v?dSentence(playAdjs(),v,hl):nounPhrase(playAdjs(),false,hl,true)+'.';
   $('playSentence').innerHTML=html;say(stripTags(html));
 }
 function buildPlay(){
