@@ -90,11 +90,13 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.waitForTimeout(900);
   check(await page.evaluate(p0 => power === p0, p0), 'guessing (3 misses) earns no points');
   await page.evaluate(() => { power = 200; savePower(); showTab('dig'); });
-  for (const g of ['dig', 'mem', 'bal', 'fw']) {
+  for (const g of ['dig', 'mem', 'bal', 'fw', 'bag']) {
     await page.evaluate(g => { showDigLock(); startGame(g); }, g);
     await page.waitForTimeout(300);
-    check(await page.evaluate(g => pane === { dig: 'digPlay', mem: 'memPlay', bal: 'balPlay', fw: 'fwPlay' }[g], g), `prize game starts: ${g}`);
+    check(await page.evaluate(g => pane === { dig: 'digPlay', mem: 'memPlay', bal: 'balPlay', fw: 'fwPlay', bag: 'bagPlay' }[g], g), `prize game starts: ${g}`);
   }
+  await page.evaluate(() => { power = 45; savePower(); showDigLock(); startGame('mem'); document.querySelector('#memPlay .quitBtn').click(); $('qsLeave').click(); });
+  check(await page.evaluate(() => power === 45 && pane === 'digLock'), 'leaving a prize game right after starting gives the points back');
   await page.evaluate(() => { DINOS.forEach(d => prepParts(d)); showDigLock(); });
   check(true, 'all 11 dinosaur skeletons build');
 

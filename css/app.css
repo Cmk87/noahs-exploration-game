@@ -622,3 +622,10 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .stkBtns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .stkBtns button{border:none;border-radius:16px;background:var(--bolt);color:var(--ink);font:800 17px 'Baloo 2',system-ui;padding:8px 14px;box-shadow:0 4px 0 #C99600;cursor:pointer}
 .stkBtns button#stkX{background:#EEF1F8;box-shadow:0 4px 0 #C9D0DB}
+#bag{touch-action:none;background:#5BC0F8}
+#quitSheet{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;background:rgba(10,14,40,.55)}
+#quitSheet.on{display:flex}
+#quitSheet .qsBox{background:#fff;border-radius:26px;padding:20px 18px;width:min(88vw,380px);display:flex;flex-direction:column;gap:12px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+#quitSheet .qsTitle{font-size:24px;color:var(--ink)}
+#quitSheet .btn{font-size:20px;padding:12px}
+#qsStay{background:var(--good);color:#fff}
