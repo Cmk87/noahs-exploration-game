@@ -377,6 +377,14 @@
     border:3px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);font-weight:bold;font-size:16px;cursor:pointer;position:relative;z-index:2}
   #advBar.on{display:flex}
   #advBar .stars{letter-spacing:1px}
+  #sleep{position:fixed;inset:0;z-index:45;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    background:radial-gradient(circle at 50% 30%,#2A3270,#0B1030 70%);padding:20px}
+  #sleep.on{display:flex}
+  #sleepCv{width:min(70vw,45dvh,320px);aspect-ratio:1/1;border-radius:20px;border:5px solid var(--ink);box-shadow:8px 8px 0 var(--ink)}
+  #sleepTitle{font-size:min(9vw,40px);color:var(--bolt);-webkit-text-stroke:4px var(--ink);paint-order:stroke fill;margin-top:18px}
+  #sleepSub{font-size:min(5vw,20px);font-weight:bold;margin-top:6px;color:#fff}
+  #sleepMore{margin-top:26px;border:2px solid rgba(255,255,255,.35);border-radius:10px;background:conic-gradient(rgba(255,212,0,.6) var(--hold,0%),transparent var(--hold,0%));
+    color:rgba(255,255,255,.6);font-size:13px;padding:8px 14px;cursor:pointer}
   #gearTip{position:fixed;z-index:40;top:62px;left:50%;transform:translateX(-50%);background:#fff;color:var(--ink);
     border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);border-radius:8px;padding:6px 12px;font-weight:bold;font-size:15px;
     display:none;white-space:nowrap}
@@ -530,6 +538,11 @@
       <span><button class="btn" id="pPlus">+10 ⚡</button> <button class="btn" id="pZero">0</button></span></div>
   </div>
   <div class="panel">
+    <h3 id="pLimitTitle">⏰</h3>
+    <div id="limitBtns" class="segs" style="padding:0;flex-wrap:wrap"></div>
+    <div id="limitInfo" style="font-size:13px;margin-top:6px"></div>
+  </div>
+  <div class="panel">
     <h3 id="pAdvTitle">🗺️</h3>
     <div id="advSizes" class="segs" style="padding:0"></div>
   </div>
@@ -573,6 +586,8 @@
 <div id="rain"></div>
 
 <div id="gearTip"></div>
+<div id="sleep"><canvas id="sleepCv"></canvas><div id="sleepTitle" class="display"></div><div id="sleepSub"></div>
+  <button id="sleepMore"></button></div>
 <canvas id="mascot" aria-label="Rexi"></canvas>
 
 <div id="gate"><div>
@@ -3141,6 +3156,7 @@ function addPower(n=1){
 let fireStreak=0;
 function award(misses,base){
   base=base||1;mascot('cheer');advTick(activeTab);
+  {const d=logDay();if(misses===0)d.ok++;else d.miss++;logSave();}
   if(misses>=2){fireStreak=0;return 0;}
   if(misses===0){fireStreak++;}else fireStreak=0;
   addPower(base);
@@ -4366,6 +4382,12 @@ function renderParent(){
            de:['Name für den 🦸 Tab','Level','Meist verfehlte Wörter','Zurücksetzen']}[lang];
   document.getElementById('pNameTitle').textContent=L[0];
   renderVoices();
+  $('pLimitTitle').textContent={es:'⏰ Tiempo de juego al día',en:'⏰ Play time per day',de:'⏰ Spielzeit pro Tag'}[lang];
+  const lb=$('limitBtns');lb.innerHTML='';
+  [0,15,20,30,45].forEach(m=>{const b=document.createElement('button');b.className='seg'+(timeLimit===m?' on':'');
+    b.textContent=m?m+' min':{es:'Sin límite',en:'No limit',de:'Kein Limit'}[lang];
+    b.onclick=()=>{timeLimit=m;warned5=false;try{localStorage.setItem('sl_limit',String(m));}catch(e){}renderParent();};lb.appendChild(b);});
+  $('limitInfo').textContent={es:'Hoy: ',en:'Today: ',de:'Heute: '}[lang]+Math.round(logDay().sec/60)+' min';
   $('pAdvTitle').textContent={es:'🗺️ Largo de la aventura diaria',en:'🗺️ Daily adventure length',de:'🗺️ Länge des täglichen Abenteuers'}[lang];
   const sz=$('advSizes');sz.innerHTML='';
   [['short',{es:'Corta (4)',en:'Short (4)',de:'Kurz (4)'}],['normal',{es:'Normal (6)',en:'Normal (6)',de:'Normal (6)'}],['long',{es:'Larga (8)',en:'Long (8)',de:'Lang (8)'}]].forEach(([k,l])=>{
@@ -4498,6 +4520,7 @@ function unlock(e){
   e.preventDefault();ac();loadVoices();
   gate.style.display='none';
   showTab('adv');advEnsure();
+  if(timeLimit&&logDay().sec>=(timeLimit+(logDay().extra||0))*60){goToSleep();return;}
   const hello=ADV.done?{es:'¡Hola! Ya has hecho tu aventura de hoy.',en:'Hi! You already did today\'s adventure.',de:'Hallo! Dein Abenteuer heute hast du schon geschafft.'}[lang]
     :{es:'¡Hola! ¿Empezamos la aventura?',en:'Hi! Shall we start the adventure?',de:'Hallo! Wollen wir das Abenteuer starten?'}[lang];
   say(hello);
@@ -4584,11 +4607,54 @@ function advFinish(){
   fanfare();rainEmoji(['🏆','⭐','🦖','🎉','✨'],34);
   if(!ADV.bonus){ADV.bonus=true;advSave();flyBolt(10,'+10⚡');addPowerQuiet(10);}
   say({es:'¡Aventura completada! ¡Eres un campeón!',en:'Adventure complete! You are a champion!',de:'Abenteuer geschafft! Du bist ein Champion!'}[lang]);
-  try{const L=JSON.parse(localStorage.getItem('sl_log')||'{}'),d=today();L[d]=L[d]||{};L[d].adv=(L[d].adv||0)+1;localStorage.setItem('sl_log',JSON.stringify(L));}catch(e){}
+  logDay().adv++;logSave();
 }
 $('advGo').onclick=()=>{ac();advGo();};
 $('advAgain').onclick=()=>{ac();advEnsure(true);renderAdv();say({es:'¡Una nueva aventura!',en:'A new adventure!',de:'Ein neues Abenteuer!'}[lang]);};
 $('advBar').onclick=()=>{ac();showTab('adv');};
+
+/* =============================================================
+   DAILY LOG + TIME LIMIT. Minutes played and first-try right/wrong per
+   day (for the parent report). With a limit set, Rexi warns at 5 minutes
+   left, then falls asleep and the app rests until tomorrow; a parent can
+   hold a button for 2 s to add 15 minutes.
+============================================================= */
+let LOG={};try{LOG=JSON.parse(localStorage.getItem('sl_log')||'{}');}catch(e){}
+const logDay=()=>LOG[today()]||(LOG[today()]={sec:0,ok:0,miss:0,adv:0,extra:0});
+const logSave=()=>{try{const keys=Object.keys(LOG).sort();while(keys.length>60)delete LOG[keys.shift()];
+  localStorage.setItem('sl_log',JSON.stringify(LOG));}catch(e){}};
+let timeLimit=0;try{timeLimit=+localStorage.getItem('sl_limit')||0;}catch(e){}
+let warned5=false;
+setInterval(()=>{
+  if(document.hidden||gate.style.display!=='none'||$('sleep').classList.contains('on'))return;
+  const d=logDay();d.sec+=5;logSave();
+  if(!timeLimit)return;
+  const left=(timeLimit+(d.extra||0))*60-d.sec;
+  if(left<=300&&left>295-5&&!warned5){warned5=true;mascot('wave',2500);
+    say({es:'¡Quedan cinco minutos!',en:'Five more minutes!',de:'Noch fünf Minuten!'}[lang]);}
+  if(left<=0)goToSleep();
+},5000);
+function goToSleep(){
+  if($('sleep').classList.contains('on'))return;
+  closeRewardIfOpen();$('sleep').classList.add('on');
+  $('sleepTitle').textContent={es:'¡Buenas noches!',en:'Good night!',de:'Gute Nacht!'}[lang];
+  $('sleepSub').textContent={es:'Rexi está cansado. ¡Hasta mañana!',en:'Rexi is tired. See you tomorrow!',de:'Rexi ist müde. Bis morgen!'}[lang];
+  $('sleepMore').textContent={es:'⚙ Padres: mantener 2 s para +15 min',en:'⚙ Parents: hold 2 s for +15 min',de:'⚙ Eltern: 2 s halten für +15 Min.'}[lang];
+  say({es:'¡Buenas noches! Rexi está cansado. ¡Hasta mañana!',en:'Good night! Rexi is tired. See you tomorrow!',de:'Gute Nacht! Rexi ist müde. Bis morgen!'}[lang]);
+  [523,440,392,330].forEach((f,i)=>beep(f,i*0.45,0.6,'sine',0.12));
+  const cn=$('sleepCv');(function loop(){if(!$('sleep').classList.contains('on'))return;
+    const r=cn.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2.5),w=Math.round(r.width*dpr);
+    if(w&&cn.width!==w){cn.width=w;cn.height=w;}const g=cn.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+    drawDino(g,r.width,r.width,{verb:'sleep'},performance.now()/1000);requestAnimationFrame(loop);})();
+}
+function closeRewardIfOpen(){if(rewardOpen)closeReward(false);}
+(function(){const b=$('sleepMore');let t0=0,raf=0,timer=0;
+  const fill=()=>{b.style.setProperty('--hold',Math.min(100,(performance.now()-t0)/20)+'%');raf=requestAnimationFrame(fill);};
+  b.addEventListener('pointerdown',e=>{e.preventDefault();t0=performance.now();fill();
+    timer=setTimeout(()=>{const d=logDay();d.extra=(d.extra||0)+15;logSave();warned5=false;$('sleep').classList.remove('on');
+      cancelAnimationFrame(raf);b.style.setProperty('--hold','0%');},2000);});
+  ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,()=>{clearTimeout(timer);cancelAnimationFrame(raf);b.style.setProperty('--hold','0%');}));
+})();
 
 /* ---- Rexi, the mascot: cheers on right answers, puzzles on misses, waves when tapped ---- */
 const mascotCv=$('mascot'),mascotG=mascotCv.getContext('2d');
