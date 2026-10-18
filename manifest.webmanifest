@@ -1,0 +1,16 @@
+{
+  "name": "Noah's Exploration Game",
+  "short_name": "Noah",
+  "description": "Letters, words, verbs and exploration in Spanish, English and German",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B1030",
+  "theme_color": "#0B1030",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/maskable-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
