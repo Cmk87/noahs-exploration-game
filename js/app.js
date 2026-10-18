@@ -142,7 +142,7 @@ function renderParent(){
   $('pPowerTitle').textContent={es:'Puntos de premio (40 ⚡ = 1 premio)',en:'Prize points (40 ⚡ = 1 prize)',de:'Preispunkte (40 ⚡ = 1 Preis)'}[lang];
   $('pPowerVal').textContent='⚡ '+power;
   const lr=document.getElementById('levelRows');lr.innerHTML='';
-  const MN={words:'🖼️',ear:'👂',act:'🦖',space:'🪐',geo:'🌍'};
+  const MN={words:'🖼️',ear:'👂',act:'🦖',space:'🪐',geoK:'🌍',geoF:'🏳️'};
   [['🇪🇸','es'],['🇬🇧','en'],['🇩🇪','de']].forEach(([f,c])=>{
     const cells=Object.keys(MN).map(m=>{const r=skillRec(m,c),acc=r.h.length?Math.round(r.h.reduce((a,b)=>a+b,0)/r.h.length*100)+'%':'–';
       return `${MN[m]} ${level(m,SKILL_MAX[m],c)}/${SKILL_MAX[m]} <small>(${acc})</small>`;}).join(' &nbsp;');

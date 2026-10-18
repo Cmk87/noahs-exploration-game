@@ -30,18 +30,25 @@ const OCEANS=[
  {k:'arc',lab:[[-10,79]],de:['das Nordpolarmeer','Nordpolarmeer'],en:['the Arctic Ocean','Arctic Ocean'],es:['el océano Ártico','Ártico']},
  {k:'sou',lab:[[40,-62]],de:['das Südpolarmeer','Südpolarmeer'],en:['the Southern Ocean','Southern Ocean'],es:['el océano Antártico','Antártico']}
 ];
-/* countries a four-year-old may have heard of first, then more */
-const FAMOUS1=['ES','DE','FR','IT','GB','PT','US','CA','MX','BR','AR','CN','IN','JP','RU','AU','EG','ZA','MA','CL'];
-const FAMOUS2=FAMOUS1.concat(['NL','BE','CH','AT','PL','SE','NO','FI','DK','IE','GR','TR','CO','PE','VE','CU','SA','IR','TH','VN','ID','KR','NZ','NG','KE','ET','DZ','UA','IS','GL','MG','PH','PK','KZ','MN']);
+/* Countries in tiers by how well known they are (big, famous, close to home,
+   distinctive flags first). Level 1 asks only tier 1; each level adds a tier;
+   level 5 has every country that is big enough to tap. */
+const TIERS=[
+ ['DE','ES','GB','FR','IT','US','BR','CN','JP','AU','CA','MX','IN','RU','EG'],
+ ['PT','CH','AT','NL','BE','SE','NO','DK','FI','GR','TR','IE','PL','AR','CL','CO','PE','KR','TH','SA','ZA','MA','NZ','IS','GL'],
+ ['CU','VE','ID','PH','VN','MY','PK','IR','IQ','UA','RO','HU','CZ','HR','BG','RS','KE','NG','ET','TZ','DZ','TN','GH','KZ','MN','UY','PY','BO','EC','JM','MG','CD','AO','SD','LY','NP','LK','IL','JO','AE']];
+const FAMOUS1=TIERS[0],FAMOUS2=TIERS[0].concat(TIERS[1]);
+/* fact questions: always say that the answer is a continent */
 const GEO_Q=[
- {a:'OC',es:'¿Dónde viven los canguros?',en:'Where do kangaroos live?',de:'Wo leben Kängurus?'},
- {a:'SA',es:'¿Dónde está la selva del Amazonas?',en:'Where is the Amazon rainforest?',de:'Wo ist der Amazonas-Regenwald?'},
- {a:'AS',es:'¿Dónde viven los pandas?',en:'Where do pandas live?',de:'Wo leben Pandas?'},
- {a:'AS',es:'¿Dónde viven los tigres?',en:'Where do tigers live?',de:'Wo leben Tiger?'},
- {a:'AF',es:'¿Dónde viven las cebras?',en:'Where do zebras live?',de:'Wo leben Zebras?'},
- {a:'AF',es:'¿Dónde están las pirámides de Egipto?',en:'Where are the pyramids of Egypt?',de:'Wo sind die Pyramiden von Ägypten?'},
- {a:'AN',es:'¿Cuál es el lugar más frío?',en:'Where is the coldest place?',de:'Wo ist es am kältesten?'},
- {a:'AS',es:'¿Cuál es el continente más grande?',en:'Which is the biggest continent?',de:'Welcher ist der größte Kontinent?'}
+ {a:'OC',es:'¿En qué continente viven los canguros?',en:'On which continent do kangaroos live?',de:'Auf welchem Kontinent leben Kängurus?'},
+ {a:'SA',es:'¿En qué continente está la selva del Amazonas?',en:'On which continent is the Amazon rainforest?',de:'Auf welchem Kontinent ist der Amazonas-Regenwald?'},
+ {a:'AS',es:'¿En qué continente viven los pandas?',en:'On which continent do pandas live?',de:'Auf welchem Kontinent leben Pandas?'},
+ {a:'AF',es:'¿En qué continente viven las cebras?',en:'On which continent do zebras live?',de:'Auf welchem Kontinent leben Zebras?'},
+ {a:'AF',es:'¿En qué continente están las pirámides de Egipto?',en:'On which continent are the pyramids of Egypt?',de:'Auf welchem Kontinent sind die Pyramiden von Ägypten?'},
+ {a:'AN',es:'¿Qué continente es el más frío, con hielo y pingüinos?',en:'Which continent is the coldest, with ice and penguins?',de:'Welcher Kontinent ist ganz kalt, mit Eis und Pinguinen?'},
+ {a:'AS',es:'¿Cuál es el continente más grande?',en:'Which is the biggest continent?',de:'Welcher ist der größte Kontinent?'},
+ {a:'EU',es:'¿En qué continente vivimos nosotros?',en:'Which continent do we live on?',de:'Auf welchem Kontinent wohnen wir?'},
+ {a:'NA',es:'¿En qué continente viven los bisontes?',en:'On which continent do bison live?',de:'Auf welchem Kontinent leben Bisons?'}
 ];
 
 /* ---------- projection + data ---------- */
@@ -84,6 +91,16 @@ function pointIn(c,x,y){
   return inside;
 }
 const countryAt=(x,y)=>{let hit=null;for(const c of COUNTRIES)if(pointIn(c,x,y)&&(!hit||c.area<hit.area))hit=c;return hit;};
+/* the five oceans as lon/lat boxes, matching oceanAt() below; drawn in their own colours in the ocean game */
+const OCEAN_BOX={pac:[[-180,85,180,-85]],atl:[[-100,66,40,10],[-80,10,20,0],[-68,0,20,-58]],ind:[[20,30,100,-58],[100,-10,147,-58]],arc:[[-180,85,180,66]],sou:[[-180,-58,180,-85]]};
+const OCEAN_COL={pac:'#2F7FD1',atl:'#22A7B8',ind:'#5C6FD6',arc:'#8FD0EE',sou:'#5FB2E2'};
+function drawOceans(now){const pulse=0.5+0.5*Math.sin(now/180);
+  for(const k of ['pac','atl','ind','arc','sou']){mx.fillStyle=GEO.hint===k?`rgba(255,212,0,${0.5+0.4*pulse})`:OCEAN_COL[k];
+    for(const [l0,a0,l1,a1] of OCEAN_BOX[k]){const y0=projY(a0),y1=projY(a1);mx.fillRect(l0,y0,l1-l0,y1-y0);}}
+  mx.strokeStyle='rgba(255,255,255,.75)';mx.lineWidth=1.6/CAM.k;mx.setLineDash([6/CAM.k,5/CAM.k]);mx.beginPath();
+  const L=(l0,a0,l1,a1)=>{mx.moveTo(l0,projY(a0));mx.lineTo(l1,projY(a1));};
+  L(-180,66,180,66);L(-180,-58,180,-58);L(-100,66,-100,10);L(40,66,40,30);L(20,30,20,-58);L(100,30,100,-10);L(147,-10,147,-58);L(-68,0,-68,-58);
+  mx.stroke();mx.setLineDash([]);}
 function oceanAt(lon,lat){
   if(lat>66)return 'arc';if(lat<-58)return 'sou';
   if(lon>=20&&lon<=100&&lat<=30)return 'ind';
@@ -133,6 +150,7 @@ function drawMap(now){
   g.setTransform(dpr,0,0,dpr,0,0);
   const sea=g.createLinearGradient(0,0,0,MH);sea.addColorStop(0,'#2C86D9');sea.addColorStop(1,'#165FAE');g.fillStyle=sea;g.fillRect(0,0,MW,MH);
   g.save();g.setTransform(dpr*CAM.k,0,0,dpr*CAM.k,-CAM.x*CAM.k*dpr,-CAM.y*CAM.k*dpr);
+  if(GEO.mode==='oceans')drawOceans(now);
   const vx0=CAM.x,vy0=CAM.y,vx1=CAM.x+MW/CAM.k,vy1=CAM.y+MH/CAM.k,zoomed=CAM.k>kWorld()*1.7;
   const pulse=0.5+0.5*Math.sin(now/180);
   for(const c of COUNTRIES){
@@ -140,6 +158,7 @@ function drawMap(now){
     const base=contOf(c.cont).col;
     let fill=zoomed?shadeCol(base,c.shade):base;
     if(GEO.selCont===c.cont&&!zoomed)fill=shadeCol(base,-0.6);
+    if(GEO.hint&&GEO.mode==='continents'&&GEO.hint===c.cont)fill=`rgba(255,212,0,${0.55+0.45*pulse})`;
     if(GEO.glow===c.a2)fill=`rgba(255,212,0,${0.55+0.45*pulse})`;
     if(GEO.sel===c.a2)fill='#FFD400';
     if(GEO.flash&&GEO.flash.a2===c.a2&&now<GEO.flash.until)fill=GEO.flash.ok?'#2ED17A':'#FF6B5E';
@@ -171,7 +190,8 @@ function drawMap(now){
       label(name,x,y+fs*0.45,ts,c.a2===GEO.sel?'#FFD400':'#fff');
     }
   }
-  if(camAnim||GEO.glow||(GEO.flash&&now<GEO.flash.until))redraw();
+  if(GEO.mode==='oceans'&&!asking)OCEANS.forEach(o=>o.lab.forEach(([lo,la])=>{const [x,y]=S(lo,projY(la));label(o[lang][1],x,y,Math.max(11,Math.min(16,MW/28)),'#FFFFFF',true);}));
+  if(camAnim||GEO.glow||GEO.hint||(GEO.flash&&now<GEO.flash.until))redraw();
 }
 function shadeCol(hex,f){const n=parseInt(hex.slice(1),16);let r=n>>16&255,g=n>>8&255,b=n&255;
   if(f<0){f=-f;r*=1-f*0.35;g*=1-f*0.35;b*=1-f*0.35;}else{const m=0.82+f*0.3;r=Math.min(255,r*m+20*f);g=Math.min(255,g*m+20*f);b=Math.min(255,b*m+20*f);}
@@ -223,6 +243,7 @@ function geoTap(sx,sy){
 }
 function geoInfo(o){
   const N=$('geoName'),T=$('geoText');
+  if(!o&&GEO.mode==='oceans'){N.textContent='🌊';T.textContent={es:'Cada océano tiene su color. Toca el agua.',en:'Each ocean has its own colour. Tap the water.',de:'Jedes Meer hat seine eigene Farbe. Tippe aufs Wasser.'}[lang];return;}
   if(!o){N.textContent='🌍';T.textContent={es:'Toca un continente. Pellizca con dos dedos para el zoom.',en:'Tap a continent. Pinch with two fingers to zoom.',de:'Tippe auf einen Kontinent. Mit zwei Fingern zoomen.'}[lang];return;}
   if(o.cont){N.textContent=o.cont[lang][0];T.textContent=o.cont[lang][1];return;}
   if(o.ocean){N.textContent='🌊 '+o.ocean[lang][1];T.textContent=capFirst(o.ocean[lang][0]);return;}
@@ -247,41 +268,50 @@ function setGeoMode(m){
 }
 function geoQSet(q){GEO.q=q;$('geoQ').textContent=q;$('geoQ').classList.add('on');say(q);}
 function countryPool(L){
-  const list=L<=1?FAMOUS1:L===2?FAMOUS2:COUNTRIES.filter(c=>c.area>4&&c.cont!=='AN').map(c=>c.a2);
-  return list.filter(a=>C_BY[a]);
+  let list=TIERS.slice(0,Math.min(3,L)).flat();
+  if(L===4)list=list.concat(COUNTRIES.filter(c=>c.area>20&&c.cont!=='AN').map(c=>c.a2));
+  if(L>=5)list=list.concat(COUNTRIES.filter(c=>c.area>4&&c.cont!=='AN').map(c=>c.a2));
+  return [...new Set(list)].filter(a=>C_BY[a]);
 }
+/* mostly ask the newest tier, sometimes an easier one */
+function pickCountry(L,avoid){const all=countryPool(L).filter(a=>a!==avoid),fresh=L>1?all.filter(a=>!countryPool(L-1).includes(a)):all;
+  return Math.random()<0.6&&fresh.length?pick(fresh):pick(all);}
+const GEO_KEY={continents:'geoC',countries:'geoK',flags:'geoF',oceans:'geoO'};
 function geoAsk(){
-  const L=level('geo',3);GEO.miss=0;GEO.sel=null;GEO.glow=null;$('geoLevel').textContent='🎯 '+L;
+  const key=GEO_KEY[GEO.mode]||'geoK',L=level(key,SKILL_MAX[key]);GEO.miss=0;GEO.sel=null;GEO.glow=null;GEO.hint=null;$('geoLevel').textContent='🎯 '+L;
   const W=(n,de)=>lang==='es'?`¿Dónde está ${n}?`:lang==='de'?`Wo ist ${n}?`:`Where is ${n}?`;
   if(GEO.mode==='continents'){
-    if(L>=2&&Math.random()<0.5){const q=pick(GEO_Q);GEO.target=q.a;flyTo(worldView());geoInfo(null);geoQSet(q[lang]);return;}
+    if(L>=2&&Math.random()<0.5){const q=pick(GEO_Q.filter(q=>q.a!==GEO.target));GEO.target=q.a;flyTo(worldView());geoInfo(null);geoQSet(q[lang]);return;}
     const ct=pick(CONTINENTS.filter(c=>c.k!==GEO.target));GEO.target=ct.k;flyTo(worldView());geoInfo(null);geoQSet(W(ct[lang][0]));return;
   }
   if(GEO.mode==='oceans'){const o=pick(OCEANS.filter(o=>o.k!==GEO.target));GEO.target=o.k;flyTo(worldView());geoInfo(null);geoQSet(W(o[lang][0]));return;}
-  const pool=countryPool(L).filter(a=>a!==GEO.target),c=C_BY[pick(pool)];GEO.target=c.a2;
+  const c=C_BY[pickCountry(L,GEO.target)];GEO.target=c.a2;
   const ct=contOf(c.cont);flyTo(viewLL(...ct.view));
   if(GEO.mode==='countries'){geoInfo(null);$('geoName').innerHTML=L===1&&FLAGS_OK?`<span class="geoFlag">${flagOf(c.a2)}</span>`:'📍';
     $('geoText').textContent=ct[lang][0].replace(/^(la|die|the)\s+/i,'');const n=cNP(c);
     geoQSet(n.pl?(lang==='es'?`¿Dónde están ${n.np}?`:lang==='de'?`Wo sind ${n.np}?`:`Where are ${n.np}?`):W(n.np));return;}
   /* flags: the country glows on the map; pick its flag */
   GEO.glow=c.a2;redraw();geoInfo({country:c});$('geoName').innerHTML=cName(c);
-  const n=L===1?3:4,same=L===3;
-  const others=shuffle(countryPool(Math.max(2,L)).filter(a=>a!==c.a2&&(!same||C_BY[a].cont===c.cont)));
+  const n=L<=2?3:4,same=L>=4;
+  let others=shuffle(countryPool(L).filter(a=>a!==c.a2&&(!same||C_BY[a].cont===c.cont)));if(others.length<n-1)others=shuffle(countryPool(L).filter(a=>a!==c.a2));
   const opts=shuffle([c.a2,...others.slice(0,n-1)]);
   const box=$('geoFlags');box.innerHTML='';box.classList.add('on');
-  opts.forEach(a=>{const b=document.createElement('button');b.className='flagBtn';b.textContent=FLAGS_OK?flagOf(a):a;b.onclick=()=>answerFlag(a,b);box.appendChild(b);});
+  opts.forEach(a=>{const b=document.createElement('button');b.className='flagBtn';b.dataset.a=a;b.textContent=FLAGS_OK?flagOf(a):a;b.onclick=()=>answerFlag(a,b);box.appendChild(b);});
   const fn=cNP(c);
   geoQSet(lang==='es'?deDel(`¿Cuál es la bandera de ${fn.np}?`):lang==='de'?`Welche Flagge ${fn.pl?'haben':'hat'} ${fn.np}?`:`Which flag belongs to ${fn.np}?`);
 }
 const isNow=(lg,pl)=>pl?{es:'Estos son ',en:'These are ',de:'Das sind '}[lg]:{es:'Esto es ',en:'This is ',de:'Das ist '}[lg];
-function geoRight(){bigWin();award(GEO.miss);levelFx($('geoLevel'),adapt('geo',3,GEO.miss===0));setTimeout(()=>{if(activeTab==='geo'&&GEO.mode!=='explore')geoAsk();},2600);}
-function geoWrong(what,pl){GEO.miss++;nope();if(what)say(isNow(lang,pl)+what+'. '+GEO.q);else if(GEO.miss>=2)say(GEO.q);}
+function geoRight(){const key=GEO_KEY[GEO.mode]||'geoK';GEO.hint=null;bigWin();award(GEO.miss);levelFx($('geoLevel'),adapt(key,SKILL_MAX[key],GEO.miss===0));setTimeout(()=>{if(activeTab==='geo'&&GEO.mode!=='explore')geoAsk();},2600);}
+function geoWrong(what,pl){GEO.miss++;nope();if(what)say(isNow(lang,pl)+what+'. '+GEO.q);else if(GEO.miss>=2)say(GEO.q);
+  if(GEO.miss>=2&&(GEO.mode==='continents'||GEO.mode==='oceans')){GEO.hint=GEO.target;redraw();}}
 function answerCountry(c){
   if(!c)return geoWrong(null);
   if(c.a2===GEO.target){GEO.sel=c.a2;GEO.flash={a2:c.a2,ok:true,until:performance.now()+900};geoInfo({country:c});say(cName(c)+'!');
     flyTo(viewOf(c.box[0],c.box[1],c.box[2],c.box[3],0.5));GEO.target=null;geoRight();}
   else{GEO.flash={a2:c.a2,ok:false,until:performance.now()+900};redraw();const n=cNP(c);geoWrong(n.np,n.pl);
-    if(GEO.miss>=3){GEO.glow=GEO.target;redraw();}}
+    const t=C_BY[GEO.target];
+    if(GEO.miss===1&&t){const w=t.box[2]-t.box[0],h=t.box[3]-t.box[1],p=Math.max(w,h)*2.5+12,cx=(t.box[0]+t.box[2])/2,cy=(t.box[1]+t.box[3])/2;flyTo(viewOf(cx-p,cy-p,cx+p,cy+p,1));}
+    if(GEO.miss>=2){GEO.glow=GEO.target;redraw();}}
 }
 function answerContinent(k){
   if(!k)return geoWrong(null);
@@ -299,7 +329,10 @@ function answerFlag(a,b){
   ac();if(!GEO.glow)return;
   if(a===GEO.glow){b.classList.add('right');GEO.sel=a;const c=C_BY[a];GEO.glow=null;say(cName(c)+'!');geoInfo({country:c});
     flyTo(viewOf(c.box[0],c.box[1],c.box[2],c.box[3],0.5));geoRight();}
-  else{b.classList.remove('wrong');void b.offsetWidth;b.classList.add('wrong');GEO.miss++;nope();
+  else{b.classList.remove('wrong');void b.offsetWidth;b.classList.add('wrong','gone');GEO.miss++;nope();
+    const bs=[...$('geoFlags').children];
+    if(GEO.miss===1){const other=bs.find(x=>x!==b&&!x.classList.contains('gone')&&x.dataset.a!==GEO.glow);if(other&&bs.filter(x=>!x.classList.contains('gone')).length>2)other.classList.add('gone');}
+    if(GEO.miss>=2){const r=bs.find(x=>x.dataset.a===GEO.glow);if(r)r.classList.add('hint');}
     say(deDel(isNow(lang)+({es:'la bandera de ',en:'the flag of ',de:'die Flagge von '}[lang])+cNP(C_BY[a]).np)+'. '+GEO.q);}
 }
 $('geoSay').onclick=()=>{ac();if(GEO.mode!=='explore'&&GEO.q)say(GEO.q);else{const t=$('geoName').textContent+'. '+$('geoText').textContent;say(t);}};

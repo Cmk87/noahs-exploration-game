@@ -41,8 +41,9 @@ function buildChips(){
    whole level per answer so it finds his level quickly. Levels are
    saved per mode and per language, so they survive a reload.
 ============================================================= */
-const SKILL_START={words:{es:4,en:2,de:2},ear:{es:2,en:1,de:1},act:{es:2,en:1,de:1},space:{es:1,en:1,de:1},geo:{es:1,en:1,de:1}};
-const SKILL_MAX={words:8,ear:6,act:6,space:4,geo:3};
+const SKILL_START={words:{es:4,en:2,de:2},ear:{es:2,en:1,de:1},act:{es:2,en:1,de:1},space:{es:1,en:1,de:1},geo:{es:1,en:1,de:1},
+  geoC:{es:1,en:1,de:1},geoK:{es:1,en:1,de:1},geoF:{es:1,en:1,de:1},geoO:{es:1,en:1,de:1}};
+const SKILL_MAX={words:8,ear:6,act:6,space:4,geo:3,geoC:2,geoK:5,geoF:5,geoO:2};
 let SKILL={};try{SKILL=JSON.parse(localStorage.getItem('sl_skill')||'{}');}catch(e){}
 function skillRec(mode,lg){const k=mode+'|'+(lg||lang);
   return SKILL[k]||(SKILL[k]={s:SKILL_START[mode][lg||lang],n:0,h:[]});}

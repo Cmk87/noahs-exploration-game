@@ -583,3 +583,6 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .advStop.later::after{content:"🔒";position:absolute;right:-6px;bottom:-6px;font-size:16px}
 .advStop.now::before{content:"";position:absolute;inset:-12px;border-radius:50%;border:4px dashed rgba(255,212,0,.9);animation:spin 6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* flag quiz hints: wrong flags fade away, the right one pulses after two misses */
+.flagBtn.gone{opacity:.25;pointer-events:none;transform:scale(.85)}
+.flagBtn.hint{box-shadow:0 0 0 5px var(--bolt),var(--lift);animation:pulse .5s ease-in-out infinite alternate}
