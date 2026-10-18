@@ -1031,11 +1031,16 @@ function placeBubble(){const el=$('cityBub');if(!BUB)return;if(T-BUB.t>3){el.cla
 ============================================================= */
 let FIND=null,findHist=[];
 function findNext(){
-  const vis=b=>b[2]>CAM.x&&b[0]<CAM.x+VW/CAM.k&&b[3]>CAM.y&&b[1]<CAM.y+VH/CAM.k;
-  let pool=Object.values(ENT).filter(e=>(e.find||(e.animal&&FOUND.has(e.id)))&&e.at&&!findHist.includes(e.id));
-  const here=pool.filter(e=>vis(e.at));if(here.length>=3)pool=here;else flyTo(homeView());   // ask about what is on screen
-  const e=pool[Math.random()*pool.length|0];findHist.push(e.id);if(findHist.length>6)findHist.shift();
+  if(!primed)primeAt();
+  const pool=Object.values(ENT).filter(e=>(e.find||(e.animal&&FOUND.has(e.id)))&&e.at&&!findHist.includes(e.id));
+  const e=pool[Math.random()*pool.length|0];findHist.push(e.id);if(findHist.length>8)findHist.shift();
+  /* the world is big: fly to the neighbourhood of the answer (not exactly onto it, so there is still something to find) */
+  const b=e.at,cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,R=Math.max(380,(b[2]-b[0])*0.8,(b[3]-b[1])*0.8),ox=(Math.random()-0.5)*R*0.6,oy=(Math.random()-0.5)*R*0.6;
+  flyTo(viewOf(cx+ox-R,cy+oy-R,cx+ox+R,cy+oy+R,1),1100);
   FIND={id:e.id,miss:0};showQ();say(W.where(e.n[li()]));}
+/* every place gets its find-box the first time "Wo ist …?" is used: draw the whole world once */
+let primed=false;
+function primeAt(){primed=true;const save={...CAM},anim=camAnim;camAnim=null;Object.assign(CAM,worldView());render(performance.now());Object.assign(CAM,save);camAnim=anim;}
 function showQ(){const q=$('cityQ');if(!FIND){q.classList.remove('on');return;}const e=ENT[FIND.id];
   q.innerHTML='';const s=document.createElement('span');s.textContent=W.where(e.n[li()])+' 🔊';const st=document.createElement('span');st.className='st';st.textContent='⭐ '+SAVE.stars;
   q.append(s,st);q.classList.add('on');}
@@ -1053,7 +1058,12 @@ function drawHint(){if(!FIND||FIND.miss<2||FIND.done)return;const b=ENT[FIND.id]
 /* =============================================================
    NIGHT, LANGUAGE
 ============================================================= */
-$('cNight').onclick=()=>{ac();nightOn=!nightOn;$('cNight').textContent=nightOn?'☀️':'🌙';$('cNight').classList.toggle('on',nightOn);
+const clockNight=()=>{const h=new Date().getHours();return h>=19||h<7;};
+let autoNight=clockNight();
+function setNightBtn(){$('cNight').textContent=nightOn?'☀️':'🌙';$('cNight').classList.toggle('on',nightOn);}
+nightOn=autoNight;NIGHT=nightOn?1:0;setNightBtn();
+setInterval(()=>{const n=clockNight();if(n!==autoNight){autoNight=n;nightOn=n;setNightBtn();}},30000);
+$('cNight').onclick=()=>{ac();nightOn=!nightOn;setNightBtn();
   say(nightOn?['Gute Nacht, Stadt!','Good night, town!','¡Buenas noches, ciudad!'][li()]:['Guten Morgen!','Good morning!','¡Buenos días!'][li()]);};
 /* called by the app when the language changes or the tab opens */
 function onLang(){if(FIND){showQ();say(W.where(ENT[FIND.id].n[li()]));}else if(BUB)bubble(BUB.e,BUB.b);}
