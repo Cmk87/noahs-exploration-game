@@ -30,7 +30,7 @@ ent('gingerbread','🍪',['das Lebkuchenhaus','the gingerbread house','la casita
 ent('snow','❄️',['der Schnee','the snow','la nieve'],['Der Schnee! Kalt und weiß.','The snow! Cold and white.','¡La nieve! Fría y blanca.'],{find:1});
 ent('spooky','🎃',['die Gruselecke','the spooky corner','el rincón del miedo'],['Die Gruselecke! Huuu, wie gruselig!','The spooky corner! Woooo, how spooky!','¡El rincón del miedo! ¡Uuuh, qué miedo!'],{find:1});
 ent('vampcastle','🏰',['das Vampirschloss','the vampire castle','el castillo del vampiro'],['Das Vampirschloss! Wer wohnt da wohl?','The vampire castle! Who lives there?','¡El castillo del vampiro! ¿Quién vivirá ahí?'],{find:1});
-ent('vampire','🧛',['der Vampir','the vampire','el vampiro'],['Der Vampir! Er sagt: Guten Abend! Hihi.','The vampire! He says: Good evening! Hee hee.','¡El vampiro! Dice: ¡Buenas noches! Jiji.'],{find:1});
+ent('vampire','🧛',['Graf Dracula','Count Dracula','el conde Drácula'],['Graf Dracula! Er sagt: Guten Abend! Und schwupp, wird er zur Fledermaus!','Count Dracula! He says: Good evening! And whoosh, he turns into a bat!','¡El conde Drácula! Dice: ¡Buenas noches! ¡Y zas, se convierte en murciélago!'],{find:1});
 ent('graveyard','🪦',['der Friedhof','the graveyard','el cementerio'],['Der Friedhof! Da kommen Gespenster heraus! Buuh!','The graveyard! Ghosts are coming out! Boo!','¡El cementerio! ¡Salen fantasmas! ¡Buu!'],{find:1});
 ent('ghost','👻',['das Gespenst','the ghost','el fantasma'],['Das Gespenst! Buuuh!','The ghost! Booooo!','¡El fantasma! ¡Buuuu!'],{find:1});
 ent('skeleton','💀',['das Skelett','the skeleton','el esqueleto'],['Das Skelett! Klapper, klapper!','The skeleton! Rattle, rattle!','¡El esqueleto! ¡Cloc, cloc!'],{find:1});
@@ -251,12 +251,28 @@ S(1176,[-1200,940,-880,1180],()=>{const T=TT(),t=fx('vampcastle'),x=-1170,y=1110
     rr(tx+12,base-th+18,12,18,[6,6,0,0],'#FFC94A');LIGHTS.push(tx+18,base-th+27,30,'#FFC94A');GLOW.push([tx+18,base-th+27,26]);});
   rr(x,base-72,w,72,0,'#555068');for(let k=0;k<w;k+=20)rr(x+k,base-82,12,12,1,'#555068');
   for(let k=0;k<4;k++){const wx=x+24+k*60;if(k===2)continue;rr(wx,base-56,14,20,[7,7,0,0],'#FFC94A');GLOW.push([wx+7,base-46,22]);LIGHTS.push(wx+7,base-46,26,'#FFC94A');}
-  const op=fx('vampire')<4?1:0;rr(x+w/2-20,base-46,40,46,[20,20,0,0],op?'#2B1830':'#6E4A33');
-  if(op){const vt=fx('vampire'),cf=Math.sin(vt*8)*0.3;g.save();g.translate(x+w/2,base);poly('#2B2233',-16-cf*10,0,0,-38,16+cf*10,0);poly('#C8302A',-10,0,0,-30,10,0);
-    circ(0,-38,7,'#E8E8F2');poly('#2B2233',-7,-41,0,-47,7,-41,0,-44);circ(-2.4,-39,1.2,'#C8302A');circ(2.4,-39,1.2,'#C8302A');ln('#2B2233',1,-3,-34,3,-34);poly('#FFFFFF',-2,-34,-1,-31,0,-34);poly('#FFFFFF',0,-34,1,-31,2,-34);g.restore();
-    hit('vampire',x+w/2-20,base-52,x+w/2+20,base,{small:1});}
-  else hit('vampire',x+w/2-20,base-46,x+w/2+20,base,{small:1});
+  rr(x+w/2-20,base-46,40,46,[20,20,0,0],'#2B1830');circ(x+w/2+12,base-22,2,'#C9A040');
   hit('vampcastle',x-12,base-260,x+w+12,base);});
+/* Count Dracula in front of his castle: tap him and he spreads his cape, turns into a bat, flies a loop and comes back */
+function dracula(x,y,spread,T){g.save();g.translate(x,y);const sw=Math.sin(T*1.6)*0.06;
+  g.fillStyle='#1E1A2A';g.beginPath();g.moveTo(-6,-40);g.lineTo(-14-spread*26,-34-spread*8);g.lineTo(-18-spread*22,0);g.lineTo(18+spread*22,0);g.lineTo(14+spread*26,-34-spread*8);g.lineTo(6,-40);g.closePath();g.fill();
+  g.fillStyle='#B8262E';g.beginPath();g.moveTo(-5,-38);g.lineTo(-11-spread*22,-31-spread*6);g.lineTo(-14-spread*18,-2);g.lineTo(14+spread*18,-2);g.lineTo(11+spread*22,-31-spread*6);g.lineTo(5,-38);g.closePath();g.fill();
+  rr(-6,-12,4.6,12,1,'#1E1A2A');rr(1.4,-12,4.6,12,1,'#1E1A2A');rr(-7,-36,14,26,4,'#2B2233');poly('#FFFFFF',-3,-36,3,-36,0,-26);circ(0,-26,2.2,'#D9302A');
+  poly('#1E1A2A',-12,-36,-7,-40,-6,-30);poly('#1E1A2A',12,-36,7,-40,6,-30);
+  g.save();g.rotate(sw);ell(0,-46,7,8,'#E6E6F0');poly('#E6E6F0',-7,-47,-10,-51,-6,-44);poly('#E6E6F0',7,-47,10,-51,6,-44);
+  g.fillStyle='#1E1A2A';g.beginPath();g.moveTo(-7.5,-47);g.quadraticCurveTo(-7,-56,0,-55);g.quadraticCurveTo(7,-56,7.5,-47);g.lineTo(3,-50);g.lineTo(0,-46);g.lineTo(-3,-50);g.closePath();g.fill();
+  circ(-2.6,-46,1.2,'#2B2233');circ(2.6,-46,1.2,'#2B2233');ln('#2B2233',1,-4,-49,-1.4,-48.4);ln('#2B2233',1,4,-49,1.4,-48.4);
+  g.strokeStyle='#2B2233';g.lineWidth=1;g.beginPath();g.arc(0,-42.5,2.6,0.2,Math.PI-0.2);g.stroke();poly('#FFFFFF',-1.8,-40.4,-1,-38.6,-0.4,-40.4);poly('#FFFFFF',0.4,-40.4,1,-38.6,1.8,-40.4);g.restore();
+  g.restore();}
+S(1206,[-1020,1130,-960,1210],()=>{const T=TT(),t=fx('vampire'),x=-990,y=1206;
+  const spread=t<0.7?sm(t/0.7):t<3.6?1:t<4.2?1-sm((t-3.6)/0.6):0,gone=t>=0.9&&t<3.6;
+  ell(x,y+1,14,4,'rgba(0,0,0,.25)');
+  if(!gone)dracula(x,y,spread,T);
+  else{const u=(t-0.9)/2.7,a=u*TAU,bx=x+Math.sin(a)*90,by=y-60-Math.sin(u*Math.PI)*90+Math.cos(a)*20,fl=Math.sin(T*18)*5;
+    g.save();g.translate(bx,by);g.scale(1.6,1.6);poly('#1E1A2A',0,0,-12,-4-fl,-8,2,-14,3-fl*0.5,-4,4);poly('#1E1A2A',0,0,12,-4-fl,8,2,14,3-fl*0.5,4,4);ell(0,1,3.6,4.4,'#1E1A2A');
+    circ(-1.2,0,0.8,'#FF3B3B');circ(1.2,0,0.8,'#FF3B3B');g.restore();}
+  if((t>0.7&&t<1)||(t>3.4&&t<3.7))for(let k=0;k<3;k++)puff(x+rnd(-14,14),y-30+rnd(-14,14),{c:'#8E6AC8',r:6,vy:-10,max:0.9});
+  hit('vampire',x-20,y-58,x+20,y+2,{small:1});});
 /* bats circling the castle */
 K.TOP.push(()=>{const T=TT(),t=fx('bat');if(!inV(-1300,700,-800,1200))return;
   for(let k=0;k<7;k++){const a=T*(0.6+k*0.07)+k,r=t<3?160+k*12:90+k*10,x=-1040+Math.cos(a)*r,y=960+Math.sin(a*1.3)*50-k*6,fl=Math.sin(T*16+k)*5;
