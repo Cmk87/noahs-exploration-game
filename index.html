@@ -131,6 +131,9 @@
   #earHead{display:flex;justify-content:center;align-items:center;gap:10px;width:100%;margin:10px 0 14px}
   #earHead button{border:3px solid var(--ink);border-radius:10px;background:#fff;font-size:26px;padding:8px 16px;
     box-shadow:4px 4px 0 var(--ink);cursor:pointer;line-height:1}
+  #earLetter{text-transform:none;display:none;font-size:min(18vw,11dvh,90px);line-height:1;color:var(--ink);background:var(--bolt);border:5px solid var(--ink);
+    border-radius:16px;box-shadow:6px 6px 0 var(--ink);padding:6px 28px 10px;margin:-4px 0 14px;animation:slam .5s cubic-bezier(.2,1.7,.4,1)}
+  #earLetter.on{display:block}
   #earAgain{background:var(--beam)!important;font-size:32px!important;padding:10px 24px!important}
   #earAgain.playing{animation:pulse .6s ease-in-out infinite alternate}
   #earHead button:active{transform:translate(4px,4px);box-shadow:none}
@@ -404,6 +407,7 @@
 <div class="view" id="v-ear">
   <div id="earHead"><div id="earLevelPill" class="display">🎧 1</div>
     <button id="earAgain">🔊</button><button id="earSlow">🐢</button><button id="earSkip">➜</button></div>
+  <div id="earLetter" class="display"></div>
   <div id="earGrid"></div>
 </div>
 
@@ -1755,7 +1759,39 @@ function showWin(emoji,label,speak,html){
 /* listening levels: number of pictures, and how alike they are —
    different category, same category, or words that SOUND alike */
 const ELVL=[null,{n:3,m:'far'},{n:4,m:'far'},{n:4,m:'same'},{n:6,m:'same'},{n:4,m:'sound'},{n:6,m:'sound'}];
-let earTarget=null,earMiss=0,earRecent=[],earDone=false;
+let earTarget=null,earMiss=0,earRecent=[],earDone=false,earFirst=null;
+/* ---- first sounds: "Welches Wort fängt mit M an?" ----
+   Only consonants whose letter reliably IS the sound in that language, and
+   no words where it isn't (Sch-/Sp-/St- in German, Sh-/Th-/soft G in English,
+   soft G in Spanish) — otherwise the game would teach the wrong link. */
+const FIRST_OK='mbptdlnrfskg';
+function firstLetter(it,lg){
+  const w=it[lg][1].toLowerCase(),c=w[0];
+  if(!FIRST_OK.includes(c))return '';
+  if(lg==='de'&&/^(sch|sp|st|pf)/.test(w))return '';
+  if(lg==='en'&&(/^(sh|th|ph|kn|gn|gh)/.test(w)||/^g[eiy]/.test(w)))return '';
+  if(lg==='es'&&/^g[eiéí]/.test(w))return '';
+  return c;
+}
+function firstQ(){const L=earFirst.toUpperCase();
+  return lang==='de'?`Welches Wort fängt mit ${L} an?`:lang==='en'?`Which word starts with ${L}?`:`¿Qué palabra empieza por ${letterSpokenAny(earFirst)}?`;}
+function letterSpokenAny(c){const ES={b:'be',d:'de',f:'efe',g:'ge',k:'ka',l:'ele',m:'eme',n:'ene',p:'pe',r:'erre',s:'ese',t:'te'};return lang==='es'?ES[c]:c.toUpperCase();}
+function firstRound(L){
+  const pool=VOCAB.filter(v=>v.c!=='form'&&firstLetter(v,lang));
+  const t=pick(pool),c=firstLetter(t,lang),n=L>=4?4:3;
+  const others=shuffle(pool.filter(v=>firstLetter(v,lang)!==c&&v.e!==t.e));
+  const used=new Set([c]),opts=[t];
+  for(const o of others){const oc=firstLetter(o,lang);if(!used.has(oc)){used.add(oc);opts.push(o);}if(opts.length>=n)break;}
+  if(opts.length<n)return false;
+  earTarget=t;earFirst=c;
+  $('earLetter').textContent=c.toUpperCase()+c;$('earLetter').classList.add('on');
+  const g=document.getElementById('earGrid');g.innerHTML='';g.style.gridTemplateColumns=n===4?'repeat(2,1fr)':'repeat(3,1fr)';
+  shuffle(opts).forEach((o,i)=>{const b=document.createElement('div');b.className='card';b.textContent=o.e;b.style.animationDelay=(i*0.05)+'s';
+    b.onclick=()=>earPick(o,b);g.appendChild(b);});
+  document.getElementById('earLevelPill').textContent='🎧 '+L;
+  setTimeout(()=>sayAt(firstQ(),0.72),400);
+  return true;
+}
 
 /* edit distance on the written word — a rough but effective stand-in
    for phonetic similarity (Hund/Hand, cat/hat, gato/pato). */
@@ -1781,11 +1817,12 @@ function earSay(rate){
   const sp=document.getElementById('earAgain');
   sp.classList.add('playing');
   setTimeout(()=>sp.classList.remove('playing'),1600);
-  sayAt(earTarget[lang][1], rate||0.72);
+  sayAt(earFirst?firstQ():earTarget[lang][1], rate||0.72);
 }
 function newEarRound(){
-  earMiss=0;earDone=false;
+  earMiss=0;earDone=false;earFirst=null;$('earLetter').classList.remove('on');
   const L=level('ear',6),cfg=ELVL[L];
+  if(L>=3&&Math.random()<0.25&&firstRound(L))return;
   let pool=VOCAB.filter(v=>!earRecent.includes(v.e));
   if(pool.length<10){earRecent=[];pool=VOCAB.slice();}
   earTarget=srsPick(pool);
@@ -1812,9 +1849,11 @@ function newEarRound(){
 function earPick(o,el){
   ac();if(earDone)return;
   if(o.e===earTarget.e){
-    earDone=true;el.classList.add('right');bigWin();award(earMiss);srsRecord(earTarget,earMiss===0);
+    earDone=true;el.classList.add('right');bigWin();award(earMiss);if(!earFirst)srsRecord(earTarget,earMiss===0);
     levelFx(document.getElementById('earLevelPill'),adapt('ear',6,earMiss===0));
-    showWin(earTarget.e,nounHTML(earTarget),null,true);
+    if(earFirst){const w=earTarget[lang][1],Lt=earFirst.toUpperCase(),ph=lang==='es'?`${letterSpokenAny(earFirst)} de ${w}`:lang==='de'?`${Lt} wie ${w}`:`${Lt} for ${w}`;
+      showWin(earTarget.e,`<b>${w[0]}</b>${w.slice(1)}`,ph,true);}
+    else showWin(earTarget.e,nounHTML(earTarget),null,true);
     setTimeout(newEarRound,2400);
   }else{
     earMiss++;noteMiss(earTarget);nope();
