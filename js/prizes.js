@@ -915,8 +915,8 @@ function balLoop(now){
   bx.fillStyle='#6CD45B';bx.beginPath();bx.ellipse(W*0.25,H*1.02,W*0.5,H*0.1,0,0,7);bx.fill();
   bx.fillStyle='#4DBA45';bx.beginPath();bx.ellipse(W*0.8,H*1.04,W*0.55,H*0.12,0,0,7);bx.fill();
   if(!BAL.done&&now>BAL.next&&BAL.b.length<4){
-    BAL.next=now+rnd(1400,2100);const r=W*rnd(0.085,0.11);   // slow enough that each word can be heard
-    BAL.b.push({x:rnd(r,W-r),y:H+r*1.6,r,vy:H*rnd(0.065,0.105),ph:rnd(0,6),c:pick(BCOL),
+    BAL.next=now+rnd(1050,1600);const r=W*rnd(0.085,0.11);   // slow enough that each word can be heard
+    BAL.b.push({x:rnd(r,W-r),y:H+r*1.6,r,vy:H*rnd(0.085,0.14),ph:rnd(0,6),c:pick(BCOL),
       it:pick(VOCAB.filter(v=>v.c!=='form')),gold:Math.random()<0.08});
   }
   BAL.b.forEach(b=>{b.y-=b.vy*dt*(BAL.done?2.5:1);b.ph+=dt*2;});
