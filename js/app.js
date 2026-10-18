@@ -46,7 +46,7 @@ function showTab(id){
   if(id==='words'){buildChips();if(!target)newRound();else sayPrompt();}
   if(id==='ear'){newEarRound();}
   if(id==='act'){showAct();}
-  if(id==='space'){fitSky();selectPlanet(selected);}
+  if(id==='space'){fitSky();spaceQuiz=false;selectPlanet(selected);}
   if(id==='geo'){showGeo();}
   if(id==='city'){CITY.show();}
   if(id==='stickers'){showStickers();}
@@ -66,7 +66,7 @@ function setLang(code,btn){
   else if(activeTab==='words'){buildChips();newRound();}
   else if(activeTab==='ear')newEarRound();
   else if(activeTab==='act')showAct();
-  else if(activeTab==='space')selectPlanet(selected);
+  else if(activeTab==='space'){spaceQuiz=false;selectPlanet(selected);}
   else if(activeTab==='geo'){if(GEO.mode!=='explore')setGeoMode(GEO.mode);else showGeo();}
   else if(activeTab==='city')CITY.onLang();
   else if(activeTab==='stickers')showStickers();
@@ -391,6 +391,7 @@ function advTick(tab){
   if(st.got<ADV_GOAL[tab])return;
   ADV.idx++;if(ADV.idx>=ADV.plan.length)ADV.done=true;advSave();
   setTimeout(()=>{
+    if(activeTab!==tab){if(ADV.done&&!ADV.bonus){ADV.bonus=true;advSave();addPowerQuiet(10);}return;}   // he has moved on: no yanking him back
     rainEmoji(['⭐','🗺️','✨'],16);[784,988,1175,1568].forEach((f,i)=>beep(f,i*0.09,0.2,'triangle',0.16));
     if(ADV.done){showTab('adv');setTimeout(advFinish,600);}
     else{say({es:'¡Parada conseguida! ¡Sigamos!',en:'Stop done! On we go!',de:'Station geschafft! Weiter geht\'s!'}[lang]);showTab('adv');}

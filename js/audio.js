@@ -11,26 +11,26 @@ if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loa
    Siri voices; Google/Microsoft neural or online voices. Never Apple's
    novelty voices (Albert, Bubbles, Zarvox…) or the eSpeak/Pico robots. */
 const NOVELTY=/albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|junior|ralph|fred|kathy|deranged|hysterical|pipe organ|grandpa|grandma|rocko|shelley|reed|sandy|eddy|flo/;
-function voiceScore(v){
+function voiceScore(v,L){
   const n=((v.name||'')+' '+(v.voiceURI||'')).toLowerCase(),l=(v.lang||'').replace('_','-').toLowerCase();let s=0;
   if(/premium/.test(n))s+=14; if(/enhanced|erweitert|mejorad/.test(n))s+=10; if(/siri/.test(n))s+=9;
   if(/neural|natural|wavenet|online/.test(n))s+=8; if(/google/.test(n))s+=5; if(!v.localService)s+=4;
-  if(l===LANGTAG[lang].toLowerCase())s+=3; if(/compact|espeak|pico/.test(n))s-=10; if(NOVELTY.test(n))s-=30;
+  if(l===LANGTAG[L||lang].toLowerCase())s+=3; if(/compact|espeak|pico/.test(n))s-=10; if(NOVELTY.test(n))s-=30;
   return s;
 }
-function langVoices(){
+function langVoices(L){L=L||lang;
   if(!voices.length) loadVoices();
-  return voices.filter(v=>v.lang&&v.lang.replace('_','-').toLowerCase().startsWith(lang)).sort((a,b)=>voiceScore(b)-voiceScore(a));
+  return voices.filter(v=>v.lang&&v.lang.replace('_','-').toLowerCase().startsWith(L)).sort((a,b)=>voiceScore(b,L)-voiceScore(a,L));
 }
-function pickVoice(){
-  const list=langVoices();let want='';try{want=localStorage.getItem('sl_voice_'+lang)||'';}catch(e){}
+function pickVoice(L){L=L||lang;
+  const list=langVoices(L);let want='';try{want=localStorage.getItem('sl_voice_'+L)||'';}catch(e){}
   return (want&&list.find(v=>v.voiceURI===want))||list[0]||null;
 }
-function utter(text,isRetry,rate){
+function utter(text,isRetry,rate,L){
   const synth=speechSynthesis;
   const u=new SpeechSynthesisUtterance(text);
-  u.lang=LANGTAG[lang]; u.rate=rate||0.72; u.pitch=1.0; u.volume=1;
-  const v=pickVoice(); if(v) u.voice=v;
+  u.lang=LANGTAG[L||lang]; u.rate=rate||0.72; u.pitch=1.0; u.volume=1;
+  const v=pickVoice(L); if(v) u.voice=v;
   u.onstart=()=>{speechReady=true;hideWarn();clearInterval(keepAlive);
     keepAlive=setInterval(()=>{try{synth.resume();}catch(e){}},4000);};
   u.onend=()=>clearInterval(keepAlive);
@@ -56,6 +56,11 @@ function sayAt(text,rate,force){
   }catch(e){showWarn();}
 }
 function say(text){ sayAt(text,0.72); }
+/* "Hund… perro": the word in the current language, then the Spanish word read by a Spanish voice */
+function sayBridge(own,es,rate){
+  sayAt(own,rate||0.72);
+  setTimeout(()=>{if(!rewardOpen)try{utter(es,true,rate||0.72,'es');}catch(e){}},IS_ANDROID?260:140);
+}
 function showWarn(msg){
   const w=document.getElementById('voiceWarn');
   w.textContent=msg||{

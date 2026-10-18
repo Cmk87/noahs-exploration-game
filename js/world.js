@@ -70,13 +70,13 @@ const COUNTRIES=WORLD_COUNTRIES.map(([a2,cont,enc])=>{
   let h=0;for(const ch of a2)h=h*31+ch.charCodeAt(0);
   return {a2,cont,rings,path,box:[bx0,by0,bx1,by1],lab:best,area:bestA/2,shade:(h%7)/7};
 });
-const C_BY=Object.fromEntries(COUNTRIES.map(c=>[c.a2,c]));
+const C_BY={};for(const c of COUNTRIES)if(!C_BY[c.a2]||c.area>C_BY[c.a2].area)C_BY[c.a2]=c;   // Australia also has a tiny reef entry
 const cName=c=>(WORLD_NAMES[lang]&&WORLD_NAMES[lang][c.a2])||c.a2;
 /* countries that take an article (and sometimes a plural verb) in a sentence */
 const C_ART={
  de:{NL:['die',1],US:['die',1],AE:['die',1],PH:['die',1],BS:['die',1],SB:['die',1],CH:['die'],TR:['die'],UA:['die'],MN:['die'],SK:['die'],
      DO:['die'],CG:['die'],GM:['die'],IR:['der'],IQ:['der'],SD:['der'],SS:['der'],TD:['der'],LB:['der'],YE:['der'],CD:['der'],VA:['der'],NE:['der']},
- en:{NL:['the',1],US:['the'],GB:['the'],PH:['the',1],BS:['the',1],SB:['the',1],AE:['the'],DO:['the'],VA:['the'],GM:['the'],CD:['the'],CG:['the']},
+ en:{US:['the'],GB:['the'],PH:['the',1],BS:['the',1],SB:['the',1],AE:['the'],DO:['the'],VA:['the'],CD:['the'],CG:['the']},
  es:{NL:['los',1],GB:['el'],AE:['los',1]}};
 function cNP(c){const a=(C_ART[lang]||{})[c.a2];return {np:(a?a[0]+' ':'')+cName(c),pl:!!(a&&a[1])};}
 const deDel=t=>t.replace(/\bde el\b/g,'del');
@@ -92,22 +92,20 @@ function pointIn(c,x,y){
 }
 const countryAt=(x,y)=>{let hit=null;for(const c of COUNTRIES)if(pointIn(c,x,y)&&(!hit||c.area<hit.area))hit=c;return hit;};
 /* the five oceans as lon/lat boxes, matching oceanAt() below; drawn in their own colours in the ocean game */
-const OCEAN_BOX={pac:[[-180,85,180,-85]],atl:[[-100,66,40,10],[-80,10,20,0],[-68,0,20,-58]],ind:[[20,30,100,-58],[100,-10,147,-58]],arc:[[-180,85,180,66]],sou:[[-180,-58,180,-85]]};
+const OCEAN_BOX={pac:[[-180,85,180,-85]],atl:[[-100,66,40,20],[-88,20,40,15],[-83.5,15,40,10],[-77,10,20,8.5],[-62,8.5,20,0],[-68,0,20,-58]],ind:[[20,30,100,-58],[100,-10,147,-58]],arc:[[-180,85,180,66]],sou:[[-180,-58,180,-85]]};
 const OCEAN_COL={pac:'#2F7FD1',atl:'#22A7B8',ind:'#5C6FD6',arc:'#8FD0EE',sou:'#5FB2E2'};
 function drawOceans(now){const pulse=0.5+0.5*Math.sin(now/180);
   for(const k of ['pac','atl','ind','arc','sou']){mx.fillStyle=GEO.hint===k?`rgba(255,212,0,${0.5+0.4*pulse})`:OCEAN_COL[k];
     for(const [l0,a0,l1,a1] of OCEAN_BOX[k]){const y0=projY(a0),y1=projY(a1);mx.fillRect(l0,y0,l1-l0,y1-y0);}}
   mx.strokeStyle='rgba(255,255,255,.75)';mx.lineWidth=1.6/CAM.k;mx.setLineDash([6/CAM.k,5/CAM.k]);mx.beginPath();
   const L=(l0,a0,l1,a1)=>{mx.moveTo(l0,projY(a0));mx.lineTo(l1,projY(a1));};
-  L(-180,66,180,66);L(-180,-58,180,-58);L(-100,66,-100,10);L(40,66,40,30);L(20,30,20,-58);L(100,30,100,-10);L(147,-10,147,-58);L(-68,0,-68,-58);
+  L(-180,66,180,66);L(-180,-58,180,-58);[[-100,66],[-100,20],[-88,20],[-88,15],[-83.5,15],[-83.5,10],[-77,10],[-77,8.5],[-62,8.5],[-62,0]].reduce((a,b)=>(L(a[0],a[1],b[0],b[1]),b));L(40,66,40,30);L(20,30,20,-58);L(100,30,100,-10);L(147,-10,147,-58);L(-68,0,-68,-58);
   mx.stroke();mx.setLineDash([]);}
 function oceanAt(lon,lat){
   if(lat>66)return 'arc';if(lat<-58)return 'sou';
   if(lon>=20&&lon<=100&&lat<=30)return 'ind';
   if(lon>100&&lon<=147&&lat<-10)return 'ind';
-  if(lat>=10&&lon>=-100&&lon<=40)return 'atl';
-  if(lat>=0&&lat<10&&lon>=-80&&lon<=20)return 'atl';
-  if(lat<0&&lon>=-68&&lon<=20)return 'atl';
+  if(OCEAN_BOX.atl.some(([l0,a0,l1,a1])=>lon>=l0&&lon<=l1&&lat<=a0&&lat>=a1))return 'atl';
   return 'pac';
 }
 
@@ -234,7 +232,7 @@ function geoTap(sx,sy){
   const [wx,wy]=toWorld(sx,sy),lon=wx,lat=unprojY(wy),c=countryAt(wx,wy),zoomed=CAM.k>kWorld()*1.7;
   const m=GEO.mode;
   if(m==='countries'&&GEO.target)return answerCountry(c);
-  if(m==='continents'&&GEO.target)return answerContinent(c&&c.cont);
+  if(m==='continents'&&GEO.target)return answerContinent(c&&(c.a2==='RU'&&GEO.target==='EU'&&lon<60?'EU':c.cont));   // Russia west of the Urals is Europe
   if(m==='oceans'&&GEO.target)return answerOcean(c?null:oceanAt(lon,lat),c);
   if(m==='flags')return;
   if(!c){const o=OCEANS.find(o=>o.k===oceanAt(lon,lat));geoInfo({ocean:o});say(o[lang][0]);return;}
@@ -260,7 +258,7 @@ function buildGeoModes(){
     b.onclick=()=>{ac();setGeoMode(m);};box.appendChild(b);});
 }
 function setGeoMode(m){
-  GEO.mode=m;GEO.target=null;GEO.sel=null;GEO.glow=null;GEO.selCont=null;buildGeoModes();$('geoFlags').innerHTML='';$('geoFlags').classList.remove('on');
+  clearTimeout(geoT);GEO.hint=null;GEO.mode=m;GEO.target=null;GEO.sel=null;GEO.glow=null;GEO.selCont=null;buildGeoModes();$('geoFlags').innerHTML='';$('geoFlags').classList.remove('on');
   $('geoLevel').style.visibility=m==='explore'?'hidden':'visible';
   if(m==='explore'){$('geoQ').textContent='';$('geoQ').classList.remove('on');flyTo(worldView());geoInfo(null);
     say({es:'¡Explora el mundo!',en:'Explore the world!',de:'Entdecke die Welt!'}[lang]);return;}
@@ -301,7 +299,9 @@ function geoAsk(){
   geoQSet(lang==='es'?deDel(`¿Cuál es la bandera de ${fn.np}?`):lang==='de'?`Welche Flagge ${fn.pl?'haben':'hat'} ${fn.np}?`:`Which flag belongs to ${fn.np}?`);
 }
 const isNow=(lg,pl)=>pl?{es:'Estos son ',en:'These are ',de:'Das sind '}[lg]:{es:'Esto es ',en:'This is ',de:'Das ist '}[lg];
-function geoRight(){const key=GEO_KEY[GEO.mode]||'geoK';GEO.hint=null;bigWin();award(GEO.miss);levelFx($('geoLevel'),adapt(key,SKILL_MAX[key],GEO.miss===0));setTimeout(()=>{if(activeTab==='geo'&&GEO.mode!=='explore')geoAsk();},2600);}
+let geoT=null;
+function geoRight(){const key=GEO_KEY[GEO.mode]||'geoK',m=GEO.mode;GEO.hint=null;bigWin();award(GEO.miss);levelFx($('geoLevel'),adapt(key,SKILL_MAX[key],GEO.miss===0));
+  clearTimeout(geoT);geoT=setTimeout(()=>{if(activeTab==='geo'&&GEO.mode===m&&m!=='explore')geoAsk();},2600);}
 function geoWrong(what,pl){GEO.miss++;nope();if(what)say(isNow(lang,pl)+what+'. '+GEO.q);else if(GEO.miss>=2)say(GEO.q);
   if(GEO.miss>=2&&(GEO.mode==='continents'||GEO.mode==='oceans')){GEO.hint=GEO.target;redraw();}}
 function answerCountry(c){
@@ -336,9 +336,10 @@ function answerFlag(a,b){
     say(deDel(isNow(lang)+({es:'la bandera de ',en:'the flag of ',de:'die Flagge von '}[lang])+cNP(C_BY[a]).np)+'. '+GEO.q);}
 }
 $('geoSay').onclick=()=>{ac();if(GEO.mode!=='explore'&&GEO.q)say(GEO.q);else{const t=$('geoName').textContent+'. '+$('geoText').textContent;say(t);}};
-function showGeo(){
+function showGeo(){clearTimeout(geoT);
   FLAGS_OK=emojiOK('🇩🇪');buildGeoModes();fitMap();
   if(GEO.mode==='explore'){geoInfo(GEO.sel&&C_BY[GEO.sel]?{country:C_BY[GEO.sel]}:null);$('geoLevel').style.visibility='hidden';}
+  else if(GEO.mode==='flags'?!GEO.glow:!GEO.target)geoAsk();   // answered just before leaving: next question
   else if(GEO.q)say(GEO.q);
   redraw();
 }

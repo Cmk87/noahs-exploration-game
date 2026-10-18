@@ -182,7 +182,7 @@ function finishItem(){
      clipped "i griega de yate" or left three seconds of dead air after "a".
      ~170ms per character at rate 0.72, plus engine start-up, clamped. */
   const hold=Math.max(2400,Math.min(3600,300+(spokenPhrase||'').length*190));
-  setTimeout(()=>{document.getElementById('praise').style.display='none';advance();},hold);
+  clearTimeout(holdT);holdT=setTimeout(()=>{document.getElementById('praise').style.display='none';advance();},hold);
 }
 function letterSpoken(ch){
   if(mode==='123') return NUMWORD[lang][parseInt(ch,10)];
@@ -199,7 +199,9 @@ function letterSpoken(ch){
 function sayCurrent(){ say(letterSpoken(cur)); }
 
 function resetTrace(){strokeIdx=0;cpIdx=0;trail=[];tracing=false;}
-function loadItem(k,speak){cur=k;resetTrace();buildBar();if(speak)sayCurrent();}
+let holdT=null;              // the praise pause; a letter picked during it wins over the automatic next one
+function loadItem(k,speak){clearTimeout(holdT);document.getElementById('praise').style.display='none';cur=k;resetTrace();buildBar();if(speak)sayCurrent();}
+const sayHere=()=>{if(activeTab==='trace')sayCurrent();};
 function advance(){
   if(mode==='name'){
     nameIdx++;
@@ -209,16 +211,16 @@ function advance(){
       f.textContent='🏆';w.textContent=kidName;
       document.getElementById('praise').style.display='flex';
       bigWin();boom(140);say(kidName);
-      setTimeout(()=>{document.getElementById('praise').style.display='none';
-        loadItem(playlist[0],false);setTimeout(sayCurrent,250);},2400);
+      holdT=setTimeout(()=>{document.getElementById('praise').style.display='none';
+        loadItem(playlist[0],false);setTimeout(sayHere,250);},2400);
       return;
     }
-    loadItem(playlist[nameIdx],false);setTimeout(sayCurrent,250);
+    loadItem(playlist[nameIdx],false);setTimeout(sayHere,250);
     return;
   }
   const i=playlist.indexOf(cur);
   loadItem(playlist[(i+1)%playlist.length],false);
-  setTimeout(sayCurrent,250);
+  setTimeout(sayHere,250);
 }
 function buildBar(){
   const bar=document.getElementById('letterbar');bar.innerHTML='';
@@ -233,6 +235,7 @@ function buildBar(){
   });
 }
 function setMode(m){
+  clearTimeout(holdT);document.getElementById('praise').style.display='none';
   mode=m;nameIdx=0;
   if(m==='abc') playlist=ALPHA[lang];
   else if(m==='ABC') playlist=CAPS[lang];

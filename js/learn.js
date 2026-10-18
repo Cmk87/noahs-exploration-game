@@ -121,23 +121,27 @@ function artTag(art,plural){
   const sp=art.indexOf(' ');
   return `<span class="art ${c}">${sp<0?art:art.slice(0,sp)}</span>${sp<0?'':art.slice(sp)}`;
 }
-const nounHTML=it=>artTag(it[lang][0],it.p)+' '+it[lang][1];
+const plOf=it=>!!it.p&&!(lang==='de'&&it.sgde);   // plural in this language? (die Brille is singular in German)
+const nounHTML=it=>artTag(it[lang][0],plOf(it))+' '+it[lang][1];
 let artMode=false;
 function promptText(html){
-  const A=it=>html?artTag(it[lang][0],it.p):it[lang][0];
+  const A=it=>html?artTag(it[lang][0],plOf(it)):it[lang][0];
   if(artMode)return html?`<span class="art g-m">der</span>, <span class="art g-f">die</span> oder <span class="art g-n">das</span>?`
                         :`Der, die oder das: ${target.de[1]}?`;
   if(targets.length>1){const [a,b]=targets;
     if(lang==='es')return `¿Dónde están ${A(a)} ${a.es[1]} y ${A(b)} ${b.es[1]}?`;
     if(lang==='de')return `Wo sind ${A(a)} ${a.de[1]} und ${A(b)} ${b.de[1]}?`;
     return `Where are ${a.en.join(' ')} and ${b.en.join(' ')}?`;}
-  const word=target[lang][1],art=A(target),pl=!!target.p;
+  const word=target[lang][1],art=A(target),pl=plOf(target);
   if(lang==='es')return `¿Dónde ${pl?'están':'está'} ${art} ${word}?`;
   if(lang==='de')return `Wo ${pl?'sind':'ist'} ${art} ${word}?`;
   return `Where ${pl?'are':'is'} ${art} ${word}?`;
 }
 function sayPrompt(){if(plMode){say(plQuestion());return;}if(!target)return;say(artMode?`Der, die oder das… ${target.de[1]}?`:promptText());}
+let roundT=null;
+function nextRound(ms){clearTimeout(roundT);roundT=setTimeout(()=>{if(activeTab==='words')newRound();else target=null;},ms);}
 function newRound(){
+  clearTimeout(roundT);
   misses=0;roundDone=false;gotT=[];artMode=false;plMode=null;
   const L=level('words',8),cfg=WLVL[L],SET=catPool();
   if(activeCat==='*'&&L>=4&&Math.random()<0.15){pluralRound(L);return;}
@@ -221,13 +225,13 @@ function plChoose(k,el){
     roundDone=true;el.classList.add('right');bigWin();award(misses);
     levelFx(document.getElementById('levelPill'),adapt('words',8,misses===0));
     showWin(Array(k).fill(plMode.it.e).join(''),plPhrase(plMode.it,k,x=>`<b>${x}</b>`),plPhrase(plMode.it,k),true);
-    setTimeout(newRound,2600);
+    nextRound(2600);
   }else{misses++;nope();el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),450);
     if(misses>=2)[...document.querySelectorAll('#grid .plCard')].forEach(c=>{if(c.classList.contains('pl'+plMode.n))c.classList.add('hint');});
     say(plQuestion());}
 }
 function artRound(SET,L){
-  const pool=SET.filter(v=>!v.p&&v.c!=='form'&&['der','die','das'].includes(v.de[0])&&!recent.includes(v.e));
+  const pool=SET.filter(v=>!(v.p&&!v.sgde)&&v.c!=='form'&&['der','die','das'].includes(v.de[0])&&!recent.includes(v.e));
   if(pool.length<3)return false;
   artMode=true;target=pick(pool);targets=[target];recent.push(target.e);if(recent.length>12)recent.shift();
   const g=document.getElementById('grid');g.innerHTML='';g.style.gridTemplateColumns='repeat(3,1fr)';g.classList.remove('nine');
@@ -246,7 +250,7 @@ function artChoose(a,el){
     roundDone=true;el.classList.add('right');bigWin();award(misses);
     levelFx(document.getElementById('levelPill'),adapt('words',8,misses===0));
     showWin(target.e,nounHTML(target),target.de.join(' '),true);
-    setTimeout(newRound,2600);
+    nextRound(2600);
   }else{
     misses++;nope();el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),450);
     if(misses===1)say(`Der, die oder das… ${target.de[1]}?`);
@@ -262,13 +266,13 @@ function choose(o,el){
     levelFx(document.getElementById('levelPill'),adapt('words',8,misses===0));
     const label=targets.map(nounHTML).join(' '+AND[lang]+' ');
     showWin(targets.map(t=>t.e).join(''),label,targets.map(t=>t[lang][1]).join(' '+AND[lang]+' '),true);
-    setTimeout(newRound,2600);
+    nextRound(2600);
   }else{
     misses++;targets.forEach(noteMiss);
     el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),450);nope();
     const todo=targets.filter(t=>!gotT.includes(t));
     if(misses===1)sayPrompt();
-    else if(misses===2&&lang!=='es')say(todo.map(t=>`${t[lang][1]}… ${t.es[1]}`).join(', '));
+    else if(misses===2&&lang!=='es')sayBridge(todo.map(t=>t[lang][1]).join(', ')+'…',todo.map(t=>t.es[1]).join(', '));
     else if(misses>=3){[...document.querySelectorAll('#grid .card')].forEach(c=>{
       if(todo.some(t=>t.e===c.textContent))c.classList.add('hint');});sayPrompt();}
   }
@@ -362,7 +366,9 @@ function earSay(rate){
   setTimeout(()=>sp.classList.remove('playing'),1600);
   sayAt(earFirst?firstQ():earTarget[lang][1], rate||0.72);
 }
+let earT=null;
 function newEarRound(){
+  clearTimeout(earT);
   earMiss=0;earDone=false;earFirst=null;$('earLetter').classList.remove('on');
   const L=level('ear',6),cfg=ELVL[L];
   if(L>=3&&Math.random()<0.25&&firstRound(L))return;
@@ -397,14 +403,14 @@ function earPick(o,el){
     if(earFirst){const w=earTarget[lang][1],Lt=earFirst.toUpperCase(),ph=lang==='es'?`${letterSpokenAny(earFirst)} de ${w}`:lang==='de'?`${Lt} wie ${w}`:`${Lt} for ${w}`;
       showWin(earTarget.e,`<b>${w[0]}</b>${w.slice(1)}`,ph,true);}
     else showWin(earTarget.e,nounHTML(earTarget),earTarget[lang].join(' ')+'!',true);   // "der Fuchs!" once more
-    setTimeout(newEarRound,2800);
+    earT=setTimeout(()=>{if(activeTab==='ear')newEarRound();},2800);
   }else{
     earMiss++;noteMiss(earTarget);nope();
     el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),450);
     if(earMiss===1) setTimeout(()=>earSay(),500);            // just say it again
     else if(earMiss===2) setTimeout(()=>earSay(0.5),500);    // slower
     else if(earMiss===3&&lang!=='es')
-      setTimeout(()=>sayAt(`${earTarget[lang][1]}… ${earTarget.es[1]}`,0.6),500);
+      setTimeout(()=>sayBridge(earTarget[lang][1]+'…',earTarget.es[1],0.6),500);
     else if(earMiss>=4){
       [...document.querySelectorAll('#earGrid .card')].forEach(c=>{
         if((c.dataset.e||c.textContent)===earTarget.e)c.classList.add('hint');});

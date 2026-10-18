@@ -812,14 +812,16 @@ function actChoose(correct,el){
     else if(actMiss===2&&lang!=='es'){       // bridge through his strong language
       const own=T.kind==='prep'?PREPS[T.p][lang]:T.kind==='adj'||T.kind==='opp'?aW(T.a):T.kind==='obj'?T.word:vW(T.v),
             es=T.kind==='prep'?PREPS[T.p].es:T.kind==='adj'||T.kind==='opp'?T.a.es[0]:T.kind==='obj'?T.def.es[T.yes?0:1]:T.v.es;
-      say(`${own}… ${es}`);
+      sayBridge(own+'…',es);
     }else if(actMiss>=3){
       $('actGrid').querySelectorAll('[data-ok="1"]').forEach(c=>c.classList.add('hint'));
       actAsk();
     }
   }
 }
-$('tprDone').onclick=()=>{ac();bigWin();addPower();advTick('act');setTimeout(newActRound,900);};
+let tprBusy=false;
+$('tprDone').onclick=()=>{ac();if(tprBusy)return;tprBusy=true;bigWin();addPower();advTick('act');
+  setTimeout(()=>{tprBusy=false;if(activeTab==='act'&&actMode==='quiz')newActRound();},900);};
 $('actAgain').onclick=()=>{ac();if(actMode==='play')playSay();else actAsk();};
 $('actSkip').onclick=()=>{ac();if(actMode==='quiz')newActRound();};
 
@@ -840,8 +842,8 @@ function buildPlay(){
   const box=$('playAdj');box.innerHTML='';
   groups.forEach(([dim,keys])=>keys.forEach(k=>{
     const b=document.createElement('button');b.className='pchip'+(PLAY.adjs[dim]===k?' on':'');b.textContent=IC[k];
-    b.onclick=()=>{ac();if(PLAY.adjs[dim]===k)delete PLAY.adjs[dim];else{PLAY.adjs[dim]=k;say(dIs(DA(k)));}
-      buildPlay();$('playSentence').innerHTML=PLAY.verb==='stand'?dIs(DA(k),x=>`<b>${x}</b>`):dSentence(playAdjs(),DVERBS.find(v=>v.k===PLAY.verb),x=>`<b>${x}</b>`);};
+    b.onclick=()=>{ac();const off=PLAY.adjs[dim]===k;if(off)delete PLAY.adjs[dim];else{PLAY.adjs[dim]=k;say(dIs(DA(k)));}
+      buildPlay();$('playSentence').innerHTML=PLAY.verb==='stand'?(off?'':dIs(DA(k),x=>`<b>${x}</b>`)):dSentence(playAdjs(),DVERBS.find(v=>v.k===PLAY.verb),x=>`<b>${x}</b>`);};
     box.appendChild(b);}));
   const vb=$('playVerbs');vb.innerHTML='';
   DVERBS.forEach(v=>{const b=document.createElement('button');b.className='pverb'+(PLAY.verb===v.k?' on':'');b.textContent=v.ic;
@@ -904,6 +906,7 @@ function storyPick(i,el){
     [...el.parentElement.children].forEach(c=>{if(c!==el)c.classList.add('dim');});
     bigWin();award(S.miss);const html=storyLine(i,x=>`<b>${x}</b>`);$('storyText').innerHTML=html;say(stripTags(html));
     setTimeout(()=>{if(STORY!==S||actMode!=='story')return;
+      if(activeTab!=='act'){STORY=null;return;}           // left mid-story: a fresh one next time
       if(S.phase==='between')storyQuiz();else{$('storyNext').textContent='📖';
         say({es:'¡Fin! ¿Otra historia?',en:'The end! Another story?',de:'Ende! Noch eine Geschichte?'}[lang]);}},3200);
   }else{S.miss++;nope();el.classList.remove('wrong');void el.offsetWidth;el.classList.add('wrong');
@@ -931,9 +934,10 @@ function parrotMsg(k){$('parrotMsg').textContent={
   you:{es:'🎤 ¡Ahora tú!',en:'🎤 Now you!',de:'🎤 Jetzt du!'},
   nomic:{es:'🎤 El micrófono no está disponible aquí.',en:'🎤 The microphone is not available here.',de:'🎤 Das Mikrofon ist hier nicht verfügbar.'},
   short:{es:'¡Mantén pulsado un poco más!',en:'A little longer!',de:'Ein bisschen länger!'}}[k][lang];}
+let recStarting=false;
 async function startRec(){
-  if(recorder)return;
-  if(!navigator.mediaDevices||!window.MediaRecorder){parrotMsg('nomic');return;}
+  if(recorder||recStarting)return;recStarting=true;
+  if(!navigator.mediaDevices||!window.MediaRecorder){recStarting=false;parrotMsg('nomic');return;}
   try{speechSynthesis.cancel();}catch(e){}
   try{
     unCall();setAudioSession('play-and-record');
@@ -955,6 +959,7 @@ async function startRec(){
     $('parrotRec').classList.add('rec');$('parrotRec').textContent='⏹';$('parrotMsg').textContent='';
     clearTimeout(recTimer);recTimer=setTimeout(()=>stopRec(),7000);
   }catch(e){recorder=null;parrotMsg('nomic');}
+  finally{recStarting=false;}
 }
 /* Phone mics record quietly, and on iPhone the replay can come out of the
    ear speaker. So: switch the audio session back to playback, then play the

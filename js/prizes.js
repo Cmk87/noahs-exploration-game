@@ -21,7 +21,7 @@ function renderPower(bump){
   document.querySelectorAll('.hcard[data-id="dig"]').forEach(b=>b.classList.toggle('ready',ready));
 }
 $('power').addEventListener('animationend',e=>{if(e.animationName==='bump')$('power').classList.remove('bump');});
-$('power').onclick=()=>{ac();if(power>=DIG_COST)showTab('dig');};
+$('power').onclick=()=>{ac();if(power>=DIG_COST&&activeTab!=='dig')showTab('dig');};
 /* a "+1 ⚡" flies from his finger to the counter, so he SEES where points go */
 function flyBolt(n,label){
   const pill=$('power').getBoundingClientRect();
@@ -200,6 +200,7 @@ function startGame(k,card){
   if(k==='dig')startDig();else if(k==='mem')startMem();else if(k==='bal')startBal();else if(k==='bag')startBag();else startFw();
 }
 function resumeGame(){
+  digPtr=false;digLast=null;if(BAG)BAG.touch=null;          // a finger lifted while away never sent its pointerup
   const over=(pane==='digPlay'&&(!DIG||DIG.done))||(pane==='memPlay'&&(!MEM||MEM.done))||
              (pane==='balPlay'&&(!BAL||BAL.done))||(pane==='fwPlay'&&(!FW||FW.done))||(pane==='bagPlay'&&(!BAG||BAG.done));
   if(over){showDigLock();return;}            // a finished game is never resumed — back to the prize menu
@@ -213,7 +214,7 @@ function resumeGame(){
    game that has hardly started gives the 40 ⚡ back, so he can pick another one;
    after half of it he keeps what he played. */
 function gameProgress(){
-  if(pane==='digPlay'&&DIG)return DIG.parts.filter(p=>p.found).length/DIG.parts.length;
+  if(pane==='digPlay'&&DIG)return (DIG.parts.filter(p=>p.found).length+DIG.tre.filter(t=>t.found).length)/(DIG.parts.length+DIG.tre.length);   // treasures are kept, so they count
   if(pane==='memPlay'&&MEM)return 1-MEM.left/MEM.total;
   if(pane==='balPlay'&&BAL)return BAL.pops/BAL.goal;
   if(pane==='fwPlay'&&FW)return FW.shots/FW.goal;
@@ -682,7 +683,7 @@ function chooseDino(){
   return pick(pool);
 }
 function startDig(){
-  const sp=chooseDino();lastDino=sp.k;
+  digPtr=false;digLast=null;const sp=chooseDino();lastDino=sp.k;
   const {parts,box}=prepParts(sp);
   const K=Math.min(0.88/(box[2]-box[0]),0.7/(box[3]-box[1]));
   const home={K,ox:0.5-(box[0]+box[2])/2*K,oy:0.53-(box[1]+box[3])/2*K};
@@ -713,11 +714,12 @@ function digXY(e){const r=dg.getBoundingClientRect();return [(e.clientX-r.left)/
 dg.addEventListener('pointerdown',e=>{
   e.preventDefault();ac();if(!DIG)return;
   if(DIG.phase==='alive'){DIG.roarT=(performance.now()-DIG.aliveT)/1000;roar(DIG.sp.big);shakeEl(dg);return;}
+  if(digPtr!==false&&digPtr!==e.pointerId)return;          // one finger digs; a second one is ignored
   try{dg.setPointerCapture(e.pointerId);}catch(_){}
-  digPtr=true;digLast=null;digStroke(digXY(e));
+  digPtr=e.pointerId;digLast=null;digStroke(digXY(e));
 });
-dg.addEventListener('pointermove',e=>{if(!digPtr)return;e.preventDefault();digStroke(digXY(e));});
-['pointerup','pointercancel','pointerleave'].forEach(ev=>dg.addEventListener(ev,()=>{digPtr=false;digLast=null;}));
+dg.addEventListener('pointermove',e=>{if(digPtr===false||e.pointerId!==digPtr)return;e.preventDefault();digStroke(digXY(e));});
+['pointerup','pointercancel','pointerleave'].forEach(ev=>dg.addEventListener(ev,e=>{if(e.pointerId!==digPtr)return;digPtr=false;digLast=null;}));
 function digStroke(p){
   if(!DIG||DIG.phase!=='dig')return;
   const pts=[];
@@ -869,7 +871,7 @@ function memFlip(d,it){
   const a=MEM.first;MEM.first=null;
   if(a.it.e===it.e){
     setTimeout(()=>{a.d.classList.add('ok');d.classList.add('ok');chime();say(it[lang].join(' '));},350);
-    if(--MEM.left===0)setTimeout(memWin,1500);
+    if(--MEM.left===0){const m=MEM;setTimeout(()=>{if(MEM===m)memWin();},1500);}
   }else{
     MEM.lock=true;
     setTimeout(()=>{a.d.classList.remove('flip');d.classList.remove('flip');if(MEM)MEM.lock=false;beep(300,0,0.08,'triangle',0.08);},1100);
@@ -960,7 +962,7 @@ function balPop(b,i){
   if(b.gold){BAL.pops+=3;chime();say({es:'¡Estrella de oro!',en:'Gold star!',de:'Goldstern!'}[lang]);}
   else{BAL.pops++;balSay(b.it[lang][1]);}
   if(!BAL.done&&BAL.pops>=BAL.goal){BAL.done=true;BAL.pops=BAL.goal;
-    setTimeout(()=>{BAL.queue=[];bigWin();rainEmoji(['🎈','🎉','⭐'],28);
+    const bl=BAL;setTimeout(()=>{if(BAL!==bl||pane!=='balPlay'||activeTab!=='dig')return;BAL.queue=[];bigWin();rainEmoji(['🎈','🎉','⭐'],28);
       say({es:'¡Genial! ¡Todos los globos!',en:'Great! All the balloons!',de:'Super! Alle Ballons!'}[lang]);},1600);}
   balText();
 }
@@ -1065,7 +1067,7 @@ function bagCheck(now){const {W,H,soil}=BAG,d=soil.dpr;
   for(const it of BAG.items){if(it.found)continue;const cx=it.x*W,cy=it.y*H,r=W*0.04;let open=0;
     for(const [ox,oy] of [[0,0],[-r,0],[r,0],[0,-r],[0,r]]){const a=soil.g.getImageData(Math.round((cx+ox)*d),Math.round((cy+oy)*d),1,1).data[3];if(a<150)open++;}
     if(open>=3){it.found=true;it.t=now;BAG.lastFind=now;chime();say(it.it[lang]);for(let k=0;k<14;k++)BAG.fx.push({x:cx,y:cy,vx:rnd(-120,120),vy:rnd(-200,-60),t:now,c:pick(['#FFD400','#FFFFFF','#FF8A00'])});
-      bagText();if(BAG.items.every(i=>i.found))setTimeout(bagWin,1400);}}}
+      bagText();if(BAG.items.every(i=>i.found)){const bg=BAG;setTimeout(()=>{if(BAG===bg)bagWin();},1400);}}}}
 function bagWin(){if(!BAG||pane!=='bagPlay'||BAG.done)return;BAG.done=true;bigWin();rainEmoji(BAG.items.map(i=>i.it.ic).concat(['⭐','🎉']),28);bagText();
   say({es:'¡Lo encontraste todo! ¡Eres un gran excavador!',en:'You found everything! You are a great digger!',de:'Du hast alles gefunden! Du bist ein toller Baggerfahrer!'}[lang]);}
 function bagArm(W,H){const G=H*BG_G,bx=BAG.ex*W;return {P0:[bx+W*0.05,G-H*0.1],L1:H*0.36,L2:H*0.34};}
@@ -1125,8 +1127,8 @@ function bagLoop(now){
   BAG.fx=BAG.fx.filter(f=>now-f.t<900);BAG.fx.forEach(f=>{f.vy+=500*dt;f.x+=f.vx*dt;f.y+=f.vy*dt;g.globalAlpha=1-(now-f.t)/900;g.fillStyle=f.c;g.fillRect(f.x-3,f.y-3,6,6);});g.globalAlpha=1;
   g.restore();requestAnimationFrame(bagLoop);}
 const bagXY=e=>{const r=bgc.getBoundingClientRect();return [(e.clientX-r.left)/r.width*BAG.W,(e.clientY-r.top)/r.height*BAG.H];};
-bgc.addEventListener('pointerdown',e=>{e.preventDefault();ac();if(!BAG||BAG.done)return;try{bgc.setPointerCapture(e.pointerId);}catch(_){}BAG.touch=bagXY(e);});
-bgc.addEventListener('pointermove',e=>{if(!BAG||!BAG.touch)return;e.preventDefault();BAG.touch=bagXY(e);});
-['pointerup','pointercancel'].forEach(ev=>bgc.addEventListener(ev,()=>{if(!BAG||!BAG.touch)return;const pt=BAG.touch;BAG.touch=null;
+bgc.addEventListener('pointerdown',e=>{e.preventDefault();ac();if(!BAG||BAG.done||(BAG.touch&&BAG.pid!==e.pointerId))return;try{bgc.setPointerCapture(e.pointerId);}catch(_){}BAG.pid=e.pointerId;BAG.touch=bagXY(e);});
+bgc.addEventListener('pointermove',e=>{if(!BAG||!BAG.touch||e.pointerId!==BAG.pid)return;e.preventDefault();BAG.touch=bagXY(e);});
+['pointerup','pointercancel'].forEach(ev=>bgc.addEventListener(ev,e=>{if(!BAG||!BAG.touch||e.pointerId!==BAG.pid)return;const pt=BAG.touch;BAG.touch=null;
   if(BAG.dug>0.15&&BAG.dumpT<0){BAG.dumpT=performance.now();BAG.dumped=false;beep(110,0,0.4,'square',0.05);}
   else if(BAG.dug<0.05&&pt[1]>BAG.H*BG_G)BAG.pend=pt;BAG.dug=0;}));
