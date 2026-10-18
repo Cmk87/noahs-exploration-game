@@ -227,6 +227,16 @@
   #tprDone{font-size:34px;padding:12px 46px;background:var(--kiwi,#2ED17A)}
   #playCv{width:min(calc(100% - 28px),calc(100dvh - 430px),420px);min-width:200px;aspect-ratio:1/1;border:5px solid var(--ink);
     border-radius:10px;box-shadow:8px 8px 0 var(--ink);display:block;margin-top:8px;cursor:pointer}
+  #parrotCv{width:min(calc(100% - 28px),calc(100dvh - 400px),400px);min-width:200px;aspect-ratio:1/1;border:5px solid var(--ink);
+    border-radius:10px;box-shadow:8px 8px 0 var(--ink);display:block;margin-top:8px}
+  #parrotText{min-height:46px;margin:12px 14px 0;font-size:min(6.4vw,28px);text-align:center;font-weight:bold;color:#fff;text-shadow:2px 2px 0 var(--ink)}
+  #parrotText b{color:var(--bolt)}
+  #parrotMsg{min-height:20px;font-size:14px;font-weight:bold;text-align:center;margin-top:4px}
+  .parrotBtns{display:flex;gap:14px;justify-content:center;align-items:center;margin-top:8px}
+  .parrotBtns button{border:4px solid var(--ink);border-radius:14px;background:#fff;font-size:30px;padding:10px 18px;box-shadow:5px 5px 0 var(--ink);cursor:pointer;line-height:1}
+  #parrotRec{font-size:46px!important;padding:14px 26px!important;background:var(--bolt)!important;border-radius:50%!important}
+  #parrotRec.rec{background:var(--blaze)!important;animation:pulse .45s ease-in-out infinite alternate}
+  .parrotBtns button:active{transform:translate(4px,4px);box-shadow:none}
   #playAdj,#playVerbs{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;width:100%;max-width:470px;padding:10px 14px 0}
   .pchip,.pverb{border:3px solid var(--ink);border-radius:10px;background:#fff;font-size:24px;line-height:1;padding:6px 7px;
     box-shadow:3px 3px 0 var(--ink);cursor:pointer}
@@ -412,7 +422,13 @@
     <div id="playAdj"></div>
     <div id="playVerbs"></div>
   </div>
-  <div class="tools"><button id="actAgain">🔊</button><button id="actSkip">➜</button></div>
+  <div id="actParrot" class="apane">
+    <canvas id="parrotCv"></canvas>
+    <div id="parrotText"></div>
+    <div id="parrotMsg"></div>
+    <div class="parrotBtns"><button id="parrotHear">🔊</button><button id="parrotRec">🎤</button><button id="parrotNext">➜</button></div>
+  </div>
+  <div class="tools" id="actTools"><button id="actAgain">🔊</button><button id="actSkip">➜</button></div>
 </div>
 
 <!-- ============ WORLD MAP ============ -->
@@ -2907,30 +2923,95 @@ function buildPlay(){
     b.onclick=()=>{ac();PLAY.verb=v.k;buildPlay();playSay();};vb.appendChild(b);});
 }
 function playLoop(){
-  if(activeTab!=='act'||actMode!=='play'){playAnim=null;return;}
-  const cn=$('playCv'),r=cn.getBoundingClientRect();
+  if(activeTab!=='act'||(actMode!=='play'&&actMode!=='parrot')){playAnim=null;return;}
+  const cn=$(actMode==='play'?'playCv':'parrotCv'),r=cn.getBoundingClientRect();
   if(r.width){const dpr=Math.min(window.devicePixelRatio||1,2.5),w=Math.round(r.width*dpr);
     if(cn.width!==w){cn.width=w;cn.height=w;}const g=cn.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
-    drawDino(g,r.width,r.width,playState(),performance.now()/1000);}
+    const t=performance.now()/1000;if(actMode==='play')drawDino(g,r.width,r.width,playState(),t);else drawParrot(g,r.width,t);}
   playAnim=requestAnimationFrame(playLoop);
 }
 $('playCv').onclick=()=>{ac();playSay();};
+
+/* ---------- 🦜 parrot: hear it, say it, hear yourself ----------
+   No grading — speech recognition is unreliable with children's voices.
+   Hearing his own voice right after the model voice is the useful part. */
+let PARROT=null,recorder=null,recTimer=null,recT0=0;
+function parrotNext(){
+  stopRec(true);
+  if(Math.random()<0.6){
+    const v=pick(DVERBS),dims=FACE_VERBS.includes(v.k)?['size','color']:['size','color','mood'];
+    const adjs=Math.random()<0.55?[pick(DADJ.filter(a=>dims.includes(a.dim)))]:[];
+    const html=dSentence(adjs,v,x=>`<b>${x}</b>`);PARROT={kind:'dino',st:stOf(v,adjs,0),html};
+  }else{const it=pick(VOCAB.filter(x=>x.c!=='form'));PARROT={kind:'noun',e:it.e,html:nounHTML(it)};}
+  PARROT.text=stripTags(PARROT.html);PARROT.cheer=0;
+  $('parrotText').innerHTML=PARROT.html;$('parrotMsg').textContent='';
+  setTimeout(()=>say(PARROT.text),250);
+}
+function parrotMsg(k){$('parrotMsg').textContent={
+  you:{es:'🎤 ¡Ahora tú!',en:'🎤 Now you!',de:'🎤 Jetzt du!'},
+  nomic:{es:'🎤 El micrófono no está disponible aquí.',en:'🎤 The microphone is not available here.',de:'🎤 Das Mikrofon ist hier nicht verfügbar.'},
+  short:{es:'¡Mantén pulsado un poco más!',en:'A little longer!',de:'Ein bisschen länger!'}}[k][lang];}
+async function startRec(){
+  if(recorder)return;
+  if(!navigator.mediaDevices||!window.MediaRecorder){parrotMsg('nomic');return;}
+  try{speechSynthesis.cancel();}catch(e){}
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const chunks=[];recorder=new MediaRecorder(stream);
+    recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+    recorder.onstop=()=>{
+      stream.getTracks().forEach(t=>t.stop());               // release the mic straight away
+      const dur=performance.now()-recT0,type=(recorder&&recorder.mimeType)||'audio/mp4';recorder=null;
+      $('parrotRec').classList.remove('rec');$('parrotRec').textContent='🎤';
+      if(recorder===null&&recT0<0)return;                    // cancelled
+      if(dur<500||!chunks.length){parrotMsg('short');return;}
+      const a=new Audio(URL.createObjectURL(new Blob(chunks,{type})));
+      // recordings often carry no duration, so "ended" may never fire: fall back to a timer
+      let done=false;const cheer=()=>{if(done||!PARROT)return;done=true;PARROT.cheer=performance.now();bigWin();
+        say({es:'¡Muy bien!',en:'Well done!',de:'Super gemacht!'}[lang]);
+        if(!PARROT.paid){PARROT.paid=1;addPower(1);}};
+      a.onended=cheer;setTimeout(cheer,dur+700);
+      a.play().catch(cheer);
+    };
+    recT0=performance.now();recorder.start();
+    $('parrotRec').classList.add('rec');$('parrotRec').textContent='⏹';$('parrotMsg').textContent='';
+    clearTimeout(recTimer);recTimer=setTimeout(()=>stopRec(),7000);
+  }catch(e){recorder=null;parrotMsg('nomic');}
+}
+function stopRec(cancel){
+  clearTimeout(recTimer);
+  if(recorder&&recorder.state==='recording'){if(cancel)recT0=-1;recorder.stop();}
+  $('parrotRec').classList.remove('rec');$('parrotRec').textContent='🎤';
+}
+$('parrotRec').onclick=()=>{ac();if(recorder&&recorder.state==='recording')stopRec();else startRec();};
+$('parrotHear').onclick=()=>{ac();if(PARROT)say(PARROT.text);};
+$('parrotNext').onclick=()=>{ac();parrotNext();};
+function drawParrot(g,W,t){
+  const P=PARROT;if(!P)return;
+  const cheering=P.cheer&&performance.now()-P.cheer<2200;
+  if(P.kind==='dino')drawDino(g,W,W,cheering?Object.assign({},P.st,{verb:'jump'}):P.st,t);
+  else{drawDino(g,W,W,{verb:cheering?'jump':'stand',size:0.55},t);
+    g.save();g.font=`${W*0.34}px serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(P.e,W*0.3,W*0.32+Math.sin(t*2)*W*0.01);g.restore();}
+}
 function setActMode(m){
+  if(actMode==='parrot'&&m!=='parrot')stopRec(true);
   actMode=m;
-  $('actQuiz').classList.toggle('on',m==='quiz');$('actPlay').classList.toggle('on',m==='play');
+  $('actQuiz').classList.toggle('on',m==='quiz');$('actPlay').classList.toggle('on',m==='play');$('actParrot').classList.toggle('on',m==='parrot');
   $('actLevel').style.visibility=m==='quiz'?'visible':'hidden';$('actSkip').style.display=m==='quiz'?'':'none';
+  $('actTools').style.display=m==='parrot'?'none':'';
   buildActModes();
+  if(m==='parrot'){actAnim=[];parrotNext();if(!playAnim)playAnim=requestAnimationFrame(playLoop);return;}
   if(m==='play'){actAnim=[];buildPlay();$('playSentence').innerHTML='';if(!playAnim)playAnim=requestAnimationFrame(playLoop);
     say({es:'¡Elige qué hace el dino!',en:'Choose what the dino does!',de:'Such aus, was der Dino macht!'}[lang]);}
   else newActRound();
 }
 function buildActModes(){
   const box=$('actModes');box.innerHTML='';
-  [['quiz','🎯 '+{es:'Juego',en:'Quiz',de:'Quiz'}[lang]],['play','🎮 '+{es:'Libre',en:'Play',de:'Spielen'}[lang]]].forEach(([m,l])=>{
+  [['quiz','🎯 '+{es:'Juego',en:'Quiz',de:'Quiz'}[lang]],['play','🎮 '+{es:'Libre',en:'Play',de:'Spielen'}[lang]],['parrot','🦜']].forEach(([m,l])=>{
     const b=document.createElement('button');b.className='seg'+(actMode===m?' on':'');b.textContent=l;
     b.onclick=()=>{ac();if(actMode!==m)setActMode(m);};box.appendChild(b);});
 }
-function showAct(){buildActModes();if(actMode==='play'){buildPlay();if(!playAnim)playAnim=requestAnimationFrame(playLoop);}else newActRound();}
+function showAct(){buildActModes();if(actMode==='parrot'){if(!PARROT)parrotNext();if(!playAnim)playAnim=requestAnimationFrame(playLoop);}else if(actMode==='play'){buildPlay();if(!playAnim)playAnim=requestAnimationFrame(playLoop);}else newActRound();}
 
 
 
