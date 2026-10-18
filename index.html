@@ -1055,7 +1055,6 @@ const VOCAB=[
  {e:'🪴',c:'home',es:['la','planta'],en:['the','plant'],de:['die','Pflanze']},
  {e:'🫖',c:'home',es:['la','tetera'],en:['the','teapot'],de:['die','Teekanne']},
  {e:'☕',c:'home',es:['la','taza'],en:['the','cup'],de:['die','Tasse']},
- {e:'🔪',c:'home',es:['el','cuchillo'],en:['the','knife'],de:['das','Messer']},
  {e:'📦',c:'home',es:['la','caja'],en:['the','box'],de:['die','Kiste']},
  {e:'🎒',c:'cloth',es:['la','mochila'],en:['the','backpack'],de:['der','Rucksack']},
  {e:'🩴',c:'cloth',es:['las','chanclas'],en:['the','flip-flops'],de:['die','Flip-Flops'],p:1},
@@ -1164,6 +1163,29 @@ const VOCAB=[
  {e:'🔒',c:'thing',es:['el','candado'],en:['the','padlock'],de:['das','Vorhängeschloss']},
  {e:'💎',c:'thing',es:['la','joya'],en:['the','jewel'],de:['das','Juwel']}
 ];
+
+/* Phones only draw the emoji their system font knows; older ones show an
+   empty box (or, for combined emoji, two pictures side by side). Test each
+   picture once and quietly drop the ones this phone cannot draw. */
+function emojiOK(e){
+  try{
+    const c=document.createElement('canvas');c.width=c.height=48;const g=c.getContext('2d',{willReadFrequently:true});
+    g.font='36px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",serif';g.textBaseline='top';
+    if(g.measureText(e).width>g.measureText('😀').width*1.6)return false;      // a combined emoji that fell apart
+    const px=s=>{g.clearRect(0,0,48,48);g.fillText(s,0,4);return g.getImageData(0,0,48,48).data;};
+    const a=px(e);let ink=0,colour=false;
+    for(let i=0;i<a.length;i+=4)if(a[i+3]>40){ink++;if(Math.abs(a[i]-a[i+1])>24||Math.abs(a[i+1]-a[i+2])>24)colour=true;}
+    if(!ink)return false;
+    if(colour)return true;
+    const t=px('\u{10FFFD}');let same=true;for(let i=3;i<a.length;i+=4)if((a[i]>40)!==(t[i]>40)){same=false;break;}
+    return !same;                                                              // grey but not the "missing" box: fine (⬛ ⬜)
+  }catch(err){return true;}
+}
+(function dropUnsupported(){
+  const bad=VOCAB.filter(v=>!emojiOK(v.e));
+  bad.forEach(v=>VOCAB.splice(VOCAB.indexOf(v),1));
+  window.EMOJI_DROPPED=bad.map(v=>v.e);
+})();
 
 /* =============================================================
    3. VOICE
