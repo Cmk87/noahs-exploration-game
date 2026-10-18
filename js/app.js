@@ -308,28 +308,67 @@ function advEnsure(fresh){
 }
 const advCur=()=>ADV&&!ADV.done?ADV.plan[ADV.idx]:null;
 const TABICON=id=>(TABS.find(t=>t.id===id)||{}).icon||'⭐';
+/* The map: a start flag, one stop per section, a chest at the end. Rexi stands
+   at the start of the next stretch; the child drags Rexi along the dotted path
+   to the glowing stop (or simply taps the stop) and that section opens. A
+   ghost hand shows the swipe until the child starts. */
+let ADVP=[],ADVDRAG=null,advHintT=0;
+const advBez=(a,b,t)=>{const my=(a[1]+b[1])/2,u=1-t,P1=[a[0],my],P2=[b[0],my];
+  return [0,1].map(j=>u*u*u*a[j]+3*u*u*t*P1[j]+3*u*t*t*P2[j]+t*t*t*b[j]);};
+const advSegD=(a,b,t1)=>{let d=`M ${a[0]} ${a[1]}`;for(let k=1;k<=24;k++){const p=advBez(a,b,k/24*(t1===undefined?1:t1));d+=` L ${p[0]} ${p[1]}`;}return d;};
 function renderAdv(){
-  advEnsure();
+  advEnsure();ADVDRAG=null;
   $('advTitle').textContent={es:'Tu aventura de hoy',en:"Today's adventure",de:'Dein Abenteuer heute'}[lang];
-  const m=$('advMap'),n=ADV.plan.length,X=[28,72,34,70,30,68,36,70,50],stepY=92,H=60+(n+1)*stepY;
+  const m=$('advMap'),n=ADV.plan.length,X=[28,72,34,70,30,68,36,70,50],stepY=96,top=190,H=top+40+n*stepY;
   m.style.height=H+'px';m.innerHTML='';
-  const pts=ADV.plan.map((p,i)=>[X[i],50+i*stepY]).concat([[50,50+n*stepY]]);
-  let d=`M ${pts[0][0]} ${pts[0][1]}`;
-  for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],my=(a[1]+b[1])/2;d+=` C ${a[0]} ${my}, ${b[0]} ${my}, ${b[0]} ${b[1]}`;}
-  m.insertAdjacentHTML('beforeend',`<svg viewBox="0 0 100 ${H}" preserveAspectRatio="none"><path d="${d}" fill="none" stroke="#FFD400" stroke-width="2.4" stroke-dasharray="3 3" vector-effect="non-scaling-stroke" style="stroke-width:6px"/></svg>`);
-  pts.forEach(([x,y],i)=>{
+  ADVP=[[50,40]].concat(ADV.plan.map((p,i)=>[X[i],top+i*stepY])).concat([[50,top+n*stepY]]);
+  const cur=ADV.done?ADVP.length-1:ADV.idx;                     // Rexi stands at ADVP[cur]; the next stretch is cur → cur+1
+  let done='',todo='';for(let i=0;i<ADVP.length-1;i++){const d=advSegD(ADVP[i],ADVP[i+1]);if(i<cur)done+=d+' ';else todo+=d+' ';}
+  m.insertAdjacentHTML('beforeend',`<svg viewBox="0 0 100 ${H}" preserveAspectRatio="none">
+    <path d="${todo}" fill="none" stroke="rgba(255,255,255,.55)" stroke-dasharray="3 3" vector-effect="non-scaling-stroke" style="stroke-width:6px"/>
+    <path d="${done}" fill="none" stroke="#FFD400" vector-effect="non-scaling-stroke" style="stroke-width:9px;stroke-linecap:round"/>
+    <path id="advTrail" d="" fill="none" stroke="#FFD400" vector-effect="non-scaling-stroke" style="stroke-width:9px;stroke-linecap:round"/></svg>`);
+  const flag=document.createElement('div');flag.className='advStop start';flag.textContent='🚩';flag.style.left='50%';flag.style.top='40px';m.appendChild(flag);
+  ADVP.slice(1).forEach(([x,y],k)=>{const i=k;
     const el=document.createElement('div');el.style.left=x+'%';el.style.top=y+'px';
     if(i===n){el.className='advStop chest';el.textContent=ADV.done?'🏆':'🎁';}
-    else{const st=ADV.plan[i];el.className='advStop'+(i<ADV.idx||ADV.done?' done':i===ADV.idx?' now':'');el.textContent=TABICON(st.tab);
+    else{const st=ADV.plan[i];el.className='advStop'+(i<ADV.idx||ADV.done?' done':i===ADV.idx?' now':' later');el.textContent=TABICON(st.tab);
       if(i===ADV.idx&&!ADV.done)el.onclick=()=>{ac();advGo();};}
-    m.appendChild(el);
-    if((i===ADV.idx&&!ADV.done)||(i===n&&ADV.done)){const r=document.createElement('div');r.className='advRexi';r.textContent='🦖';r.style.left=x+'%';r.style.top=y+'px';m.appendChild(r);}
-  });
+    m.appendChild(el);});
+  const r=document.createElement('div');r.className='advRexi';r.id='advRexi';r.textContent='🦕';m.appendChild(r);advPlace(ADVP[cur]);
+  if(!ADV.done){const h=document.createElement('div');h.className='advHand';h.id='advHand';h.textContent='👆';m.appendChild(h);
+    r.addEventListener('pointerdown',advDown);}
   $('advGo').textContent=ADV.done?{es:'🏆 ¡Lo has conseguido!',en:'🏆 You did it!',de:'🏆 Geschafft!'}[lang]
     :ADV.idx?{es:'▶ ¡Seguimos!',en:'▶ Keep going!',de:'▶ Weiter!'}[lang]:{es:'▶ ¡Vamos!',en:"▶ Let's go!",de:"▶ Los geht's!"}[lang];
   $('advAgain').style.display=ADV.done?'block':'none';
   $('advAgain').textContent={es:'🔁 Otra aventura',en:'🔁 Another adventure',de:'🔁 Noch ein Abenteuer'}[lang];
+  requestAnimationFrame(()=>{const v=$('v-adv');v.scrollTop=Math.max(0,m.offsetTop+ADVP[cur][1]-v.clientHeight*0.3);});
+  advHintT=performance.now();
+  if(!ADV.done&&!ADV.started)setTimeout(()=>{if(activeTab==='adv'&&!ADVDRAG&&!ADV.started)
+    say({es:'¡Lleva a Rexi con el dedo por el camino hasta la primera parada!',en:'Drag Rexi along the path to the first stop!',de:'Zieh Rexi mit dem Finger den Weg entlang zur ersten Station!'}[lang]);},1400);
 }
+function advPlace(p){const r=$('advRexi');if(r){r.style.left=p[0]+'%';r.style.top=p[1]+'px';}}
+function advDown(e){
+  e.preventDefault();e.stopPropagation();ac();const r=e.currentTarget;try{r.setPointerCapture(e.pointerId);}catch(_){}
+  ADVDRAG={t:0,moved:false,last:0};r.classList.add('drag');
+  const a=ADVP[ADV.idx],b=ADVP[ADV.idx+1],m=$('advMap');
+  const move=ev=>{if(!ADVDRAG)return;const R=m.getBoundingClientRect(),fx=(ev.clientX-R.left)/R.width*100,fy=ev.clientY-R.top;
+    let best=ADVDRAG.t,bd=1e9;for(let k=0;k<=40;k++){const t=k/40,p=advBez(a,b,t),d=Math.hypot((p[0]-fx)*R.width/100,p[1]-fy);if(d<bd){bd=d;best=t;}}
+    if(bd>110)return;if(best>ADVDRAG.t+0.02||best<ADVDRAG.t-0.02)ADVDRAG.moved=true;
+    ADVDRAG.t=Math.max(best,ADVDRAG.t-0.15);advPlace(advBez(a,b,ADVDRAG.t));$('advTrail').setAttribute('d',advSegD(a,b,ADVDRAG.t));
+    if(ADVDRAG.t-ADVDRAG.last>0.12){ADVDRAG.last=ADVDRAG.t;beep(600+ADVDRAG.t*600,0,0.06,'triangle',0.08);}
+    if(ADVDRAG.t>0.93)arrive();};
+  const arrive=()=>{end();advPlace(b);$('advTrail').setAttribute('d',advSegD(a,b,1));rainEmoji(['⭐','✨'],8);
+    [784,1047].forEach((f,i)=>beep(f,i*0.1,0.18,'triangle',0.14));setTimeout(advGo,450);};
+  const end=()=>{r.removeEventListener('pointermove',move);r.removeEventListener('pointerup',up);r.removeEventListener('pointercancel',up);r.classList.remove('drag');};
+  const up=()=>{const tapped=ADVDRAG&&!ADVDRAG.moved;end();ADVDRAG=null;advHintT=performance.now();if(tapped)advGo();};
+  r.addEventListener('pointermove',move);r.addEventListener('pointerup',up);r.addEventListener('pointercancel',up);
+}
+/* the ghost hand: shows the swipe from Rexi to the next stop while nobody is touching */
+setInterval(()=>{const h=$('advHand');if(!h||activeTab!=='adv'||!ADV||ADV.done)return;
+  if(ADVDRAG||performance.now()-advHintT<1500){h.style.opacity=0;return;}
+  const ph=((performance.now()-advHintT-1500)%2400)/2400,t=Math.min(1,ph/0.7),p=advBez(ADVP[ADV.idx],ADVP[ADV.idx+1],t*t*(3-2*t));
+  h.style.left=p[0]+'%';h.style.top=p[1]+'px';h.style.opacity=ph<0.85?1:0;},40);
 function advGo(){
   if(ADV.done){say({es:'¡Lo has conseguido! ¡Hasta mañana!',en:'You did it! See you tomorrow!',de:'Geschafft! Bis morgen!'}[lang]);return;}
   ADV.started=true;advSave();

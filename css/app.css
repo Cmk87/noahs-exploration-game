@@ -573,3 +573,13 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .card.withWord .cl b{color:var(--blaze);font-size:1.3em}
 /* difficulty levels stay internal (shown in the parent panel), not on the child's screen */
 #levelPill,#earLevelPill,#actLevel,#geoLevel{display:none!important}
+/* adventure map: drag Rexi along the path to the glowing stop */
+.advRexi{margin:0;transform:translate(-50%,-50%);width:66px;height:66px;display:flex;align-items:center;justify-content:center;font-size:42px;
+  border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.35),rgba(255,255,255,0) 70%);pointer-events:auto;touch-action:none;cursor:grab;z-index:4;animation:none}
+.advRexi.drag{font-size:50px;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35))}
+.advHand{position:absolute;font-size:38px;transform:translate(-20%,-10%);pointer-events:none;z-index:5;opacity:0;transition:opacity .25s;filter:drop-shadow(0 3px 3px rgba(0,0,0,.35))}
+.advStop.start{background:#fff;width:52px;height:52px;margin:-26px 0 0 -26px;font-size:26px}
+.advStop.later{opacity:.75}
+.advStop.later::after{content:"🔒";position:absolute;right:-6px;bottom:-6px;font-size:16px}
+.advStop.now::before{content:"";position:absolute;inset:-12px;border-radius:50%;border:4px dashed rgba(255,212,0,.9);animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}

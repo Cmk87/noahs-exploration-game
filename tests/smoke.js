@@ -109,6 +109,14 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     await page.evaluate(() => { if (!ADV.done && activeTab === 'adv') advGo(); });
   }
   check(await page.evaluate(() => ADV.done), 'a whole adventure can be finished');
+  await page.evaluate(() => { advEnsure(true); showTab('adv'); });
+  await page.waitForTimeout(200);
+  const pts = await page.evaluate(() => { const m = $('advMap').getBoundingClientRect(), out = [];
+    for (let k = 0; k <= 16; k++) { const q = advBez(ADVP[0], ADVP[1], k / 16); out.push([m.left + q[0] / 100 * m.width, m.top + q[1]]); } return out; });
+  await page.mouse.move(pts[0][0], pts[0][1]); await page.mouse.down();
+  for (const [x, y] of pts.slice(1)) await page.mouse.move(x, y, { steps: 2 });
+  await page.mouse.up(); await page.waitForTimeout(800);
+  check(await page.evaluate(() => ADV.started && activeTab === ADV.plan[0].tab), 'dragging the dino along the path opens the first stop');
 
   console.log('Parent panel');
   await page.evaluate(() => showTab('parent'));
