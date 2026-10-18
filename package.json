@@ -1,5 +1,5 @@
 {
-  "name": "noahs-exploration-game",
+  "name": "the-little-explorer",
   "private": true,
   "description": "Trilingual learning game for a four-year-old (static site, no build step)",
   "scripts": {

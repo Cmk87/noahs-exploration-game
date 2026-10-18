@@ -1,6 +1,6 @@
 {
-  "name": "Noah's Exploration Game",
-  "short_name": "Noah",
+  "name": "The Little Explorer",
+  "short_name": "Little Explorer",
   "description": "Letters, words, verbs and exploration in Spanish, English and German",
   "start_url": "./",
   "scope": "./",

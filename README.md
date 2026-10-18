@@ -1,4 +1,4 @@
-# Noah's Exploration Game
+# The Little Explorer
 
 A trilingual (🇪🇸 Spanish · 🇬🇧 English · 🇩🇪 German) learning app for a four-year-old, in a single
 self-contained `index.html`. No build step and no server: open the file in Chrome (Android/desktop) or

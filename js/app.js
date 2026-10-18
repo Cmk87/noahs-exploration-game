@@ -146,11 +146,11 @@ $('voiceSel').onchange=e=>{try{localStorage.setItem('sl_voice_'+lang,e.target.va
 $('voiceTest').onclick=()=>{ac();say({es:'Hola, soy tu dinosaurio.',en:'Hello, I am your dinosaur.',de:'Hallo, ich bin dein Dinosaurier.'}[lang]);};
 if('speechSynthesis' in window)speechSynthesis.addEventListener&&speechSynthesis.addEventListener('voiceschanged',()=>{if(activeTab==='parent')renderVoices();});
 /* ---- backup: every sl_* key in one JSON file ---- */
-function backupData(){const d={app:'noahs-exploration-game',v:1,saved:new Date().toISOString(),data:{}};
+function backupData(){const d={app:'the-little-explorer',v:1,saved:new Date().toISOString(),data:{}};
   try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('sl_'))d.data[k]=localStorage.getItem(k);}}catch(e){}
   return d;}
 $('backupSave').onclick=async()=>{
-  const d=backupData(),name='noah-backup-'+d.saved.slice(0,10)+'.json';
+  const d=backupData(),name='explorer-backup-'+d.saved.slice(0,10)+'.json';
   const blob=new Blob([JSON.stringify(d)],{type:'application/json'});
   const file=new File([blob],name,{type:'application/json'});
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});
@@ -162,7 +162,7 @@ $('backupLoad').onclick=()=>$('backupFile').click();
 $('backupFile').onchange=e=>{
   const f=e.target.files&&e.target.files[0];if(!f)return;
   const r=new FileReader();
-  r.onload=()=>{try{const d=JSON.parse(r.result);if(!d||d.app!=='noahs-exploration-game'||!d.data)throw 0;
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(!d||!['the-little-explorer','noahs-exploration-game'].includes(d.app)||!d.data)throw 0;
       if(!confirm({es:'¿Reemplazar el progreso actual con esta copia?',en:'Replace the current progress with this backup?',de:'Aktuellen Fortschritt durch diese Sicherung ersetzen?'}[lang]))return;
       Object.keys(localStorage).filter(k=>k.startsWith('sl_')).forEach(k=>localStorage.removeItem(k));
       Object.entries(d.data).forEach(([k,v])=>{if(k.startsWith('sl_'))localStorage.setItem(k,v);});
