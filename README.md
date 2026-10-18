@@ -20,6 +20,14 @@ The tabs are big icons that all fit on one row; tapping one also says its name.
 | 🎁 Prizes | Spend 40 ⚡ on a prize game (see below) |
 | ⚙ (top bar, hold 1 s) | Parent panel: weekly report, play-time limit, adventure length, voice, backup/restore, levels, most-missed words, prize points |
 
+## City (pilot)
+
+`city.html` is a stand-alone trial of an explorable town, not yet linked from the app. Pinch and drag the
+map; tap anything to hear its name (with article) and watch it react: the fire engine, police car and
+ambulance drive out with sirens, the helicopter takes off, the train comes into the station, the power
+station lights every window. 14 animals hide around town (bear asleep in the cave, fox in a bush, owl in
+a tree hole…); 🔎 asks "Wo ist …?" and 🌙 switches to night. All drawing is code in `js/city.js`.
+
 ## Automatic difficulty
 
 Words, Listen and Dino Show share one engine: a weighted up-down staircase. A round solved on the first

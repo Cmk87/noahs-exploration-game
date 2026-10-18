@@ -113,6 +113,20 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.evaluate(() => showTab('parent'));
   check(await page.evaluate(() => $('repBars').children.length === 7), 'weekly report shows 7 days');
 
+  console.log('City (pilot)');
+  const city = await browser.newPage({ viewport: { width: 360, height: 640 }, isMobile: true, hasTouch: true });
+  city.on('pageerror', e => errors.push('city: ' + e.message));
+  await city.goto('file://' + path.resolve(__dirname, '..', 'city.html'));
+  await city.waitForTimeout(600);
+  await city.evaluate(() => Object.keys(CITY.ENT).forEach(id => {
+    const h = CITY.HITS().find(h => h.id === id), b = (h && h.b) || CITY.ENT[id].at || [100, 100, 120, 120];
+    CITY.trigger(id, b, (b[0] + b[2]) / 2, (b[1] + b[3]) / 2, h && h.ref);
+  }));
+  await city.waitForTimeout(2500);
+  check(await city.evaluate(() => CITY.FOUND.size === 14), 'city: every animal can be found');
+  await city.click('#bFind');
+  check(await city.evaluate(() => !!CITY.FIND() && !!CITY.ENT[CITY.FIND().id].at), 'city: "where is …?" picks a target');
+
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();
   console.log(failures ? `\n${failures} check(s) failed` : '\nAll checks passed');
