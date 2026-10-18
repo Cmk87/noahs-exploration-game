@@ -15,10 +15,15 @@ const TT=()=>ST.T;
 const L3=a=>a[li()];
 
 /* ---------- words ---------- */
-ent('spacecenter','🛰️',['der Weltraumbahnhof','the space centre','el centro espacial'],['Der Weltraumbahnhof! Von hier fliegen Raketen ins Weltall.','The space centre! Rockets fly into space from here.','¡El centro espacial! Desde aquí los cohetes van al espacio.'],{find:1});
+ent('spacecenter','🛰️',['das Raumfahrtzentrum','the space centre','el centro espacial'],['Das Raumfahrtzentrum! Von hier fliegen Raketen ins Weltall.','The space centre! Rockets fly into space from here.','¡El centro espacial! Desde aquí los cohetes van al espacio.'],{find:1});
 ent('shuttle','🚀',['das Space Shuttle','the space shuttle','el transbordador espacial'],null,{find:1});
 ent('rocket','🚀',['die Rakete','the rocket','el cohete'],null,{find:1});
-ent('control','🖥️',['die Raketen-Zentrale','mission control','el control de la misión'],['Die Raketen-Zentrale! Hier wird der Start geplant.','Mission control! They plan the launch here.','¡El control de la misión! Aquí preparan el despegue.'],{find:1});
+ent('control','🧑‍🚀',['das Trainingszentrum','the astronaut training centre','el centro de entrenamiento'],['Das Trainingszentrum! Hier üben die Astronauten für den Flug ins Weltall.','The training centre! Astronauts practise for their trip to space here.','¡El centro de entrenamiento! Aquí los astronautas practican para ir al espacio.'],{find:1});
+ent('grandstand','👀',['die Zuschauertribüne','the viewing stand','la tribuna'],['Die Zuschauer! Sie warten auf den Raketenstart.','The visitors! They are waiting for the launch.','¡El público! Esperan el despegue.'],{find:1});
+ent('ufo','🛸',['das Ufo','the UFO','el ovni'],['Ein Ufo! Bieb, bieb, bieb!','A UFO! Beep, beep, beep!','¡Un ovni! ¡Bip, bip, bip!'],{find:1});
+ent('buggy','🚙',['das Mondauto','the moon buggy','el coche lunar'],['Das Mondauto! Damit fährt man auf dem Mond.','The moon buggy! You drive it on the moon.','¡El coche lunar! Con él se conduce en la Luna.'],{find:1});
+ent('jetpack','🚀',['der Raketenrucksack','the jetpack','la mochila cohete'],['Ein Astronaut mit Raketenrucksack! Er fliegt!','An astronaut with a jetpack! He is flying!','¡Un astronauta con mochila cohete! ¡Vuela!'],{find:1});
+ANI('alien','👽',['das Alien','the alien','el extraterrestre'],['Ein Alien! Es sagt: Hallo, Erdling!','An alien! It says: Hello, Earthling!','¡Un extraterrestre! Dice: ¡Hola, terrícola!']);
 ent('dish','📡',['die Satellitenschüssel','the satellite dish','la antena parabólica'],['Die Satellitenschüssel! Sie spricht mit den Raketen.','The satellite dish! It talks to the rockets.','¡La antena! Habla con los cohetes.'],{find:1});
 ent('astronaut','👩‍🚀',['der Astronaut','the astronaut','el astronauta'],['Der Astronaut! Im Weltall kann man ganz hoch springen.','The astronaut! In space you can jump really high.','¡El astronauta! En el espacio se salta muy alto.'],{find:1});
 ent('wildwest','🤠',['der Wilde Westen','the Wild West','el Lejano Oeste'],['Der Wilde Westen! Yeehaw!','The Wild West! Yeehaw!','¡El Lejano Oeste! ¡Yijaa!'],{find:1});
@@ -58,7 +63,8 @@ const S3={
   coins:()=>{[1568,1760,2093,2349].forEach((f,i)=>beep(f,i*0.09,0.25,'triangle',0.1));},
   trot:()=>{for(let i=0;i<10;i++)beep(i%2?260:200,i*0.16,0.05,'square',0.06);},
   splash:()=>noise(0.6,0.15),
-  boing:()=>{swp(200,700,0.35,'sine',0.12);}};
+  boing:()=>{swp(200,700,0.35,'sine',0.12);},
+  ufo:()=>{for(let i=0;i<4;i++){swp(600,1400,0.18,'sine',0.08,i*0.22);swp(1400,600,0.18,'sine',0.08,i*0.22+0.11);}}};
 
 /* =============================================================
    GROUND
@@ -86,27 +92,81 @@ K.GROUND1.push(()=>{if(!inV(2820,770,4040,830))return;
 /* =============================================================
    SPACE CENTRE
 ============================================================= */
-S(310,[2880,180,3130,312],()=>{const x=2900,y=240,w=220,d=70,h=72,Fy=flatB(x,y,w,d,h,'#F4F7FB','#C9D0DB','#3B7DE2'),base=y+d;
-  sign(x+w/2,Fy+13,120,15,L3(['RAUMFAHRT','SPACE CENTER','CENTRO ESPACIAL']),'#2B2D3A','#FFFFFF');
-  for(let k=0;k<6;k++)win(x+12+k*35,Fy+30,22,16);rr(x+w/2-14,base-22,28,22,2,'#BFE6FA');ln('#9AA4B8',1.4,x+w/2,base-22,x+w/2,base);
-  poly('#E8443A',x+w-30,Fy-20,x+w-16,Fy-34,x+w-2,Fy-20);rr(x+w-18,Fy-20,4,20,1,'#9AA4B8');
-  hit('control',x-4,y-h,x+w+4,base);});
-S(210,[3110,70,3200,212],()=>{const T=TT(),x=3150,y=210,a=Math.sin(T*0.3)*0.9;
+function astro(x,y,f,s,pose,T){s=s||1;flip(x,y,f,()=>{g.scale(s,s);const st=pose==='walk'?Math.sin(T*6)*3:0;
+  rr(-7,-26,14,20,5,'#F4F7FB');rr(-6,-8+st*0.3,5,8,2,'#E3E8F0');rr(1,-8-st*0.3,5,8,2,'#E3E8F0');rr(-12,-24,6,14,3,'#F4F7FB');rr(6,-24,6,14,3,'#F4F7FB');
+  rr(-6,-22,12,8,2,'#3B7DE2');circ(0,-34,10,'#F4F7FB');ell(2,-34,7,6,'#F2B23A');ell(4,-36,2.6,1.8,'rgba(255,255,255,.7)');rr(-10,-28,4,8,2,'#C9D0DB');
+  if(pose==='wave'){g.save();g.translate(8,-22);g.rotate(-2.4+Math.sin(T*9)*0.4);rr(-3,0,6,12,3,'#F4F7FB');g.restore();}});}
+/* astronaut training centre with an open front: centrifuge, water tank, mission control */
+S(282,[2860,40,3190,284],()=>{const T=TT(),t=fx('control'),fast=t<5?2.5:1,x=2870,y=190,w=310,d=92,h=140,Ye=y+d-h,base=y+d;
+  rr(x+6,base-5,w+8,10,5,'rgba(0,0,0,.15)');rr(x,y-h,w,d,4,'#C9D0DB');ln('#9AA4B8',2,x+w-30,y-h+10,x+w-30,y-h-26);circ(x+w-30,y-h-28,3,Math.sin(T*4)>0?'#E8443A':'#8A3A3A');
+  rr(x,Ye,w,h,[0,0,4,4],'#F4F7FB');rr(x,Ye,w,8,0,'#3B7DE2');sign(x+w/2,Ye+22,200,18,L3(['TRAININGSZENTRUM','TRAINING CENTRE','ENTRENAMIENTO']),'#3B7DE2','#FFFFFF');
+  const ix=x+14,iy=Ye+38,iw=w-28,ih=h-46,rw=iw/3;rr(ix-4,iy-4,iw+8,ih+8,8,'#7E889C');
+  g.save();g.beginPath();g.rect(ix,iy,iw,ih);g.clip();
+  rr(ix,iy,rw,ih,0,'#EAF2FB');const cx=ix+rw/2,cy=iy+ih/2+4,a=T*2.2*fast;ln('#7E889C',4,cx,cy,cx+Math.cos(a)*30,cy+Math.sin(a)*30*0.5);circ(cx,cy,6,'#5A6074');
+  g.save();g.translate(cx+Math.cos(a)*30,cy+Math.sin(a)*30*0.5);circ(0,0,10,'#FFC928');circ(0,-1,5,'#F2B23A');g.restore();rr(cx-16,iy+ih-6,32,6,2,'#5A6074');
+  rr(ix+rw,iy,rw,ih,0,'#DCEAF6');rr(ix+rw+6,iy+18,rw-12,ih-22,4,'#7FD0F5');for(let k=0;k<4;k++)circ(ix+rw+14+k*14,iy+ih-10-((T*20+k*13)%(ih-30)),2,'rgba(255,255,255,.8)');
+  g.save();g.translate(ix+rw*1.5,iy+ih/2+6+Math.sin(T*1.5)*4);g.rotate(Math.sin(T*0.7)*0.4);astro(0,10,1,0.8,'float',T);g.restore();
+  rr(ix+2*rw,iy,rw,ih,0,'#EEF1F6');for(let k=0;k<3;k++){rr(ix+2*rw+6+k*28,iy+8,24,16,2,'#2B2D3A');const sc=['#7ED957','#3CC8F5','#FF8A3D'][k];
+    for(let j=0;j<3;j++)rr(ix+2*rw+9+k*28,iy+11+j*4,(6+((Math.floor(T*3)+j+k)%3)*5),2,0,sc);}
+  rr(ix+2*rw+4,iy+ih-22,rw-8,8,2,'#9AA4B8');[[ix+2*rw+22,0],[ix+2*rw+60,2]].forEach(([px,i])=>{kid(px,iy+ih-14,'#3B7DE2',SKIN[i],HAIR[i],1.1);rr(px-3,iy+ih-30,6,2,1,'#2B2233');});
+  g.restore();
+  hit('control',x-4,y-h-30,x+w+4,base);hit('astronaut',ix+rw,iy,ix+2*rw,iy+ih,{small:1});});
+S(206,[3200,70,3290,208],()=>{const T=TT(),x=3245,y=206,a=Math.sin(T*0.3)*0.9;
   rr(x-6,y-50,12,50,2,'#C9D0DB');rr(x-16,y-6,32,8,2,'#9AA4B8');
   g.save();g.translate(x,y-70);g.scale(Math.cos(a)*0.9+0.1,1);g.fillStyle='#F4F7FB';g.beginPath();g.ellipse(0,0,36,26,0,0,TAU);g.fill();
   g.strokeStyle='#C9D0DB';g.lineWidth=3;g.stroke();g.fillStyle='#E3E8F0';g.beginPath();g.ellipse(4,2,26,18,0,0,TAU);g.fill();ln('#9AA4B8',2,0,0,22,-18);circ(22,-18,3,'#E8443A');g.restore();
   hit('dish',x-40,y-100,x+40,y);});
 [[3700,140],[3790,140]].forEach(([x,y])=>S(y+30,[x-30,y-30,x+30,y+32],()=>{[-18,0,18].forEach(o=>rr(x+o-2,y,4,30,1,'#9AA4B8'));circ(x,y,26,'#F4F7FB');circ(x-8,y-8,9,'#FFFFFF');}));
-/* the visitors' stand */
-S(560,[2980,470,3240,562],()=>{const T=TT(),cheer=Math.max(fx('shuttle'),0)<12&&fx('shuttle')>4||fx('rocket')<12&&fx('rocket')>4;
-  for(let r=0;r<3;r++){rr(2990,500+r*20,240,8,2,'#9AA4B8');for(let k=0;k<8;k++){const kx=3004+k*30+(r%2)*12,j=cheer?Math.abs(Math.sin(T*8+k+r))*5:0;kid(kx,500+r*20-j,['#FF5A5F','#3CC8F5','#FFC928','#7ED957','#B78CFF'][(k+r)%5],SKIN[(k+r)%4],HAIR[(k*3+r)%4],1);
-    if(cheer&&(k+r)%3===0)rr(kx+4,486+r*20-j,2,8,1,SKIN[(k+r)%4]);}}
-  ln('#9AA4B8',2,2990,556,3230,556);});
-/* astronaut */
-S(420,[3180,330,3300,424],()=>{const T=TT(),t=fx('astronaut'),x=3240+Math.sin(T*0.4)*40,j=t<2.5?Math.sin(t/2.5*Math.PI)*60:0,y=420-j,f=Math.cos(T*0.4)>0?1:-1;
-  ell(x,421,10,3,'rgba(0,0,0,.15)');flip(x,y,f,()=>{rr(-7,-26,14,20,5,'#F4F7FB');rr(-6,-8,5,8,2,'#E3E8F0');rr(1,-8,5,8,2,'#E3E8F0');rr(-12,-24,6,14,3,'#F4F7FB');rr(6,-24,6,14,3,'#F4F7FB');
-    rr(-6,-22,12,8,2,'#3B7DE2');circ(0,-34,10,'#F4F7FB');ell(2,-34,7,6,'#F2B23A');ell(4,-36,2.6,1.8,'rgba(255,255,255,.7)');rr(-10,-28,4,8,2,'#C9D0DB');});
-  hit('astronaut',x-14,y-46,x+14,y,{small:1});});
+/* a covered viewing stand for visitors, who cheer at every launch */
+S(562,[2970,440,3250,566],()=>{const T=TT(),cheer=fx('shuttle')<12&&fx('shuttle')>4||fx('rocket')<12&&fx('rocket')>4;
+  for(let r=0;r<3;r++){rr(2990,504+r*20,240,8,2,'#9AA4B8');for(let k=0;k<8;k++){const kx=3004+k*30+(r%2)*12,j=cheer?Math.abs(Math.sin(T*8+k+r))*5:0,c=['#FF5A5F','#3CC8F5','#FFC928','#7ED957','#B78CFF'][(k+r)%5];
+    kid(kx,504+r*20-j,c,SKIN[(k+r)%4],HAIR[(k*3+r)%4],1);if((k+r)%3===0){ln('#7E889C',1,kx+5,498+r*20-j,kx+5,486+r*20-j);rr(kx+5,486+r*20-j,8,5,1,c);}}}
+  [[2984],[3236]].forEach(([px])=>rr(px,470,4,90,1,'#7E889C'));poly('#E8443A',2976,474,3244,474,3236,458,2984,458);for(let k=0;k<9;k++)rr(2984+k*28,458,14,16,0,'rgba(255,255,255,.55)');
+  sign(3110,448,140,16,L3(['ZUSCHAUER','VISITORS','VISITANTES']),'#2B2D3A','#FFFFFF');ln('#9AA4B8',2,2990,558,3230,558);hit('grandstand',2976,440,3244,562);});
+/* astronauts walking around, one in a moon buggy, one flying with a jetpack */
+[[3060,330,0.55,0],[3210,380,0.4,2],[2950,420,0.35,4]].forEach(([cx,y,sp,ph],i)=>S(y,[cx-90,y-60,cx+90,y+4],()=>{const T=TT(),t=fx('astronaut'),x=cx+Math.sin(T*sp+ph)*70,
+  j=t<2.5?Math.sin(t/2.5*Math.PI)*60:0,f=Math.cos(T*sp+ph)>0?1:-1;ell(x,y+1,10,3,'rgba(0,0,0,.15)');astro(x,y-j,f,1,i===1&&Math.sin(T*0.5)>0.6?'wave':'walk',T);
+  hit('astronaut',x-14,y-46-j,x+14,y,{small:1});}));
+K.DYN.push(L=>{const T=TT(),t=fx('buggy'),u=(T*(t<4?0.25:0.08))%2,k=u<1?u:2-u,x=2900+k*340,y=460,f=u<1?1:-1;if(!inV(x-40,y-50,x+40,y+6))return;
+  L.push({y,f:()=>{flip(x,y,f,()=>{ell(0,1,30,4,'rgba(0,0,0,.15)');rr(-26,-14,52,8,3,'#C9D0DB');rr(-20,-20,22,6,2,'#9AA4B8');ln('#7E889C',1.6,16,-14,20,-34);g.fillStyle='#F4F7FB';g.beginPath();g.ellipse(20,-36,7,3,0,0,TAU);g.fill();
+    [-18,0,18].forEach(wx=>{circ(wx,-4,6,'#3A3F52');circ(wx,-4,2.4,'#9AA4B8');});g.save();g.translate(-8,-14);g.scale(0.8,0.8);astro(0,0,1,1,'sit',T);g.restore();});
+    if(Math.random()<0.15)puff(x-f*28,y-2,{c:'#D9DCE3',r:3,max:0.8});hit('buggy',x-30,y-44,x+30,y+2,{moving:1,small:1});}});});
+K.TOP.push(()=>{const T=TT(),t=fx('jetpack'),a=T*(t<4?0.9:0.35),x=3460+Math.cos(a)*240,y=60+Math.sin(a*1.3)*80-(t<4?40:0),f=-Math.sin(a)>0?1:-1;if(!inV(x-30,y-60,x+30,y+60))return;
+  g.save();g.translate(x,y);g.rotate(Math.sin(T*2)*0.15);rr(-10,-26,8,18,3,'#9AA4B8');for(let k=0;k<2;k++){const fl=10+Math.sin(T*30+k)*3;poly(k?'#FFE14D':'#FF7A2A',-10+k*2,-8,-6,-8+fl,-2-k*2,-8);}
+  astro(0,0,f,0.9,'wave',T);g.restore();LIGHTS.push(x-6,y,30,'#FF9A2A');hit('jetpack',x-18,y-40,x+18,y+6,{moving:1,small:1});});
+
+/* =============================================================
+   UFOS AND ALIENS behind the launch pads
+============================================================= */
+function ufoBody(x,y,s,T,col){g.save();g.translate(x,y);g.scale(s,s);
+  ell(0,0,46,12,'#9AA4B8');ell(0,-3,46,10,'#C9D0DB');ell(0,-12,22,16,'rgba(150,230,255,.75)');ell(-6,-18,6,4,'rgba(255,255,255,.7)');
+  for(let k=0;k<8;k++){const on=((k+Math.floor(T*6))%3)===0,c=['#FF5A5F','#FFE14D','#7ED957','#3CC8F5'][k%4];circ(-38+k*11,2,2.6,on?c:shade(c,-0.5));}
+  if(col)LIGHTS.push(x,y,60*s,col);g.restore();}
+function alien(x,y,c,s,T,i,wave){g.save();g.translate(x,y);g.scale(s,s);const b=Math.abs(Math.sin(T*4+i))*2;
+  rr(-6,-14-b,12,13,5,c);rr(-6,-2,4,3,1,c);rr(2,-2,4,3,1,c);ell(0,-22-b,9,8,c);
+  ln(c,1.4,-4,-29-b,-7,-37-b);ln(c,1.4,4,-29-b,7,-37-b);circ(-7,-37-b,2.2,'#FFE14D');circ(7,-37-b,2.2,'#FFE14D');
+  if(i%2){circ(0,-23-b,4.4,'#FFFFFF');circ(0,-23-b,2.2,'#2B2233');}else{ell(-3.4,-23-b,2.6,3.2,'#2B2233');ell(3.4,-23-b,2.6,3.2,'#2B2233');}
+  g.strokeStyle='#2B2233';g.lineWidth=1;g.beginPath();g.arc(0,-19-b,3,0.2,Math.PI-0.2);g.stroke();
+  if(wave){g.save();g.translate(6,-12-b);g.rotate(-2.3+Math.sin(T*10)*0.5);rr(-1.6,0,3.2,9,1.6,c);g.restore();}g.restore();}
+S(40,[3380,-120,3640,44],()=>{const T=TT(),t=fx('ufo'),x=3500,y=-20;
+  g.strokeStyle='rgba(120,160,90,.5)';g.lineWidth=3;for(let r=24;r<90;r+=16){g.beginPath();g.ellipse(x,y+30,r*1.4,r*0.45,0,0,TAU);g.stroke();}
+  [[-28],[28]].forEach(([o])=>ln('#7E889C',3,x+o,y+4,x+o*1.3,y+30));poly('#9AA4B8',x+10,y+6,x+34,y+40,x+50,y+40,x+22,y+6);
+  ufoBody(x,y,1.2,T,'#9BE15D');alien(x,y-14,'#7ED957',0.6,T,1,false);
+  hit('ufo',x-60,y-40,x+60,y+30);});
+const ALIENS=[[3560,46,'#7ED957'],[3600,58,'#B78CFF'],[3430,52,'#7ED957'],[3470,70,'#9BE15D']];
+ALIENS.forEach(([ax,ay,c],i)=>S(ay,[ax-30,ay-50,ax+30,ay+4],()=>{const T=TT(),t=fx('alien'),j=t<2?Math.abs(Math.sin(t*6+i))*18:0,x=ax+Math.sin(T*0.6+i*2)*16;
+  ell(x,ay+1,8,2.4,'rgba(0,0,0,.15)');alien(x,ay-j,c,1.1,T,i,t<3||i===0);hit('alien',x-12,ay-46-j,x+12,ay+2,{small:1});}));
+/* a second UFO hovers and beams a cow up and down */
+K.TOP.push(()=>{const T=TT(),t=fx('ufo2'),x=3820+Math.sin(T*0.3)*80,y=-160+Math.sin(T*0.9)*12;if(!inV(x-80,y-40,x+80,y+220))return;
+  const beam=t<6,up=beam?Math.sin(Math.min(1,t/3)*Math.PI/2)*(t>4.5?(6-t)/1.5:1):0;
+  if(beam){g.save();g.globalAlpha=0.35;g.fillStyle='#E6FFB0';g.beginPath();g.moveTo(x-16,y+8);g.lineTo(x+16,y+8);g.lineTo(x+46,y+190);g.lineTo(x-46,y+190);g.closePath();g.fill();g.restore();}
+  const cy=y+186-up*150;g.save();g.translate(x,cy);g.rotate(beam?Math.sin(T*3)*0.4:0);ell(0,-10,16,8,'#FFFFFF');ell(-5,-12,5,3.4,'#2E2E2E');ell(6,-8,4,3,'#2E2E2E');
+  [-10,-5,6,11].forEach(lx=>rr(lx-1.5,-4,3,7,1,'#4A4A4A'));circ(15,-14,6,'#FFFFFF');ell(19,-12,3.4,2.6,'#F6B7B7');circ(14,-16,1.1,'#222');g.restore();
+  ufoBody(x,y,1,T,beam?'#E6FFB0':null);hit('ufo',x-50,y-24,x+50,y+16,{moving:1,small:1,ref:'beam'});});
+/* a tiny UFO zips across the sky now and then */
+K.TOP.push(()=>{const T=TT(),ph=(T%18)/18;if(ph>0.3)return;const u=ph/0.3,x=2900+u*1200,y=-260+Math.sin(u*TAU*2)*40;if(!inV(x-30,y-20,x+30,y+20))return;
+  ufoBody(x,y,0.5,T,'#7FE0FF');hit('ufo',x-26,y-14,x+26,y+10,{moving:1,small:1});});
+
 /* the two launch pads */
 const PADS3={shuttle:{x:3460,base:404,col:'#C0473A'},rocket:{x:3830,base:404,col:'#3B7DE2'}};
 function rise(id){const t=fx(id);if(t>=40)return 0;if(t<3.6)return 0;const tt=t-3.6;return 22*tt*tt;}
@@ -285,7 +345,9 @@ S(1580,[3600,1560,3650,1584],()=>{ell(3625,1576,12,6,'#F2EDE4');circ(3619,1574,2
    TAPS, TRAIN ARRIVALS, ZONES
 ============================================================= */
 Object.assign(TAP,{
-  shuttle:()=>launch('shuttle'),rocket:()=>launch('rocket'),control:()=>{S3.count();},dish:()=>{SND.whoosh();},astronaut:()=>{act('astronaut');S3.boing();},
+  shuttle:()=>launch('shuttle'),rocket:()=>launch('rocket'),control:()=>{act('control');S3.count();},dish:()=>{SND.whoosh();},astronaut:()=>{act('astronaut');S3.boing();},
+  grandstand:()=>S3.cheer(),buggy:()=>{act('buggy');SND.motor();},jetpack:()=>{act('jetpack');S3.launch();},
+  ufo:(r)=>{if(r==='beam')act('ufo2');else act('ufo');S3.ufo();},alien:()=>{act('alien');S3.ufo();},
   spacecenter:()=>{S3.count();},
   weststation:()=>rideTrain(STOP_WEST),wildwest:()=>{S3.yeehaw();},desert:(r,x,y)=>burst(x,y,'drop',8,'#E2BE7A',0.5),
   saloon:()=>{act('saloon');S3.piano();},sheriff:()=>{SND.whistle();},store:()=>{SND.ding();},hotel:()=>{SND.ding();},
