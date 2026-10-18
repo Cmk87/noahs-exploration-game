@@ -10,6 +10,7 @@ The tabs are big icons that all fit on one row; tapping one also says its name.
 
 | Tab | What it does |
 | --- | --- |
+| 🗺️ Adventure | Daily guided path of 4–8 stops through the learning tabs, chest and bonus at the end (the app opens here) |
 | ✍️ Write | Trace lowercase, capitals, digits, or his own name, with stroke order and arrows |
 | 🖼️ Words | "Where is the …?" picture quiz, 15 categories, ~370 words, 8 difficulty levels |
 | 👂 Listen | Hear a word, tap the picture, 6 levels up to sound-alike distractors |
@@ -17,7 +18,7 @@ The tabs are big icons that all fit on one row; tapping one also says its name.
 | 🪐 Space | Orrery of the solar system with facts and a quiz |
 | 🌍 World | The seven continents with facts and a quiz |
 | 🎁 Prizes | Spend 40 ⚡ on a prize game (see below) |
-| ⚙ (top bar, hold 1 s) | Parent panel: name, voice picker, levels, most-missed words, prize points |
+| ⚙ (top bar, hold 1 s) | Parent panel: weekly report, play-time limit, adventure length, voice, backup/restore, levels, most-missed words, prize points |
 
 ## Automatic difficulty
 
@@ -66,5 +67,5 @@ Leaving an unfinished prize game takes two taps on 🏠, so a stray tap cannot w
 
 ## Saved data (localStorage)
 
-`sl_power` (⚡ points), `sl_skill` (difficulty levels), `sl_dinos` (museum), `sl_treasure` (treasure counts), `sl_name`, `sl_stats`
+`sl_power` (⚡ points), `sl_skill` (difficulty levels), `sl_srs` (spaced repetition), `sl_adv`/`sl_advsize` (adventure), `sl_log` (daily minutes and accuracy), `sl_limit` (time limit), `sl_voice_*`, `sl_dinos` (museum), `sl_treasure` (treasure counts), `sl_name`, `sl_stats`
 (missed words).
