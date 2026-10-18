@@ -2536,7 +2536,7 @@ function drawDino(g,W,H,st,t,inner){
   if(st.age>0&&v==='stand'){P.hold='cane';P.a1=-0.35;P.head=0.1;P.rot=0.04;}
   if(!inner){g.save();g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,g.canvas.width,g.canvas.height);g.restore();}
   g.save();if(!inner)g.scale(W/100,H/100);g.lineJoin='round';g.lineCap='round';
-  dscene(g,v,t,st,P);
+  if(!st.noScene)dscene(g,v,t,st,P);
   if(st.wet<0){g.save();g.translate(84,13);g.rotate(t*0.4);g.fillStyle='#FFD43B';g.strokeStyle=INK;g.lineWidth=1.2;
     for(let i=0;i<8;i++){g.rotate(Math.PI/4);g.beginPath();g.moveTo(7,-1.5);g.lineTo(11,0);g.lineTo(7,1.5);g.fill();}
     g.beginPath();g.arc(0,0,6,0,7);g.fill();g.stroke();g.restore();}
@@ -2600,6 +2600,43 @@ function drawCrowd(g,W,H,slots,t){
     g.strokeStyle=INK;g.lineWidth=3;g.strokeRect(x,y,cw,ch);});
 }
 
+/* ---------- prepositions: where is the dino? ---------- */
+const PREPS={on:{de:'auf',en:'on',es:'encima de'},under:{de:'unter',en:'under',es:'debajo de'},in:{de:'in',en:'in',es:'dentro de'},
+  next:{de:'neben',en:'next to',es:'al lado de'},behind:{de:'hinter',en:'behind',es:'detrás de'},front:{de:'vor',en:'in front of',es:'delante de'}};
+/* German takes the dative here: die Kiste → in der Kiste, der Tisch → unter dem Tisch */
+const POBJ={box:{preps:['on','in','next','behind','front'],de:'der Kiste',en:'the box',es:'la caja'},
+            table:{preps:['on','under','next','front'],de:'dem Tisch',en:'the table',es:'la mesa'}};
+function drawPrep(g,W,H,obj,pk,t,seed){
+  g.save();g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,g.canvas.width,g.canvas.height);g.restore();
+  g.save();g.scale(W/100,H/100);g.lineJoin='round';g.lineCap='round';
+  const gr=g.createLinearGradient(0,0,0,100);gr.addColorStop(0,'#BFEAFF');gr.addColorStop(1,'#EFFAFF');g.fillStyle=gr;g.fillRect(0,0,100,100);
+  g.fillStyle='#8EDB7E';g.fillRect(0,74,100,26);g.fillStyle='#7CD36B';g.fillRect(0,88,100,12);
+  const dino=(fx,fy,sz)=>{g.save();g.translate(fx-52,fy-88);drawDino(g,100,100,{verb:'stand',size:sz,seed,toff:seed,noScene:1},t,true);g.restore();};
+  g.strokeStyle=INK;g.lineWidth=1.8;
+  const table=()=>{g.fillStyle='#A4683A';g.fillRect(42,61,4,27);g.strokeRect(42,61,4,27);g.fillRect(84,61,4,27);g.strokeRect(84,61,4,27);
+    g.fillStyle='#C68A52';g.fillRect(36,55,58,6);g.strokeRect(36,55,58,6);};
+  const box=(front)=>{g.fillStyle='#D9A06A';
+    if(front!==true){g.fillStyle='#B07D46';g.fillRect(45,58,40,30);g.strokeRect(45,58,40,30);if(front===false)return;}
+    g.fillStyle='#D9A06A';g.fillRect(45,64,40,24);g.strokeRect(45,64,40,24);g.strokeStyle='#8B5E32';g.lineWidth=1.2;
+    g.beginPath();g.moveTo(45,70);g.lineTo(85,70);g.moveTo(45,82);g.lineTo(85,82);g.stroke();g.strokeStyle=INK;g.lineWidth=1.8;
+    if(front===true){g.fillStyle='#E8B985';g.beginPath();g.moveTo(45,64);g.lineTo(38,56);g.lineTo(52,56);g.lineTo(59,64);g.closePath();g.fill();g.stroke();
+      g.beginPath();g.moveTo(85,64);g.lineTo(92,56);g.lineTo(78,56);g.lineTo(71,64);g.closePath();g.fill();g.stroke();}};
+  if(obj==='table'){
+    if(pk==='behind'){dino(64,76,0.42);table();}
+    else if(pk==='under'){table();dino(64,88,0.38);}
+    else if(pk==='on'){table();dino(66,55,0.42);}
+    else if(pk==='next'){table();dino(22,88,0.42);}
+    else{table();dino(62,97,0.5);}
+  }else{
+    if(pk==='in'){box(false);dino(64,80,0.42);box(true);}
+    else if(pk==='behind'){dino(64,76,0.42);box();}
+    else if(pk==='on'){box();dino(64,58,0.42);}
+    else if(pk==='next'){box();dino(22,88,0.42);}
+    else{box();dino(62,97,0.5);}
+  }
+  g.restore();
+}
+
 /* ---------- words and sentences ---------- */
 const capFirst=s=>s.charAt(0).toUpperCase()+s.slice(1);
 const deAdj=(stem,acc)=>stem+(stem.endsWith('e')?(acc?'n':''):(acc?'en':'e'));
@@ -2655,10 +2692,10 @@ function newActRound(){
   const r=Math.random();let kind;
   if(L===1)kind='verb';
   else if(L===2)kind=r<0.6?'verb':'adj';
-  else if(L===3)kind=r<0.35?'verb':r<0.7?'adj':r<0.8?'obj':'count';
-  else if(L===4)kind=r<0.3?'verb':r<0.6?'adj':r<0.7?'obj':r<0.85?'count':'neg';
-  else if(L===5)kind=r<0.45?'combo':r<0.6?'verb':r<0.7?'adj':r<0.85?'count':'neg';
-  else kind=r<0.35?'combo3':r<0.6?'combo':r<0.8?'neg':'count';
+  else if(L===3)kind=r<0.3?'verb':r<0.6?'adj':r<0.68?'obj':r<0.82?'count':'prep';
+  else if(L===4)kind=r<0.25?'verb':r<0.5?'adj':r<0.58?'obj':r<0.7?'count':r<0.82?'neg':'prep';
+  else if(L===5)kind=r<0.4?'combo':r<0.52?'verb':r<0.6?'adj':r<0.72?'count':r<0.84?'neg':'prep';
+  else kind=r<0.3?'combo3':r<0.5?'combo':r<0.67?'neg':r<0.83?'count':'prep';
   let opts=[],ti=0;
   if(kind==='verb'){
     const n=L===1?2:L===2?3:4,vs=pickVerbs(n,L===1?DVERBS.filter(v=>v.easy):DVERBS);
@@ -2688,6 +2725,13 @@ function newActRound(){
     for(let i=1;i<=maxK+1;i++){const b=document.createElement('button');b.className='numBtn';b.innerHTML=`${i}<small>${'●'.repeat(i)}</small>`;
       b.dataset.ok=i===k?'1':'0';b.onclick=()=>actChoose(i===k,b);row.appendChild(b);}
     grid.appendChild(row);actAsk();return;
+  }else if(kind==='prep'){                   // "Welcher Dino ist unter dem Tisch?"
+    const obj=Math.random()<0.5?'box':'table',ps=shuffle(POBJ[obj].preps).slice(0,L===3?3:4);
+    actTarget={kind,obj,p:ps[0]};
+    const order=shuffle(ps.map((x,i)=>i));grid.classList.toggle('three',ps.length===3);
+    order.forEach(i=>{const card=makeCard((g,w,h,t)=>drawPrep(g,w,h,obj,ps[i],t,i*1.3));
+      card.dataset.ok=i===0?'1':'0';card.onclick=()=>actChoose(i===0,card);grid.appendChild(card);});
+    actAsk();return;
   }else if(kind==='neg'){                    // "Wer springt nicht?" — the odd one out
     const [v,o]=pickVerbs(2,DVERBS);actTarget={kind,v,o};
     opts=[stOf(o,[],0),stOf(v,[],1.3),stOf(v,[],2.6),stOf(v,[],3.9)];
@@ -2714,6 +2758,8 @@ function actQuestion(){
   if(T.kind==='tpr'){const im=T.v.imp[lang];return lang==='de'?`${im} wie der Dino!`:lang==='en'?`${im} like the dino!`:`¡${im} como el dino!`;}
   if(T.kind==='verb'){const v=T.v;return lang==='de'?`Wer ${v.de[0]}?`:lang==='en'?`Who is ${v.en}?`:`¿Quién está ${v.es}?`;}
   if(T.kind==='adj'){const a=T.a;return lang==='de'?`Welcher Dino ist ${a.de}?`:lang==='en'?`Which dino is ${a.en}?`:`¿Qué dino ${a.es[1]} ${a.es[0]}?`;}
+  if(T.kind==='prep'){const P=PREPS[T.p][lang],O=POBJ[T.obj][lang];
+    return lang==='de'?`Welcher Dino ist ${P} ${O}?`:lang==='en'?`Which dino is ${P} ${O}?`:`¿Qué dino está ${P} ${O}?`;}
   if(T.kind==='neg'){const v=T.v;return lang==='de'?`Wer ${v.dn||v.de[0]+' nicht'}?`:lang==='en'?`Who is not ${v.en}?`:`¿Quién no está ${v.es}?`;}
   if(T.kind==='count'){const v=T.v;return lang==='de'?`Wie viele Dinos ${v.dp}?`:lang==='en'?`How many dinos are ${v.enp||v.en}?`:`¿Cuántos dinos están ${v.ep||v.es}?`;}
   if(T.kind==='obj'){const w=T.word,many=T.def.plural;
@@ -2731,6 +2777,10 @@ function actAnswerHTML(){
   const T=actTarget,hl=x=>`<b>${x}</b>`;
   if(T.kind==='verb'||T.kind==='combo'||T.kind==='combo3')return dSentence(T.adjs,T.v,hl);
   if(T.kind==='adj')return dIs(T.a,hl);
+  if(T.kind==='prep'){const P=PREPS[T.p][lang],O=POBJ[T.obj][lang],A=w=>`<span class="art g-m">${w}</span>`;
+    if(lang==='de')return `${A('Der')} Dino ist ${hl(P+' '+O)}!`;
+    if(lang==='en')return `The dino is ${hl(P)} ${O}!`;
+    return `¡${A('El')} dino está ${hl(P)} ${O}!`;}
   if(T.kind==='neg'){const v=T.v,o=T.o;
     if(lang==='de')return `Er ${hl(v.dn||v.de[0]+' nicht')} – er ${hl(o.de[0])}!`;
     if(lang==='en')return `It is ${hl('not '+v.en)} – it is ${hl(o.en)}!`;
@@ -2756,8 +2806,8 @@ function actChoose(correct,el){
     const T=actTarget;
     if(actMiss===1)actAsk();
     else if(actMiss===2&&lang!=='es'){       // bridge through his strong language
-      const own=T.kind==='adj'?aW(T.a):T.kind==='obj'?T.word:vW(T.v),
-            es=T.kind==='adj'?T.a.es[0]:T.kind==='obj'?T.def.es[T.yes?0:1]:T.v.es;
+      const own=T.kind==='prep'?PREPS[T.p][lang]:T.kind==='adj'?aW(T.a):T.kind==='obj'?T.word:vW(T.v),
+            es=T.kind==='prep'?PREPS[T.p].es:T.kind==='adj'?T.a.es[0]:T.kind==='obj'?T.def.es[T.yes?0:1]:T.v.es;
       say(`${own}… ${es}`);
     }else if(actMiss>=3){
       $('actGrid').querySelectorAll('[data-ok="1"]').forEach(c=>c.classList.add('hint'));
