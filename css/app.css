@@ -416,3 +416,96 @@
   @keyframes tipIn{from{transform:translateX(-50%) scale(.5);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
   #backBtn{background:var(--beam);width:100%}
   @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+/* =====================================================================
+   DESIGN REFRESH — rounded, chunky, calm. One font family for the app
+   (Baloo 2 for headings, Nunito for text; both SIL OFL, bundled), soft
+   3D "press me" buttons instead of black outlines, white cards, no
+   tilted boxes, and a quiet night-sky background. Drawings on canvas
+   keep their cartoon outlines — that is the illustration style.
+===================================================================== */
+@font-face{font-family:'Baloo 2';font-weight:700;font-display:swap;src:url(../fonts/baloo-2-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Baloo 2';font-weight:800;font-display:swap;src:url(../fonts/baloo-2-latin-800-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-weight:600;font-display:swap;src:url(../fonts/nunito-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-weight:800;font-display:swap;src:url(../fonts/nunito-latin-800-normal.woff2) format('woff2')}
+:root{--ink:#1D2350;--bolt:#FFC928;--blaze:#FF5A5F;--beam:#3CC8F5;--good:#2ED17A;
+  --sky1:#4560E0;--sky2:#24308F;--sky3:#151C5E;
+  --lift:0 5px 0 rgba(10,14,55,.30);--lift-sm:0 3px 0 rgba(10,14,55,.30);--soft:0 12px 24px rgba(5,8,40,.25)}
+body{background:radial-gradient(130% 75% at 50% -12%,var(--sky1) 0%,var(--sky2) 55%,var(--sky3) 100%);
+  font-family:'Nunito',system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:600}
+body::before{background-image:radial-gradient(rgba(255,255,255,.55) 1px,transparent 1.6px),radial-gradient(rgba(255,255,255,.35) 1px,transparent 1.6px);
+  background-size:160px 160px,90px 90px;background-position:20px 30px,65px 80px;opacity:.35}
+.display{font-family:'Baloo 2','Nunito',sans-serif;font-weight:800;letter-spacing:0;text-transform:none}
+button,.btn,input,select{font-family:'Nunito',system-ui,sans-serif}
+
+/* surfaces: no black outlines, soft 3D lift */
+.power,.lang,.tab,.seg,.chip,.prompt,.card,.acard,.tools button,.btn,.letterbar button,.panel,.gcard,.mcard,.numBtn,.flagBtn,
+.pchip,.pverb,#earHead button,.parrotBtns button,#mapBtns button,#gearBtn,#boneCount,#geoBox,#factBox,#dinoCard,#advBar,
+#quizWord,#wordText,#levelPill,#earLevelPill,#actLevel,#geoLevel,.mem .f,.mem .b,#earLetter,#meterOuter{
+  border:none;box-shadow:var(--lift),var(--soft)}
+.tab:active,.seg:active,.chip:active,.card:active,.acard:active,.tools button:active,.btn:active,.letterbar button:active,
+.gcard:active,.mcard:active,.numBtn:active,.flagBtn:active,.pchip:active,.pverb:active,#earHead button:active,.parrotBtns button:active,
+#mapBtns button:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(10,14,55,.30)}
+
+/* header */
+.power{transform:none;border-radius:999px;padding:5px 16px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:20px;
+  background:linear-gradient(90deg,#FFE27A var(--pct,0%),#fff var(--pct,0%))}
+.power.ready{animation:readyGlow2 .9s ease-in-out infinite alternate}
+.power.bump{animation:bump2 .5s cubic-bezier(.2,1.8,.4,1)}
+@keyframes readyGlow2{from{box-shadow:var(--lift),0 0 0 0 rgba(255,201,40,0)}to{box-shadow:var(--lift),0 0 22px 6px rgba(255,201,40,.85);transform:scale(1.06)}}
+@keyframes bump2{40%{transform:scale(1.35)}}
+.lang{transform:none;border-radius:999px;padding:3px}
+.lang button{border-radius:999px;padding:5px 9px}
+.lang button.on{background:var(--bolt)}
+#gearBtn{background:conic-gradient(var(--bolt) var(--hold,0%),#fff var(--hold,0%))}
+
+/* tabs and segmented controls */
+.tab{border-radius:16px;padding:8px 0}
+.tab.on{background:var(--bolt);box-shadow:0 5px 0 #C99600,var(--soft);transform:translateY(-3px)}
+.tab.ready{background:#FFE27A}
+.seg{border-radius:999px;font-weight:800}
+.seg.on{background:var(--beam);color:#fff;box-shadow:0 5px 0 #1E93BD,var(--soft)}
+.chip{border-radius:999px;font-weight:800}
+.chip.on{background:var(--bolt);box-shadow:0 4px 0 #C99600,var(--soft)}
+
+/* text bubbles */
+.prompt{transform:none;border-radius:22px;padding:10px 20px 12px;font-size:min(6vw,26px,3.6dvh);line-height:1.15}
+#quizWord,#wordText{transform:none;border-radius:18px;padding:6px 22px 8px}
+#levelPill,#earLevelPill,#actLevel,#geoLevel{border-radius:999px;background:var(--blaze);padding:3px 14px 4px}
+.art{border:none;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+
+/* cards and buttons */
+.card,.acard{border-radius:22px;background:#fff}
+.card.wrong{background:#FFE4E4}
+.card.right{background:#FFE27A}
+.mem .f,.mem .b{border-radius:18px}
+.mem .b{background:linear-gradient(135deg,#5B7CFA,#3F5BE0)}
+.tools button{border-radius:18px;background:#fff}
+#sayBtn{background:var(--beam)!important;color:#fff}
+#nextBtn{background:var(--blaze)!important;color:#fff}
+.btn{border-radius:16px;font-weight:800}
+.letterbar button{border-radius:14px}
+.letterbar button.on{transform:translateY(-3px);box-shadow:0 5px 0 #C99600,var(--soft)}
+.gcard{border-radius:24px}
+.mcard{border-radius:16px}
+.panel{border-radius:22px}
+.panel h3{font-family:'Baloo 2',sans-serif;font-weight:800;letter-spacing:0}
+#nameInput,#voiceSel{border:2px solid #D5DBF0;border-radius:14px}
+#meterOuter{background:rgba(255,255,255,.18)}
+#meterFill{border-right:none;border-radius:999px}
+
+/* every stage/canvas gets the same white frame */
+#c,#sky,#map,#dig,.gameCv,#playCv,#parrotCv,#storyCv,#sleepCv{border:5px solid #fff;border-radius:24px;box-shadow:var(--lift),var(--soft)}
+.acard canvas{border-radius:22px}
+#mascot{border:4px solid #fff;box-shadow:var(--lift),var(--soft)}
+.advStop{border:4px solid #fff;box-shadow:var(--lift),var(--soft)}
+.advStop.done::after{border:2px solid #fff}
+#lockIcon{padding-top:14px;font-size:min(20vw,92px)}
+#meterOuter{border:none;box-shadow:inset 0 2px 4px rgba(0,0,0,.25)}
+#meterFill{border-right:none;border-radius:999px}
+.gcard .gl{font-family:'Baloo 2',system-ui,sans-serif;font-weight:800;letter-spacing:0;-webkit-text-stroke:0;
+  text-shadow:0 2px 0 rgba(10,14,55,.45)}
+.gcard .gc{border:none;box-shadow:0 2px 0 rgba(10,14,55,.25)}
+.gcard.locked{filter:grayscale(.6) brightness(.85)}
+.gcard.locked::after{font-size:30px;inset:auto;top:50%;left:50%;width:56px;height:56px;margin:-40px 0 0 -28px;
+  background:rgba(255,255,255,.92);border-radius:50%;box-shadow:0 4px 10px rgba(0,0,0,.25)}
