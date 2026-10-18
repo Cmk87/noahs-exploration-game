@@ -256,8 +256,12 @@ function gateText(){
   document.getElementById('gateSub').textContent=T[1];
 }
 const gate=document.getElementById('gate');
+/* The gate disappears on touch-down, so the same finger's click would land on the
+   home card underneath and open it. Swallow clicks for a moment after unlocking. */
+let gateEat=0;
+document.addEventListener('click',e=>{if(performance.now()<gateEat){e.stopPropagation();e.preventDefault();}},true);
 function unlock(e){
-  e.preventDefault();ac();loadVoices();
+  e.preventDefault();ac();loadVoices();gateEat=performance.now()+700;
   gate.style.display='none';
   advEnsure();showTab('home');
   if(timeLimit&&logDay().sec>=(timeLimit+(logDay().extra||0))*60){goToSleep();return;}
@@ -270,13 +274,17 @@ function unlock(e){
 }
 /* coming back to the app (switching apps, screen off) always lands on the home screen;
    games keep their state, so nothing is lost */
-let hiddenAt=0;
+let hiddenAt=0,lastTouch=Date.now();
+const goHomeIf=away=>{if(away&&gate.style.display==='none'&&activeTab!=='home'&&!$('sleep').classList.contains('on'))showTab('home');};
+document.addEventListener('pointerdown',()=>{lastTouch=Date.now();},true);
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden){hiddenAt=Date.now();return;}
-  if(hiddenAt&&Date.now()-hiddenAt>2000&&gate.style.display==='none'&&activeTab!=='home'&&!$('sleep').classList.contains('on'))showTab('home');
+  goHomeIf((hiddenAt&&Date.now()-hiddenAt>2000)||Date.now()-lastTouch>60000);
   hiddenAt=0;
 });
-window.addEventListener('pageshow',e=>{if(e.persisted&&gate.style.display==='none'&&activeTab!=='home')showTab('home');});
+// iOS home-screen apps sometimes come back without a visibility event: an idle minute also counts as "away"
+window.addEventListener('focus',()=>goHomeIf(Date.now()-lastTouch>60000));
+window.addEventListener('pageshow',e=>goHomeIf(e.persisted||Date.now()-lastTouch>60000));
 gate.addEventListener('pointerdown',unlock,{once:true});
 gate.addEventListener('click',unlock,{once:true});
 

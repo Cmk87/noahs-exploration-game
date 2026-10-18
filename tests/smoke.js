@@ -167,6 +167,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.evaluate(() => { Object.defineProperty(document, 'hidden', { value: false, configurable: true }); document.dispatchEvent(new Event('visibilitychange')); });
   check(await page.evaluate(() => activeTab === 'home'), 'coming back to the app opens the home screen');
 
+  {const p2 = await browser.newPage({ viewport: { width: 390, height: 800 }, isMobile: true, hasTouch: true });
+   await p2.goto(page.url().split('#')[0]); await p2.waitForTimeout(400);
+   await p2.touchscreen.tap(100, 600); await p2.waitForTimeout(600);
+   check(await p2.evaluate(() => activeTab === 'home'), 'the "tap to start" touch does not fall through to a home card'); await p2.close();}
+
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();
   console.log(failures ? `\n${failures} check(s) failed` : '\nAll checks passed');
