@@ -207,6 +207,10 @@ const DADJ=[
  {k:'young',    dim:'age',  es:['joven','es'],        en:'young',    de:'jung',      st:{age:-1}},
  {k:'fast',     dim:'speed',es:['rápido','es'],       en:'fast',     de:'schnell',   st:{verb:'run',speed:2.3}},
  {k:'slow',     dim:'speed',es:['lento','es'],        en:'slow',     de:'langsam',   st:{verb:'walk',speed:0.3}},
+ {k:'hungry',   dim:'mood', es:['hambriento','está'], en:'hungry',   de:'hungrig',   st:{mood:'hungry'}},
+ {k:'sick',     dim:'mood', es:['enfermo','está'],    en:'sick',     de:'krank',     st:{mood:'sick'}},
+ {k:'strong',   dim:'strength',es:['fuerte','es'],    en:'strong',   de:'stark',     st:{verb:'lift',strong:1}},
+ {k:'weak',     dim:'strength',es:['débil','es'],     en:'weak',     de:'schwach',   st:{verb:'lift',strong:-1}},
  {k:'loud',     dim:'loud', es:['ruidoso','es'],      en:'loud',     de:'laut',      st:{verb:'roar'}},
  {k:'quiet',    dim:'loud', es:['silencioso','es'],   en:'quiet',    de:'leise',     st:{verb:'shh'}},
  {k:'red',      dim:'color',es:['rojo','es'],         en:'red',      de:'rot',       st:{color:'red'}},
@@ -216,7 +220,7 @@ const DADJ=[
 ];
 const DA=k=>DADJ.find(a=>a.k===k);
 /* verbs whose own face or setting would fight a mood, wetness or dirt */
-const FACE_VERBS=['sleep','laugh','cry','sing','sneeze','yawn','eat','drink','swim','shower','teeth','bubbles','smell','hide'];
+const FACE_VERBS=['lift','sleep','laugh','cry','sing','sneeze','yawn','eat','drink','swim','shower','teeth','bubbles','smell','hide'];
 
 /* ---------- drawing the dino (100×100 design space, feet on y=88) ---------- */
 const INK='#05060F';
@@ -403,6 +407,12 @@ function dpose(v,t,st){
         g.fillStyle='#5B3A1E';g.fillRect(4,-1.4,20,2.8);g.strokeRect(4,-1.4,20,2.8);g.fillRect(23,-2.4,4,4.8);
         g.fillStyle=INK;g.beginPath();g.arc(-2,0,1.8,0,7);g.fill();g.restore();};
       P.post=g=>{for(let i=0;i<2;i++){const ph=(t*0.6+i/2)%1;g.globalAlpha=1-ph;note(g,80+ph*10,40-ph*24,1.1,'#FFD43B');}g.globalAlpha=1;};break;
+    case 'lift':{const sg=st.strong>0;P.a1=P.a2=-2.9+(sg?0:Math.sin(t*9)*0.12);P.dy=sg?0:Math.abs(Math.sin(t*9))*1.2;
+      P.mouth=sg?'grin':'wobble';P.eyes=sg?'happy':'squint';P.l1=sg?-0.15:0.15;P.l2=sg?0.15:-0.15;
+      P.post=g=>{const y=17+P.dy,w=sg?40:18,r=sg?7:3;g.strokeStyle='#555';g.lineWidth=2.2;g.beginPath();g.moveTo(58-w/2+P.dx,y);g.lineTo(58+w/2+P.dx,y);g.stroke();
+        g.fillStyle='#333';[-1,1].forEach(k=>{g.beginPath();g.arc(58+k*w/2+P.dx,y,r,0,7);g.fill();});
+        if(sg){g.fillStyle='#FFD43B';g.strokeStyle=INK;g.lineWidth=1;txt(g,'💪',22,40,9,'#FFD43B');}
+        else for(let i=0;i<2;i++){const ph=(t+i/2)%1;drop(g,46+i*14+P.dx,22+ph*10+P.dy,0.8,'#BFE6FF');}};break;}
     case 'roar':P.mouth='roar';P.head=-0.2+Math.sin(t*16)*0.03;P.a1=P.a2=-1.2;P.eyes='angry';
       P.post=g=>{g.strokeStyle=INK;g.lineWidth=1.6;for(let i=0;i<3;i++){const r=8+i*6+(t*20)%6;g.globalAlpha=0.8-i*0.2;
         g.beginPath();g.arc(92,40,r,-0.7,0.7);g.stroke();}g.globalAlpha=1;txt(g,SAYS.roar[L],76,10,9,'#FF5A4F',-0.1);};break;
@@ -411,7 +421,7 @@ function dpose(v,t,st){
   }
   return P;
 }
-const MOOD_FACE={happy:['happy','grin'],sad:['sad','frown'],angry:['angry','frown'],scared:['wide','wobble'],
+const MOOD_FACE={hungry:['open','o'],sick:['half','wobble'],happy:['happy','grin'],sad:['sad','frown'],angry:['angry','frown'],scared:['wide','wobble'],
                  surprised:['wide','o'],tired:['half','flat']};
 function dface(g,P,st,t,C){
   const m=MOOD_FACE[st.mood]||[],ey=P.eyes||m[0]||'open',mo=P.mouth||m[1]||'smile',ex=73,eyy=28;
@@ -563,6 +573,13 @@ function drawDino(g,W,H,st,t,inner){
   if(st.speed>1){g.fillStyle='rgba(200,170,120,.7)';for(let i=0;i<3;i++){const ph=(t*3+i/3)%1;g.globalAlpha=1-ph;g.beginPath();g.arc(30-ph*22,86-ph*4,2+ph*4,0,7);g.fill();}g.globalAlpha=1;}
   if(st.mood==='surprised')txt(g,'!',86+P.dx,12+P.dy,11,'#FFD43B',0.15);
   if(st.mood==='tired'&&v==='stand'){const ph=(t*0.5)%1;g.globalAlpha=1-ph;txt(g,'z',84,24-ph*14,5+ph*4,'#fff');g.globalAlpha=1;}
+  if(st.mood==='hungry'){g.strokeStyle=INK;g.lineWidth=1.2;for(let i=0;i<3;i++){const a=t*6+i;g.beginPath();g.arc(50+P.dx,66+P.dy,9+i*3+Math.sin(a),-0.6,0.6);g.stroke();}
+    g.fillStyle='#fff';g.strokeStyle=INK;g.lineWidth=1.2;[[86,20,9],[80,31,2.5],[77,36,1.5]].forEach(([x,y,r])=>{g.beginPath();g.arc(x+P.dx,y+P.dy,r,0,7);g.fill();g.stroke();});
+    g.font='10px serif';g.textAlign='center';g.textBaseline='middle';g.fillText('🍗',86+P.dx,20+P.dy);
+    drop(g,88+P.dx,46+P.dy+((t*0.8)%1)*4,0.7,'#BFE6FF');}
+  if(st.mood==='sick'){g.save();g.translate(P.dx,P.dy);g.fillStyle='rgba(120,200,90,.45)';g.beginPath();g.ellipse(74,34,10,8,0,0,7);g.fill();
+    g.strokeStyle='#ddd';g.lineWidth=2;g.beginPath();g.moveTo(86,41);g.lineTo(97,45);g.stroke();g.fillStyle='#FF3B30';g.beginPath();g.arc(97,45,1.6,0,7);g.fill();
+    g.fillStyle='#8FD3FF';g.strokeStyle=INK;g.lineWidth=1.2;g.beginPath();g.roundRect(62,13,14,7,3);g.fill();g.stroke();g.restore();}
   if(st.mood==='scared'){g.strokeStyle=INK;g.lineWidth=1.2;[[18,40],[16,48],[20,56]].forEach(([x,y])=>{g.beginPath();g.moveTo(x+P.dx,y);g.lineTo(x-5+P.dx,y-1);g.stroke();});}
   g.restore();
 }
@@ -669,15 +686,15 @@ function newActRound(){
   if(L===1)kind='verb';
   else if(L===2)kind=r<0.6?'verb':'adj';
   else if(L===3)kind=r<0.3?'verb':r<0.6?'adj':r<0.68?'obj':r<0.82?'count':'prep';
-  else if(L===4)kind=r<0.25?'verb':r<0.5?'adj':r<0.58?'obj':r<0.7?'count':r<0.82?'neg':'prep';
-  else if(L===5)kind=r<0.4?'combo':r<0.52?'verb':r<0.6?'adj':r<0.72?'count':r<0.84?'neg':'prep';
-  else kind=r<0.3?'combo3':r<0.5?'combo':r<0.67?'neg':r<0.83?'count':'prep';
+  else if(L===4)kind=r<0.22?'verb':r<0.44?'adj':r<0.52?'obj':r<0.64?'count':r<0.76?'neg':r<0.88?'prep':'opp';
+  else if(L===5)kind=r<0.36?'combo':r<0.48?'verb':r<0.56?'adj':r<0.67?'count':r<0.78?'neg':r<0.89?'prep':'opp';
+  else kind=r<0.26?'combo3':r<0.44?'combo':r<0.6?'neg':r<0.74?'count':r<0.87?'prep':'opp';
   let opts=[],ti=0;
   if(kind==='verb'){
     const n=L===1?2:L===2?3:4,vs=pickVerbs(n,L===1?DVERBS.filter(v=>v.easy):DVERBS);
     actTarget={kind,v:vs[0],adjs:[]};opts=vs.map((v,i)=>stOf(v,[],i*1.3));
   }else if(kind==='adj'){
-    const dims=L===2?['size','mood','color','wet','dirt']:['size','mood','color','wet','dirt','age','speed','loud'];
+    const dims=L===2?['size','mood','color','wet','dirt']:['size','mood','color','wet','dirt','age','speed','loud','strength'];
     const dim=pick(dims);let vals=DADJ.filter(a=>a.dim===dim);
     if(dim==='mood')vals=L===2?[DA('happy'),DA('sad')]:shuffle(vals).slice(0,L===3?3:4);
     else if(dim==='color')vals=shuffle(vals).slice(0,L===2?2:L===3?3:4);
@@ -701,6 +718,12 @@ function newActRound(){
     for(let i=1;i<=maxK+1;i++){const b=document.createElement('button');b.className='numBtn';b.innerHTML=`${i}<small>${'●'.repeat(i)}</small>`;
       b.dataset.ok=i===k?'1':'0';b.onclick=()=>actChoose(i===k,b);row.appendChild(b);}
     grid.appendChild(row);actAsk();return;
+  }else if(kind==='opp'){                    // "Was ist das Gegenteil von groß?"
+    const pairs=[['big','small'],['happy','sad'],['wet','dry'],['dirty','clean'],['old','young'],['fast','slow'],['loud','quiet'],['strong','weak']];
+    const pr=shuffle(pick(pairs)),from=DA(pr[0]),to=DA(pr[1]);
+    const other=pick(DADJ.filter(a=>a.dim!==from.dim&&!['color','mood'].includes(a.dim)));
+    actTarget={kind,a:to,from};
+    opts=[stOf(null,[to],0),stOf(null,[from],1.3),stOf(null,[other],2.6)];
   }else if(kind==='prep'){                   // "Welcher Dino ist unter dem Tisch?"
     const obj=Math.random()<0.5?'box':'table',ps=shuffle(POBJ[obj].preps).slice(0,L===3?3:4);
     actTarget={kind,obj,p:ps[0]};
@@ -734,6 +757,7 @@ function actQuestion(){
   if(T.kind==='tpr'){const im=T.v.imp[lang];return lang==='de'?`${im} wie der Dino!`:lang==='en'?`${im} like the dino!`:`¡${im} como el dino!`;}
   if(T.kind==='verb'){const v=T.v;return lang==='de'?`Wer ${v.de[0]}?`:lang==='en'?`Who is ${v.en}?`:`¿Quién está ${v.es}?`;}
   if(T.kind==='adj'){const a=T.a;return lang==='de'?`Welcher Dino ist ${a.de}?`:lang==='en'?`Which dino is ${a.en}?`:`¿Qué dino ${a.es[1]} ${a.es[0]}?`;}
+  if(T.kind==='opp'){const f=aW(T.from);return lang==='de'?`Was ist das Gegenteil von „${f}“?`:lang==='en'?`What is the opposite of "${f}"?`:`¿Qué es lo contrario de «${f}»?`;}
   if(T.kind==='prep'){const P=PREPS[T.p][lang],O=POBJ[T.obj][lang];
     return lang==='de'?`Welcher Dino ist ${P} ${O}?`:lang==='en'?`Which dino is ${P} ${O}?`:`¿Qué dino está ${P} ${O}?`;}
   if(T.kind==='neg'){const v=T.v;return lang==='de'?`Wer ${v.dn||v.de[0]+' nicht'}?`:lang==='en'?`Who is not ${v.en}?`:`¿Quién no está ${v.es}?`;}
@@ -753,6 +777,8 @@ function actAnswerHTML(){
   const T=actTarget,hl=x=>`<b>${x}</b>`;
   if(T.kind==='verb'||T.kind==='combo'||T.kind==='combo3')return dSentence(T.adjs,T.v,hl);
   if(T.kind==='adj')return dIs(T.a,hl);
+  if(T.kind==='opp'){const f=aW(T.from),o=aW(T.a);
+    return lang==='de'?`Das Gegenteil von ${hl(f)} ist ${hl(o)}!`:lang==='en'?`The opposite of ${hl(f)} is ${hl(o)}!`:`¡Lo contrario de ${hl(f)} es ${hl(o)}!`;}
   if(T.kind==='prep'){const P=PREPS[T.p][lang],O=POBJ[T.obj][lang],A=w=>`<span class="art g-m">${w}</span>`;
     if(lang==='de')return `${A('Der')} Dino ist ${hl(P+' '+O)}!`;
     if(lang==='en')return `The dino is ${hl(P)} ${O}!`;
@@ -784,8 +810,8 @@ function actChoose(correct,el){
       if(w){const k=lang+'|🦖 '+w;stats[k]=(stats[k]||0)+1;saveStats();}}
     if(actMiss===1)actAsk();
     else if(actMiss===2&&lang!=='es'){       // bridge through his strong language
-      const own=T.kind==='prep'?PREPS[T.p][lang]:T.kind==='adj'?aW(T.a):T.kind==='obj'?T.word:vW(T.v),
-            es=T.kind==='prep'?PREPS[T.p].es:T.kind==='adj'?T.a.es[0]:T.kind==='obj'?T.def.es[T.yes?0:1]:T.v.es;
+      const own=T.kind==='prep'?PREPS[T.p][lang]:T.kind==='adj'||T.kind==='opp'?aW(T.a):T.kind==='obj'?T.word:vW(T.v),
+            es=T.kind==='prep'?PREPS[T.p].es:T.kind==='adj'||T.kind==='opp'?T.a.es[0]:T.kind==='obj'?T.def.es[T.yes?0:1]:T.v.es;
       say(`${own}… ${es}`);
     }else if(actMiss>=3){
       $('actGrid').querySelectorAll('[data-ok="1"]').forEach(c=>c.classList.add('hint'));
@@ -808,9 +834,9 @@ function playSay(){
 }
 function buildPlay(){
   const groups=[['size',['small','big']],['color',['red','blue','yellow','green']],
-                ['mood',['happy','sad','angry','scared','surprised','tired']],['wet',['wet']],['dirt',['dirty','clean']],['age',['old','young']]];
+                ['mood',['happy','sad','angry','scared','surprised','tired','hungry','sick']],['wet',['wet']],['dirt',['dirty','clean']],['age',['old','young']]];
   const IC={small:'🐭',big:'🐘',red:'🟥',blue:'🟦',yellow:'🟨',green:'🟩',happy:'😀',sad:'😢',angry:'😠',scared:'😱',
-            surprised:'😮',tired:'😴',wet:'💧',dirty:'🟫',clean:'✨',old:'👴',young:'🧢'};
+            surprised:'😮',tired:'😴',hungry:'🤤',sick:'🤒',wet:'💧',dirty:'🟫',clean:'✨',old:'👴',young:'🧢'};
   const box=$('playAdj');box.innerHTML='';
   groups.forEach(([dim,keys])=>keys.forEach(k=>{
     const b=document.createElement('button');b.className='pchip'+(PLAY.adjs[dim]===k?' on':'');b.textContent=IC[k];
@@ -822,14 +848,69 @@ function buildPlay(){
     b.onclick=()=>{ac();PLAY.verb=v.k;buildPlay();playSay();};vb.appendChild(b);});
 }
 function playLoop(){
-  if(activeTab!=='act'||(actMode!=='play'&&actMode!=='parrot')){playAnim=null;return;}
-  const cn=$(actMode==='play'?'playCv':'parrotCv'),r=cn.getBoundingClientRect();
+  if(activeTab!=='act'||!['play','parrot','story'].includes(actMode)){playAnim=null;return;}
+  const cn=$({play:'playCv',parrot:'parrotCv',story:'storyCv'}[actMode]),r=cn.getBoundingClientRect();
   if(r.width){const dpr=Math.min(window.devicePixelRatio||1,2.5),w=Math.round(r.width*dpr);
     if(cn.width!==w){cn.width=w;cn.height=w;}const g=cn.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
-    const t=performance.now()/1000;if(actMode==='play')drawDino(g,r.width,r.width,playState(),t);else drawParrot(g,r.width,t);}
+    const t=performance.now()/1000;if(actMode==='play')drawDino(g,r.width,r.width,playState(),t);
+    else if(actMode==='story'){if(STORY&&STORY.phase==='tell')drawDino(g,r.width,r.width,{verb:STORY.v[STORY.i].k},t);}
+    else drawParrot(g,r.width,t);}
   playAnim=requestAnimationFrame(playLoop);
 }
 $('playCv').onclick=()=>{ac();playSay();};
+
+/* ---------- 📖 Rexi's day: a 4-scene story, then "what does Rexi do second?" ----------
+   Trains listening to a whole little story, sequence words, and German
+   verb-second order after "dann/danach": "Dann fährt Rexi Fahrrad." */
+const STORY_GROUPS=[['yawn','teeth','eat','drink'],['walk','run','bike','skate','swing','slide','kick','climb','swim'],
+  ['paint','read','drum','guitar','cook','dig','water','sweep','dance','sing','fish','carry'],['shower','sleep']];
+const STORY_T={de:['Zuerst','Dann','Danach','Am Ende'],en:['First','Then','After that','In the end'],es:['Primero','Luego','Después','Al final']};
+const STORY_Q={de:['Was macht Rexi zuerst?','Was macht Rexi als Zweites?','Was macht Rexi als Drittes?','Was macht Rexi am Ende?'],
+  en:['What does Rexi do first?','What does Rexi do second?','What does Rexi do third?','What does Rexi do at the end?'],
+  es:['¿Qué hace Rexi primero?','¿Qué hace Rexi en segundo lugar?','¿Qué hace Rexi en tercer lugar?','¿Qué hace Rexi al final?']};
+let STORY=null;
+function storyLine(i,hl){
+  hl=hl||(x=>x);const v=STORY.v[i],T=STORY_T[lang][i];
+  if(lang==='de'){const w=v.de[0],k=w.indexOf(' ');const fin=k<0?w:w.slice(0,k),rest=k<0?'':' '+w.slice(k+1);
+    return `${hl(T)} ${hl(fin)} Rexi${rest?' '+hl(rest.trim()):''}.`;}
+  if(lang==='en')return `${hl(T)}, Rexi is ${hl(v.en)}.`;
+  return `${hl(T)}, Rexi está ${hl(v.es)}.`;
+}
+function storyNew(){
+  STORY={v:STORY_GROUPS.map(g=>{const k=pick(g);return DVERBS.find(v=>v.k===k);}),i:0,phase:'tell',asked:[]};
+  $('actStory').classList.remove('quiz');storyShow();
+}
+function storyShow(){
+  const S=STORY;$('storyDots').innerHTML=S.v.map((v,i)=>`<span class="${i<S.i?'done':i===S.i?'on':''}"></span>`).join('');
+  const html=storyLine(S.i,x=>`<b>${x}</b>`);$('storyText').innerHTML=html;say(stripTags(html));
+  $('storyNext').textContent='▶';
+}
+function storyAdvance(){
+  const S=STORY;if(!S)return storyNew();
+  if(S.phase==='tell'){if(S.i<3){S.i++;storyShow();}else storyQuiz();}
+  else if(S.phase==='done')storyNew();
+}
+function storyQuiz(){
+  const S=STORY;S.phase='quiz';S.miss=0;$('actStory').classList.add('quiz');
+  const left=[0,1,2,3].filter(i=>!S.asked.includes(i));S.q=pick(left);S.asked.push(S.q);
+  $('storyText').innerHTML='';$('storyQ').textContent=STORY_Q[lang][S.q];say(STORY_Q[lang][S.q]);
+  const g=$('storyGrid');g.innerHTML='';actAnim=actAnim.filter(a=>!a.story);
+  shuffle([0,1,2,3]).forEach(i=>{const card=makeCard((gg,w,h,t)=>drawDino(gg,w,h,{verb:S.v[i].k,seed:i,toff:i*0.4},t));
+    card.onclick=()=>storyPick(i,card);g.appendChild(card);});
+}
+function storyPick(i,el){
+  ac();const S=STORY;if(S.phase!=='quiz')return;
+  if(i===S.q){S.phase=S.asked.length>=2?'done':'between';el.classList.add('right');
+    [...el.parentElement.children].forEach(c=>{if(c!==el)c.classList.add('dim');});
+    bigWin();award(S.miss);const html=storyLine(i,x=>`<b>${x}</b>`);$('storyText').innerHTML=html;say(stripTags(html));
+    setTimeout(()=>{if(STORY!==S||actMode!=='story')return;
+      if(S.phase==='between')storyQuiz();else{$('storyNext').textContent='📖';
+        say({es:'¡Fin! ¿Otra historia?',en:'The end! Another story?',de:'Ende! Noch eine Geschichte?'}[lang]);}},3200);
+  }else{S.miss++;nope();el.classList.remove('wrong');void el.offsetWidth;el.classList.add('wrong');
+    if(S.miss>=2){const T=STORY_T[lang];say(S.v.map((v,k)=>storyLine(k)).join(' '));}else say(STORY_Q[lang][S.q]);}
+}
+$('storyNext').onclick=()=>{ac();storyAdvance();};
+$('storyHear').onclick=()=>{ac();if(!STORY)return;if(STORY.phase==='tell')say(stripTags(storyLine(STORY.i)));else if(STORY.phase==='quiz')say(STORY_Q[lang][STORY.q]);};
 
 /* ---------- 🦜 parrot: hear it, say it, hear yourself ----------
    No grading — speech recognition is unreliable with children's voices.
@@ -895,19 +976,21 @@ function drawParrot(g,W,t){
 function setActMode(m){
   if(actMode==='parrot'&&m!=='parrot')stopRec(true);
   actMode=m;
-  $('actQuiz').classList.toggle('on',m==='quiz');$('actPlay').classList.toggle('on',m==='play');$('actParrot').classList.toggle('on',m==='parrot');
+  $('actQuiz').classList.toggle('on',m==='quiz');$('actPlay').classList.toggle('on',m==='play');$('actParrot').classList.toggle('on',m==='parrot');$('actStory').classList.toggle('on',m==='story');
   $('actLevel').style.visibility=m==='quiz'?'visible':'hidden';$('actSkip').style.display=m==='quiz'?'':'none';
-  $('actTools').style.display=m==='parrot'?'none':'';
+  $('actTools').style.display=m==='parrot'||m==='story'?'none':'';
   buildActModes();
   if(m==='parrot'){actAnim=[];parrotNext();if(!playAnim)playAnim=requestAnimationFrame(playLoop);return;}
+  if(m==='story'){actAnim=[];storyNew();if(!playAnim)playAnim=requestAnimationFrame(playLoop);return;}
   if(m==='play'){actAnim=[];buildPlay();$('playSentence').innerHTML='';if(!playAnim)playAnim=requestAnimationFrame(playLoop);
     say({es:'¡Elige qué hace el dino!',en:'Choose what the dino does!',de:'Such aus, was der Dino macht!'}[lang]);}
   else newActRound();
 }
 function buildActModes(){
   const box=$('actModes');box.innerHTML='';
-  [['quiz','🎯 '+{es:'Juego',en:'Quiz',de:'Quiz'}[lang]],['play','🎮 '+{es:'Libre',en:'Play',de:'Spielen'}[lang]],['parrot','🦜']].forEach(([m,l])=>{
-    const b=document.createElement('button');b.className='seg'+(actMode===m?' on':'');b.textContent=l;
+  [['quiz','🎯'],['play','🎮'],['parrot','🦜'],['story','📖']].forEach(([m,l])=>{
+    const b=document.createElement('button');b.className='seg modeBtn'+(actMode===m?' on':'');b.textContent=l;
+    b.title={quiz:{es:'Juego',en:'Quiz',de:'Quiz'},play:{es:'Libre',en:'Play',de:'Spielen'},parrot:{es:'Repetir',en:'Repeat',de:'Nachsprechen'},story:{es:'Historia',en:'Story',de:'Geschichte'}}[m][lang];
     b.onclick=()=>{ac();if(actMode!==m)setActMode(m);};box.appendChild(b);});
 }
-function showAct(){buildActModes();if(actMode==='parrot'){if(!PARROT)parrotNext();if(!playAnim)playAnim=requestAnimationFrame(playLoop);}else if(actMode==='play'){buildPlay();if(!playAnim)playAnim=requestAnimationFrame(playLoop);}else newActRound();}
+function showAct(){buildActModes();if(actMode==='story'){if(!STORY)storyNew();if(!playAnim)playAnim=requestAnimationFrame(playLoop);}else if(actMode==='parrot'){if(!PARROT)parrotNext();if(!playAnim)playAnim=requestAnimationFrame(playLoop);}else if(actMode==='play'){buildPlay();if(!playAnim)playAnim=requestAnimationFrame(playLoop);}else newActRound();}

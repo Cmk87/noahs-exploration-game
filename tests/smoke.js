@@ -57,17 +57,21 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
 
   await page.evaluate(() => showTab('act'));
   const kinds = new Set();
-  for (let i = 0; i < 150; i++) {
+  for (let i = 0; i < 400; i++) {
     const k = await page.evaluate(i => { SKILL['act|de'] = { s: 1 + (i % 6) + 0.2, n: 10, h: [] }; actRound = i % 25 === 24 ? 5 : 1; newActRound(); return actTarget.kind; }, i);
     kinds.add(k);
   }
-  for (const k of ['verb', 'adj', 'obj', 'combo', 'combo3', 'count', 'neg', 'prep', 'tpr']) check(kinds.has(k), `Dino Show round type: ${k}`);
+  for (const k of ['verb', 'adj', 'obj', 'combo', 'combo3', 'count', 'neg', 'prep', 'opp', 'tpr']) check(kinds.has(k), `Dino Show round type: ${k}`);
   await page.evaluate(() => { actRound = 1; newActRound(); if (actTarget.kind !== 'tpr') $('actGrid').querySelector('[data-ok="1"]').click(); });
   await page.evaluate(() => setActMode('play'));
   await page.evaluate(() => document.querySelector('.pverb').click());
   check(await page.evaluate(() => $('playSentence').textContent.length > 5), 'free play builds a sentence');
   await page.evaluate(() => setActMode('parrot'));
   check(await page.evaluate(() => !!PARROT && PARROT.text.length > 2), 'parrot mode shows a phrase');
+  await page.evaluate(() => setActMode('story'));
+  await page.evaluate(() => { for (let i = 0; i < 4; i++) storyAdvance(); });
+  check(await page.evaluate(() => STORY.phase === 'quiz' && $('storyGrid').children.length === 4), 'story mode tells 4 scenes, then asks');
+  await page.evaluate(() => [...$('storyGrid').children].forEach((c, i) => { if (i === 0) c.click(); }));
   await page.evaluate(() => setActMode('quiz'));
 
   await page.evaluate(() => { showTab('space'); SKILL['space|de'] = { s: 4.2, n: 10, h: [] }; spaceAsk(); spaceAnswer(spaceTargetIdx); });

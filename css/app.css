@@ -232,6 +232,21 @@
   #parrotRec{font-size:46px!important;padding:14px 26px!important;background:var(--bolt)!important;border-radius:50%!important}
   #parrotRec.rec{background:var(--blaze)!important;animation:pulse .45s ease-in-out infinite alternate}
   .parrotBtns button:active{transform:translate(4px,4px);box-shadow:none}
+  #storyDots{display:flex;gap:8px;justify-content:center;margin:8px 0 2px}
+  #storyDots span{width:16px;height:16px;border-radius:50%;border:3px solid var(--ink);background:#fff}
+  #storyDots span.on{background:var(--bolt);transform:scale(1.25)}
+  #storyDots span.done{background:#2ED17A}
+  #storyCv{width:min(calc(100% - 28px),calc(100dvh - 420px),400px);min-width:200px;aspect-ratio:1/1;border:5px solid var(--ink);
+    border-radius:10px;box-shadow:8px 8px 0 var(--ink);display:block;margin-top:6px}
+  #storyText{min-height:46px;margin:12px 14px 0;font-size:min(6.2vw,27px);text-align:center;font-weight:bold;color:#fff;text-shadow:2px 2px 0 var(--ink)}
+  #storyText b{color:var(--bolt)}
+  #storyQ{display:none}
+  #actStory.quiz #storyText:empty{display:none}
+  .modeBtn{font-size:24px;padding:4px 14px;line-height:1.2}
+  #storyGrid{display:none;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:460px;padding:0 14px}
+  #actStory.quiz #storyCv,#actStory.quiz #storyDots{display:none}
+  #actStory.quiz #storyQ{display:block}
+  #actStory.quiz #storyGrid{display:grid}
   #playAdj,#playVerbs{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;width:100%;max-width:470px;padding:10px 14px 0}
   .pchip,.pverb{border:3px solid var(--ink);border-radius:10px;background:#fff;font-size:24px;line-height:1;padding:6px 7px;
     box-shadow:3px 3px 0 var(--ink);cursor:pointer}
