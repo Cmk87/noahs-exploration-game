@@ -396,8 +396,8 @@ function earPick(o,el){
     levelFx(document.getElementById('earLevelPill'),adapt('ear',6,earMiss===0));
     if(earFirst){const w=earTarget[lang][1],Lt=earFirst.toUpperCase(),ph=lang==='es'?`${letterSpokenAny(earFirst)} de ${w}`:lang==='de'?`${Lt} wie ${w}`:`${Lt} for ${w}`;
       showWin(earTarget.e,`<b>${w[0]}</b>${w.slice(1)}`,ph,true);}
-    else showWin(earTarget.e,nounHTML(earTarget),null,true);
-    setTimeout(newEarRound,2400);
+    else showWin(earTarget.e,nounHTML(earTarget),earTarget[lang].join(' ')+'!',true);   // "der Fuchs!" once more
+    setTimeout(newEarRound,2800);
   }else{
     earMiss++;noteMiss(earTarget);nope();
     el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),450);
