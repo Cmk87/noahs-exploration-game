@@ -126,7 +126,7 @@ S(336,[-1370,140,-1230,340],()=>{const T=TT(),t=fx('xmastree'),x=-1300,y=336;
   [[x-40,y+4,'#E8443A'],[x+30,y+6,'#3CC8F5'],[x-8,y+10,'#7ED957']].forEach(([px,py,c])=>{rr(px-10,py-14,20,14,2,c);rr(px-2,py-14,4,14,0,'#FFD23F');rr(px-10,py-9,20,3,0,'#FFD23F');});
   hit('xmastree',x-60,y-190,x+60,y+10);});
 /* reindeer stable and paddock */
-S(212,[-870,80,-700,214],()=>{const x=-860,y=150,w=150,d=62,h=60,{Ye,Yr}=gableB(x,y,w,d,h,'#9A6440','#6E3A2E');snowRoof(x,Yr,Ye,w);
+S(120,[-870,-14,-700,122],()=>{const x=-860,y=58,w=150,d=62,h=60,{Ye,Yr}=gableB(x,y,w,d,h,'#9A6440','#6E3A2E');snowRoof(x,Yr,Ye,w);
   rr(x+20,Ye+14,w-40,h-14,[6,6,0,0],'#4A2E20');ell(x+w/2,y+d-6,40,8,'#E8C25A');sign(x+w/2,Ye+8,70,12,L3(['RENTIERE','REINDEER','RENOS']),'#FFFFFF','#8A3A2A');hit('stable',x-6,Yr-8,x+w+6,y+d);});
 function reindeer(x,y,f,c,rud,t,i){const T=TT(),hop=t<1.2?Math.abs(Math.sin(t*8+i))*10:0;
   flip(x,y-hop,f,()=>{ell(0,hop+1,18,4,'rgba(0,0,0,.12)');[-10,-6,6,10].forEach(lx=>rr(lx-1.4,-13,2.8,13,1,shade(c,-0.25)));
@@ -135,12 +135,25 @@ function reindeer(x,y,f,c,rud,t,i){const T=TT(),hop=t<1.2?Math.abs(Math.sin(t*8+
     g.strokeStyle='#C9A87A';g.lineWidth=1.6;g.lineCap='round';g.beginPath();g.moveTo(1,-18);g.lineTo(-3,-30);g.lineTo(-8,-34);g.moveTo(-3,-30);g.lineTo(1,-36);g.moveTo(4,-18);g.lineTo(8,-30);g.lineTo(6,-36);g.moveTo(8,-30);g.lineTo(13,-34);g.stroke();g.lineCap='butt';
     ell(-1,-20,2,3.4,c,-0.4);g.restore();
     rr(-8,-22,16,3,1,'#D9302A');circ(0,-20,1.6,'#FFD23F');});}
-const PAD=[[-860,300,1,'#A8784A',1],[-780,326,-1,'#9A6A40',0],[-720,290,1,'#B08A5E',0]];
-PAD.forEach(([x,y,f,c,r],i)=>S(y,[x-30,y-50,x+30,y+4],()=>{const T=TT(),t=fx('reindeer'),xx=x+Math.sin(T*0.3+i*2)*14;reindeer(xx,y,f,c,r,t,i);
-  if(r){const nx=xx+f*25,ny=y-37;LIGHTS.push(nx,ny,26,'#FF3030');}
-  hit('reindeer',xx-22,y-58,xx+24,y+2,{small:1});}));
-S(346,[-900,226,-690,350],()=>{for(let x=-900;x<=-690;x+=21){rr(x,330,4,16,1,'#8A5A3B');}rr(-900,334,214,3,1,'#9A6440');rr(-900,342,214,3,1,'#9A6440');
-  for(let y=240;y<=330;y+=22){rr(-904,y,4,14,1,'#8A5A3B');rr(-690,y,4,14,1,'#8A5A3B');}});
+/* Santa's nine reindeer, each with its name (the names are the same in every language, only Rudolph is Rodolfo in Spanish) */
+const RD=[['Rudolph','Rudolph','Rodolfo'],['Dasher'],['Dancer'],['Prancer'],['Vixen'],['Comet'],['Cupid'],['Donner'],['Blitzen']]
+  .map((n,i)=>({n:n.length>1?n:[n[0],n[0],n[0]],c:['#A8784A','#9A6A40','#B08A5E','#8E623C','#A27448','#B48C62','#946640','#A07050','#8A5E3A'][i],
+    x:-910+(i%3)*120+(i>>1&1)*10,y:200+Math.floor(i/3)*62,f:i%2?-1:1,tap:-9}));
+const rdName=r=>r.n[li()];
+let ROLL=-1;                                   // roll call running since this time
+const rdHop=(r,i,T)=>{const a=T-r.tap,b=ROLL>=0?T-ROLL-i*0.8:9;return Math.max(a>=0&&a<1.2?Math.abs(Math.sin(a*8))*12:0,b>=0&&b<0.7?Math.abs(Math.sin(b*9))*12:0);};
+RD.forEach((r,i)=>S(r.y,[r.x-40,r.y-60,r.x+40,r.y+6],()=>{if(SL.t>=0)return;        // out flying with the sleigh
+  const T=TT(),t=fx('reindeer'),xx=r.x+Math.sin(T*0.3+i*2)*14,h=rdHop(r,i,T);
+  reindeer(xx,r.y-h,r.f,r.c,i===0,t,i);
+  if(i===0){const nx=xx+r.f*25,ny=r.y-h-37;LIGHTS.push(nx,ny,26,'#FF3030');}
+  const rc=ROLL>=0?T-ROLL:99,tag=(rc>=i*0.8&&rc<9*0.8+2.5)||T-r.tap<2.5;      // name tag: during the roll call, or after a tap
+  if(tag){const nm=rdName(r);g.font=FONT(11);sign(xx,r.y-h-68,g.measureText(nm).width+14,14,nm,'#FFFFFF','#8A3A2A');}
+  hit('reindeer',xx-22,r.y-58,xx+24,r.y+2,{small:1,ref:{i,label:rdName(r)}});}));
+/* paddock fence: back with gaps for the stable, sides, front */
+S(140,[-990,120,-630,146],()=>{for(let x=-985;x<=-630;x+=21){if(x>-880&&x<-690)continue;rr(x,126,4,16,1,'#8A5A3B');}
+  rr(-985,130,110,3,1,'#9A6440');rr(-985,138,110,3,1,'#9A6440');rr(-695,130,65,3,1,'#9A6440');rr(-695,138,65,3,1,'#9A6440');
+  for(let y=150;y<=320;y+=22){rr(-989,y,4,14,1,'#8A5A3B');rr(-633,y,4,14,1,'#8A5A3B');}});
+S(352,[-990,330,-630,356],()=>{for(let x=-985;x<=-630;x+=21){rr(x,336,4,16,1,'#8A5A3B');}rr(-989,340,360,3,1,'#9A6440');rr(-989,348,360,3,1,'#9A6440');});
 /* the toy factory: the front is open so you can watch the elves */
 function elf(x,y,c,arm,s){s=s||1;rr(x-4*s,y-11*s,8*s,10*s,3*s,c);rr(x-4*s,y-3*s,8*s,2.4*s,1,'#2B2233');circ(x,y-15*s,4.4*s,'#F6D2B4');
   poly('#F6D2B4',x-4.4*s,y-16*s,x-7.6*s,y-18*s,x-4*s,y-14*s);poly('#F6D2B4',x+4.4*s,y-16*s,x+7.6*s,y-18*s,x+4*s,y-14*s);
@@ -182,11 +195,11 @@ function slState(){if(SL.t<0)return {x:SLHOME[0],y:SLHOME[1],f:1,air:0};const u=
   return {x:a[0]+(b[0]-a[0])*k,y:a[1]+(b[1]-a[1])*k,f:b[0]>=a[0]?1:-1,air:u>0.01&&u<0.99};}
 function drawSleigh(p){const T=TT(),s=p.air?1.4:1;g.save();g.translate(p.x,p.y);g.scale(p.f*s,s);
   if(!p.air)ell(10,1,60,6,'rgba(0,0,0,.12)');
-  for(let r=0;r<2;r++)for(let c=0;c<2;c++){const gx=34+c*30,gy=-2-r*6,run=p.air?Math.sin(T*10+c+r)*0.5:0;
+  if(p.air)for(let r=0;r<2;r++)for(let c=0;c<5;c++){if(c===4&&r)continue;const lead=c===4,gx=34+c*30,gy=lead?-5:-2-r*6,run=Math.sin(T*10+c+r)*0.5,col=RD[lead?0:1+c*2+r].c;
     g.save();g.translate(gx,gy);[-8,-5,5,8].forEach((lx,k)=>{g.save();g.translate(lx,-9);g.rotate((k%2?run:-run));rr(-1,0,2.4,9,1,'#7A5235');g.restore();});
-    ell(0,-12,11,5.5,r?'#9A6A40':'#A8784A');g.save();g.translate(9,-15);rr(-2,-10,5,11,2,r?'#9A6A40':'#A8784A');ell(4,-11,5,3.2,r?'#9A6A40':'#A8784A');
-    circ(8,-10.5,c===1&&r===0?2.4:1.2,c===1&&r===0?'#FF2A2A':'#3A2A20');ln('#C9A87A',1.2,1,-13,-2,-22);ln('#C9A87A',1.2,3,-13,6,-22);g.restore();g.restore();}
-  ln('#C9A040',1.2,18,-14,64,-16);ln('#C9A040',1.2,18,-10,64,-12);
+    ell(0,-12,11,5.5,col);g.save();g.translate(9,-15);rr(-2,-10,5,11,2,col);ell(4,-11,5,3.2,col);
+    circ(8,-10.5,lead?2.4:1.2,lead?'#FF2A2A':'#3A2A20');ln('#C9A87A',1.2,1,-13,-2,-22);ln('#C9A87A',1.2,3,-13,6,-22);g.restore();g.restore();}
+  if(p.air){ln('#C9A040',1.2,18,-14,154,-18);ln('#C9A040',1.2,18,-10,124,-12);}
   g.strokeStyle='#C9A040';g.lineWidth=2.4;g.beginPath();g.moveTo(-34,0);g.lineTo(18,0);g.quadraticCurveTo(28,0,26,-8);g.stroke();
   poly('#D9302A',-30,-4,14,-4,22,-22,-34,-26);poly('#B8261E',-34,-26,-26,-30,-22,-26);rr(-32,-26,48,4,2,'#FFD23F');
   ell(-22,-30,12,10,'#8A5A3B');[0,1,2].forEach(k=>rr(-30+k*7,-40,6,6,1,PCOL[k]));
@@ -194,8 +207,9 @@ function drawSleigh(p){const T=TT(),s=p.air?1.4:1;g.save();g.translate(p.x,p.y);
   g.restore();
   if(p.air){if(Math.random()<0.6)PARTS.push({x:p.x-p.f*40*s,y:p.y-14*s,vx:-p.f*rnd(10,30),vy:rnd(-10,10),life:0,max:1.2,k:'star',r:3,c:['#FFD23F','#FFFFFF'][Math.random()*2|0],gr:10});
     if(p.x>0&&p.x<1200&&p.y>0&&p.y<1500&&Math.random()<0.04)PARTS.push({x:p.x,y:p.y,vx:rnd(-20,20),vy:30,life:0,max:2.2,k:'emoji',t:'🎁',r:14,gr:60});
-    LIGHTS.push(p.x+p.f*72*s,p.y-26*s,40,'#FF3030');}
-  hit('sleigh',p.x-50*s,p.y-56*s,p.x+90*s,p.y+4*s,{moving:1,small:1});}
+    LIGHTS.push(p.x+p.f*162*s,p.y-29*s,40,'#FF3030');}
+  if(p.air)hit('sleigh',p.x+Math.min(-50*p.f,180*p.f)*s,p.y-56*s,p.x+Math.max(-50*p.f,180*p.f)*s,p.y+4*s,{moving:1,small:1});
+  else hit('sleigh',p.x-50,p.y-56,p.x+40,p.y+4,{moving:1,small:1});}
 K.UPDATE.push(dt=>{if(SL.t>=0){SL.t+=dt;if(SL.t>24)SL.t=-1;}});
 K.DYN.push(L=>{const p=slState();if(p.air)return;if(inV(p.x-80,p.y-80,p.x+120,p.y+10))L.push({y:p.y,f:()=>drawSleigh(p)});});
 K.TOP.push(()=>{const p=slState();if(p.air)drawSleigh(p);});
@@ -396,8 +410,10 @@ const oldBoat=TAP.boat,oldSub=TAP.submarine;
 Object.assign(TAP,{
   northpole:()=>S4.bells(),santa:()=>{act('santa');S4.hoho();},santahouse:()=>S4.bells(),factory:()=>{act('factory');S4.machine();},elf:()=>{act('factory');S4.jingle();},
   presents:()=>{act('presents');S4.jingle();},sleigh:()=>{if(SL.t<0){SL.t=0;S4.bells();}else S4.jingle();},xmastree:()=>{act('xmastree');S4.bells();},rink:()=>{act('rink');S4.jingle();},
-  stable:()=>{act('reindeer');S4.jingle();},gingerbread:()=>SND.ding(),snow:(r,x,y)=>burst(x,y,'drop',10,'#FFFFFF',0.6),
-  reindeer:()=>{act('reindeer');S4.jingle();},polarbear:()=>{act('polarbear');S4.growl();},arcticfox:()=>{act('arcticfox');SND.squeak();},snowyowl:()=>{act('snowyowl');SND.hoot();},
+  stable:()=>{if(SL.t>=0)return;ROLL=TT();S4.jingle();    say(RD.map(rdName).join(', ')+'!');return true;},gingerbread:()=>SND.ding(),snow:(r,x,y)=>burst(x,y,'drop',10,'#FFFFFF',0.6),
+  reindeer:ref=>{S4.jingle();if(!ref)return;const r=RD[ref.i];r.tap=TT();
+    return ref.i===0?L3(['Das ist Rudolph mit der roten Nase!','This is Rudolph, the red-nosed reindeer!','¡Este es Rodolfo, el reno de la nariz roja!'])
+      :L3([`Das ist ${rdName(r)}!`,`This is ${rdName(r)}!`,`¡Este es ${rdName(r)}!`]);},polarbear:()=>{act('polarbear');S4.growl();},arcticfox:()=>{act('arcticfox');SND.squeak();},snowyowl:()=>{act('snowyowl');SND.hoot();},
   penguin:()=>{act('penguin');SND.squeak();},
   spooky:()=>S4.organ(),vampcastle:()=>{act('vampire');S4.organ();},vampire:()=>{act('vampire');S4.cackle();},graveyard:()=>{act('graveyard');S4.boo();},ghost:()=>{act('ghost');S4.boo();},
   skeleton:()=>{act('skeleton');S4.bones();},witch:()=>{act('witch');S4.cackle();},cauldron:()=>{act('cauldron');S4.bubble();},pumpkin:()=>{act('pumpkin');S4.boo();},moon:()=>S4.organ(),

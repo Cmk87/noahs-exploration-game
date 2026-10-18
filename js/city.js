@@ -1045,20 +1045,20 @@ function lineFor(e){return e.l?e.l[li()]:cap(e.n[li()])+'!';}
 function trigger(id,b,x,y,ref){
   const e=ENT[id];if(!e)return;
   if(FIND){findTap(e,b,x,y,ref);return;}
-  const quiet=TAP[id]&&TAP[id](ref,x,y)===true;
-  let line=quiet?'':lineFor(e);
+  const r=TAP[id]&&TAP[id](ref,x,y),quiet=r===true;      // a TAP may also return its own line (a reindeer's name)
+  let line=quiet?'':typeof r==='string'?r:lineFor(e);
   if(e.animal&&!FOUND.has(id)){FOUND.add(id);store();paws();line+=' '+W.found[li()];burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();
     if(typeof addPower==='function')addPower(2);
     if(FOUND.size===ANIMALS.length)later(2.5,()=>{burst(x,y,'star',40,'#FFD23F',1.5);say(['Du hast alle Tiere gefunden! Super!','You found all the animals! Amazing!','¡Encontraste todos los animales! ¡Genial!'][li()]);});}
-  if(line)say(line);bubble(e,b);
+  if(line)say(line);bubble(e,b,ref&&ref.label);
   if(CAM.k<kFit()*1.8){const cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,k=kFit()*2.8;flyTo({k,x:cx-VW/2/k,y:cy-VH/2/k});}}
 
 /* name bubble that follows its object */
 let BUB=null;
-function bubble(e,b){BUB={e,b,t:T};const el=$('cityBub');el.textContent=e.ic+' '+cap(e.n[li()]);el.classList.add('on');}
+function bubble(e,b,label){BUB={e,b,t:T,label};const el=$('cityBub');el.textContent=e.ic+' '+(label||cap(e.n[li()]));el.classList.add('on');}
 function placeBubble(){const el=$('cityBub');if(!BUB)return;if(T-BUB.t>3){el.classList.remove('on');BUB=null;return;}
   {const ob=BUB.b,ox=(ob[0]+ob[2])/2,oy=(ob[1]+ob[3])/2;let best=null,bd=400;       // follow it if it moves
-    for(const h of HITS){if(h.id!==BUB.e.id)continue;const d=Math.hypot((h.b[0]+h.b[2])/2-ox,(h.b[1]+h.b[3])/2-oy);if(d<bd){bd=d;best=h.b;}}
+    for(const h of HITS){if(h.id!==BUB.e.id||(BUB.label&&h.ref&&h.ref.label!==BUB.label))continue;const d=Math.hypot((h.b[0]+h.b[2])/2-ox,(h.b[1]+h.b[3])/2-oy);if(d<bd){bd=d;best=h.b;}}
     if(best)BUB.b=best;}
   const b=BUB.b,sx=((b[0]+b[2])/2-CAM.x)*CAM.k,sy=(b[1]-CAM.y)*CAM.k-10,w=el.offsetWidth/2+6;
   el.style.left=Math.max(w,Math.min(VW-w,sx))+'px';el.style.top=Math.max(el.offsetHeight+4,sy)+'px';}
@@ -1085,8 +1085,8 @@ $('cityQ').onclick=()=>{if(FIND)say(W.where(ENT[FIND.id].n[li()]));};
 function findTap(e,b,x,y,ref){
   if(FIND.done)return;
   if(e.id===FIND.id){FIND.done=true;SAVE.stars++;store();showQ();if(typeof award==='function')award(Math.min(FIND.miss,2),1);TAP[e.id]&&TAP[e.id](ref,x,y);
-    burst((b[0]+b[2])/2,(b[1]+b[3])/2,'star',22,'#FFD23F');SND.yay();bubble(e,b);say(W.yes[li()]+' '+cap(e.n[li()])+'!');later(3,()=>{if(FIND)findNext();});}
-  else{bubble(e,b);let got='';
+    burst((b[0]+b[2])/2,(b[1]+b[3])/2,'star',22,'#FFD23F');SND.yay();bubble(e,b,ref&&ref.label);say(W.yes[li()]+' '+cap(e.n[li()])+'!');later(3,()=>{if(FIND)findNext();});}
+  else{bubble(e,b,ref&&ref.label);let got='';
     if(e.animal&&!FOUND.has(e.id)){FOUND.add(e.id);store();paws();got=' '+W.found[li()];burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();if(typeof addPower==='function')addPower(2);}
     else{FIND.miss++;nope();}
     say(W.that(e.n[li()])+got+' '+W.where(ENT[FIND.id].n[li()]));}}
@@ -1106,7 +1106,7 @@ setInterval(()=>{const n=clockNight();if(n!==autoNight){autoNight=n;nightOn=n;se
 $('cNight').onclick=()=>{ac();nightOn=!nightOn;setNightBtn();
   say(nightOn?['Gute Nacht, Stadt!','Good night, town!','¡Buenas noches, ciudad!'][li()]:['Guten Morgen!','Good morning!','¡Buenos días!'][li()]);};
 /* called by the app when the language changes or the tab opens */
-function onLang(){if(FIND){showQ();say(W.where(ENT[FIND.id].n[li()]));}else if(BUB)bubble(BUB.e,BUB.b);}
+function onLang(){if(FIND){showQ();say(W.where(ENT[FIND.id].n[li()]));}else if(BUB)bubble(BUB.e,BUB.b,BUB.label);}
 let pendingFocus=null;
 function show(){fit();paws();
   if(pendingFocus){const {id,c}=pendingFocus;pendingFocus=null;TRAIN.ride=false;if(!primed)primeAt();
