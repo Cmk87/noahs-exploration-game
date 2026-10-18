@@ -49,7 +49,13 @@ dropping presents, a giant Christmas tree, an ice rink, penguins, polar bear, ar
 spooky corner (vampire castle under a full moon with bats, a graveyard whose ghosts rise, a skeleton, a
 witch on a broom, a bubbling cauldron, a pumpkin patch, a raven, a spider and a black cat). Boats sail
 slowly across the whole sea: a ferry, a fishing boat, a container ship, a cruise ship, sailing boats, a
-speedboat and a red submarine. 57 animals in all.
+speedboat and a red submarine.
+
+Far east (`js/city-industry.js`): an industrial area (a see-through car factory with welding robots, an
+old brick factory, a waste incinerator with a grab crane over the fire, recycling containers for glass,
+paper, plastic, metal and food waste, a warehouse with a forklift, a container crane, a garbage truck)
+and a jail you can look into (robbers in eight cells, a guard with keys, watchtowers with searchlights, a
+basketball yard, a vegetable patch, a police van that brings a new robber, a police dog). 59 animals.
 
 ## Automatic difficulty
 

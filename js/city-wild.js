@@ -112,8 +112,8 @@ const S2={
 const seaY=x=>1898+12*Math.sin(x/130)+7*Math.sin(x/47);
 const sandY=x=>1712+9*Math.sin(x/90)+5*Math.sin(x/37);
 const SEA=new Path2D(),SAND=new Path2D();
-SEA.moveTo(-1800,seaY(-1800));for(let x=-1800;x<=4400;x+=20)SEA.lineTo(x,seaY(x));SEA.lineTo(4400,4000);SEA.lineTo(-1800,4000);SEA.closePath();
-SAND.moveTo(-1800,sandY(-1800));for(let x=-1800;x<=4400;x+=20)SAND.lineTo(x,sandY(x));for(let x=4400;x>=-1800;x-=20)SAND.lineTo(x,seaY(x)+10);SAND.closePath();
+SEA.moveTo(-1800,seaY(-1800));for(let x=-1800;x<=5800;x+=20)SEA.lineTo(x,seaY(x));SEA.lineTo(5800,4000);SEA.lineTo(-1800,4000);SEA.closePath();
+SAND.moveTo(-1800,sandY(-1800));for(let x=-1800;x<=5800;x+=20)SAND.lineTo(x,sandY(x));for(let x=5800;x>=-1800;x-=20)SAND.lineTo(x,seaY(x)+10);SAND.closePath();
 const PEAKS_B=[[140,-840,-260,520],[620,-900,260,1000],[1080,-830,700,1420],[1530,-880,1120,1920],[1880,-720,1560,2120]];
 const PEAKS_F=[[340,-650,20,720],[870,-720,500,1200],[1320,-640,980,1640],[1760,-590,1470,2010]];
 function peak([px,py,l,r],c,base){
@@ -131,15 +131,15 @@ K.GROUND0.push(()=>{
   const T=TT();
   // alpine meadow and mountain range
   if(VIEW[1]<0){
-    const sky=g.createLinearGradient(0,-1000,0,-300);sky.addColorStop(0,'#BFE3FA');sky.addColorStop(1,'#E3F3FC');g.fillStyle=sky;g.fillRect(-1800,-1700,6300,1400);
+    const sky=g.createLinearGradient(0,-1000,0,-300);sky.addColorStop(0,'#BFE3FA');sky.addColorStop(1,'#E3F3FC');g.fillStyle=sky;g.fillRect(-1800,-1700,7800,1400);
     rr(-1800,-300,3820,300,0,'#A3DA80');
     [[-350,-860,-760,120],[-850,-900,-1300,-380],[-1300,-840,-1760,-880]].forEach(p=>peak(p,'#AEB9D0',-300));
     PEAKS_B.forEach(p=>peak(p,'#AEB9D0',-300));PEAKS_F.forEach(p=>peak(p,'#94A2BE',-232));
     for(let x=-1460;x<2040;x+=95)ell(x,-232,82,24,'#A3DA80');
     for(const [x,y,c] of ALPFL)if(inV(x-3,y-3,x+3,y+3)){circ(x,y,2.4,c);circ(x,y,0.9,'#FFE14D');}
     // volcano
-    rr(1960,-300,2500,300,0,'#A3DA80');[[2180,-930,1880,2520],[2660,-880,2330,3000],[3120,-900,2760,3480],[3560,-850,3200,3920],[3960,-910,3620,4320]].forEach(p=>peak(p,'#AEB9D0',-300));
-    for(let x=1990;x<4440;x+=95)ell(x,-300,82,24,'#A3DA80');
+    rr(1960,-300,3900,300,0,'#A3DA80');[[2180,-930,1880,2520],[2660,-880,2330,3000],[3120,-900,2760,3480],[3560,-850,3200,3920],[3960,-910,3620,4320],[4400,-860,4040,4780],[4900,-920,4500,5300],[5350,-860,4980,5760]].forEach(p=>peak(p,'#AEB9D0',-300));
+    for(let x=1990;x<5840;x+=95)ell(x,-300,82,24,'#A3DA80');
     poly('#7A5A4E',1990,VBASE,VX-80,VTOP,VX+80,VTOP,2760,VBASE);poly('#93746A',1990,VBASE,VX-80,VTOP,VX-30,VTOP,2220,VBASE);
     ell(2200,-150,40,12,'#6A4C42');ell(2560,-250,30,9,'#6A4C42');ell(2450,-80,46,12,'#6A4C42');
     const vt=fx('volcano'),hot=vt<7?1:0,glow=0.75+0.25*Math.sin(T*3);
@@ -191,8 +191,8 @@ K.GROUND1.push(()=>{
 const ALPFL=[],JUNGLEBLOB=[],WAVES=[],SHELLS=[];
 for(let i=0;i<160;i++)ALPFL.push([sr()*1950,-300+sr()*290,['#FFFFFF','#FFE14D','#B78CFF','#FF8FB1','#5DA9FF'][sr()*5|0]]);
 for(let i=0;i<30;i++)JUNGLEBLOB.push([1720+sr()*1060,10+sr()*560,20+sr()*50]);
-for(let i=0;i<260;i++){const x=-1400+sr()*5400;WAVES.push([x,seaY(x)+40+sr()*480,sr()*6]);}
-for(let i=0;i<90;i++){const x=-1400+sr()*5400;if(Math.abs(x-915)<70)continue;SHELLS.push([x,sandY(x)+30+sr()*(seaY(x)-sandY(x)-50)]);}
+for(let i=0;i<260;i++){const x=-1400+sr()*6800;WAVES.push([x,seaY(x)+40+sr()*480,sr()*6]);}
+for(let i=0;i<90;i++){const x=-1400+sr()*6800;if(Math.abs(x-915)<70)continue;SHELLS.push([x,sandY(x)+30+sr()*(seaY(x)-sandY(x)-50)]);}
 
 /* =============================================================
    NORTH: waterfall, cable car, hut, snowman, alpine animals

@@ -119,7 +119,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.waitForTimeout(400);
   check(await page.evaluate(() => CITY.HITS().length > 50), 'city: the town is drawn');
   // visit each quarter of the world so everything is drawn once, and tap everything there
-  for (const v of [[-1400, -900, 0, 700], [-1400, 700, 0, 2400], [0, -900, 1400, 700], [1400, -900, 2800, 700], [2800, -900, 4000, 700], [0, 700, 1400, 2400], [1400, 700, 2800, 2400], [2800, 700, 4000, 2400]]) {
+  for (const v of [[-1400, -900, 0, 700], [-1400, 700, 0, 2400], [0, -900, 1400, 700], [1400, -900, 2800, 700], [2800, -900, 4000, 700], [0, 700, 1400, 2400], [1400, 700, 2800, 2400], [2800, 700, 4000, 2400], [4000, -900, 5400, 700], [4000, 700, 5400, 2400]]) {
     for (let k = 0; k < 3; k++) { await page.evaluate(v => { CITY.TRAIN.ride = false; Object.assign(CITY.CAM, CITY.viewOf(...v, 1)); }, v); await page.waitForTimeout(400); }
     await page.evaluate(() => { const seen = new Set(); CITY.HITS().forEach(h => { if (seen.has(h.id)) return; seen.add(h.id);
       CITY.trigger(h.id, h.b, (h.b[0] + h.b[2]) / 2, (h.b[1] + h.b[3]) / 2, h.ref); }); });

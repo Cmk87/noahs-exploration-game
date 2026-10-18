@@ -8,7 +8,7 @@
 ============================================================= */
 (()=>{
 const CW=1200,CH=1600,TAU=Math.PI*2;          // the town
-const WX0=-1400,WX1=4000,WY0=-900,WY1=2400;   // the whole world around it (js/city-wild.js, city-far.js, city-west.js)
+const WX0=-1400,WX1=5400,WY0=-900,WY1=2400;   // the whole world around it (js/city-wild.js, city-far.js, city-west.js, city-industry.js)
 const cv=$('cityCv'),g=cv.getContext('2d'),probe=document.createElement('canvas').getContext('2d');
 let T=0,NIGHT=0,nightOn=false,HITS=[];const LIT=[],LIGHTS=[],ST={T:0,NIGHT:0};
 let seed=11;
@@ -868,7 +868,7 @@ function drawHeli(){const p=heliPos(),y=p.y-p.alt,spin=HELI.t>=0?T*40:T*0.3;
   ln('#555',1.4,-10,0,10,0);ln('#555',1.2,-6,0,-6,-3);ln('#555',1.2,6,0,6,-3);
   const r=30*Math.abs(Math.cos(spin));ln('#3A3F52',2,-r,-21,r,-21);if(HELI.t>=0)ell(0,-21,30,2.2,'rgba(60,60,70,.25)');
   g.restore();hit('heli',p.x-26,y-24,p.x+20,y+2,{moving:1,small:1});}
-const CLOUDS=[[-900,100,1.2],[-600,1200,1.1],[-1100,2000,1.3],[3100,200,1.2],[3600,1300,1.1],[3300,2100,1.3],[150,300,1.1],[700,700,1.3],[300,1250,1],[1000,1100,1.2],[1500,-500,1.4],[2300,100,1.2],[1800,900,1.1],[2500,1500,1.3],[600,2050,1.2],[1900,2200,1],[400,-300,1]].map(([x,y,s])=>({x,y,s}));
+const CLOUDS=[[4400,300,1.2],[5000,1300,1.1],[4700,2100,1.2],[-900,100,1.2],[-600,1200,1.1],[-1100,2000,1.3],[3100,200,1.2],[3600,1300,1.1],[3300,2100,1.3],[150,300,1.1],[700,700,1.3],[300,1250,1],[1000,1100,1.2],[1500,-500,1.4],[2300,100,1.2],[1800,900,1.1],[2500,1500,1.3],[600,2050,1.2],[1900,2200,1],[400,-300,1]].map(([x,y,s])=>({x,y,s}));
 function drawClouds(){const z=CAM.k/kFit(),ca=Math.max(0,Math.min(0.8,(1.7-z)*1.4))*(1-NIGHT*0.7);if(ca<=0.01)return;
   for(const c of CLOUDS){g.globalAlpha=ca*0.5;ell(c.x+40*c.s,c.y+80*c.s,55*c.s,16*c.s,'rgba(30,70,40,.25)');
     g.globalAlpha=ca;[[0,0,24],[-26,6,17],[26,6,18],[-10,-12,17],[12,-10,19]].forEach(([dx,dy,r])=>circ(c.x+dx*c.s,c.y+dy*c.s,r*c.s,'#FFFFFF'));
@@ -906,7 +906,7 @@ function drawGround(){
   rr(752,772,136,4,2,'#FFFFFF');for(let px=760;px<=880;px+=12)rr(px,766,3,8,1,'#FFFFFF');
   rr(766,826,108,8,2,'rgba(0,40,80,.22)');
   // railway
-  const RX=WX1+40;rr(-40,1243,RX+40,24,0,'#BDB1A0');g.fillStyle='#7B5B45';for(let x=Math.max(-40,VIEW[0]-20);x<Math.min(RX,VIEW[2]+20);x+=13)g.fillRect(x,1245,5,20);
+  const RX=3790;              // the railway ends just past the Wild West stationrr(-40,1243,RX+40,24,0,'#BDB1A0');g.fillStyle='#7B5B45';for(let x=Math.max(-40,VIEW[0]-20);x<Math.min(RX,VIEW[2]+20);x+=13)g.fillRect(x,1245,5,20);
   ln('#8F96A3',3,-40,1249,RX,1249);ln('#8F96A3',3,-40,1261,RX,1261);ln('#DDE2EA',1,-40,1248,RX,1248);ln('#DDE2EA',1,-40,1260,RX,1260);
   for(const f of K.GROUND1)f();
   rr(762,1238,116,5,2,'#C0473A');
@@ -1130,6 +1130,7 @@ const K={rr,circ,ell,poly,ln,star,shade,FONT,sign,win,gableB,flatB,kid,SKIN,HAIR
 if(typeof cityWild==='function')cityWild(K);
 if(typeof cityFar==='function')cityFar(K);
 if(typeof cityWest==='function')cityWest(K);
+if(typeof cityIndustry==='function')cityIndustry(K);
 paws();
 if(document.fonts)document.fonts.load(FONT(20)).catch(()=>{});
 requestAnimationFrame(frame);
