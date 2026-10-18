@@ -1067,7 +1067,13 @@ $('cNight').onclick=()=>{ac();nightOn=!nightOn;setNightBtn();
   say(nightOn?['Gute Nacht, Stadt!','Good night, town!','¡Buenas noches, ciudad!'][li()]:['Guten Morgen!','Good morning!','¡Buenos días!'][li()]);};
 /* called by the app when the language changes or the tab opens */
 function onLang(){if(FIND){showQ();say(W.where(ENT[FIND.id].n[li()]));}else if(BUB)bubble(BUB.e,BUB.b);}
-function show(){fit();paws();say(['Willkommen in der Stadt! Tippe auf alles.','Welcome to the town! Tap on anything.','¡Bienvenido a la ciudad! Toca todo.'][li()]);}
+let pendingFocus=null;
+function show(){fit();paws();
+  if(pendingFocus){const {id,c}=pendingFocus;pendingFocus=null;if(!primed)primeAt();const e=ENT[id],b=e.at||[c[0]-60,c[1]-60,c[0]+60,c[1]+60],cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,R=e.at?260:520;
+    flyTo(viewOf(cx-R,cy-R,cx+R,cy+R,1),900);if(e.at&&FOUND.has(id))later(1,()=>bubble(e,b));return;}
+  say(['Willkommen in der Stadt! Tippe auf alles.','Welcome to the town! Tap on anything.','¡Bienvenido a la ciudad! Toca todo.'][li()]);}
+/* the sticker book sends the child here: fly to the animal (or only to its area if not found yet) */
+function showAt(id,c){pendingFocus={id,c};}
 
 /* =============================================================
    MAIN LOOP
@@ -1144,6 +1150,6 @@ if(typeof cityIndustry==='function')cityIndustry(K);
 paws();
 if(document.fonts)document.fonts.load(FONT(20)).catch(()=>{});
 requestAnimationFrame(frame);
-window.CITY={total:()=>ANIMALS.length,worldView,homeView,show,onLang,ENT,FOUND,HITS:()=>HITS,trigger,tapAt,toScreen:(x,y)=>[(x-CAM.x)*CAM.k,(y-CAM.y)*CAM.k],flyTo,viewOf,CAM,TRAIN,VEH,
+window.CITY={total:()=>ANIMALS.length,animals:()=>ANIMALS.map(a=>a[0]),showAt,worldView,homeView,show,onLang,ENT,FOUND,HITS:()=>HITS,trigger,tapAt,toScreen:(x,y)=>[(x-CAM.x)*CAM.k,(y-CAM.y)*CAM.k],flyTo,viewOf,CAM,TRAIN,VEH,
   setNight:v=>{nightOn=v;NIGHT=v?1:0;},act,FIND:()=>FIND,findNext,callTrain};
 })();

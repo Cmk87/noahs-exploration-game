@@ -20,11 +20,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.reload();
   await page.mouse.click(180, 320);
   await page.waitForTimeout(300);
-  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 9), 'opens on the home screen with 9 sections');
+  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 10), 'opens on the home screen with 10 sections');
   check(await page.evaluate(() => lang === 'de'), 'starts in German');
 
   console.log('Layout');
-  for (const t of ['home', 'adv', 'city', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
+  for (const t of ['home', 'adv', 'city', 'stickers', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
     await page.evaluate(t => showTab(t), t);
     await page.waitForTimeout(150);
     await page.evaluate(() => { window.scrollTo(0, 500); const v = document.querySelector('.view.on'); v.lastElementChild && v.lastElementChild.scrollIntoView(); });
@@ -152,6 +152,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   check(boarded, 'city: tapping the station while the train waits starts a ride');
   await page.click('#cFind');
   check(await page.evaluate(() => !!CITY.FIND() && !!CITY.ENT[CITY.FIND().id].at), 'city: "where is …?" picks a target');
+  await page.evaluate(() => showTab('stickers'));
+  check(await page.evaluate(() => document.querySelectorAll('#stkBook .stk').length === CITY.total() && document.querySelectorAll('#stkBook .stk.got').length === CITY.FOUND.size), 'sticker book shows every animal, found ones as stickers');
+  await page.evaluate(() => { document.querySelector('#stkBook .stk.got').click(); $('stkGo').click(); });
+  await page.waitForTimeout(300);
+  check(await page.evaluate(() => activeTab === 'city'), 'a sticker can show its animal in the town');
   await page.click('#homeBtn');
   check(await page.evaluate(() => activeTab === 'home'), '🏠 goes back to the home screen');
   await page.evaluate(() => { showTab('words'); document.dispatchEvent(new Event('visibilitychange')); });

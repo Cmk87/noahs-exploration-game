@@ -57,6 +57,14 @@ paper, plastic, metal and food waste, a warehouse with a forklift, a container c
 and a jail you can look into (robbers in eight cells, a guard with keys, watchtowers with searchlights, a
 basketball yard, a vegetable patch, a police van that brings a new robber, a police dog). 59 animals.
 
+## Sticker book
+
+📒 on the home screen (`js/stickers.js`): all town animals grouped by area (town, forest, farm,
+mountains, dino valley, castle, beach and sea, North Pole, spooky corner, Wild West, space centre,
+industrial area). Found animals are colourful stickers (tap: hear the name and sentence, or fly to it
+in the town); missing ones are grey silhouettes that say which area to search and can fly there. New
+stickers carry a "neu" badge until the book is opened; complete areas get a 🏆.
+
 ## Automatic difficulty
 
 Words, Listen and Dino Show share one engine: a weighted up-down staircase. A round solved on the first

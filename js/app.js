@@ -10,24 +10,26 @@ const TABS=[
   {id:'space', icon:'🪐', es:'Espacio', en:'Space',   de:'Weltall'},
   {id:'city',  icon:'🏙️', es:'Ciudad',  en:'Town',    de:'Stadt'},
   {id:'geo',   icon:'🌍', es:'Mundo',   en:'World',   de:'Welt'},
+  {id:'stickers',icon:'📒',es:'Álbum',  en:'Stickers',de:'Stickerbuch'},
   {id:'dig',   icon:'🎁', es:'Premios', en:'Prizes',  de:'Preise'}
 ];
-const ALLVIEWS=['home','adv','trace','words','ear','act','city','space','geo','dig','parent'];
+const ALLVIEWS=['home','adv','trace','words','ear','act','city','space','geo','stickers','dig','parent'];
 activeTab='trace';                 // declared in core.js so early animation loops can read it
 /* The home screen: one big card per section. 🏠 in the header always comes back here. */
 const CARD_COL={adv:['#FFB938','#FF8A3D'],trace:['#FF7A7A','#E8445A'],words:['#4FC3F7','#2F7FE0'],ear:['#B58CFF','#7A5AE0'],
-  act:['#6FD86A','#2EA84F'],city:['#3DD6C0','#1C9E9A'],geo:['#4FD1F5','#2A8BD0'],space:['#7A7FF0','#4A3FB8'],dig:['#FF8FC8','#E0559A']};
+  act:['#6FD86A','#2EA84F'],city:['#3DD6C0','#1C9E9A'],stickers:['#FFB347','#E07B1A'],geo:['#4FD1F5','#2A8BD0'],space:['#7A7FF0','#4A3FB8'],dig:['#FF8FC8','#E0559A']};
 function buildHome(){
   const box=$('homeGrid');box.innerHTML='';
   $('homeHello').textContent=kidName?{es:'¡Hola, ',en:'Hi, ',de:'Hallo, '}[lang]+kidName+'!':{es:'¿Qué jugamos?',en:'What shall we play?',de:'Was spielen wir?'}[lang];
   TABS.forEach(t=>{
     const b=document.createElement('button'),c=CARD_COL[t.id];
-    b.className='hcard'+(t.id==='adv'?' wide':'')+(t.id==='dig'&&power>=DIG_COST?' ready':'');b.dataset.id=t.id;
+    b.className='hcard'+(t.id==='adv'||t.id==='dig'?' wide':'')+(t.id==='dig'&&power>=DIG_COST?' ready':'');b.dataset.id=t.id;
     b.style.background=`linear-gradient(150deg,${c[0]},${c[1]})`;b.style.setProperty('--edge',c[1]);
     let extra='';
     if(t.id==='adv'&&ADV)extra=ADV.done?'✅':`${ADV.idx+1} / ${ADV.plan.length}`;
     if(t.id==='dig')extra=power>=DIG_COST?'🎁 !':`${power} / ${DIG_COST} ⚡`;
     if(t.id==='city'&&window.CITY)extra='🐾 '+CITY.FOUND.size+' / '+CITY.total();
+    if(t.id==='stickers'&&window.CITY){const nw=stickersNew();extra=nw?`✨ ${nw} NEU`.replace('NEU',{es:'nuevos',en:'new',de:'neu'}[lang]):CITY.FOUND.size+' / '+CITY.total();}
     b.innerHTML=`<span class="hi">${t.icon}</span><span class="hl">${t[lang]}</span>${extra?`<span class="hx">${extra}</span>`:''}`;
     b.setAttribute('aria-label',t[lang]);
     b.onclick=()=>{ac();say(t[lang]);showTab(t.id);};
@@ -47,6 +49,7 @@ function showTab(id){
   if(id==='space'){fitSky();selectPlanet(selected);}
   if(id==='geo'){showGeo();}
   if(id==='city'){CITY.show();}
+  if(id==='stickers'){showStickers();}
   if(id==='dig'){if(pane==='digLock')showDigLock();else resumeGame();}
   if(id==='parent'){renderParent();}
 }
@@ -66,6 +69,7 @@ function setLang(code,btn){
   else if(activeTab==='space')selectPlanet(selected);
   else if(activeTab==='geo'){if(GEO.mode!=='explore')setGeoMode(GEO.mode);else showGeo();}
   else if(activeTab==='city')CITY.onLang();
+  else if(activeTab==='stickers')showStickers();
   else if(activeTab==='home'){}
   else if(activeTab==='dig'){if(pane==='digLock')showDigLock();}
   else if(activeTab==='adv')renderAdv();
