@@ -6,16 +6,18 @@ Safari (iOS). On a phone, use **Add to Home Screen** so it runs full-screen.
 
 ## Tabs
 
+The tabs are big icons that all fit on one row; tapping one also says its name.
+
 | Tab | What it does |
 | --- | --- |
 | ✍️ Write | Trace lowercase, capitals, digits, or his own name, with stroke order and arrows |
 | 🖼️ Words | "Where is the …?" picture quiz, 15 categories, ~370 words, 8 difficulty levels |
 | 👂 Listen | Hear a word, tap the picture, 6 levels up to sound-alike distractors |
-| 🦖 Dino Show | Verbs and adjectives acted out by an animated dino (27 verbs, 22 adjectives); answers echoed as full sentences; 🎮 free-play sentence builder; act-it-out breaks |
+| 🦖 Dino Show | Verbs and adjectives acted out by an animated dino (43 verbs, 22 adjectives); "how many dinos…?" (plural verbs) and "who is NOT…?" (negation) rounds; answers echoed as full sentences; 🎮 free-play sentence builder; act-it-out breaks |
 | 🪐 Space | Orrery of the solar system with facts and a quiz |
 | 🌍 World | The seven continents with facts and a quiz |
 | 🎁 Prizes | Spend 40 ⚡ on a prize game (see below) |
-| ⚙ (hold) | Parent panel: name, voice picker, levels, most-missed words, prize points |
+| ⚙ (top bar, hold 1 s) | Parent panel: name, voice picker, levels, most-missed words, prize points |
 
 ## Automatic difficulty
 

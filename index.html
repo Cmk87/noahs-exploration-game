@@ -31,7 +31,7 @@
     justify-content:space-between;gap:8px;padding:9px 14px 2px}
   .power{font-size:19px;font-weight:bold;color:var(--ink);background:var(--bolt);
     border:3px solid var(--ink);border-radius:6px;padding:4px 12px;box-shadow:4px 4px 0 var(--ink);transform:rotate(-2deg)}
-  .lang{display:flex;background:#fff;border:3px solid var(--ink);border-radius:6px;overflow:hidden;
+  .lang{flex:0 0 auto;display:flex;background:#fff;border:3px solid var(--ink);border-radius:6px;overflow:hidden;
     box-shadow:4px 4px 0 var(--ink);transform:rotate(2deg)}
   .lang button{border:0;background:transparent;font-size:21px;line-height:1;padding:5px 9px;cursor:pointer;
     filter:saturate(.3) opacity(.5)}
@@ -40,13 +40,13 @@
   .tabs{position:relative;z-index:2;display:flex;gap:7px;width:100%;max-width:540px;padding:7px 14px 3px;
     overflow-x:auto;scrollbar-width:none}
   .tabs::-webkit-scrollbar{display:none}
-  .tab{flex:0 0 auto;border:3px solid var(--ink);border-radius:6px;background:#fff;color:var(--ink);
-    font-family:Impact,Haettenschweiler,sans-serif;font-size:16px;padding:8px 11px;
-    box-shadow:3px 3px 0 var(--ink);cursor:pointer;letter-spacing:1px;white-space:nowrap}
-  .tab.on{background:var(--bolt);transform:translateY(-2px)}
+  .tab{flex:1 1 0;min-width:0;border:3px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink);
+    font-size:min(6.4vw,27px);line-height:1;padding:7px 0;text-align:center;
+    box-shadow:3px 3px 0 var(--ink);cursor:pointer;white-space:nowrap}
+  .tab.on{background:var(--bolt);transform:translateY(-3px) scale(1.12);z-index:1}
   .tab:active{transform:translate(3px,3px);box-shadow:none}
 
-  body{height:100vh;height:100dvh}
+  body{position:fixed;inset:0;width:100%;height:auto}
   header,.tabs{flex:0 0 auto}
   /* each tab scrolls inside itself, so the header and tabs can never be pushed off screen */
   .view{display:none;position:relative;z-index:2;width:100%;max-width:540px;flex:1 1 auto;min-height:0;
@@ -114,6 +114,7 @@
   .prompt{background:#fff;border:4px solid var(--ink);box-shadow:6px 6px 0 var(--ink);color:var(--ink);
     font-size:min(6vw,27px,3.4dvh);padding:9px 16px 12px;margin:10px 14px 14px;text-align:center;transform:rotate(-1deg)}
   #grid,#earGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;padding:0 14px;max-width:min(100%,calc((100dvh - 270px)*1.5))}
+  #earGrid{max-width:min(100%,calc((100dvh - 200px)*1.5))}
   .card{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:#F4F7FF;
     border:4px solid var(--ink);border-radius:8px;box-shadow:5px 5px 0 var(--ink);font-size:min(12vw,60px);cursor:pointer}
   .card:active{transform:translate(5px,5px);box-shadow:none}
@@ -127,7 +128,12 @@
   #quizWord{margin-top:16px;font-size:min(8vw,40px);color:var(--ink);background:var(--bolt);border:4px solid var(--ink);
     box-shadow:6px 6px 0 var(--ink);padding:5px 20px 9px;transform:rotate(-2deg)}
 
-  #earHead{display:flex;justify-content:center;width:100%;margin-top:8px}
+  #earHead{display:flex;justify-content:center;align-items:center;gap:10px;width:100%;margin:10px 0 14px}
+  #earHead button{border:3px solid var(--ink);border-radius:10px;background:#fff;font-size:26px;padding:8px 16px;
+    box-shadow:4px 4px 0 var(--ink);cursor:pointer;line-height:1}
+  #earAgain{background:var(--beam)!important;font-size:32px!important;padding:10px 24px!important}
+  #earAgain.playing{animation:pulse .6s ease-in-out infinite alternate}
+  #earHead button:active{transform:translate(4px,4px);box-shadow:none}
   #earLevelPill{background:var(--blaze);color:#fff;border:3px solid var(--ink);
     box-shadow:3px 3px 0 var(--ink);padding:3px 12px 5px;font-size:15px}
   #earSpeaker{
@@ -175,6 +181,16 @@
   .apane.on{display:flex}
   #actPrompt{font-size:min(5.6vw,25px)}
   #actGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:460px;padding:0 14px}
+  #actGrid.countMode{grid-template-columns:1fr}
+  .numRow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .numBtn{flex:1 1 0;max-width:72px;border:4px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);font:bold 30px Impact,sans-serif;
+    padding:6px 0 4px;box-shadow:4px 4px 0 var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1;
+    animation:cardIn .4s cubic-bezier(.2,1.6,.4,1) both;transition:opacity .3s}
+  .numBtn small{font-size:8px;letter-spacing:1px;color:var(--blaze);margin-top:3px}
+  .numBtn.right{background:var(--bolt);transform:scale(1.15)}
+  .numBtn.wrong{animation:shake .4s;border-color:var(--blaze)}
+  .numBtn.dim{opacity:.3}
+  .numBtn.hint{box-shadow:0 0 0 5px var(--beam),4px 4px 0 var(--ink)}
   #actGrid.three .acard:last-child{grid-column:1 / span 2;justify-self:center;width:calc(50% - 6px)}
   .acard{aspect-ratio:1/1;background:#F4F7FF;border:4px solid var(--ink);border-radius:10px;
     box-shadow:5px 5px 0 var(--ink);cursor:pointer;overflow:hidden;position:relative;transition:opacity .3s,transform .3s;
@@ -312,12 +328,14 @@
   #rain{position:fixed;inset:0;pointer-events:none;z-index:35;overflow:hidden}
   .rainBit{position:absolute;top:-60px;animation:fall linear forwards}
   @keyframes fall{to{transform:translateY(118vh) rotate(540deg)}}
-  #gearBtn{
-    position:fixed;right:8px;bottom:8px;z-index:8;width:30px;height:30px;padding:0;
-    border:0;border-radius:50%;background:rgba(255,255,255,.10);color:rgba(255,255,255,.34);
-    font-size:15px;line-height:30px;cursor:pointer;
-  }
-  #gearBtn:active{background:rgba(255,255,255,.3)}
+  #gearBtn{position:relative;flex:0 0 auto;width:42px;height:42px;padding:0;border:3px solid var(--ink);border-radius:50%;
+    background:conic-gradient(var(--bolt) var(--hold,0%),#fff var(--hold,0%));color:var(--ink);font-size:22px;line-height:1;
+    cursor:pointer;box-shadow:3px 3px 0 var(--ink);margin-left:auto;margin-right:10px}
+  #gearTip{position:fixed;z-index:40;top:62px;left:50%;transform:translateX(-50%);background:#fff;color:var(--ink);
+    border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);border-radius:8px;padding:6px 12px;font-weight:bold;font-size:15px;
+    display:none;white-space:nowrap}
+  #gearTip.on{display:block;animation:tipIn .35s cubic-bezier(.2,1.7,.4,1)}
+  @keyframes tipIn{from{transform:translateX(-50%) scale(.5);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
   #backBtn{background:var(--beam);width:100%}
   @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
@@ -326,6 +344,7 @@
 
 <header>
   <div class="power display" id="power">⚡ 0</div>
+  <button id="gearBtn" aria-label="settings">⚙</button>
   <div class="lang">
     <button id="es">🇪🇸</button><button id="en">🇬🇧</button><button id="de" class="on">🇩🇪</button>
   </div>
@@ -361,11 +380,9 @@
 
 <!-- ============ LISTENING ============ -->
 <div class="view" id="v-ear">
-  <div id="earHead"><div id="earLevelPill" class="display">🎧 1</div></div>
-  <button id="earSpeaker">👂</button>
-  <div class="prompt display" id="earPrompt">…</div>
+  <div id="earHead"><div id="earLevelPill" class="display">🎧 1</div>
+    <button id="earAgain">🔊</button><button id="earSlow">🐢</button><button id="earSkip">➜</button></div>
   <div id="earGrid"></div>
-  <div class="tools"><button id="earAgain">🔊</button><button id="earSlow">🐢</button><button id="earSkip">➜</button></div>
 </div>
 
 <!-- ============ DINO SHOW: verbs & adjectives ============ -->
@@ -481,7 +498,7 @@
 </div>
 <div id="rain"></div>
 
-<button id="gearBtn" aria-label="settings">⚙</button>
+<div id="gearTip"></div>
 
 <div id="gate"><div>
   <div class="gateBolt">⚡</div>
@@ -1589,7 +1606,7 @@ function soundScore(a,b){
 }
 function earSay(rate){
   if(!earTarget) return;
-  const sp=document.getElementById('earSpeaker');
+  const sp=document.getElementById('earAgain');
   sp.classList.add('playing');
   setTimeout(()=>sp.classList.remove('playing'),1600);
   sayAt(earTarget[lang][1], rate||0.72);
@@ -1610,8 +1627,6 @@ function newEarRound(){
   }else others=rest.map(v=>({v,s:soundScore(w,v[lang][1])})).sort((a,b)=>b.s-a.s).slice(0,k).map(x=>x.v);
   const opts=shuffle([earTarget,...others]);
   document.getElementById('earLevelPill').textContent='🎧 '+L;
-  document.getElementById('earPrompt').textContent=
-    {es:'Toca la oreja y escucha',en:'Tap the ear and listen',de:'Tippe aufs Ohr und hör zu'}[lang];
   const g=document.getElementById('earGrid');g.innerHTML='';
   g.style.gridTemplateColumns=opts.length===4?'repeat(2,1fr)':'repeat(3,1fr)';
   opts.forEach((o,i)=>{
@@ -1643,7 +1658,6 @@ function earPick(o,el){
     }
   }
 }
-document.getElementById('earSpeaker').onclick=()=>{ac();earSay();};
 
 /* =============================================================
    Top-down orrery. Real orbits, but with the distances compressed
@@ -2038,33 +2052,49 @@ requestAnimationFrame(animLoop);
    himself: pick how the dino looks, pick what it does, hear it.
 ============================================================= */
 const DVERBS=[
- {k:'jump',  ic:'🤸',easy:1,es:'saltando',          en:'jumping',          de:['springt','springt'],               imp:{es:'Salta',en:'Jump',de:'Spring'}},
- {k:'run',   ic:'🏃',easy:1,es:'corriendo',         en:'running',          de:['rennt','rennt'],                   imp:{es:'Corre',en:'Run',de:'Renn'}},
- {k:'walk',  ic:'🚶',       es:'andando',           en:'walking',          de:['geht','geht'],                     imp:{es:'Anda',en:'Walk',de:'Geh'}},
- {k:'sleep', ic:'😴',easy:1,es:'durmiendo',         en:'sleeping',         de:['schläft','schläft'],               imp:{es:'Duerme',en:'Sleep',de:'Schlaf'}},
- {k:'eat',   ic:'🍎',easy:1,es:'comiendo',          en:'eating',           de:['isst','isst']},
- {k:'drink', ic:'🥤',easy:1,es:'bebiendo',          en:'drinking',         de:['trinkt','trinkt']},
- {k:'swim',  ic:'🏊',easy:1,es:'nadando',           en:'swimming',         de:['schwimmt','schwimmt'],             imp:{es:'Nada',en:'Swim',de:'Schwimm'}},
- {k:'dance', ic:'💃',easy:1,es:'bailando',          en:'dancing',          de:['tanzt','tanzt'],                   imp:{es:'Baila',en:'Dance',de:'Tanz'}},
- {k:'sing',  ic:'🎤',       es:'cantando',          en:'singing',          de:['singt','singt'],                   imp:{es:'Canta',en:'Sing',de:'Sing'}},
- {k:'laugh', ic:'😂',easy:1,es:'riendo',            en:'laughing',         de:['lacht','lacht'],                   imp:{es:'Ríete',en:'Laugh',de:'Lach'}},
- {k:'cry',   ic:'😭',easy:1,es:'llorando',          en:'crying',           de:['weint','weint']},
- {k:'wave',  ic:'👋',easy:1,es:'saludando',         en:'waving',           de:['winkt','winkt'],                   imp:{es:'Saluda',en:'Wave',de:'Wink'}},
- {k:'fly',   ic:'🕊️',      es:'volando',           en:'flying',           de:['fliegt','fliegt'],                 imp:{es:'Vuela',en:'Fly',de:'Flieg'}},
- {k:'read',  ic:'📖',       es:'leyendo',           en:'reading',          de:['liest','liest']},
- {k:'paint', ic:'🎨',       es:'pintando',          en:'painting',         de:['malt','malt']},
- {k:'throw', ic:'⚾',       es:'tirando la pelota', en:'throwing the ball',de:['wirft den Ball','den Ball wirft']},
- {k:'catch', ic:'🧤',       es:'atrapando la pelota',en:'catching the ball',de:['fängt den Ball','den Ball fängt']},
- {k:'climb', ic:'🪜',       es:'trepando',          en:'climbing',         de:['klettert','klettert'],             imp:{es:'Trepa',en:'Climb',de:'Klettere'}},
- {k:'sit',   ic:'🪑',       es:'sentado',           en:'sitting',          de:['sitzt','sitzt'],                   imp:{es:'Siéntate',en:'Sit down',de:'Setz dich'}},
- {k:'shower',ic:'🚿',       es:'duchándose',        en:'having a shower',  de:['duscht','duscht']},
- {k:'sneeze',ic:'🤧',       es:'estornudando',      en:'sneezing',         de:['niest','niest'],                   imp:{es:'Estornuda',en:'Sneeze',de:'Nies'}},
- {k:'yawn',  ic:'🥱',       es:'bostezando',        en:'yawning',          de:['gähnt','gähnt'],                   imp:{es:'Bosteza',en:'Yawn',de:'Gähn'}},
- {k:'cook',  ic:'🍳',       es:'cocinando',         en:'cooking',          de:['kocht','kocht']},
- {k:'drum',  ic:'🥁',       es:'tocando el tambor', en:'playing the drum', de:['trommelt','trommelt'],             imp:{es:'Toca el tambor',en:'Play the drum',de:'Trommle'}},
- {k:'dig',   ic:'⛏️',      es:'cavando',           en:'digging',          de:['gräbt','gräbt']},
- {k:'fish',  ic:'🎣',       es:'pescando',          en:'fishing',          de:['angelt','angelt']},
- {k:'bike',  ic:'🚲',       es:'montando en bici',  en:'riding a bike',    de:['fährt Fahrrad','Fahrrad fährt']}
+ {k:'jump',  ic:'🤸',easy:1,es:'saltando',          en:'jumping',          de:['springt','springt'],               imp:{es:'Salta',en:'Jump',de:'Spring'},dp:'springen'},
+ {k:'run',   ic:'🏃',easy:1,es:'corriendo',         en:'running',          de:['rennt','rennt'],                   imp:{es:'Corre',en:'Run',de:'Renn'},dp:'rennen'},
+ {k:'walk',  ic:'🚶',       es:'andando',           en:'walking',          de:['geht','geht'],                     imp:{es:'Anda',en:'Walk',de:'Geh'},dp:'gehen'},
+ {k:'sleep', ic:'😴',easy:1,es:'durmiendo',         en:'sleeping',         de:['schläft','schläft'],               imp:{es:'Duerme',en:'Sleep',de:'Schlaf'},dp:'schlafen'},
+ {k:'eat',   ic:'🍎',easy:1,es:'comiendo',          en:'eating',           de:['isst','isst'],dp:'essen'},
+ {k:'drink', ic:'🥤',easy:1,es:'bebiendo',          en:'drinking',         de:['trinkt','trinkt'],dp:'trinken'},
+ {k:'swim',  ic:'🏊',easy:1,es:'nadando',           en:'swimming',         de:['schwimmt','schwimmt'],             imp:{es:'Nada',en:'Swim',de:'Schwimm'},dp:'schwimmen'},
+ {k:'dance', ic:'💃',easy:1,es:'bailando',          en:'dancing',          de:['tanzt','tanzt'],                   imp:{es:'Baila',en:'Dance',de:'Tanz'},dp:'tanzen'},
+ {k:'sing',  ic:'🎤',       es:'cantando',          en:'singing',          de:['singt','singt'],                   imp:{es:'Canta',en:'Sing',de:'Sing'},dp:'singen'},
+ {k:'laugh', ic:'😂',easy:1,es:'riendo',            en:'laughing',         de:['lacht','lacht'],                   imp:{es:'Ríete',en:'Laugh',de:'Lach'},dp:'lachen'},
+ {k:'cry',   ic:'😭',easy:1,es:'llorando',          en:'crying',           de:['weint','weint'],dp:'weinen'},
+ {k:'wave',  ic:'👋',easy:1,es:'saludando',         en:'waving',           de:['winkt','winkt'],                   imp:{es:'Saluda',en:'Wave',de:'Wink'},dp:'winken'},
+ {k:'fly',   ic:'🕊️',      es:'volando',           en:'flying',           de:['fliegt','fliegt'],                 imp:{es:'Vuela',en:'Fly',de:'Flieg'},dp:'fliegen'},
+ {k:'read',  ic:'📖',       es:'leyendo',           en:'reading',          de:['liest','liest'],dp:'lesen'},
+ {k:'paint', ic:'🎨',       es:'pintando',          en:'painting',         de:['malt','malt'],dp:'malen'},
+ {k:'throw', ic:'⚾',       es:'tirando la pelota', en:'throwing the ball',de:['wirft den Ball','den Ball wirft'],dp:'werfen den Ball',dn:'wirft den Ball nicht'},
+ {k:'catch', ic:'🧤',       es:'atrapando la pelota',en:'catching the ball',de:['fängt den Ball','den Ball fängt'],dp:'fangen den Ball',dn:'fängt den Ball nicht'},
+ {k:'climb', ic:'🪜',       es:'trepando',          en:'climbing',         de:['klettert','klettert'],             imp:{es:'Trepa',en:'Climb',de:'Klettere'},dp:'klettern'},
+ {k:'sit',   ic:'🪑',       es:'sentado',           en:'sitting',          de:['sitzt','sitzt'],                   imp:{es:'Siéntate',en:'Sit down',de:'Setz dich'},dp:'sitzen',ep:'sentados'},
+ {k:'shower',ic:'🚿',       es:'duchándose',        en:'having a shower',  de:['duscht','duscht'],dp:'duschen'},
+ {k:'sneeze',ic:'🤧',       es:'estornudando',      en:'sneezing',         de:['niest','niest'],                   imp:{es:'Estornuda',en:'Sneeze',de:'Nies'},dp:'niesen'},
+ {k:'yawn',  ic:'🥱',       es:'bostezando',        en:'yawning',          de:['gähnt','gähnt'],                   imp:{es:'Bosteza',en:'Yawn',de:'Gähn'},dp:'gähnen'},
+ {k:'cook',  ic:'🍳',       es:'cocinando',         en:'cooking',          de:['kocht','kocht'],dp:'kochen'},
+ {k:'drum',  ic:'🥁',       es:'tocando el tambor', en:'playing the drum', de:['trommelt','trommelt'],             imp:{es:'Toca el tambor',en:'Play the drum',de:'Trommle'},dp:'trommeln'},
+ {k:'dig',   ic:'⛏️',      es:'cavando',           en:'digging',          de:['gräbt','gräbt'],dp:'graben'},
+ {k:'fish',  ic:'🎣',       es:'pescando',          en:'fishing',          de:['angelt','angelt'],dp:'angeln'},
+ {k:'bike',  ic:'🚲',       es:'montando en bici',  en:'riding a bike',    de:['fährt Fahrrad','Fahrrad fährt'],dp:'fahren Fahrrad',dn:'fährt nicht Fahrrad'},
+ {k:'teeth', ic:'🪥',es:'lavándose los dientes',en:'brushing its teeth',enp:'brushing their teeth',de:['putzt sich die Zähne','sich die Zähne putzt'],dp:'putzen sich die Zähne',dn:'putzt sich nicht die Zähne',imp:{es:'Lávate los dientes',en:'Brush your teeth',de:'Putz dir die Zähne'}},
+ {k:'bubbles',ic:'🧼',es:'haciendo pompas',   en:'blowing bubbles',  de:['macht Seifenblasen','Seifenblasen macht'],dp:'machen Seifenblasen',dn:'macht keine Seifenblasen'},
+ {k:'swing', ic:'🪢',es:'columpiándose',     en:'swinging',         de:['schaukelt','schaukelt'],dp:'schaukeln'},
+ {k:'slide', ic:'🛝',es:'tirándose por el tobogán',en:'going down the slide',de:['rutscht','rutscht'],dp:'rutschen'},
+ {k:'skate', ic:'🛹',es:'patinando',         en:'skateboarding',    de:['fährt Skateboard','Skateboard fährt'],dp:'fahren Skateboard',dn:'fährt nicht Skateboard'},
+ {k:'ski',   ic:'🎿',es:'esquiando',         en:'skiing',           de:['fährt Ski','Ski fährt'],dp:'fahren Ski',dn:'fährt nicht Ski'},
+ {k:'kick',  ic:'⚽',es:'chutando la pelota',en:'kicking the ball', de:['schießt den Ball','den Ball schießt'],dp:'schießen den Ball',dn:'schießt den Ball nicht'},
+ {k:'water', ic:'🌷',es:'regando las flores',en:'watering the flowers',de:['gießt die Blumen','die Blumen gießt'],dp:'gießen die Blumen',dn:'gießt die Blumen nicht'},
+ {k:'carry', ic:'📦',es:'llevando una caja', en:'carrying a box',   de:['trägt eine Kiste','eine Kiste trägt'],dp:'tragen eine Kiste',dn:'trägt keine Kiste'},
+ {k:'sweep', ic:'🧹',es:'barriendo',         en:'sweeping',         de:['fegt','fegt'],dp:'fegen',imp:{es:'Barre',en:'Sweep',de:'Feg'}},
+ {k:'push',  ic:'🛒',es:'empujando el carro',en:'pushing the cart', de:['schiebt den Wagen','den Wagen schiebt'],dp:'schieben den Wagen',dn:'schiebt den Wagen nicht'},
+ {k:'pull',  ic:'🛷',es:'tirando del carro', en:'pulling the cart', de:['zieht den Wagen','den Wagen zieht'],dp:'ziehen den Wagen',dn:'zieht den Wagen nicht'},
+ {k:'spin',  ic:'🌀',es:'dando vueltas',     en:'spinning',         de:['dreht sich','sich dreht'],dp:'drehen sich',dn:'dreht sich nicht',imp:{es:'Da vueltas',en:'Spin around',de:'Dreh dich'}},
+ {k:'hide',  ic:'🌳',es:'escondiéndose',     en:'hiding',           de:['versteckt sich','sich versteckt'],dp:'verstecken sich',dn:'versteckt sich nicht',imp:{es:'Escóndete',en:'Hide',de:'Versteck dich'}},
+ {k:'smell', ic:'🌸',es:'oliendo la flor',   en:'smelling the flower',de:['riecht an der Blume','an der Blume riecht'],dp:'riechen an der Blume',dn:'riecht nicht an der Blume'},
+ {k:'guitar',ic:'🎸',es:'tocando la guitarra',en:'playing the guitar',de:['spielt Gitarre','Gitarre spielt'],dp:'spielen Gitarre',dn:'spielt nicht Gitarre',imp:{es:'Toca la guitarra',en:'Play the guitar',de:'Spiel Gitarre'}}
 ];
 /* es: [word, copula] — ser for what it IS, estar for how it IS RIGHT NOW.
    de: the stem; endings are added for "der kleine" / "den kleinen". */
@@ -2094,7 +2124,7 @@ const DADJ=[
 ];
 const DA=k=>DADJ.find(a=>a.k===k);
 /* verbs whose own face or setting would fight a mood, wetness or dirt */
-const FACE_VERBS=['sleep','laugh','cry','sing','sneeze','yawn','eat','drink','swim','shower'];
+const FACE_VERBS=['sleep','laugh','cry','sing','sneeze','yawn','eat','drink','swim','shower','teeth','bubbles','smell','hide'];
 
 /* ---------- drawing the dino (100×100 design space, feet on y=88) ---------- */
 const INK='#05060F';
@@ -2223,6 +2253,64 @@ function dpose(v,t,st){
         g.strokeStyle='#FF5A4F';g.lineWidth=2.6;g.beginPath();g.moveTo(26,79);g.lineTo(44,79);g.lineTo(40,62);g.lineTo(26,79);
         g.moveTo(44,79);g.lineTo(64,62);g.lineTo(68,79);g.moveTo(40,62);g.lineTo(64,62);g.moveTo(64,62);g.lineTo(62,54);g.stroke();
         g.strokeStyle=INK;g.lineWidth=2;g.beginPath();g.moveTo(58,54);g.lineTo(66,54);g.moveTo(35,61);g.lineTo(45,61);g.stroke();};break;}
+    case 'teeth':P.a1=-2.15+Math.sin(t*14)*0.12;P.hold='toothbrush';P.mouth='grin';P.eyes='happy';
+      P.post=g=>{g.fillStyle='#fff';g.strokeStyle='rgba(5,6,15,.4)';g.lineWidth=0.6;for(let i=0;i<4;i++){const ph=(t*0.8+i/4)%1;g.globalAlpha=1-ph;
+        g.beginPath();g.arc(90+i*1.5,44-ph*10,1.4+ph,0,7);g.fill();g.stroke();}g.globalAlpha=1;};break;
+    case 'bubbles':P.a1=-1.9;P.hold='wand';P.mouth='o';P.head=-0.1;
+      P.post=g=>{for(let i=0;i<6;i++){const ph=(t*0.35+i/6)%1,x=88+ph*10+Math.sin(ph*9+i)*5,y=34-ph*32,r=2+(i*7)%5;g.globalAlpha=1-ph*0.7;
+        g.strokeStyle='rgba(90,180,255,.95)';g.lineWidth=0.9;g.fillStyle='rgba(200,240,255,.3)';g.beginPath();g.arc(x,y,r,0,7);g.fill();g.stroke();
+        g.fillStyle='rgba(255,255,255,.9)';g.beginPath();g.arc(x-r*0.35,y-r*0.35,r*0.25,0,7);g.fill();}g.globalAlpha=1;};break;
+    case 'swing':{const a=Math.sin(t*2.4)*0.55,L=70;P.dx=4+Math.sin(a)*L;P.dy=-10-(1-Math.cos(a))*L;P.rot=a*0.5;P.l1=P.l2=-1.35;P.a1=P.a2=-2.4;
+      P.mouth='grin';P.eyes='happy';P.shadow=0.5;
+      P.pre=g=>{g.strokeStyle='#A4683A';g.lineWidth=3;g.beginPath();g.moveTo(8,89);g.lineTo(22,2);g.lineTo(80,2);g.lineTo(94,89);g.stroke();
+        const sx=50+Math.sin(a)*L,sy=2+Math.cos(a)*L,c=Math.cos(a)*10,d=Math.sin(a)*10;
+        g.strokeStyle='#555';g.lineWidth=1.2;g.beginPath();g.moveTo(40,2);g.lineTo(sx-c,sy-d);g.moveTo(60,2);g.lineTo(sx+c,sy+d);g.stroke();
+        g.save();g.translate(sx,sy);g.rotate(a);g.fillStyle='#FF5A4F';g.strokeStyle=INK;g.lineWidth=1;g.fillRect(-12,0,24,3);g.strokeRect(-12,0,24,3);g.restore();};break;}
+    case 'slide':{const ph=(t*0.45)%1,u=Math.min(1,ph/0.75);P.dx=-32+u*48;P.dy=-46+u*44;P.rot=u<1?0.55:0;P.l1=P.l2=-1.4;P.a1=P.a2=-2.5;
+      P.mouth='grin';P.eyes='happy';P.shadow=u<1?0:1;
+      P.pre=g=>{g.strokeStyle='#888';g.lineWidth=2;g.beginPath();g.moveTo(4,34);g.lineTo(4,89);g.moveTo(11,34);g.lineTo(11,89);g.stroke();
+        g.lineWidth=1.4;for(let y=42;y<89;y+=8){g.beginPath();g.moveTo(4,y);g.lineTo(11,y);g.stroke();}
+        g.fillStyle='#FFD43B';g.strokeStyle=INK;g.lineWidth=1.6;g.beginPath();g.moveTo(3,33);g.lineTo(12,33);g.lineTo(86,86);g.lineTo(76,89);g.closePath();g.fill();g.stroke();};break;}
+    case 'skate':P.dy=-6+Math.sin(t*3)*0.5;P.rot=-0.04+Math.sin(t*1.5)*0.05;P.a1=-1.7+Math.sin(t*2)*0.2;P.a2=-1.3;P.scroll=t*35;P.mouth='grin';P.shadow=0.8;
+      P.post=g=>{const y=83+P.dy*0.2;g.fillStyle='#B65CFF';g.strokeStyle=INK;g.lineWidth=1.4;g.beginPath();g.roundRect(26,y,42,3.4,1.7);g.fill();g.stroke();
+        g.fillStyle='#FFD43B';[[32,y+5],[62,y+5]].forEach(([x,yy])=>{g.beginPath();g.arc(x,yy,2.4,0,7);g.fill();g.stroke();});};break;
+    case 'ski':P.dy=-3;P.rot=0.12;P.a1=-0.9+Math.sin(t*4)*0.3;P.a2=-0.9-Math.sin(t*4)*0.3;P.hold='pole';P.scroll=t*40;P.mouth='grin';P.l1=-0.2;P.l2=0.1;
+      P.post=g=>{g.strokeStyle='#FF5A4F';g.lineWidth=2.4;g.beginPath();g.moveTo(24,86);g.lineTo(72,86);g.quadraticCurveTo(77,86,78,82);g.stroke();};break;
+    case 'kick':{const ph=(t*0.6)%1;P.l1=ph<0.4?0.9*(ph/0.4):ph<0.5?0.9-2.2*((ph-0.4)/0.1):-1.3+((ph-0.5)/0.5)*1.3;P.a1=-0.8;P.a2=-1.2;P.mouth='grin';
+      P.post=g=>{const u=(ph-0.45)/0.55;ball(g,ph<0.45?67:67+u*50,ph<0.45?85:85-Math.sin(u*Math.PI)*30,3.6);};break;}
+    case 'water':P.dx=-8;P.a1=-1.1;P.hold='can';P.mouth='smile';P.head=0.15;
+      P.pre=g=>{[[82,'#FF5A4F'],[93,'#FFD43B']].forEach(([x,c])=>{g.strokeStyle='#2E8B3A';g.lineWidth=1.6;g.beginPath();g.moveTo(x,89);g.lineTo(x,75);g.stroke();
+        g.fillStyle=c;g.strokeStyle=INK;g.lineWidth=0.8;for(let i=0;i<5;i++){const a=i*1.26;g.beginPath();g.arc(x+Math.cos(a)*2.6,73+Math.sin(a)*2.6,2,0,7);g.fill();g.stroke();}
+        g.fillStyle='#FFE45C';g.beginPath();g.arc(x,73,1.4,0,7);g.fill();});};
+      P.post=g=>{for(let i=0;i<5;i++){const ph=(t*1.6+i/5)%1;drop(g,70+ph*14,60+ph*12,0.6);}};break;
+    case 'carry':{const f=t*4;P.l1=Math.sin(f)*0.4;P.l2=-Math.sin(f)*0.4;P.a1=P.a2=-1.75;P.hold='box';P.scroll=t*12;P.dy=-Math.abs(Math.sin(f))*1.2;P.mouth='flat';break;}
+    case 'sweep':{const w=Math.sin(t*4);P.a1=0.15+w*0.45;P.hold='broom';P.head=0.2;P.mouth='smile';
+      P.post=g=>{g.fillStyle='rgba(180,150,110,.6)';for(let i=0;i<3;i++){const ph=(t*1.3+i/3)%1;g.globalAlpha=1-ph;g.beginPath();g.arc(66+w*8+ph*10,87-ph*6,1.5+ph*3,0,7);g.fill();}g.globalAlpha=1;};break;}
+    case 'push':{const f=t*4;P.l1=Math.sin(f)*0.45;P.l2=-Math.sin(f)*0.45;P.rot=0.18;P.a1=P.a2=-1.45;P.scroll=t*12;P.dx=-10;P.mouth='flat';P.eyes='squint';
+      P.post=g=>{g.strokeStyle=INK;g.lineWidth=1.6;g.fillStyle='rgba(180,190,205,.85)';g.beginPath();g.moveTo(66,64);g.lineTo(96,64);g.lineTo(92,80);g.lineTo(70,80);g.closePath();g.fill();g.stroke();
+        g.lineWidth=0.7;for(let x=70;x<94;x+=4){g.beginPath();g.moveTo(x,64);g.lineTo(x,80);g.stroke();}g.lineWidth=1.8;g.beginPath();g.moveTo(66,64);g.lineTo(62,58);g.stroke();
+        g.fillStyle='#333';[[72,85],[90,85]].forEach(([x,y])=>{g.beginPath();g.arc(x,y,3,0,7);g.fill();});};break;}
+    case 'pull':{const f=t*4;P.l1=Math.sin(f)*0.45;P.l2=-Math.sin(f)*0.45;P.rot=0.12;P.dx=14;P.a1=0.9;P.scroll=t*12;P.mouth='flat';P.eyes='squint';
+      P.pre=g=>{g.strokeStyle=INK;g.lineWidth=1.4;g.beginPath();g.moveTo(22,76);g.lineTo(68,67);g.stroke();g.fillStyle='#FF5A4F';g.lineWidth=1.6;
+        g.beginPath();g.rect(1,70,22,12);g.fill();g.stroke();g.fillStyle='#333';[[6,85],[18,85]].forEach(([x,y])=>{g.beginPath();g.arc(x,y,3.4,0,7);g.fill();});};break;}
+    case 'spin':P.flip=Math.cos(t*6);P.a1=P.a2=-1.6;P.mouth='grin';P.eyes='happy';
+      P.post=g=>{g.strokeStyle='rgba(5,6,15,.45)';g.lineWidth=1.4;for(let i=0;i<2;i++){g.beginPath();g.ellipse(46,60,30+i*5,8,0,t*3+i,t*3+i+2.2);g.stroke();}};break;
+    case 'hide':{const ph=(t*0.4)%1,peek=ph>0.5&&ph<0.85?Math.sin((ph-0.5)/0.35*Math.PI):0;P.dy=24-peek*14;P.eyes='wide';P.mouth='smile';P.shadow=0;
+      P.post=g=>{g.fillStyle='#3FA650';g.strokeStyle=INK;g.lineWidth=1.6;const B=[[16,80,13],[34,70,16],[56,68,17],[76,76,15],[46,84,18]];
+        B.forEach(([x,y,r])=>{g.beginPath();g.arc(x,y,r,0,7);g.stroke();});B.forEach(([x,y,r])=>{g.beginPath();g.arc(x,y,r,0,7);g.fill();});
+        g.fillStyle='#5BD06B';[[28,66],[50,60],[70,70],[40,78]].forEach(([x,y])=>{g.beginPath();g.ellipse(x,y,3,1.8,0.6,0,7);g.fill();});};break;}
+    case 'smell':P.dx=-6;P.head=0.38;P.eyes='closed';P.mouth='smile';P.a1=-0.6;
+      P.pre=g=>{g.strokeStyle='#2E8B3A';g.lineWidth=1.8;g.beginPath();g.moveTo(92,89);g.lineTo(92,64);g.stroke();
+        g.fillStyle='#5BD06B';g.beginPath();g.ellipse(96,78,4,1.8,-0.5,0,7);g.fill();
+        g.fillStyle='#FF5BA8';g.strokeStyle=INK;g.lineWidth=0.9;for(let i=0;i<6;i++){const a=i*1.047;g.beginPath();g.arc(92+Math.cos(a)*3.4,61+Math.sin(a)*3.4,2.6,0,7);g.fill();g.stroke();}
+        g.fillStyle='#FFE45C';g.beginPath();g.arc(92,61,2,0,7);g.fill();};
+      P.post=g=>{for(let i=0;i<2;i++){const ph=(t*0.6+i/2)%1;g.globalAlpha=1-ph;txt(g,'♥',80+i*8,40-ph*22,5+ph*3,'#FF5BA8');}g.globalAlpha=1;};break;
+    case 'guitar':P.a1=-1.0+Math.sin(t*10)*0.25;P.head=Math.sin(t*4)*0.08;P.eyes='closed';P.mouth='grin';P.dy=-Math.abs(Math.sin(t*4));
+      P.mid=g=>{g.save();g.translate(55,66);g.rotate(-0.45);g.fillStyle='#E07B39';g.strokeStyle=INK;g.lineWidth=1.3;
+        g.beginPath();g.arc(-6,0,6.5,0,7);g.fill();g.stroke();g.beginPath();g.arc(2,0,5,0,7);g.fill();g.stroke();
+        g.fillStyle='#5B3A1E';g.fillRect(4,-1.4,20,2.8);g.strokeRect(4,-1.4,20,2.8);g.fillRect(23,-2.4,4,4.8);
+        g.fillStyle=INK;g.beginPath();g.arc(-2,0,1.8,0,7);g.fill();g.restore();};
+      P.post=g=>{for(let i=0;i<2;i++){const ph=(t*0.6+i/2)%1;g.globalAlpha=1-ph;note(g,80+ph*10,40-ph*24,1.1,'#FFD43B');}g.globalAlpha=1;};break;
     case 'roar':P.mouth='roar';P.head=-0.2+Math.sin(t*16)*0.03;P.a1=P.a2=-1.2;P.eyes='angry';
       P.post=g=>{g.strokeStyle=INK;g.lineWidth=1.6;for(let i=0;i<3;i++){const r=8+i*6+(t*20)%6;g.globalAlpha=0.8-i*0.2;
         g.beginPath();g.arc(92,40,r,-0.7,0.7);g.stroke();}g.globalAlpha=1;txt(g,SAYS.roar[L],76,10,9,'#FF5A4F',-0.1);};break;
@@ -2288,6 +2376,14 @@ function holdProp(g,k,t,y){
   else if(k==='stick'){g.strokeStyle='#A4683A';g.lineWidth=1.4;g.beginPath();g.moveTo(0,y);g.lineTo(2,y+12);g.stroke();g.fillStyle='#fff';g.beginPath();g.arc(2,y+12,1.4,0,7);g.fill();}
   else if(k==='shovel'){g.strokeStyle='#A4683A';g.lineWidth=1.8;g.beginPath();g.moveTo(0,y-6);g.lineTo(0,y+14);g.stroke();
     g.fillStyle='#9AA3AD';g.beginPath();g.moveTo(-3.5,y+14);g.lineTo(3.5,y+14);g.lineTo(0,y+21);g.closePath();g.fill();g.lineWidth=1;g.strokeStyle=INK;g.stroke();}
+  else if(k==='toothbrush'){g.strokeStyle='#5B9BFF';g.lineWidth=1.8;g.beginPath();g.moveTo(0,y);g.lineTo(0,y+10);g.stroke();
+    g.fillStyle='#fff';g.strokeStyle=INK;g.lineWidth=0.8;g.fillRect(-1.6,y+9,3.2,4);g.strokeRect(-1.6,y+9,3.2,4);}
+  else if(k==='wand'){g.strokeStyle='#FF5BA8';g.lineWidth=1.4;g.beginPath();g.moveTo(0,y);g.lineTo(0,y+8);g.stroke();g.beginPath();g.arc(0,y+10.5,2.6,0,7);g.stroke();}
+  else if(k==='pole'){g.strokeStyle='#555';g.lineWidth=1.2;g.beginPath();g.moveTo(0,y-2);g.lineTo(0,y+24);g.stroke();g.beginPath();g.moveTo(-2,y+21);g.lineTo(2,y+21);g.stroke();}
+  else if(k==='box'){g.fillStyle='#C68A52';g.beginPath();g.rect(-5,y-6,15,12);g.fill();g.stroke();g.strokeStyle='#8B5E32';g.beginPath();g.moveTo(2.5,y-6);g.lineTo(2.5,y+6);g.stroke();}
+  else if(k==='broom'){g.strokeStyle='#A4683A';g.lineWidth=1.6;g.beginPath();g.moveTo(0,y-5);g.lineTo(0,y+19);g.stroke();
+    g.fillStyle='#E8C25A';g.strokeStyle=INK;g.lineWidth=1;g.beginPath();g.moveTo(-2,y+19);g.lineTo(2,y+19);g.lineTo(4,y+25);g.lineTo(-4,y+25);g.closePath();g.fill();g.stroke();}
+  else if(k==='can'){g.fillStyle='#2ED17A';g.beginPath();g.rect(-3,y-2,9,8);g.fill();g.stroke();g.strokeStyle='#2ED17A';g.lineWidth=1.8;g.beginPath();g.moveTo(6,y);g.lineTo(12,y-4);g.stroke();}
   else if(k==='cane'){g.strokeStyle='#7A4C26';g.lineWidth=1.8;g.beginPath();g.moveTo(0,y);g.lineTo(0,y+20);g.stroke();
     g.beginPath();g.arc(-2.5,y,2.5,0,Math.PI,true);g.stroke();}
 }
@@ -2297,6 +2393,7 @@ function dscene(g,v,t,st,P){
   else if(v==='dance'){top='#2A1257';bot='#6A35D8';ground='#4B2499';}
   else if(v==='shower'){top='#E3F4FA';bot='#CBE9F4';ground='#9FD3E6';}
   else if(v==='swim'||v==='fish'){bot='#D7F3FF';}
+  else if(v==='ski'){top='#CFE3F7';bot='#F2F8FF';ground='#FFFFFF';}
   if(st.wet>0){top='#8FA5BA';bot='#C7D3DE';}
   const gr=g.createLinearGradient(0,0,0,100);gr.addColorStop(0,top);gr.addColorStop(1,bot);g.fillStyle=gr;g.fillRect(0,0,100,100);
   if(v==='sleep'){g.fillStyle='#FFF4C2';g.beginPath();g.arc(16,16,7,0,7);g.fill();g.fillStyle=top;g.beginPath();g.arc(19.5,13.5,6,0,7);g.fill();
@@ -2306,13 +2403,14 @@ function dscene(g,v,t,st,P){
     g.fillStyle='#ddd';g.beginPath();g.arc(50,4,4,0,7);g.fill();}
   if(v==='shower'){g.strokeStyle='rgba(255,255,255,.8)';g.lineWidth=0.6;for(let x=0;x<=100;x+=12){g.beginPath();g.moveTo(x,0);g.lineTo(x,88);g.stroke();}
     for(let y=0;y<=88;y+=12){g.beginPath();g.moveTo(0,y);g.lineTo(100,y);g.stroke();}}
+  if(v==='ski'){g.fillStyle='#fff';for(let i=0;i<14;i++){const x=(i*37+t*8)%100,y=(i*23+t*14)%88;g.beginPath();g.arc(x,y,0.9,0,7);g.fill();}}
   if(v==='fly'){g.fillStyle='rgba(255,255,255,.95)';for(let i=0;i<3;i++){const x=((i*45-t*30)%140+140)%140-20,y=18+i*24;
       [[0,0,6],[6,-3,7],[12,0,6]].forEach(([a,b,r])=>{g.beginPath();g.arc(x+a,y+b,r,0,7);g.fill();});}ground=null;}
   if(ground){g.fillStyle=ground;g.fillRect(0,88,100,12);g.fillStyle='rgba(0,0,0,.12)';
     for(let i=0;i<6;i++){const x=((i*22-P.scroll)%132+132)%132-16;g.fillRect(x,91+(i%2)*4,6,1.6);}}
 }
-function drawDino(g,W,H,st,t){
-  st=Object.assign({verb:'stand',size:1,color:'green',mood:'',wet:0,dirt:0,age:0,speed:1,seed:0},st);
+function drawDino(g,W,H,st,t,inner){
+  st=Object.assign({verb:'stand',size:1,color:'green',mood:'',wet:0,dirt:0,age:0,speed:1,seed:0,toff:0},st);t+=st.toff;
   const v=st.verb,P=dpose(v,t,st),C=DCOL[st.color]||DCOL.green;
   if(st.mood&&!FACE_VERBS.includes(v)&&v!=='roar'&&v!=='shh'){P.eyes=null;P.mouth=null;}  // the asked-about mood wins
   if(st.mood==='scared')P.dx+=Math.sin(t*45)*0.7;
@@ -2320,8 +2418,8 @@ function drawDino(g,W,H,st,t){
   if(st.mood==='surprised'&&v==='stand'){P.dy-=Math.max(0,Math.sin(t*3))*4;P.a1=P.a2=-1.9;}
   if((st.mood==='sad'||st.mood==='tired')&&v==='stand'){P.head=0.18;P.tail=0.25;P.a1=P.a2=0.1;}
   if(st.age>0&&v==='stand'){P.hold='cane';P.a1=-0.35;P.head=0.1;P.rot=0.04;}
-  g.save();g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,g.canvas.width,g.canvas.height);g.restore();
-  g.save();g.scale(W/100,H/100);g.lineJoin='round';g.lineCap='round';
+  if(!inner){g.save();g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,g.canvas.width,g.canvas.height);g.restore();}
+  g.save();if(!inner)g.scale(W/100,H/100);g.lineJoin='round';g.lineCap='round';
   dscene(g,v,t,st,P);
   if(st.wet<0){g.save();g.translate(84,13);g.rotate(t*0.4);g.fillStyle='#FFD43B';g.strokeStyle=INK;g.lineWidth=1.2;
     for(let i=0;i<8;i++){g.rotate(Math.PI/4);g.beginPath();g.moveTo(7,-1.5);g.lineTo(11,0);g.lineTo(7,1.5);g.fill();}
@@ -2333,7 +2431,7 @@ function drawDino(g,W,H,st,t){
   if(P.shadow){g.fillStyle='rgba(0,0,0,.18)';g.beginPath();g.ellipse(46+P.dx,89,22*P.shadow,3.2*P.shadow,0,0,7);g.fill();}
   if(st.wet>0){g.fillStyle='rgba(90,160,230,.45)';g.beginPath();g.ellipse(46,89.5,28,3.5,0,0,7);g.fill();}
   if(P.pre)P.pre(g);
-  g.save();g.translate(46+P.dx,88+P.dy);g.rotate(P.rot);g.scale(1,P.sq);g.translate(-46,-88);
+  g.save();g.translate(46+P.dx,88+P.dy);g.rotate(P.rot);g.scale(P.flip==null?1:P.flip,P.sq);g.translate(-46,-88);
   const [col,dark,belly,spk]=C;
   limb(g,40,71,13.5,8.5,P.l2,dark,1);
   limb(g,57,58,9,5,P.a2,dark,0);
@@ -2359,6 +2457,7 @@ function drawDino(g,W,H,st,t){
   g.save();headT(g);dface(g,P,st,t,C);
   if(st.dirt>0){g.fillStyle='#7A5230';g.beginPath();g.ellipse(66,30,2.6,2,0,0,7);g.fill();}
   g.restore();
+  if(P.mid)P.mid(g);
   g.save();g.translate(61,60);g.rotate(P.a1);limb(g,0,0,9,5.5,0,col,0);if(P.hold)holdProp(g,P.hold,t,9);g.restore();
   g.restore();
   if(P.post)P.post(g);
@@ -2374,6 +2473,15 @@ function drawDino(g,W,H,st,t){
   if(st.mood==='tired'&&v==='stand'){const ph=(t*0.5)%1;g.globalAlpha=1-ph;txt(g,'z',84,24-ph*14,5+ph*4,'#fff');g.globalAlpha=1;}
   if(st.mood==='scared'){g.strokeStyle=INK;g.lineWidth=1.2;[[18,40],[16,48],[20,56]].forEach(([x,y])=>{g.beginPath();g.moveTo(x+P.dx,y);g.lineTo(x-5+P.dx,y-1);g.stroke();});}
   g.restore();
+}
+
+/* several dinos in one picture, each in its own little scene — for "how many?" */
+function drawCrowd(g,W,H,slots,t){
+  g.save();g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,g.canvas.width,g.canvas.height);g.restore();
+  const cols=slots.length>4?3:2,rows=2,cw=W/cols,ch=H/rows;
+  slots.forEach((st,i)=>{const x=(i%cols)*cw,y=Math.floor(i/cols)*ch;
+    g.save();g.beginPath();g.rect(x,y,cw,ch);g.clip();g.translate(x,y);g.scale(cw/100,ch/100);drawDino(g,100,100,st,t,true);g.restore();
+    g.strokeStyle=INK;g.lineWidth=3;g.strokeRect(x,y,cw,ch);});
 }
 
 /* ---------- words and sentences ---------- */
@@ -2414,7 +2522,7 @@ function pickVerbs(n,pool){
   pool=shuffle((pool||DVERBS).filter(v=>v.k!==actLastVerb));
   const out=pool.slice(0,n);actLastVerb=out[0].k;return out;
 }
-function stOf(v,adjs,seed){const s={verb:v?v.k:'stand',seed};adjs.forEach(a=>Object.assign(s,a.st));return s;}
+function stOf(v,adjs,seed){const s={verb:v?v.k:'stand',seed,toff:seed*0.37};adjs.forEach(a=>Object.assign(s,a.st));return s;}
 function newActRound(){
   actMiss=0;actDone=false;actAnim=[];actRound++;
   const grid=$('actGrid'),tpr=$('tprBox');grid.innerHTML='';grid.className='';$('actSentence').innerHTML='';
@@ -2430,9 +2538,10 @@ function newActRound(){
   const r=Math.random();let kind;
   if(L===1)kind='verb';
   else if(L===2)kind=r<0.6?'verb':'adj';
-  else if(L<=4)kind=r<0.45?'verb':r<0.85?'adj':'obj';
-  else if(L===5)kind=r<0.6?'combo':r<0.8?'verb':'adj';
-  else kind=r<0.5?'combo3':r<0.75?'combo':r<0.9?'verb':'adj';
+  else if(L===3)kind=r<0.35?'verb':r<0.7?'adj':r<0.8?'obj':'count';
+  else if(L===4)kind=r<0.3?'verb':r<0.6?'adj':r<0.7?'obj':r<0.85?'count':'neg';
+  else if(L===5)kind=r<0.45?'combo':r<0.6?'verb':r<0.7?'adj':r<0.85?'count':'neg';
+  else kind=r<0.35?'combo3':r<0.6?'combo':r<0.8?'neg':'count';
   let opts=[],ti=0;
   if(kind==='verb'){
     const n=L===1?2:L===2?3:4,vs=pickVerbs(n,L===1?DVERBS.filter(v=>v.easy):DVERBS);
@@ -2450,6 +2559,21 @@ function newActRound(){
       const card=makeCard((g,w,h,t)=>drawAdj(g,w,h,def.k,isYes,t));
       card.dataset.ok=isYes===yes?'1':'0';card.onclick=()=>actChoose(isYes===yes,card);grid.appendChild(card);});
     actAsk();return;
+  }else if(kind==='count'){                  // "Wie viele Dinos springen?" — plural verb forms
+    const n=L>=5?6:4,maxK=L>=5?5:3,k=1+Math.floor(Math.random()*maxK);
+    const pool=DVERBS.filter(v=>!['climb','swing','slide','hide','fly','pull','push'].includes(v.k));
+    const v=pickVerbs(1,pool)[0],others=shuffle(pool.filter(x=>x.k!==v.k)).slice(0,n-k);
+    const slots=shuffle([...Array(k).fill(v),...others]).map((x,i)=>({verb:x.k,seed:i*1.7,toff:i*0.41}));
+    actTarget={kind,v,k};grid.classList.add('countMode');
+    const card=makeCard((g,w,h,t)=>drawCrowd(g,w,h,slots,t));card.style.aspectRatio=n>4?'3/2':'1/1';card.style.cursor='default';
+    grid.appendChild(card);
+    const row=document.createElement('div');row.className='numRow';
+    for(let i=1;i<=maxK+1;i++){const b=document.createElement('button');b.className='numBtn';b.innerHTML=`${i}<small>${'●'.repeat(i)}</small>`;
+      b.dataset.ok=i===k?'1':'0';b.onclick=()=>actChoose(i===k,b);row.appendChild(b);}
+    grid.appendChild(row);actAsk();return;
+  }else if(kind==='neg'){                    // "Wer springt nicht?" — the odd one out
+    const [v,o]=pickVerbs(2,DVERBS);actTarget={kind,v,o};
+    opts=[stOf(o,[],0),stOf(v,[],1.3),stOf(v,[],2.6),stOf(v,[],3.9)];
   }else{                                     // a verb AND one or two adjectives must all match
     const dimsOk=['size','color','mood','wet','dirt','age'];
     const nd=kind==='combo3'?2:1,dims=shuffle(dimsOk).slice(0,nd);
@@ -2473,6 +2597,8 @@ function actQuestion(){
   if(T.kind==='tpr'){const im=T.v.imp[lang];return lang==='de'?`${im} wie der Dino!`:lang==='en'?`${im} like the dino!`:`¡${im} como el dino!`;}
   if(T.kind==='verb'){const v=T.v;return lang==='de'?`Wer ${v.de[0]}?`:lang==='en'?`Who is ${v.en}?`:`¿Quién está ${v.es}?`;}
   if(T.kind==='adj'){const a=T.a;return lang==='de'?`Welcher Dino ist ${a.de}?`:lang==='en'?`Which dino is ${a.en}?`:`¿Qué dino ${a.es[1]} ${a.es[0]}?`;}
+  if(T.kind==='neg'){const v=T.v;return lang==='de'?`Wer ${v.dn||v.de[0]+' nicht'}?`:lang==='en'?`Who is not ${v.en}?`:`¿Quién no está ${v.es}?`;}
+  if(T.kind==='count'){const v=T.v;return lang==='de'?`Wie viele Dinos ${v.dp}?`:lang==='en'?`How many dinos are ${v.enp||v.en}?`:`¿Cuántos dinos están ${v.ep||v.es}?`;}
   if(T.kind==='obj'){const w=T.word,many=T.def.plural;
     if(many)return lang==='es'?`¿Dónde hay ${w}?`:lang==='de'?`Wo sind ${w}?`:`Which one has ${w}?`;
     const cop=['long'].includes(T.def.k)?'es':'está';
@@ -2488,13 +2614,21 @@ function actAnswerHTML(){
   const T=actTarget,hl=x=>`<b>${x}</b>`;
   if(T.kind==='verb'||T.kind==='combo'||T.kind==='combo3')return dSentence(T.adjs,T.v,hl);
   if(T.kind==='adj')return dIs(T.a,hl);
+  if(T.kind==='neg'){const v=T.v,o=T.o;
+    if(lang==='de')return `Er ${hl(v.dn||v.de[0]+' nicht')} – er ${hl(o.de[0])}!`;
+    if(lang==='en')return `It is ${hl('not '+v.en)} – it is ${hl(o.en)}!`;
+    return `¡${hl('No está '+v.es)}, está ${hl(o.es)}!`;}
+  if(T.kind==='count'){const v=T.v,k=T.k,N={de:['','Ein','Zwei','Drei','Vier','Fünf'],en:['','One','Two','Three','Four','Five'],es:['','Un','Dos','Tres','Cuatro','Cinco']}[lang][k];
+    if(lang==='de')return k===1?`${hl(N)} Dino ${hl(v.de[0])}!`:`${hl(N)} Dinos ${hl(v.dp)}!`;
+    if(lang==='en')return k===1?`${hl(N)} dino is ${hl(v.en)}!`:`${hl(N)} dinos are ${hl(v.enp||v.en)}!`;
+    return k===1?`¡${hl(N)} dino está ${hl(v.es)}!`:`¡${hl(N)} dinos están ${hl(v.ep||v.es)}!`;}
   return hl(T.word);
 }
 function actChoose(correct,el){
   ac();if(actDone)return;
   if(correct){
     actDone=true;el.classList.add('right');
-    [...$('actGrid').children].forEach(c=>{if(c!==el)c.classList.add('dim');});
+    [...el.parentElement.children].forEach(c=>{if(c!==el)c.classList.add('dim');});
     bigWin();addPower();
     const ch=adapt('act',ACT_MAX,actMiss===0);levelFx($('actLevel'),ch);
     const html=actAnswerHTML();$('actSentence').innerHTML=html;
@@ -2509,7 +2643,7 @@ function actChoose(correct,el){
             es=T.kind==='adj'?T.a.es[0]:T.kind==='obj'?T.def.es[T.yes?0:1]:T.v.es;
       say(`${own}… ${es}`);
     }else if(actMiss>=3){
-      [...$('actGrid').children].forEach(c=>{if(c.dataset.ok==='1')c.classList.add('hint');});
+      $('actGrid').querySelectorAll('[data-ok="1"]').forEach(c=>c.classList.add('hint'));
       actAsk();
     }
   }
@@ -3771,8 +3905,8 @@ function buildTabs(){
     const b=document.createElement('button');
     b.className='tab'+(activeTab===t.id?' on':'')+(t.id==='dig'&&power>=DIG_COST?' ready':'');
     b.dataset.id=t.id;
-    b.textContent=t.icon+' '+t[lang];
-    b.onclick=()=>{ac();showTab(t.id);};
+    b.textContent=t.icon;b.title=t[lang];b.setAttribute('aria-label',t[lang]);
+    b.onclick=()=>{ac();if(activeTab!==t.id)say(t[lang]);showTab(t.id);};
     box.appendChild(b);
   });
 }
@@ -3876,11 +4010,17 @@ document.getElementById('earSlow').onclick=()=>{ac();earSay(0.45);};
 document.getElementById('earSkip').onclick=()=>{ac();newEarRound();};
 (function(){
   const g=document.getElementById('gearBtn');
-  let timer=null;
-  const start=()=>{timer=setTimeout(()=>{ac();showTab('parent');},600);};
-  const stop=()=>{clearTimeout(timer);};
+  // a parent HOLDS it for one second (the ring fills); a quick tap from a child just shows "hold"
+  let timer=null,raf=null,t0=0;
+  const fill=()=>{const p=Math.min(100,(performance.now()-t0)/10);g.style.setProperty('--hold',p+'%');if(p<100)raf=requestAnimationFrame(fill);};
+  const start=()=>{t0=performance.now();fill();timer=setTimeout(()=>{stop();ac();showTab('parent');},1000);};
+  const stop=()=>{clearTimeout(timer);cancelAnimationFrame(raf);
+    if(performance.now()-t0<900&&activeTab!=='parent'){const tip=$('gearTip');
+      tip.textContent={es:'⚙ Mantén pulsado (padres)',en:'⚙ Press and hold (parents)',de:'⚙ Gedrückt halten (Eltern)'}[lang];
+      tip.classList.add('on');clearTimeout(tip._t);tip._t=setTimeout(()=>tip.classList.remove('on'),1600);}
+    g.style.setProperty('--hold','0%');};
   g.addEventListener('pointerdown',e=>{e.preventDefault();start();});
-  ['pointerup','pointerleave','pointercancel'].forEach(ev=>g.addEventListener(ev,stop));
+  ['pointerup','pointerleave','pointercancel'].forEach(ev=>g.addEventListener(ev,()=>{if(timer)stop();timer=null;}));
 })();
 document.getElementById('backBtn').onclick=()=>{ac();showTab('trace');};
 document.getElementById('zoomIn').onclick=()=>{ac();setZoom(zoom*1.45);};
