@@ -8,7 +8,7 @@
 ============================================================= */
 (()=>{
 const CW=1200,CH=1600,TAU=Math.PI*2;          // the town
-const WX0=0,WX1=4000,WY0=-900,WY1=2400;       // the whole world around it (js/city-wild.js, js/city-far.js)
+const WX0=-1400,WX1=4000,WY0=-900,WY1=2400;   // the whole world around it (js/city-wild.js, city-far.js, city-west.js)
 const cv=$('cityCv'),g=cv.getContext('2d'),probe=document.createElement('canvas').getContext('2d');
 let T=0,NIGHT=0,nightOn=false,HITS=[];const LIT=[],LIGHTS=[],ST={T:0,NIGHT:0};
 let seed=11;
@@ -215,7 +215,7 @@ for(let i=0;i<=64;i++){const a=i/64*TAU,r=1+0.06*Math.sin(3*a+1)+0.04*Math.cos(5
 LAKE.closePath();
 const inLake=(x,y)=>probe.isPointInPath(LAKE,x,y),inRiver=(x,y)=>probe.isPointInPath(RIVER,x,y);
 
-const ROADS=[[-40,380,740,380],[-40,800,WX1+40,800],[250,-40,250,1150],[520,-40,520,800],[250,1150,600,1150]];
+const ROADS=[[WX0-40,380,740,380],[WX0-40,800,WX1+40,800],[250,-40,250,1150],[520,-40,520,800],[250,1150,600,1150]];
 const ROADP=new Path2D();ROADS.forEach(r=>{ROADP.moveTo(r[0],r[1]);ROADP.lineTo(r[2],r[3]);});
 const segD=(px,py,r)=>{const dx=r[2]-r[0],dy=r[3]-r[1],t=Math.max(0,Math.min(1,((px-r[0])*dx+(py-r[1])*dy)/(dx*dx+dy*dy)));return Math.hypot(px-r[0]-dx*t,py-r[1]-dy*t);};
 const onRoad=(x,y,w)=>ROADS.some(r=>segD(x,y,r)<(w||30));
@@ -758,7 +758,7 @@ function vehicle(x,y,dir,o,col,flash,spin){
   if(flash!==undefined&&Math.sin(T*18)>0)LIGHTS.push(x,y-H,26,'#FF5A50');
 }
 function vehicleFront(x,y,o){vehicle(x,y,'S',o,o.col);}
-const RN={a:[250,-40],b:[520,-40],c:[-40,380],d:[250,380],e:[520,380],f:[740,380],h0:[-40,800],h:[250,800],i:[520,800],j:[WX1+40,800],k:[250,1150],l:[600,1150]};
+const RN={a:[250,-40],b:[520,-40],c:[WX0-40,380],d:[250,380],e:[520,380],f:[740,380],h0:[WX0-40,800],h:[250,800],i:[520,800],j:[WX1+40,800],k:[250,1150],l:[600,1150]};
 const RE=[['a','d'],['b','e'],['c','d'],['d','e'],['e','f'],['h0','h'],['h','i'],['i','j'],['d','h'],['e','i'],['h','k'],['k','l']];
 const NB={};RE.forEach(([p,q])=>{(NB[p]=NB[p]||[]).push(q);(NB[q]=NB[q]||[]).push(p);});
 const CARCOL=['#FF5A5F','#3CC8F5','#7ED957','#B78CFF','#FF8A3D','#2F5FD0'];
@@ -868,7 +868,7 @@ function drawHeli(){const p=heliPos(),y=p.y-p.alt,spin=HELI.t>=0?T*40:T*0.3;
   ln('#555',1.4,-10,0,10,0);ln('#555',1.2,-6,0,-6,-3);ln('#555',1.2,6,0,6,-3);
   const r=30*Math.abs(Math.cos(spin));ln('#3A3F52',2,-r,-21,r,-21);if(HELI.t>=0)ell(0,-21,30,2.2,'rgba(60,60,70,.25)');
   g.restore();hit('heli',p.x-26,y-24,p.x+20,y+2,{moving:1,small:1});}
-const CLOUDS=[[3100,200,1.2],[3600,1300,1.1],[3300,2100,1.3],[150,300,1.1],[700,700,1.3],[300,1250,1],[1000,1100,1.2],[1500,-500,1.4],[2300,100,1.2],[1800,900,1.1],[2500,1500,1.3],[600,2050,1.2],[1900,2200,1],[400,-300,1]].map(([x,y,s])=>({x,y,s}));
+const CLOUDS=[[-900,100,1.2],[-600,1200,1.1],[-1100,2000,1.3],[3100,200,1.2],[3600,1300,1.1],[3300,2100,1.3],[150,300,1.1],[700,700,1.3],[300,1250,1],[1000,1100,1.2],[1500,-500,1.4],[2300,100,1.2],[1800,900,1.1],[2500,1500,1.3],[600,2050,1.2],[1900,2200,1],[400,-300,1]].map(([x,y,s])=>({x,y,s}));
 function drawClouds(){const z=CAM.k/kFit(),ca=Math.max(0,Math.min(0.8,(1.7-z)*1.4))*(1-NIGHT*0.7);if(ca<=0.01)return;
   for(const c of CLOUDS){g.globalAlpha=ca*0.5;ell(c.x+40*c.s,c.y+80*c.s,55*c.s,16*c.s,'rgba(30,70,40,.25)');
     g.globalAlpha=ca;[[0,0,24],[-26,6,17],[26,6,18],[-10,-12,17],[12,-10,19]].forEach(([dx,dy,r])=>circ(c.x+dx*c.s,c.y+dy*c.s,r*c.s,'#FFFFFF'));
@@ -1129,6 +1129,7 @@ const K={rr,circ,ell,poly,ln,star,shade,FONT,sign,win,gableB,flatB,kid,SKIN,HAIR
   GROUND0:[],GROUND1:[],UPDATE:[],DYN:[],TOP:[],ZONES:[],shake:0};
 if(typeof cityWild==='function')cityWild(K);
 if(typeof cityFar==='function')cityFar(K);
+if(typeof cityWest==='function')cityWest(K);
 paws();
 if(document.fonts)document.fonts.load(FONT(20)).catch(()=>{});
 requestAnimationFrame(frame);

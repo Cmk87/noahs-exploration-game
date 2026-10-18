@@ -41,7 +41,15 @@ Further east (`js/city-far.js`): a space centre whose space shuttle and rocket c
 a Wild West town (saloon, sheriff, store, hotel, cowboy with lasso, stagecoach, water tower, gold mine,
 mesas, cacti, bison, coyote, rattlesnake, roadrunner, vulture, lizard). The steam train shuttles between
 the town station and the Wild West station; tapping a station while the train waits there means "all
-aboard" and the camera rides along. 48 animals in all.
+aboard" and the camera rides along.
+
+West of the town (`js/city-west.js`): Santa's snowy village (Santa, his house, a toy factory with an open
+front where elves wrap presents on a conveyor belt, reindeer, a sleigh that flies around the world
+dropping presents, a giant Christmas tree, an ice rink, penguins, polar bear, arctic fox, snowy owl) and a
+spooky corner (vampire castle under a full moon with bats, a graveyard whose ghosts rise, a skeleton, a
+witch on a broom, a bubbling cauldron, a pumpkin patch, a raven, a spider and a black cat). Boats sail
+slowly across the whole sea: a ferry, a fishing boat, a container ship, a cruise ship, sailing boats, a
+speedboat and a red submarine. 57 animals in all.
 
 ## Automatic difficulty
 
