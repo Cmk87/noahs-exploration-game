@@ -1315,7 +1315,7 @@ function finishItem(){
   bigWin();boom();
   setTimeout(()=>boom(70,S*0.25,S*0.58,.9),240);
   setTimeout(()=>boom(70,S*0.75,S*0.58,.9),440);
-  addPower();
+  addPower(3);
 
   const faceEl=document.getElementById('face'),wordEl=document.getElementById('wordText');
   faceEl.classList.remove('small');
@@ -1462,8 +1462,8 @@ function buildChips(){
    whole level per answer so it finds his level quickly. Levels are
    saved per mode and per language, so they survive a reload.
 ============================================================= */
-const SKILL_START={words:{es:4,en:2,de:2},ear:{es:2,en:1,de:1},act:{es:2,en:1,de:1}};
-const SKILL_MAX={words:8,ear:6,act:6};
+const SKILL_START={words:{es:4,en:2,de:2},ear:{es:2,en:1,de:1},act:{es:2,en:1,de:1},space:{es:1,en:1,de:1},geo:{es:1,en:1,de:1}};
+const SKILL_MAX={words:8,ear:6,act:6,space:4,geo:2};
 let SKILL={};try{SKILL=JSON.parse(localStorage.getItem('sl_skill')||'{}');}catch(e){}
 function skillRec(mode,lg){const k=mode+'|'+(lg||lang);
   return SKILL[k]||(SKILL[k]={s:SKILL_START[mode][lg||lang],n:0,h:[]});}
@@ -1542,7 +1542,7 @@ function choose(o,el){
   if(targets.includes(o)){
     el.classList.add('right');gotT.push(o);
     if(gotT.length<targets.length){beep(880,0,0.12,'triangle',0.16);say(o[lang][1]);return;}
-    roundDone=true;bigWin();addPower();
+    roundDone=true;bigWin();award(misses);
     levelFx(document.getElementById('levelPill'),adapt('words',8,misses===0));
     const label=targets.map(t=>t[lang].join(' ')).join(' '+AND[lang]+' ');
     showWin(targets.map(t=>t.e).join(''),label,targets.map(t=>t[lang][1]).join(' '+AND[lang]+' '));
@@ -1640,7 +1640,7 @@ function newEarRound(){
 function earPick(o,el){
   ac();if(earDone)return;
   if(o.e===earTarget.e){
-    earDone=true;el.classList.add('right');bigWin();addPower();
+    earDone=true;el.classList.add('right');bigWin();award(earMiss);
     levelFx(document.getElementById('earLevelPill'),adapt('ear',6,earMiss===0));
     showWin(earTarget.e,earTarget[lang].join(' '),null);
     setTimeout(newEarRound,2400);
@@ -1884,25 +1884,48 @@ function selectPlanet(i){
   say(p[lang][0]+'. '+p[lang][1]);
   beep(660,0,0.12,'square',0.14);
 }
+/* Space quiz levels: 1 the easy planets by name, 2 every planet by name,
+   3 "which is the hottest / has rings / …", 4 order from the Sun. */
+const SPACE_Q=[
+ {L:3,a:5,es:'¿Cuál es el planeta más grande?',en:'Which is the biggest planet?',de:'Welcher ist der größte Planet?'},
+ {L:3,a:1,es:'¿Cuál es el planeta más pequeño?',en:'Which is the smallest planet?',de:'Welcher ist der kleinste Planet?'},
+ {L:3,a:2,es:'¿Cuál es el planeta más caliente?',en:'Which is the hottest planet?',de:'Welcher ist der heißeste Planet?'},
+ {L:3,a:6,es:'¿Qué planeta tiene anillos grandes?',en:'Which planet has big rings?',de:'Welcher Planet hat große Ringe?'},
+ {L:3,a:4,es:'¿Cuál es el planeta rojo?',en:'Which is the red planet?',de:'Welcher ist der rote Planet?'},
+ {L:3,a:3,es:'¿Dónde vivimos nosotros?',en:'Where do we live?',de:'Wo leben wir?'},
+ {L:3,a:0,es:'¿Cuál es una estrella?',en:'Which one is a star?',de:'Welches ist ein Stern?'},
+ {L:3,a:8,es:'¿Cuál es el planeta más lejano?',en:'Which planet is the farthest away?',de:'Welcher Planet ist am weitesten weg?'},
+ {L:3,a:7,es:'¿Qué planeta gira tumbado?',en:'Which planet spins on its side?',de:'Welcher Planet dreht sich auf der Seite?'},
+ {L:4,a:1,es:'¿Cuál es el planeta más cercano al Sol?',en:'Which planet is closest to the Sun?',de:'Welcher Planet ist der Sonne am nächsten?'},
+ {L:4,a:4,es:'¿Qué planeta viene después de la Tierra?',en:'Which planet comes after Earth?',de:'Welcher Planet kommt nach der Erde?'},
+ {L:4,a:2,es:'¿Qué planeta viene antes de la Tierra?',en:'Which planet comes before Earth?',de:'Welcher Planet kommt vor der Erde?'},
+ {L:4,a:5,es:'¿Qué planeta está entre Marte y Saturno?',en:'Which planet is between Mars and Saturn?',de:'Welcher Planet ist zwischen Mars und Saturn?'},
+ {L:4,a:7,es:'¿Qué planeta viene después de Saturno?',en:'Which planet comes after Saturn?',de:'Welcher Planet kommt nach dem Saturn?'}
+];
+let spaceQText='',spaceMiss=0;
 function spaceAsk(){
-  spaceQuiz=true;
-  const pool=PLANETS.map((p,i)=>i).filter(i=>!PLANETS[i].sun);
-  spaceTargetIdx=pool[Math.floor(Math.random()*pool.length)];
-  const name=PLANETS[spaceTargetIdx][lang][0];
-  const q=lang==='es'?`¿Dónde está ${name}?`:lang==='de'?`Wo ist ${name}?`:`Where is ${name}?`;
-  document.getElementById('factName').textContent='🎯';
-  document.getElementById('factText').textContent=q;
-  say(q);
+  spaceQuiz=true;spaceMiss=0;
+  const L=level('space',4);
+  if(L>=3&&Math.random()<0.75){
+    const q=pick(SPACE_Q.filter(x=>x.L<=L&&x.a!==spaceTargetIdx));spaceTargetIdx=q.a;spaceQText=q[lang];
+  }else{
+    const pool=L===1?[0,3,4,5,6]:PLANETS.map((p,i)=>i).filter(i=>!PLANETS[i].sun);
+    spaceTargetIdx=pick(pool.filter(i=>i!==spaceTargetIdx));
+    const name=PLANETS[spaceTargetIdx][lang][0];
+    spaceQText=lang==='es'?`¿Dónde está ${name}?`:lang==='de'?`Wo ist ${name}?`:`Where is ${name}?`;
+  }
+  document.getElementById('factName').textContent='🎯 '+L;
+  document.getElementById('factText').textContent=spaceQText;
+  say(spaceQText);
 }
 function spaceAnswer(i){
   if(i===spaceTargetIdx){
-    spaceQuiz=false;bigWin();
-    addPower();
+    spaceQuiz=false;bigWin();award(spaceMiss);adapt('space',4,spaceMiss===0);
     selected=i;const p=PLANETS[i];
     document.getElementById('factName').textContent=p[lang][0];
     document.getElementById('factText').textContent=p[lang][1];
     say(p[lang][0]+'. '+p[lang][1]);
-  }else nope();
+  }else{nope();spaceMiss++;if(spaceMiss===2)say(spaceQText);}
 }
 
 
@@ -2629,7 +2652,7 @@ function actChoose(correct,el){
   if(correct){
     actDone=true;el.classList.add('right');
     [...el.parentElement.children].forEach(c=>{if(c!==el)c.classList.add('dim');});
-    bigWin();addPower();
+    bigWin();award(actMiss);
     const ch=adapt('act',ACT_MAX,actMiss===0);levelFx($('actLevel'),ch);
     const html=actAnswerHTML();$('actSentence').innerHTML=html;
     const plain=stripTags(html);say(plain);
@@ -2729,9 +2752,9 @@ function renderPower(bump){
 $('power').addEventListener('animationend',e=>{if(e.animationName==='bump')$('power').classList.remove('bump');});
 $('power').onclick=()=>{ac();if(power>=DIG_COST)showTab('dig');};
 /* a "+1 ⚡" flies from his finger to the counter, so he SEES where points go */
-function flyBolt(n){
+function flyBolt(n,label){
   const pill=$('power').getBoundingClientRect();
-  const f=document.createElement('div');f.className='flyBolt';f.textContent='+'+n+'⚡';
+  const f=document.createElement('div');f.className='flyBolt';f.textContent=label||('+'+n+'⚡');
   f.style.left=lastTap.x+'px';f.style.top=lastTap.y+'px';
   document.body.appendChild(f);
   if(!f.animate){setTimeout(()=>f.remove(),50);return;}
@@ -2750,6 +2773,21 @@ function addPower(n=1){
   if(Math.floor(before/DIG_COST)<Math.floor(power/DIG_COST)) setTimeout(showReward,2800);
   if(activeTab==='dig'&&pane==='digLock') showDigLock();
 }
+/* Points must not reward guessing: a right answer on the first try is
+   worth 1 ⚡, on the second try still 1, after that nothing (the round
+   still ends happily). Five first-try answers in a row earn a 🔥 bonus. */
+let fireStreak=0;
+function award(misses,base){
+  base=base||1;
+  if(misses>=2){fireStreak=0;return 0;}
+  if(misses===0){fireStreak++;}else fireStreak=0;
+  addPower(base);
+  if(fireStreak&&fireStreak%5===0)setTimeout(()=>{flyBolt(2,'🔥+2');addPowerQuiet(2);
+    [880,1175,1568].forEach((f,i)=>beep(f,i*0.07,0.18,'triangle',0.18));},950);
+  return base;
+}
+function addPowerQuiet(n){const before=power;power+=n;savePower();setTimeout(()=>renderPower(true),800);
+  if(Math.floor(before/DIG_COST)<Math.floor(power/DIG_COST))setTimeout(showReward,2800);}
 function spendPower(n){power=Math.max(0,power-n);savePower();renderPower(true);}
 
 /* ---------- emoji rain (DOM, so it works over any tab) ---------- */
@@ -3863,26 +3901,40 @@ function geoSelect(i,speak){
   drawMap();
   if(speak!==false){say(c[lang][0]+'. '+c[lang][1]);beep(660,0,0.12,'square',0.14);}
 }
+const GEO_Q=[
+ {a:'oc',es:'¿Dónde viven los canguros?',en:'Where do kangaroos live?',de:'Wo leben Kängurus?'},
+ {a:'sa',es:'¿Dónde está la selva del Amazonas?',en:'Where is the Amazon rainforest?',de:'Wo ist der Amazonas-Regenwald?'},
+ {a:'eu',es:'¿Dónde está España?',en:'Where is Spain?',de:'Wo ist Spanien?'},
+ {a:'eu',es:'¿Dónde está Alemania?',en:'Where is Germany?',de:'Wo ist Deutschland?'},
+ {a:'eu',es:'¿Dónde está Inglaterra?',en:'Where is England?',de:'Wo ist England?'},
+ {a:'as',es:'¿Dónde viven los pandas?',en:'Where do pandas live?',de:'Wo leben Pandas?'},
+ {a:'as',es:'¿Dónde viven los tigres?',en:'Where do tigers live?',de:'Wo leben Tiger?'},
+ {a:'af',es:'¿Dónde viven las cebras?',en:'Where do zebras live?',de:'Wo leben Zebras?'},
+ {a:'af',es:'¿Dónde están las pirámides de Egipto?',en:'Where are the pyramids of Egypt?',de:'Wo sind die Pyramiden von Ägypten?'},
+ {a:'an',es:'¿Cuál es el lugar más frío?',en:'Where is the coldest place?',de:'Wo ist es am kältesten?'},
+ {a:'na',es:'¿Dónde está Estados Unidos?',en:'Where is the United States?',de:'Wo sind die USA?'},
+ {a:'as',es:'¿Cuál es el continente más grande?',en:'Which is the biggest continent?',de:'Welcher ist der größte Kontinent?'}
+];
+let geoQText='',geoMiss=0;
 function geoAsk(){
-  geoQuizOn=true;
-  geoTarget=Math.floor(Math.random()*CONTINENTS.length);
-  const n=CONTINENTS[geoTarget][lang][0];
-  const q=lang==='es'?`¿Dónde está ${n}?`:lang==='de'?`Wo ist ${n}?`:`Where is ${n}?`;
-  document.getElementById('geoName').textContent='🎯';
-  document.getElementById('geoText').textContent=q;
-  drawMap();say(q);
+  geoQuizOn=true;geoMiss=0;
+  const L=level('geo',2);
+  if(L>=2&&Math.random()<0.7){const q=pick(GEO_Q);geoTarget=CONTINENTS.findIndex(c=>c.k===q.a);geoQText=q[lang];}
+  else{geoTarget=Math.floor(Math.random()*CONTINENTS.length);const n=CONTINENTS[geoTarget][lang][0];
+    geoQText=lang==='es'?`¿Dónde está ${n}?`:lang==='de'?`Wo ist ${n}?`:`Where is ${n}?`;}
+  document.getElementById('geoName').textContent='🎯 '+L;
+  document.getElementById('geoText').textContent=geoQText;
+  drawMap();say(geoQText);
 }
 function geoAnswer(i){
   if(i===geoTarget){
-    geoQuizOn=false;bigWin();
-    addPower();
+    geoQuizOn=false;bigWin();award(geoMiss);adapt('geo',2,geoMiss===0);
     geoSelect(i,true);
-  }else nope();
+  }else{nope();geoMiss++;if(geoMiss===2)say(geoQText);}
 }
 document.getElementById('geoQuiz').onclick=()=>{ac();geoAsk();};
 document.getElementById('geoSay').onclick=()=>{ac();
-  if(geoQuizOn){const n=CONTINENTS[geoTarget][lang][0];
-    say(lang==='es'?`¿Dónde está ${n}?`:lang==='de'?`Wo ist ${n}?`:`Where is ${n}?`);}
+  if(geoQuizOn)say(geoQText);
   else geoSelect(selectedGeo,true);};
 
 /* =============================================================
@@ -3957,7 +4009,7 @@ function renderParent(){
   $('pPowerTitle').textContent={es:'Puntos de premio (40 ⚡ = 1 premio)',en:'Prize points (40 ⚡ = 1 prize)',de:'Preispunkte (40 ⚡ = 1 Preis)'}[lang];
   $('pPowerVal').textContent='⚡ '+power;
   const lr=document.getElementById('levelRows');lr.innerHTML='';
-  const MN={words:'🖼️',ear:'👂',act:'🦖'};
+  const MN={words:'🖼️',ear:'👂',act:'🦖',space:'🪐',geo:'🌍'};
   [['🇪🇸','es'],['🇬🇧','en'],['🇩🇪','de']].forEach(([f,c])=>{
     const cells=Object.keys(MN).map(m=>{const r=skillRec(m,c),acc=r.h.length?Math.round(r.h.reduce((a,b)=>a+b,0)/r.h.length*100)+'%':'–';
       return `${MN[m]} ${level(m,SKILL_MAX[m],c)}/${SKILL_MAX[m]} <small>(${acc})</small>`;}).join(' &nbsp;');
@@ -4030,8 +4082,7 @@ document.getElementById('pauseBtn').onclick=()=>{ac();paused=!paused;
   document.getElementById('pauseBtn').textContent=paused?'▶':'⏸';};
 document.getElementById('spaceQuizBtn').onclick=()=>{ac();spaceAsk();};
 document.getElementById('spaceSayBtn').onclick=()=>{ac();
-  if(spaceQuiz){const n=PLANETS[spaceTargetIdx][lang][0];
-    say(lang==='es'?`¿Dónde está ${n}?`:lang==='de'?`Wo ist ${n}?`:`Where is ${n}?`);}
+  if(spaceQuiz)say(spaceQText);
   else selectPlanet(selected);};
 
 function gateText(){
