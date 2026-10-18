@@ -1489,6 +1489,37 @@ function levelFx(el,ch){
   el.classList.remove('pop','down');void el.offsetWidth;el.classList.add(ch>0?'pop':'down');
   if(ch>0)[660,880,1175].forEach((f,i)=>beep(f,i*0.08,0.2,'square',0.2));
 }
+/* =============================================================
+   SPACED REPETITION (Leitner boxes), per language, shared by the
+   Words and Listening tabs. Right on the first try → next box, so the
+   word comes back later and later; any miss → back to box 1, so it
+   comes back soon. New words are let in gradually: never more than
+   8 "being learned" (box 1–2) at once.
+============================================================= */
+const SRS_DAYS=[0,0.007,1,3,7,21];            // box → days until due (0.007 d ≈ 10 min)
+let SRS={};try{SRS=JSON.parse(localStorage.getItem('sl_srs')||'{}');}catch(e){}
+const srsOf=(e,lg)=>((SRS[lg||lang]||{})[e]);
+function srsRecord(item,ok){
+  const L=SRS[lang]||(SRS[lang]={}),r=L[item.e]||(L[item.e]={b:0,d:0,n:0,ok:0});
+  // a word he gets right the very first time he meets it is already known: skip ahead to box 3
+  r.b=ok?(r.n===0?3:Math.min(5,r.b+1)):1;r.n++;if(ok)r.ok++;
+  r.d=Date.now()+SRS_DAYS[r.b]*864e5;
+  try{localStorage.setItem('sl_srs',JSON.stringify(SRS));}catch(e){}
+}
+/* pick what to practise: due words first (weakest first), then a new word if
+   there is room, otherwise a random known word to keep it fresh */
+function srsPick(pool){
+  const now=Date.now(),seen=pool.filter(v=>srsOf(v.e)),fresh=pool.filter(v=>!srsOf(v.e));
+  const due=seen.filter(v=>srsOf(v.e).d<=now).sort((a,b)=>srsOf(a.e).b-srsOf(b.e).b||Math.random()-.5);
+  const learning=Object.values(SRS[lang]||{}).filter(r=>r.b>0&&r.b<=2).length;
+  const r=Math.random();
+  if(due.length&&r<0.65)return due[Math.floor(Math.random()*Math.min(3,due.length))];
+  if(fresh.length&&learning<8&&r<0.9)return pick(fresh);
+  if(due.length)return due[0];
+  return pick(seen.length?seen:pool);
+}
+const srsMastered=lg=>Object.values(SRS[lg]||{}).filter(r=>r.b>=4).length;
+
 /* words quiz levels: how many pictures, how many from the same
    category, then sound-alike distractors, then two things at once */
 const WLVL=[null,{n:4,same:0},{n:4,same:1},{n:6,same:2},{n:6,same:5},{n:9,same:4},{n:9,same:8},
@@ -1521,9 +1552,9 @@ function newRound(){
   const L=level('words',8),cfg=WLVL[L],SET=catPool();
   let pool=SET.filter(v=>!recent.includes(v.e));
   if(pool.length<Math.min(8,SET.length)){recent=[];pool=SET.slice();}
-  target=pick(pool);recent.push(target.e);if(recent.length>12)recent.shift();
+  target=srsPick(pool);recent.push(target.e);if(recent.length>12)recent.shift();
   targets=[target];
-  if(cfg.two)targets.push(pick(SET.filter(v=>v.e!==target.e)));
+  if(cfg.two)targets.push(srsPick(pool.filter(v=>v.e!==target.e)));
   const rest=SET.filter(v=>!targets.includes(v)),need=Math.min(cfg.n,SET.length)-targets.length;
   let picked=[];
   if(cfg.sound){                    // words that SOUND like the target, in this language
@@ -1550,7 +1581,7 @@ function choose(o,el){
   if(targets.includes(o)){
     el.classList.add('right');gotT.push(o);
     if(gotT.length<targets.length){beep(880,0,0.12,'triangle',0.16);say(o[lang][1]);return;}
-    roundDone=true;bigWin();award(misses);
+    roundDone=true;bigWin();award(misses);targets.forEach(t=>srsRecord(t,misses===0));
     levelFx(document.getElementById('levelPill'),adapt('words',8,misses===0));
     const label=targets.map(t=>t[lang].join(' ')).join(' '+AND[lang]+' ');
     showWin(targets.map(t=>t.e).join(''),label,targets.map(t=>t[lang][1]).join(' '+AND[lang]+' '));
@@ -1624,7 +1655,7 @@ function newEarRound(){
   const L=level('ear',6),cfg=ELVL[L];
   let pool=VOCAB.filter(v=>!earRecent.includes(v.e));
   if(pool.length<10){earRecent=[];pool=VOCAB.slice();}
-  earTarget=pick(pool);
+  earTarget=srsPick(pool);
   earRecent.push(earTarget.e); if(earRecent.length>14) earRecent.shift();
   const w=earTarget[lang][1],rest=VOCAB.filter(v=>v.e!==earTarget.e),k=cfg.n-1;
   let others;
@@ -1648,7 +1679,7 @@ function newEarRound(){
 function earPick(o,el){
   ac();if(earDone)return;
   if(o.e===earTarget.e){
-    earDone=true;el.classList.add('right');bigWin();award(earMiss);
+    earDone=true;el.classList.add('right');bigWin();award(earMiss);srsRecord(earTarget,earMiss===0);
     levelFx(document.getElementById('earLevelPill'),adapt('ear',6,earMiss===0));
     showWin(earTarget.e,earTarget[lang].join(' '),null);
     setTimeout(newEarRound,2400);
