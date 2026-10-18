@@ -356,6 +356,10 @@
   #gearBtn{position:relative;flex:0 0 auto;width:42px;height:42px;padding:0;border:3px solid var(--ink);border-radius:50%;
     background:conic-gradient(var(--bolt) var(--hold,0%),#fff var(--hold,0%));color:var(--ink);font-size:22px;line-height:1;
     cursor:pointer;box-shadow:3px 3px 0 var(--ink);margin-left:auto;margin-right:10px}
+  #mascot{position:fixed;left:8px;bottom:max(8px,env(safe-area-inset-bottom));z-index:7;width:78px;height:78px;border-radius:50%;
+    border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);background:radial-gradient(circle at 50% 35%,#E6F7FF,#9ED8FF);cursor:pointer;display:none}
+  #mascot.on{display:block}
+  .view{padding-bottom:max(92px,env(safe-area-inset-bottom))}
   #gearTip{position:fixed;z-index:40;top:62px;left:50%;transform:translateX(-50%);background:#fff;color:var(--ink);
     border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);border-radius:8px;padding:6px 12px;font-weight:bold;font-size:15px;
     display:none;white-space:nowrap}
@@ -539,6 +543,7 @@
 <div id="rain"></div>
 
 <div id="gearTip"></div>
+<canvas id="mascot" aria-label="Rexi"></canvas>
 
 <div id="gate"><div>
   <div class="gateBolt">⚡</div>
@@ -1197,7 +1202,7 @@ function noise(dur=0.25,vol=0.16){
 const blip=()=>beep(900+Math.random()*220,0,0.05,'square',0.07);
 const strokeDone=()=>{beep(520,0,0.1,'square',0.16);beep(780,0.08,0.16,'square',0.16);noise(0.15,0.08);};
 const bigWin=()=>{[392,523,659,784,1047].forEach((f,i)=>beep(f,i*0.09,0.3,'square',0.2));noise(0.5,0.22);};
-const nope=()=>beep(150,0,0.14,'sawtooth',0.10);
+const nope=()=>{beep(150,0,0.14,'sawtooth',0.10);if(typeof mascot==='function')mascot('hmm',1400);};
 
 /* =============================================================
    5. TRACING ENGINE
@@ -1355,7 +1360,7 @@ function finishItem(){
   bigWin();boom();
   setTimeout(()=>boom(70,S*0.25,S*0.58,.9),240);
   setTimeout(()=>boom(70,S*0.75,S*0.58,.9),440);
-  addPower(3);
+  addPower(3);mascot('cheer');
 
   const faceEl=document.getElementById('face'),wordEl=document.getElementById('wordText');
   faceEl.classList.remove('small');
@@ -3105,7 +3110,7 @@ function addPower(n=1){
    still ends happily). Five first-try answers in a row earn a 🔥 bonus. */
 let fireStreak=0;
 function award(misses,base){
-  base=base||1;
+  base=base||1;mascot('cheer');
   if(misses>=2){fireStreak=0;return 0;}
   if(misses===0){fireStreak++;}else fireStreak=0;
   addPower(base);
@@ -4465,6 +4470,34 @@ gate.addEventListener('click',unlock,{once:true});
 /* ---- the page itself must never scroll (only the tabs' content does) ---- */
 window.addEventListener('scroll',()=>{if(window.scrollY||window.scrollX)window.scrollTo(0,0);});
 document.body.addEventListener('scroll',()=>{if(document.body.scrollTop)document.body.scrollTop=0;});
+
+/* ---- Rexi, the mascot: cheers on right answers, puzzles on misses, waves when tapped ---- */
+const mascotCv=$('mascot'),mascotG=mascotCv.getContext('2d');
+let mascotState='idle',mascotUntil=0,mascotRun=false;
+const MASCOT_TABS=['trace','words','ear','space','geo'];
+function mascot(state,ms){mascotState=state;mascotUntil=performance.now()+(ms||1700);}
+function mascotLoop(){
+  const show=MASCOT_TABS.includes(activeTab)&&gate.style.display==='none'&&!rewardOpen;
+  mascotCv.classList.toggle('on',show);
+  if(show){
+    const dpr=Math.min(window.devicePixelRatio||1,2.5),W=78,w=Math.round(W*dpr);
+    if(mascotCv.width!==w){mascotCv.width=w;mascotCv.height=w;}
+    const g=mascotG,now=performance.now(),t=now/1000;
+    if(now>mascotUntil)mascotState='idle';
+    g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,w,w);g.setTransform(dpr*W/100,0,0,dpr*W/100,0,0);
+    g.save();g.translate(-8,-14);g.scale(1.16,1.16);
+    const st={verb:{cheer:'jump',wave:'wave',hmm:'stand',idle:'stand'}[mascotState],noScene:1,seed:0,
+              mood:mascotState==='hmm'?'surprised':mascotState==='cheer'?'happy':''};
+    drawDino(g,100,100,st,t,true);g.restore();
+    if(mascotState==='hmm')txt(g,'?',84,20,22,'#FFD400',0.15);
+  }
+  requestAnimationFrame(mascotLoop);
+}
+requestAnimationFrame(mascotLoop);
+mascotCv.addEventListener('pointerdown',e=>{e.preventDefault();ac();mascot('wave',2200);
+  say(pick({es:['¡Hola! Soy Rexi.','¡Tú puedes!','¡Sigue así!','¡Qué bien lo haces!'],
+            en:['Hi! I am Rexi!','You can do it!','Keep going!','You are doing great!'],
+            de:['Hallo! Ich bin Rexi!','Du schaffst das!','Weiter so!','Das machst du toll!']}[lang]));});
 
 /* ---- installable app: offline cache + auto-update (only when served over http/https) ---- */
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))
