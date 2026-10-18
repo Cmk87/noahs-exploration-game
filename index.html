@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -15,7 +15,7 @@
 <style>
   :root{--night:#0B1030;--bolt:#FFD400;--blaze:#FF3B30;--beam:#00D4FF;--ink:#05060F}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%;margin:0;overscroll-behavior:none;touch-action:none}
+  html,body{height:100%;margin:0;overscroll-behavior:none;touch-action:none;overflow:hidden}
   body{
     background:repeating-conic-gradient(from 0deg at 50% 42%,rgba(255,212,0,.07) 0deg 7deg,transparent 7deg 14deg),
       radial-gradient(circle at 50% 40%,#21306E 0%,#131C46 45%,#0B1030 100%);
@@ -46,8 +46,13 @@
   .tab.on{background:var(--bolt);transform:translateY(-2px)}
   .tab:active{transform:translate(3px,3px);box-shadow:none}
 
-  .view{display:none;position:relative;z-index:2;width:100%;max-width:540px;flex:1;
-    flex-direction:column;align-items:center}
+  body{height:100vh;height:100dvh}
+  header,.tabs{flex:0 0 auto}
+  /* each tab scrolls inside itself, so the header and tabs can never be pushed off screen */
+  .view{display:none;position:relative;z-index:2;width:100%;max-width:540px;flex:1 1 auto;min-height:0;
+    flex-direction:column;align-items:center;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;
+    -webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding-bottom:max(16px,env(safe-area-inset-bottom))}
+  .view.on>*{flex-shrink:0}
   .view.on{display:flex}
 
   /* ---------- tracing ---------- */
@@ -55,9 +60,9 @@
   .seg{border:3px solid var(--ink);border-radius:6px;background:#fff;color:var(--ink);font-weight:bold;
     font-size:15px;padding:6px 12px;box-shadow:3px 3px 0 var(--ink);cursor:pointer;font-family:inherit}
   .seg.on{background:var(--beam)}
-  #stage{width:100%;flex:1;display:flex;align-items:center;justify-content:center}
-  #wrap{position:relative;width:94vw;max-width:470px;aspect-ratio:1/1}
-  #c{position:absolute;inset:0;width:100%;height:100%;background:#F4F7FF;border:5px solid var(--ink);
+  #stage{width:100%;display:flex;align-items:center;justify-content:center}
+  #wrap{position:relative;width:min(94vw,470px,calc(100dvh - 330px));min-width:240px;aspect-ratio:1/1}
+  #c{touch-action:none;position:absolute;inset:0;width:100%;height:100%;background:#F4F7FF;border:5px solid var(--ink);
     border-radius:8px;box-shadow:8px 8px 0 var(--ink);display:block}
   #wrap.shake{animation:shake .4s}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px) rotate(-1deg)}75%{transform:translateX(9px) rotate(1deg)}}
@@ -107,8 +112,8 @@
     padding:3px 12px 5px;font-size:15px}
   #levelPill.pop{animation:slam .5s cubic-bezier(.2,1.7,.4,1)}
   .prompt{background:#fff;border:4px solid var(--ink);box-shadow:6px 6px 0 var(--ink);color:var(--ink);
-    font-size:min(6vw,27px);padding:9px 16px 12px;margin:10px 14px 14px;text-align:center;transform:rotate(-1deg)}
-  #grid,#earGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;padding:0 14px}
+    font-size:min(6vw,27px,3.4dvh);padding:9px 16px 12px;margin:10px 14px 14px;text-align:center;transform:rotate(-1deg)}
+  #grid,#earGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;padding:0 14px;max-width:min(100%,calc((100dvh - 270px)*1.5))}
   .card{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:#F4F7FF;
     border:4px solid var(--ink);border-radius:8px;box-shadow:5px 5px 0 var(--ink);font-size:min(12vw,60px);cursor:pointer}
   .card:active{transform:translate(5px,5px);box-shadow:none}
@@ -128,12 +133,11 @@
   #earSpeaker{
     font-size:min(26vw,120px);line-height:1;margin:8px 0 2px;background:var(--beam);
     border:5px solid var(--ink);border-radius:50%;box-shadow:6px 6px 0 var(--ink);
-    width:min(34vw,150px);height:min(34vw,150px);cursor:pointer;padding:0;
+    width:min(34vw,150px,15dvh);height:min(34vw,150px,15dvh);font-size:min(26vw,120px,11dvh);cursor:pointer;padding:0;
   }
   #earSpeaker:active{transform:translate(6px,6px);box-shadow:none}
   #earSpeaker.playing{animation:pulse .6s ease-in-out infinite alternate}
   @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.07)}}
-  #earGrid{grid-template-columns:repeat(2,1fr)!important}
 
   /* ---------- space ---------- */
   #spaceWrap{position:relative;width:100%;padding:0 14px}
@@ -151,6 +155,7 @@
   .panel h3{margin:0 0 8px;font-family:Impact,sans-serif;letter-spacing:1px;font-size:19px}
   .row{display:flex;justify-content:space-between;padding:3px 0;font-size:15px;border-bottom:1px dotted #bbb}
   .row:last-child{border:0}
+  #voiceSel{width:100%;font-size:16px;padding:8px;border:3px solid var(--ink);border-radius:6px;font-family:inherit;background:#fff;color:var(--ink)}
   #nameInput{width:100%;font-size:20px;padding:9px;border:3px solid var(--ink);border-radius:6px;
     font-family:inherit;text-align:center;letter-spacing:2px}
   .btn{border:3px solid var(--ink);border-radius:6px;background:var(--bolt);font:inherit;font-weight:bold;
@@ -162,7 +167,6 @@
     cursor:pointer;white-space:nowrap}
   .chip.on{background:var(--bolt);transform:translateY(-1px)}
   .chip:active{transform:translate(2px,2px);box-shadow:none}
-  #v-act{min-height:0;overflow-y:auto;touch-action:pan-y}
   #actHead{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 14px 0 0}
   #actLevel{background:var(--blaze);color:#fff;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:3px 12px 5px;font-size:15px}
   #actLevel.pop,#levelPill.pop,#earLevelPill.pop{animation:slam .5s cubic-bezier(.2,1.7,.4,1)}
@@ -208,7 +212,6 @@
   #geoName{font-family:Impact,sans-serif;font-size:min(7vw,32px);letter-spacing:1px}
   #geoText{font-size:min(4.4vw,18px);margin-top:4px}
   /* ---------- prizes ---------- */
-  #v-dig{min-height:0;overflow-y:auto;touch-action:pan-y;padding-bottom:20px}
   .pane{display:none;flex-direction:column;align-items:center;width:100%}
   .pane.on{display:flex}
   #digLock{padding:12px 14px;text-align:center}
@@ -324,7 +327,7 @@
 <header>
   <div class="power display" id="power">⚡ 0</div>
   <div class="lang">
-    <button id="es" class="on">🇪🇸</button><button id="en">🇬🇧</button><button id="de">🇩🇪</button>
+    <button id="es">🇪🇸</button><button id="en">🇬🇧</button><button id="de" class="on">🇩🇪</button>
   </div>
 </header>
 
@@ -448,6 +451,12 @@
       <span><button class="btn" id="pPlus">+10 ⚡</button> <button class="btn" id="pZero">0</button></span></div>
   </div>
   <div class="panel">
+    <h3 id="pVoiceTitle">🔊</h3>
+    <select id="voiceSel"></select>
+    <button class="btn" id="voiceTest">▶</button>
+    <div id="voiceTip" style="font-size:13px;margin-top:8px;line-height:1.35"></div>
+  </div>
+  <div class="panel">
     <h3 id="pLevelTitle">Levels</h3>
     <div id="levelRows"></div>
     <button class="btn" id="resetLevels">↺</button>
@@ -476,7 +485,7 @@
 
 <div id="gate"><div>
   <div class="gateBolt">⚡</div>
-  <div class="gateText display" id="gateText">¡Toca para empezar!</div>
+  <div class="gateText display" id="gateText">Tippe zum Starten!</div>
   <div class="gateSub" id="gateSub">Activa el sonido y la voz</div>
 </div></div>
 
@@ -1042,18 +1051,28 @@ const VOCAB=[
 ============================================================= */
 const LANGTAG={es:'es-ES',en:'en-US',de:'de-DE'};
 const IS_ANDROID=/Android/i.test(navigator.userAgent);
-let voices=[],speechReady=false,keepAlive=null,lang='es';
+let voices=[],speechReady=false,keepAlive=null,lang='de';
 function loadVoices(){try{voices=speechSynthesis.getVoices()||[];}catch(e){}}
 if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
-function pickVoice(){
+/* Voice quality is whatever the device has installed. Prefer, in order:
+   the voice chosen in the parent panel; Apple "Premium"/"Enhanced" and
+   Siri voices; Google/Microsoft neural or online voices. Never Apple's
+   novelty voices (Albert, Bubbles, Zarvox…) or the eSpeak/Pico robots. */
+const NOVELTY=/albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|junior|ralph|fred|kathy|deranged|hysterical|pipe organ|grandpa|grandma|rocko|shelley|reed|sandy|eddy|flo/;
+function voiceScore(v){
+  const n=((v.name||'')+' '+(v.voiceURI||'')).toLowerCase(),l=(v.lang||'').replace('_','-').toLowerCase();let s=0;
+  if(/premium/.test(n))s+=14; if(/enhanced|erweitert|mejorad/.test(n))s+=10; if(/siri/.test(n))s+=9;
+  if(/neural|natural|wavenet|online/.test(n))s+=8; if(/google/.test(n))s+=5; if(!v.localService)s+=4;
+  if(l===LANGTAG[lang].toLowerCase())s+=3; if(/compact|espeak|pico/.test(n))s-=10; if(NOVELTY.test(n))s-=30;
+  return s;
+}
+function langVoices(){
   if(!voices.length) loadVoices();
-  const pre=lang,tag=LANGTAG[lang].toLowerCase();
-  const list=voices.filter(v=>v.lang&&v.lang.replace('_','-').toLowerCase().startsWith(pre));
-  const score=v=>{const n=(v.name||'').toLowerCase(),l=(v.lang||'').replace('_','-').toLowerCase();let s=0;
-    if(!v.localService)s+=6; if(/network|neural|wavenet|natural|enhanced|premium/.test(n))s+=6;
-    if(/google/.test(n))s+=3; if(l===tag)s+=2; if(/compact|espeak|pico/.test(n))s-=6; return s;};
-  list.sort((a,b)=>score(b)-score(a));
-  return list[0]||null;
+  return voices.filter(v=>v.lang&&v.lang.replace('_','-').toLowerCase().startsWith(lang)).sort((a,b)=>voiceScore(b)-voiceScore(a));
+}
+function pickVoice(){
+  const list=langVoices();let want='';try{want=localStorage.getItem('sl_voice_'+lang)||'';}catch(e){}
+  return (want&&list.find(v=>v.voiceURI===want))||list[0]||null;
 }
 function utter(text,isRetry,rate){
   const synth=speechSynthesis;
@@ -1087,9 +1106,10 @@ function sayAt(text,rate,force){
 function say(text){ sayAt(text,0.72); }
 function showWarn(msg){
   const w=document.getElementById('voiceWarn');
-  w.textContent=msg||(lang==='es'
-    ?'🔇 Sin voz. Ajustes → Idiomas → Texto a voz → instala la voz. Abre esta página en Chrome y sube el volumen multimedia.'
-    :'🔇 No voice. Settings → Languages → Text-to-speech → install voice data. Open in Chrome, raise media volume.');
+  w.textContent=msg||{
+    es:'🔇 Sin voz. Ajustes → Idiomas → Síntesis de voz → instala la voz. Sube el volumen multimedia.',
+    en:'🔇 No voice. Settings → Languages → Text-to-speech → install voice data. Raise the media volume.',
+    de:'🔇 Keine Stimme. Einstellungen → Sprachen → Sprachausgabe → Sprachdaten installieren. Medienlautstärke erhöhen.'}[lang];
   w.style.display='block';
 }
 function hideWarn(){document.getElementById('voiceWarn').style.display='none';}
@@ -1353,7 +1373,7 @@ function buildBar(){
     b.onclick=()=>{ac();if(mode==='name')nameIdx=idx;loadItem(k,true);};
     bar.appendChild(b);
     if((mode==='name'?idx===nameIdx:k===cur))
-      setTimeout(()=>{try{b.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});}catch(e){}},0);
+      setTimeout(()=>{try{bar.scrollTo({left:b.offsetLeft-bar.clientWidth/2+b.offsetWidth/2,behavior:'smooth'});}catch(e){}},0);
   });
 }
 function setMode(m){
@@ -3757,7 +3777,8 @@ function buildTabs(){
   });
 }
 function showTab(id){
-  activeTab=id;buildTabs();
+  activeTab=id;buildTabs();window.scrollTo(0,0);
+  const vEl=document.getElementById('v-'+id);if(vEl)vEl.scrollTop=0;
   ALLVIEWS.forEach(v=>document.getElementById('v-'+v).classList.toggle('on',v===id));
   if(id==='trace'){fit();sayCurrent();}
   if(id==='words'){buildChips();if(!target)newRound();else sayPrompt();}
@@ -3793,6 +3814,7 @@ function renderParent(){
            en:['Name for the 🦸 tab','Levels','Most-missed words','Reset'],
            de:['Name für den 🦸 Tab','Level','Meist verfehlte Wörter','Zurücksetzen']}[lang];
   document.getElementById('pNameTitle').textContent=L[0];
+  renderVoices();
   $('pLevelTitle').textContent={es:'Niveles automáticos (aciertos a la primera, últimas 20)',en:'Automatic levels (first-try right, last 20)',de:'Automatische Level (beim ersten Versuch richtig, letzte 20)'}[lang];
   document.getElementById('pMissTitle').textContent=L[2];
   document.getElementById('resetStats').textContent=L[3];
@@ -3822,6 +3844,21 @@ document.getElementById('saveName').onclick=()=>{
 };
 $('pPlus').onclick=()=>{power+=10;savePower();renderPower(true);renderParent();};
 $('pZero').onclick=()=>{power=0;savePower();renderPower(true);renderParent();};
+function renderVoices(){
+  const sel=$('voiceSel'),list=langVoices(),cur=pickVoice();
+  $('pVoiceTitle').textContent={es:'🔊 Voz (español)',en:'🔊 Voice (English)',de:'🔊 Stimme (Deutsch)'}[lang];
+  sel.innerHTML=list.length?list.map(v=>`<option value="${v.voiceURI.replace(/"/g,'&quot;')}">${v.name} (${v.lang})${v.localService?'':' ☁'}</option>`).join('')
+    :'<option>—</option>';
+  if(cur)sel.value=cur.voiceURI;
+  $('voiceTip').textContent={
+    es:'La voz es la del móvil. Para que suene natural, instala una voz de alta calidad. iPhone: Ajustes → Accesibilidad → Contenido leído → Voces → elige una voz "Premium" o "Mejorada". Android: Ajustes → Idiomas → Síntesis de voz → Google → Instalar datos de voz. Luego elígela aquí.',
+    en:'The voice is the phone\'s own. To sound natural, install a high-quality voice. iPhone: Settings → Accessibility → Spoken Content → Voices → pick a "Premium" or "Enhanced" voice. Android: Settings → Languages → Text-to-speech → Google → Install voice data. Then choose it here.',
+    de:'Die Stimme kommt vom Handy. Für eine natürliche Stimme eine hochwertige Stimme installieren. iPhone: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → eine „Premium“- oder „Erweitert“-Stimme laden. Android: Einstellungen → Sprachen → Sprachausgabe → Google → Sprachdaten installieren. Dann hier auswählen.'}[lang];
+}
+$('voiceSel').onchange=e=>{try{localStorage.setItem('sl_voice_'+lang,e.target.value);}catch(err){}
+  say({es:'Hola, soy tu dinosaurio.',en:'Hello, I am your dinosaur.',de:'Hallo, ich bin dein Dinosaurier.'}[lang]);};
+$('voiceTest').onclick=()=>{ac();say({es:'Hola, soy tu dinosaurio.',en:'Hello, I am your dinosaur.',de:'Hallo, ich bin dein Dinosaurier.'}[lang]);};
+if('speechSynthesis' in window)speechSynthesis.addEventListener&&speechSynthesis.addEventListener('voiceschanged',()=>{if(activeTab==='parent')renderVoices();});
 $('resetLevels').onclick=()=>{SKILL={};try{localStorage.removeItem('sl_skill');}catch(e){}renderParent();};
 document.getElementById('resetStats').onclick=()=>{
   stats={};saveStats();renderParent();
@@ -3875,6 +3912,10 @@ function unlock(e){
 }
 gate.addEventListener('pointerdown',unlock,{once:true});
 gate.addEventListener('click',unlock,{once:true});
+
+/* ---- the page itself must never scroll (only the tabs' content does) ---- */
+window.addEventListener('scroll',()=>{if(window.scrollY||window.scrollX)window.scrollTo(0,0);});
+document.body.addEventListener('scroll',()=>{if(document.body.scrollTop)document.body.scrollTop=0;});
 
 /* ---- installable app: offline cache + auto-update (only when served over http/https) ---- */
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))

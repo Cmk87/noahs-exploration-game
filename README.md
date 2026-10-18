@@ -15,7 +15,7 @@ Safari (iOS). On a phone, use **Add to Home Screen** so it runs full-screen.
 | 🪐 Space | Orrery of the solar system with facts and a quiz |
 | 🌍 World | The seven continents with facts and a quiz |
 | 🎁 Prizes | Spend 40 ⚡ on a prize game (see below) |
-| ⚙ (hold) | Parent panel: name, levels, most-missed words, prize points |
+| ⚙ (hold) | Parent panel: name, voice picker, levels, most-missed words, prize points |
 
 ## Automatic difficulty
 
