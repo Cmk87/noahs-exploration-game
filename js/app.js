@@ -72,6 +72,16 @@ function setLang(code,btn){
   else renderParent();
 }
 ['es','en','de'].forEach(c=>document.getElementById(c).onclick=e=>setLang(c,e.currentTarget));
+/* Parents choose which languages the child may switch to. Switched-off flags
+   disappear from the header; with only one language left the switch is hidden. */
+let LANGS_ON=['de','en','es'];
+try{const v=(localStorage.getItem('sl_langs')||'').split(',').filter(c=>['de','en','es'].includes(c));if(v.length)LANGS_ON=v;}catch(e){}
+function applyLangs(){
+  ['es','en','de'].forEach(c=>{$(c).style.display=LANGS_ON.includes(c)?'':'none';});
+  document.querySelector('header .lang').style.display=LANGS_ON.length>1?'':'none';
+  if(!LANGS_ON.includes(lang)){const c=LANGS_ON.includes('de')?'de':LANGS_ON[0];setLang(c,$(c));}
+}
+applyLangs();
 
 function renderParent(){
   const L={es:['Nombre para la pestaña 🦸','Niveles','Palabras que más falla','Borrar'],
@@ -97,6 +107,15 @@ function renderParent(){
     [['🇩🇪','de'],['🇬🇧','en'],['🇪🇸','es']].map(([f,c])=>{const R=Object.values(SRS[c]||{});
       return `${f} ${W[0]}: <b>${R.filter(r=>r.b>=4).length}</b> · ${W[1]}: <b>${R.filter(r=>r.b>0&&r.b<=2).length}</b>`;}).join('<br>')+
     `<br><small>${{es:'% = acertadas a la primera',en:'% = right on the first try',de:'% = beim ersten Versuch richtig'}[lang]}</small>`;
+  $('pLangTitle').textContent={es:'🗣️ Idiomas disponibles',en:'🗣️ Languages to choose from',de:'🗣️ Sprachen zur Auswahl'}[lang];
+  const lgb=$('langBtns');lgb.innerHTML='';
+  [['de','🇩🇪',{es:'Alemán',en:'German',de:'Deutsch'}],['en','🇬🇧',{es:'Inglés',en:'English',de:'Englisch'}],['es','🇪🇸',{es:'Español',en:'Spanish',de:'Spanisch'}]].forEach(([c,f,n])=>{
+    const b=document.createElement('button'),on=LANGS_ON.includes(c);b.className='seg'+(on?' on':'');b.textContent=(on?'✅ ':'⛔ ')+f+' '+n[lang];
+    b.onclick=()=>{ac();if(on&&LANGS_ON.length===1){$('langInfo').textContent={es:'Al menos un idioma tiene que quedar activo.',en:'At least one language has to stay on.',de:'Mindestens eine Sprache muss an bleiben.'}[lang];return;}
+      LANGS_ON=on?LANGS_ON.filter(x=>x!==c):['de','en','es'].filter(x=>x===c||LANGS_ON.includes(x));
+      try{localStorage.setItem('sl_langs',LANGS_ON.join(','));}catch(e){}applyLangs();renderParent();};
+    lgb.appendChild(b);});
+  $('langInfo').textContent={es:'Los idiomas apagados desaparecen de arriba.',en:'Languages switched off disappear from the top bar.',de:'Ausgeschaltete Sprachen verschwinden oben aus der Leiste.'}[lang];
   $('pLimitTitle').textContent={es:'⏰ Tiempo de juego al día',en:'⏰ Play time per day',de:'⏰ Spielzeit pro Tag'}[lang];
   const lb=$('limitBtns');lb.innerHTML='';
   [0,15,20,30,45].forEach(m=>{const b=document.createElement('button');b.className='seg'+(timeLimit===m?' on':'');

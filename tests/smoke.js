@@ -113,6 +113,16 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   console.log('Parent panel');
   await page.evaluate(() => showTab('parent'));
   check(await page.evaluate(() => $('repBars').children.length === 7), 'weekly report shows 7 days');
+  await page.evaluate(() => { [...$('langBtns').children].find(b => b.textContent.includes('🇪🇸')).click(); });
+  check(await page.evaluate(() => $('es').style.display === 'none' && localStorage.getItem('sl_langs') === 'de,en'), 'parent can switch Spanish off');
+  await page.evaluate(() => { setLang('en', $('en')); [...$('langBtns').children].find(b => b.textContent.includes('🇬🇧')).click(); });
+  check(await page.evaluate(() => lang === 'de' && document.querySelector('header .lang').style.display === 'none'), 'switching off the current language moves to one still on; one left hides the switch');
+  await page.evaluate(() => { [...$('langBtns').children].find(b => b.textContent.includes('🇩🇪')).click(); });
+  check(await page.evaluate(() => localStorage.getItem('sl_langs') === 'de'), 'the last language cannot be switched off');
+  await page.evaluate(() => { localStorage.setItem('sl_langs', 'en,es'); });
+  await page.reload(); await page.mouse.click(180, 320); await page.waitForTimeout(300);
+  check(await page.evaluate(() => lang === 'en' && $('de').style.display === 'none'), 'with German off the app starts in an allowed language');
+  await page.evaluate(() => { localStorage.removeItem('sl_langs'); });
 
   console.log('City');
   await page.evaluate(() => showTab('city'));
