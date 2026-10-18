@@ -8,7 +8,7 @@
 ============================================================= */
 (()=>{
 const CW=1200,CH=1600,TAU=Math.PI*2;          // the town
-const WX0=0,WX1=2800,WY0=-900,WY1=2400;       // the whole world around it (js/city-wild.js)
+const WX0=0,WX1=4000,WY0=-900,WY1=2400;       // the whole world around it (js/city-wild.js, js/city-far.js)
 const cv=$('cityCv'),g=cv.getContext('2d'),probe=document.createElement('canvas').getContext('2d');
 let T=0,NIGHT=0,nightOn=false,HITS=[];const LIT=[],LIGHTS=[],ST={T:0,NIGHT:0};
 let seed=11;
@@ -86,7 +86,7 @@ ent('balloon','🎈',['der Luftballon','the balloon','el globo'],['Ein Luftballo
 ent('site','🚧',['die Baustelle','the building site','la obra'],['Die Baustelle! Hier wird ein Haus gebaut.','The building site! They are building a house.','¡La obra! Aquí construyen una casa.'],{find:1});
 ent('crane','🏗️',['der Kran','the crane','la grúa'],['Der Kran! Er hebt schwere Sachen.','The crane! It lifts heavy things.','¡La grúa! Levanta cosas pesadas.'],{find:1});
 ent('digger','🚜',['der Bagger','the digger','la excavadora'],['Der Bagger! Er gräbt ein Loch.','The digger! It digs a hole.','¡La excavadora! Hace un agujero.'],{find:1});
-ent('station','🚉',['der Bahnhof','the train station','la estación de tren'],['Der Bahnhof! Achtung, der Zug kommt!','The train station! Look, the train is coming!','¡La estación de tren! ¡Viene el tren!'],{find:1});
+ent('station','🚉',['der Bahnhof','the train station','la estación de tren'],['Der Bahnhof! Von hier fährt der Zug in den Wilden Westen.','The train station! The train goes to the Wild West from here.','¡La estación de tren! De aquí sale el tren al Lejano Oeste.'],{find:1});
 ent('train','🚂',['der Zug','the train','el tren'],['Der Zug! Tschu-tschu!','The train! Choo choo!','¡El tren! ¡Chu chu!']);
 ent('rail','🛤️',['das Gleis','the railway','la vía del tren'],['Das Gleis! Hier fährt der Zug.','The railway! The train runs here.','¡La vía! Por aquí pasa el tren.']);
 ent('power','⚡',['das Kraftwerk','the power station','la central eléctrica'],['Das Kraftwerk! Es macht Strom für die Lampen.','The power station! It makes electricity for the lights.','¡La central eléctrica! Hace la luz para las casas.'],{find:1});
@@ -537,7 +537,7 @@ S(1208,[330,1090,530,1210],()=>{
 S(1236,[310,1190,592,1238],()=>{
   rr(312,1210,276,24,3,'#D9D3C7');rr(312,1230,276,3,1,'#FFD23F');
   [330,450,570].forEach(px=>rr(px-1.5,1196,3,28,1,'#5A6074'));rr(318,1190,264,8,3,'#4F78B0');rr(318,1196,264,3,1,'#3A5F95');
-  [[380,1226,0],[520,1226,2]].forEach(([px,py,k])=>{if(TRAIN.state!=='stop'||TRAIN.t<0.8)kid(px,py,['#B78CFF','#FF8A3D','#3CC8F5'][k],SKIN[k],HAIR[k],1.15);});
+  [[380,1226,0],[520,1226,2]].forEach(([px,py,k])=>{if(!(TRAIN.dwell&&TRAIN.leg===1&&TRAIN.t>0.8))kid(px,py,['#B78CFF','#FF8A3D','#3CC8F5'][k],SKIN[k],HAIR[k],1.15);});
 });
 /* power station, chimney, solar panels, wind turbines */
 S(1390,[20,1270,190,1392],()=>{
@@ -779,14 +779,28 @@ function vehPos(v){const A=RN[v.a],B=RN[v.b],dx=B[0]-A[0],dy=B[1]-A[1],d=Math.hy
 function emergency(kind,a,b,x){const A=RN[a],B=RN[b],t=Math.abs(x-A[0])/Math.abs(B[0]-A[0]);addVeh(kind,a,b,t,{flash:1,life:16});}
 
 /* train */
-const TRAIN={state:'wait',t:6,x:-60},STOPX=588,TLEN=74+3*68;
-function stepTrain(dt){const s=TRAIN;s.t+=dt;
-  if(s.state==='wait'){s.x=-60;if(s.t>16){s.state='in';s.t=0;}}
-  else if(s.state==='in'){const u=Math.min(1,s.t/6);s.x=-30+(STOPX+30)*(1-Math.pow(1-u,2));if(u>=1){s.state='stop';s.t=0;}}
-  else if(s.state==='stop'){s.x=STOPX;if(s.t>4){s.state='out';s.t=0;SND.whistle();}}
-  else{const u=Math.min(1,s.t/12);s.x=STOPX+(WX1+60+TLEN-STOPX)*u*u;if(u>=1){s.state='wait';s.t=0;}}
-  if(s.state!=='wait'&&s.state!=='stop'&&Math.random()<dt*7)puff(s.x-20,1205,{c:'#F4F4F6',r:5,vy:-18,max:1.8});}
-function drawTrain(x0){const y=1262;if(x0<-5||x0-TLEN>CW+20)return;
+/* The train shuttles along the whole railway: west end → town station →
+   Wild West station → east end and back. Tapping a station while the train
+   waits there means "all aboard": the camera rides along to the next stop. */
+const TLEN=74+3*68,STOP_TOWN=450,STOP_WEST=3550;
+const LEGS=[{to:STOP_WEST,dw:8},{to:STOP_TOWN,dw:8}];
+const TRAIN={c:STOP_TOWN,dir:1,leg:1,from:STOP_TOWN,t:0,dur:1,dwell:true,ride:false};
+function nextLeg(){const s=TRAIN;s.leg=(s.leg+1)%LEGS.length;s.from=s.c;const L=LEGS[s.leg];s.dir=L.to>s.c?1:-1;s.dur=Math.max(5,Math.abs(L.to-s.c)/210);s.t=0;s.dwell=false;SND.whistle();}
+function stepTrain(dt){const s=TRAIN,L=LEGS[s.leg];s.t+=dt;
+  if(s.dwell){if(s.t>L.dw)nextLeg();return;}
+  if(s.t<0)return;
+  const u=Math.min(1,s.t/s.dur),e=u<0.5?2*u*u:1-Math.pow(-2*u+2,2)/2;s.c=s.from+(L.to-s.from)*e;
+  if(u>=1){s.dwell=true;s.t=0;if(s.ride){s.ride=false;K.onArrive&&K.onArrive(L.to);}}
+  else if(Math.random()<dt*7)puff(s.c+s.dir*(TLEN/2-19),1205,{c:'#F4F4F6',r:5,vy:-18,max:1.8});}
+const atStation=x=>TRAIN.dwell&&Math.abs(TRAIN.c-x)<5;
+function rideTrain(x){             // tapped a station at x
+  const s=TRAIN;
+  if(atStation(x)){s.ride=true;say(['Alle einsteigen! Tschu-tschu!','All aboard! Choo choo!','¡Todos al tren! ¡Chu chu!'][li()]);s.t=LEGS[s.leg].dw;return true;}
+  SND.whistle();return false;}
+function drawTrainAny(){const s=TRAIN,x0=s.c+TLEN/2;
+  if(s.dir>0){drawTrain(x0);return;}
+  g.save();g.translate(2*s.c,0);g.scale(-1,1);drawTrain(x0);g.restore();}
+function drawTrain(x0){const y=1262;if(x0<-5||x0-TLEN>WX1+20)return;
   const cols=['#3F8CE8','#FFB938','#3DBB7A'],sp=x0/7;
   for(let i=2;i>=0;i--){const re=x0-76-i*68,x=re-62,c=cols[i];
     ell(x+31,y,34,3,'rgba(0,0,0,.18)');rr(x,y-37,62,28,6,c);rr(x-1,y-40,64,6,3,shade(c,-0.22));
@@ -854,7 +868,7 @@ function drawHeli(){const p=heliPos(),y=p.y-p.alt,spin=HELI.t>=0?T*40:T*0.3;
   ln('#555',1.4,-10,0,10,0);ln('#555',1.2,-6,0,-6,-3);ln('#555',1.2,6,0,6,-3);
   const r=30*Math.abs(Math.cos(spin));ln('#3A3F52',2,-r,-21,r,-21);if(HELI.t>=0)ell(0,-21,30,2.2,'rgba(60,60,70,.25)');
   g.restore();hit('heli',p.x-26,y-24,p.x+20,y+2,{moving:1,small:1});}
-const CLOUDS=[[150,300,1.1],[700,700,1.3],[300,1250,1],[1000,1100,1.2],[1500,-500,1.4],[2300,100,1.2],[1800,900,1.1],[2500,1500,1.3],[600,2050,1.2],[1900,2200,1],[400,-300,1]].map(([x,y,s])=>({x,y,s}));
+const CLOUDS=[[3100,200,1.2],[3600,1300,1.1],[3300,2100,1.3],[150,300,1.1],[700,700,1.3],[300,1250,1],[1000,1100,1.2],[1500,-500,1.4],[2300,100,1.2],[1800,900,1.1],[2500,1500,1.3],[600,2050,1.2],[1900,2200,1],[400,-300,1]].map(([x,y,s])=>({x,y,s}));
 function drawClouds(){const z=CAM.k/kFit(),ca=Math.max(0,Math.min(0.8,(1.7-z)*1.4))*(1-NIGHT*0.7);if(ca<=0.01)return;
   for(const c of CLOUDS){g.globalAlpha=ca*0.5;ell(c.x+40*c.s,c.y+80*c.s,55*c.s,16*c.s,'rgba(30,70,40,.25)');
     g.globalAlpha=ca;[[0,0,24],[-26,6,17],[26,6,18],[-10,-12,17],[12,-10,19]].forEach(([dx,dy,r])=>circ(c.x+dx*c.s,c.y+dy*c.s,r*c.s,'#FFFFFF'));
@@ -925,7 +939,7 @@ cv.addEventListener('pointermove',e=>{if(!ptr.has(e.pointerId)||!gs)return;e.pre
   if(ptr.size>=2&&gs.pinch){const [a,b]=[...ptr.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]),mid=[(a[0]+b[0])/2,(a[1]+b[1])/2],C0=gs.cam;
     const wx=C0.x+gs.mid[0]/C0.k,wy=C0.y+gs.mid[1]/C0.k;CAM.k=C0.k*d/gs.d;CAM.x=wx-mid[0]/CAM.k;CAM.y=wy-mid[1]/CAM.k;clampCam(CAM);return;}
   if(ptr.size===1&&!gs.pinch){const p=pxy(e),dx=p[0]-gs.p[0],dy=p[1]-gs.p[1];if(Math.hypot(dx,dy)>8)gs.moved=true;
-    if(gs.moved){CAM.x=gs.cam.x-dx/CAM.k;CAM.y=gs.cam.y-dy/CAM.k;clampCam(CAM);}}});
+    if(gs.moved){TRAIN.ride=false;CAM.x=gs.cam.x-dx/CAM.k;CAM.y=gs.cam.y-dy/CAM.k;clampCam(CAM);}}});
 const pend=e=>{if(!ptr.has(e.pointerId))return;const p=ptr.get(e.pointerId);ptr.delete(e.pointerId);
   if(gs&&gs.pinch){if(ptr.size===1){gs={t:0,p:[...ptr.values()][0],moved:true,cam:{...CAM}};}else if(!ptr.size)gs=null;return;}
   if(gs&&!gs.moved&&performance.now()-gs.t<600){const now=performance.now();
@@ -954,7 +968,7 @@ const TAP={
   ferris:()=>{act('ferris');SND.music();},carousel:()=>{act('carousel');SND.tune();},coaster:()=>{act('coaster');SND.whoosh();},
   balloon:()=>{for(let i=0;i<5;i++)if(fx('balloon'+i)>=9){act('balloon'+i);PARTS.push({x:515-14+i*7,y:1104-56-(i%2)*10,vx:rnd(-8,8),vy:-38,life:0,max:7,k:'balloon',r:9,c:BALC[i]});SND.pop();break;}},
   crane:()=>{act('crane');SND.motor();},digger:()=>{act('digger');SND.motor();},site:()=>{act('digger');act('crane');SND.motor();},
-  station:()=>{callTrain();},train:()=>{SND.whistle();},rail:()=>{callTrain();},
+  station:()=>rideTrain(STOP_TOWN),train:()=>{SND.whistle();},rail:()=>{SND.whistle();},
   power:()=>{act('power');SND.zap();zapStart();},turbine:()=>{act('turbine');SND.whoosh();},
   harbour:()=>{if(TUG.t<0){TUG.t=0;SND.ship();}},ship:()=>{if(TUG.t<0)TUG.t=0;SND.ship();},boat:()=>{SND.whoosh();},
   lighthouse:()=>{act('lighthouse');SND.ship();},
@@ -969,7 +983,7 @@ const TAP={
     for(let i=0;i<8;i++)PARTS.push({x:1115+rnd(-10,10),y:715,vx:rnd(-50,50),vy:rnd(-60,-20),life:0,max:1.3,k:'leaf',r:4,c:['#E2803A','#C8502A','#F2B23A'][i%3],gr:60});},
   rabbit:()=>{act('rabbit');SND.hop();},cat:()=>{act('cat');SND.meow();},frog:()=>{if(FROG.t>=0.7){FROG.from=FROG.p;FROG.p=(FROG.p+1+(Math.random()*3|0))%PADS.length;FROG.t=0;}SND.ribbit();},
   duck:()=>SND.quack(),cow:()=>{act('cow');SND.moo();},pig:()=>{act('pig');SND.oink();},sheep:()=>{act('sheep');SND.baa();},chicken:()=>{act('chicken');SND.cluck();}};
-function callTrain(){if(TRAIN.state==='wait'){TRAIN.state='in';TRAIN.t=0;}SND.whistle();}
+function callTrain(){rideTrain(STOP_TOWN);}
 /* power station: lightning runs to the houses and every window lights up */
 const ZAP_TO=[[60,40],[165,50],[385,120],[650,240],[110,620],[385,420],[650,640],[650,420],[60,420],[430,1140]];
 let ZAPS=[];function zapStart(){ZAPS=ZAP_TO.map(([x,y],i)=>({x,y,d:i*0.08}));}
@@ -997,12 +1011,12 @@ function lineFor(e){return e.l?e.l[li()]:cap(e.n[li()])+'!';}
 function trigger(id,b,x,y,ref){
   const e=ENT[id];if(!e)return;
   if(FIND){findTap(e,b,x,y,ref);return;}
-  TAP[id]&&TAP[id](ref,x,y);
-  let line=lineFor(e);
+  const quiet=TAP[id]&&TAP[id](ref,x,y)===true;
+  let line=quiet?'':lineFor(e);
   if(e.animal&&!FOUND.has(id)){FOUND.add(id);store();paws();line+=' '+W.found[li()];burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();
     if(typeof addPower==='function')addPower(2);
     if(FOUND.size===ANIMALS.length)later(2.5,()=>{burst(x,y,'star',40,'#FFD23F',1.5);say(['Du hast alle Tiere gefunden! Super!','You found all the animals! Amazing!','¡Encontraste todos los animales! ¡Genial!'][li()]);});}
-  say(line);bubble(e,b);
+  if(line)say(line);bubble(e,b);
   if(CAM.k<kFit()*1.8){const cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,k=kFit()*2.8;flyTo({k,x:cx-VW/2/k,y:cy-VH/2/k});}}
 
 /* name bubble that follows its object */
@@ -1070,6 +1084,8 @@ function update(dt){
   if(NIGHT>0.5&&Math.random()<dt*3)PARTS.push({x:rnd(890,1190),y:rnd(320,760),vx:rnd(-6,6),vy:rnd(-6,6),life:0,max:3,k:'firefly',r:3,c:'#FFF27A'});
 }
 function render(now){
+  if(TRAIN.ride&&!camAnim){const k=Math.max(kFit()*1.3,Math.min(CAM.k,kFit()*2.2)),tx=TRAIN.c-VW/2/k,ty=1190-VH/2/k;
+    CAM.x+=(tx-CAM.x)*0.08;CAM.y+=(ty-CAM.y)*0.08;CAM.k+=(k-CAM.k)*0.08;clampCam(CAM);}
   if(camAnim){const t=Math.min(1,(now-camAnim.t0)/camAnim.d),e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2,A=camAnim.from,B=camAnim.to;
     CAM.k=Math.exp(Math.log(A.k)+(Math.log(B.k)-Math.log(A.k))*e);
     const cxA=A.x+VW/2/A.k,cyA=A.y+VH/2/A.k,cxB=B.x+VW/2/B.k,cyB=B.y+VH/2/B.k;
@@ -1086,7 +1102,7 @@ function render(now){
     vehicle(p.x,p.y,p.dir,VKIND[v.kind],v.col,v.flash,v.spin);g.globalAlpha=1;const o=VKIND[v.kind];
     hit(ENT_OF[v.kind],p.x-o.L/2,p.y-o.H-4,p.x+o.L/2,p.y+2,{moving:1,small:1});
     if(NIGHT>0.2&&p.dir!=='N')LIGHTS.push(p.x+(p.dir==='E'?o.L/2:p.dir==='W'?-o.L/2:0),p.y-o.H*0.4,20,'#FFE9A0');}});}
-  L.push({y:1262,f:()=>drawTrain(TRAIN.x)});
+  L.push({y:1262,f:drawTrainAny});
   L.push({y:tugPos().y,f:drawTug});L.push({y:1505+Math.sin(boatA)*62,f:drawBoat});
   L.push({y:riverAt(duckU)[1],f:drawDucks});L.push({y:FIELD_ROWS[TRAC.row]+8,f:drawTractor});
   L.push({y:990,f:drawChicks});
@@ -1109,9 +1125,10 @@ let last=performance.now();
 function frame(now){requestAnimationFrame(frame);if(document.hidden||activeTab!=='city'){last=now;return;}
   const dt=Math.min(0.05,(now-last)/1000);last=now;T+=dt;update(dt);render(now);}
 const K={rr,circ,ell,poly,ln,star,shade,FONT,sign,win,gableB,flatB,kid,SKIN,HAIR,ent,ENT,ANIMALS,S,hit,fx,act,later,puff,burst,textP,PARTS,LIT,LIGHTS,
-  SND,swp,tree,TCOL,sr,sm,li,ST,TAP,VIEW,TAU,wheel,shakeTree,g,
+  SND,swp,tree,TCOL,sr,sm,li,ST,TAP,VIEW,TAU,wheel,shakeTree,g,rideTrain,TRAIN,STOP_WEST,flyTo,viewOf,
   GROUND0:[],GROUND1:[],UPDATE:[],DYN:[],TOP:[],ZONES:[],shake:0};
 if(typeof cityWild==='function')cityWild(K);
+if(typeof cityFar==='function')cityFar(K);
 paws();
 if(document.fonts)document.fonts.load(FONT(20)).catch(()=>{});
 requestAnimationFrame(frame);

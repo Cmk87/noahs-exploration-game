@@ -35,7 +35,13 @@ a dinosaur valley (Brachiosaurus, T. rex, Triceratops, Stegosaurus, a pterosaur 
 a deep forest with a beaver pond, tree house, wolf, boar, badger, woodpecker, stag, snail and butterflies;
 a campsite with a campfire; an airport whose plane takes off and flies around the world; a castle with a
 fire-breathing dragon, horses and sunflowers; and the beach and sea (crab, gull, starfish, seal, octopus,
-turtle, dolphins, whale, shark, an island with treasure, a pirate ship and a submarine). 42 animals in all.
+turtle, dolphins, whale, shark, an island with treasure, a pirate ship and a submarine).
+
+Further east (`js/city-far.js`): a space centre whose space shuttle and rocket count down and launch, and
+a Wild West town (saloon, sheriff, store, hotel, cowboy with lasso, stagecoach, water tower, gold mine,
+mesas, cacti, bison, coyote, rattlesnake, roadrunner, vulture, lizard). The steam train shuttles between
+the town station and the Wild West station; tapping a station while the train waits there means "all
+aboard" and the camera rides along. 48 animals in all.
 
 ## Automatic difficulty
 

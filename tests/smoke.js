@@ -119,14 +119,19 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.waitForTimeout(400);
   check(await page.evaluate(() => CITY.HITS().length > 50), 'city: the town is drawn');
   // visit each quarter of the world so everything is drawn once, and tap everything there
-  for (const v of [[0, -900, 1400, 700], [1400, -900, 2800, 700], [0, 700, 1400, 2400], [1400, 700, 2800, 2400]]) {
-    for (let k = 0; k < 2; k++) { await page.evaluate(v => Object.assign(CITY.CAM, CITY.viewOf(...v, 1)), v); await page.waitForTimeout(400); }
+  for (const v of [[0, -900, 1400, 700], [1400, -900, 2800, 700], [2800, -900, 4000, 700], [0, 700, 1400, 2400], [1400, 700, 2800, 2400], [2800, 700, 4000, 2400]]) {
+    for (let k = 0; k < 3; k++) { await page.evaluate(v => { CITY.TRAIN.ride = false; Object.assign(CITY.CAM, CITY.viewOf(...v, 1)); }, v); await page.waitForTimeout(400); }
     await page.evaluate(() => { const seen = new Set(); CITY.HITS().forEach(h => { if (seen.has(h.id)) return; seen.add(h.id);
       CITY.trigger(h.id, h.b, (h.b[0] + h.b[2]) / 2, (h.b[1] + h.b[3]) / 2, h.ref); }); });
     await page.waitForTimeout(1000);
   }
   await page.evaluate(() => { if (rewardOpen) closeReward(false); });
   check(await page.evaluate(() => CITY.FOUND.size === CITY.total() && CITY.total() >= 40), 'city: every animal in the whole world can be found');
+  await page.evaluate(() => { Object.assign(CITY.CAM, CITY.viewOf(250, 1000, 700, 1350, 1)); });
+  await page.waitForTimeout(300);
+  const boarded = await page.evaluate(() => { const t = CITY.TRAIN; t.c = 450; t.leg = 1; t.dwell = true; t.t = 0;
+    CITY.trigger('station', CITY.ENT.station.at, 450, 1200); return t.ride; });
+  check(boarded, 'city: tapping the station while the train waits starts a ride');
   await page.click('#cFind');
   check(await page.evaluate(() => !!CITY.FIND() && !!CITY.ENT[CITY.FIND().id].at), 'city: "where is …?" picks a target');
   await page.click('#homeBtn');
