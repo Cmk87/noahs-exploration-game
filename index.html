@@ -483,6 +483,14 @@
     <div id="missRows"><div class="row"><span>—</span><span>0</span></div></div>
     <button class="btn" id="resetStats">Reset</button>
   </div>
+  <div class="panel">
+    <h3 id="pBackupTitle">💾</h3>
+    <div id="pBackupText" style="font-size:13px;line-height:1.35"></div>
+    <button class="btn" id="backupSave">💾 ⬇</button>
+    <button class="btn" id="backupLoad">📂 ⬆</button>
+    <input type="file" id="backupFile" accept="application/json,.json" style="display:none">
+    <div id="backupMsg" style="font-size:13px;font-weight:bold;margin-top:6px"></div>
+  </div>
   <button class="btn" id="backBtn">← Volver</button>
 </div></div>
 
@@ -4001,6 +4009,12 @@ function renderParent(){
            de:['Name für den 🦸 Tab','Level','Meist verfehlte Wörter','Zurücksetzen']}[lang];
   document.getElementById('pNameTitle').textContent=L[0];
   renderVoices();
+  $('pBackupTitle').textContent={es:'💾 Copia de seguridad',en:'💾 Backup',de:'💾 Sicherung'}[lang];
+  $('pBackupText').textContent={es:'Todo el progreso vive solo en este móvil. Guarda una copia de vez en cuando (Archivos, Drive, WhatsApp…) y cárgala en un móvil nuevo.',
+    en:'All progress lives only on this phone. Save a copy now and then (Files, Drive, WhatsApp…) and load it on a new phone.',
+    de:'Der ganze Fortschritt liegt nur auf diesem Handy. Ab und zu eine Kopie speichern (Dateien, Drive, WhatsApp…) und auf einem neuen Handy laden.'}[lang];
+  $('backupSave').textContent={es:'💾 Guardar',en:'💾 Save',de:'💾 Speichern'}[lang];
+  $('backupLoad').textContent={es:'📂 Cargar',en:'📂 Load',de:'📂 Laden'}[lang];
   $('pLevelTitle').textContent={es:'Niveles automáticos (aciertos a la primera, últimas 20)',en:'Automatic levels (first-try right, last 20)',de:'Automatische Level (beim ersten Versuch richtig, letzte 20)'}[lang];
   document.getElementById('pMissTitle').textContent=L[2];
   document.getElementById('resetStats').textContent=L[3];
@@ -4045,6 +4059,31 @@ $('voiceSel').onchange=e=>{try{localStorage.setItem('sl_voice_'+lang,e.target.va
   say({es:'Hola, soy tu dinosaurio.',en:'Hello, I am your dinosaur.',de:'Hallo, ich bin dein Dinosaurier.'}[lang]);};
 $('voiceTest').onclick=()=>{ac();say({es:'Hola, soy tu dinosaurio.',en:'Hello, I am your dinosaur.',de:'Hallo, ich bin dein Dinosaurier.'}[lang]);};
 if('speechSynthesis' in window)speechSynthesis.addEventListener&&speechSynthesis.addEventListener('voiceschanged',()=>{if(activeTab==='parent')renderVoices();});
+/* ---- backup: every sl_* key in one JSON file ---- */
+function backupData(){const d={app:'noahs-exploration-game',v:1,saved:new Date().toISOString(),data:{}};
+  try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('sl_'))d.data[k]=localStorage.getItem(k);}}catch(e){}
+  return d;}
+$('backupSave').onclick=async()=>{
+  const d=backupData(),name='noah-backup-'+d.saved.slice(0,10)+'.json';
+  const blob=new Blob([JSON.stringify(d)],{type:'application/json'});
+  const file=new File([blob],name,{type:'application/json'});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});
+      $('backupMsg').textContent='✅';return;}}catch(e){if(e&&e.name==='AbortError')return;}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);$('backupMsg').textContent='✅ '+name;
+};
+$('backupLoad').onclick=()=>$('backupFile').click();
+$('backupFile').onchange=e=>{
+  const f=e.target.files&&e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(!d||d.app!=='noahs-exploration-game'||!d.data)throw 0;
+      if(!confirm({es:'¿Reemplazar el progreso actual con esta copia?',en:'Replace the current progress with this backup?',de:'Aktuellen Fortschritt durch diese Sicherung ersetzen?'}[lang]))return;
+      Object.keys(localStorage).filter(k=>k.startsWith('sl_')).forEach(k=>localStorage.removeItem(k));
+      Object.entries(d.data).forEach(([k,v])=>{if(k.startsWith('sl_'))localStorage.setItem(k,v);});
+      location.reload();
+    }catch(err){$('backupMsg').textContent={es:'❌ Ese archivo no es una copia válida',en:'❌ That file is not a valid backup',de:'❌ Das ist keine gültige Sicherung'}[lang];}};
+  r.readAsText(f);e.target.value='';
+};
 $('resetLevels').onclick=()=>{SKILL={};try{localStorage.removeItem('sl_skill');}catch(e){}renderParent();};
 document.getElementById('resetStats').onclick=()=>{
   stats={};saveStats();renderParent();
