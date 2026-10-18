@@ -30,7 +30,7 @@ ent('glass','🍾',['das Altglas','the glass','el vidrio'],['Altglas! Hier komme
 ent('paper','📦',['das Altpapier','the paper','el papel'],['Altpapier! Zeitungen und Kartons.','Paper! Newspapers and boxes.','¡Papel! Periódicos y cajas.'],{find:1});
 ent('plastic','🥤',['der Plastikmüll','the plastic','el plástico'],['Plastik! Joghurtbecher und Plastikflaschen.','Plastic! Yoghurt pots and plastic bottles.','¡Plástico! Vasos de yogur y botellas de plástico.'],{find:1});
 ent('metal','🥫',['das Metall','the metal','el metal'],['Metall! Dosen und Deckel.','Metal! Cans and lids.','¡Metal! Latas y tapas.'],{find:1});
-ent('biowaste','🍌',['der Biomüll','the food waste','los restos orgánicos'],['Biomüll! Bananenschalen und Apfelreste.','Food waste! Banana peels and apple cores.','¡Orgánico! Cáscaras de plátano y restos de manzana.'],{find:1});
+ent('biowaste','🍌',['der Biomüll','the food waste','la basura orgánica'],['Biomüll! Bananenschalen und Apfelreste.','Food waste! Banana peels and apple cores.','¡Orgánico! Cáscaras de plátano y restos de manzana.'],{find:1});
 ent('warehouse','🏬',['die Lagerhalle','the warehouse','el almacén'],null,{find:1});
 ent('forklift','🛻',['der Gabelstapler','the forklift','la carretilla elevadora'],['Der Gabelstapler! Er hebt schwere Paletten.','The forklift! It lifts heavy pallets.','¡La carretilla elevadora! Levanta palés pesados.'],{find:1});
 ent('portcrane','🏗️',['der Containerkran','the container crane','la grúa de contenedores'],['Der Containerkran! Er hebt riesige Kisten.','The container crane! It lifts giant boxes.','¡La grúa de contenedores! Levanta cajas gigantes.'],{find:1});

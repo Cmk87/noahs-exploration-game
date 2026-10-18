@@ -344,7 +344,7 @@ S(450,[2590,410,2660,460],()=>{const T=TT(),t=fx('babydino'),open=t<9;
   [[2610,438],[2634,438]].forEach(([ex,ey])=>{ell(ex,ey,7,9,'#F4ECD8');circ(ex-2,ey-3,1.4,'#D9C7AE');circ(ex+2,ey+2,1.2,'#D9C7AE');});
   if(open){const up=Math.min(1,t*2);ell(2622,442,8,5,'#F4ECD8');poly('#F4ECD8',2614,436,2617,430,2620,435,2624,429,2627,435,2630,431,2630,438);
     g.save();g.translate(2622,436-up*8);circ(0,-4,7,'#7ED957');circ(3,-6,1.8,'#FFF');circ(3.4,-6,1,'#222');ln('#2B2233',0.9,2,-1,6,-1);poly('#F4ECD8',-6,-10,0,-14,6,-10,4,-7,-4,-7);g.restore();
-    hit('babydino',2610,420,2636,446,{small:1});}
+    hit('babydino',2610,420,2636,446,{small:1,moving:1});}
   else{ell(2622,436,7,9,'#F4ECD8');circ(2620,433,1.4,'#D9C7AE');const wob=Math.sin(T*9)*(Math.sin(T*0.9)>0.8?0.2:0);g.save();g.translate(2622,436);g.rotate(wob);g.restore();}
   hit('nest',2592,422,2652,458);});
 
@@ -503,7 +503,7 @@ S(1532,[1960,1300,2360,1560],()=>{const T=TT(),t=fx('castle'),open=t<1?sm(t):t<8
   rr(x+w/2-22,y-26,44,46,[22,22,0,0],'#3A2A30');
   g.strokeStyle='#5A5A5A';g.lineWidth=2;g.beginPath();for(let k=0;k<5;k++){g.moveTo(x+w/2-16+k*8,y-22-open*30);g.lineTo(x+w/2-16+k*8,y+20-open*40);}g.stroke();
   if(open>0.5){kid(x+w/2,y+18,'#9AA4B8',SKIN[0],'#9AA4B8',1.4);rr(x+w/2-12,y+2,6,10,2,'#C0473A');ln('#C9CED8',1.4,x+w/2+8,y-6,x+w/2+8,y-22);
-    if(Math.sin(T*8)>0)rr(x+w/2+5,y-8,2,6,1,SKIN[0]);hit('knight',x+w/2-12,y-12,x+w/2+12,y+20,{small:1});}
+    if(Math.sin(T*8)>0)rr(x+w/2+5,y-8,2,6,1,SKIN[0]);hit('knight',x+w/2-12,y-12,x+w/2+12,y+20,{small:1,moving:1});}
   const bh=44*(1-open);rr(x+w/2-22,y+20-bh*0+0,44,Math.max(4,44*open),2,'#9A6440');
   if(open<0.5)rr(x+w/2-22,y-24,44,bh,[22,22,0,0],'#9A6440');
   // towers

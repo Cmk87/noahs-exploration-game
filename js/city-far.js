@@ -36,7 +36,7 @@ ent('hotel','🏨',['das Hotel','the hotel','el hotel'],null,{find:1});
 ent('cowboy','🤠',['der Cowboy','the cowboy','el vaquero'],['Der Cowboy! Yeehaw! Er wirft sein Lasso.','The cowboy! Yeehaw! He throws his lasso.','¡El vaquero! ¡Yijaa! Lanza su lazo.'],{find:1});
 ent('stagecoach','🐎',['die Postkutsche','the stagecoach','la diligencia'],['Die Postkutsche! Hü, ihr Pferde!','The stagecoach! Giddy-up, horses!','¡La diligencia! ¡Arre, caballos!'],{find:1});
 ent('watertower','💧',['der Wasserturm','the water tower','el depósito de agua'],['Der Wasserturm! Hier trinkt die Dampflok.','The water tower! The steam train drinks here.','¡El depósito de agua! Aquí bebe la locomotora.'],{find:1});
-ent('windpump','🌀',['das Windrad','the windmill','el molino'],null);
+ent('windpump','🌀',['die Windpumpe','the wind pump','el molino de agua'],null);
 ent('mine','⛏️',['die Goldmine','the gold mine','la mina de oro'],['Die Goldmine! Da kommt ein Wagen voll Gold!','The gold mine! Here comes a cart full of gold!','¡La mina de oro! ¡Sale un carro lleno de oro!'],{find:1});
 ent('cactus','🌵',['der Kaktus','the cactus','el cactus'],['Der Kaktus! Autsch, der ist stachelig.','The cactus! Ouch, it is prickly.','¡El cactus! ¡Ay, pincha!'],{find:1});
 ent('mesa','⛰️',['der Tafelberg','the mesa','la meseta'],['Der Tafelberg! Oben ist er ganz flach.','The mesa! It is flat on top.','¡La meseta! Arriba es plana.'],{find:1});
@@ -211,7 +211,7 @@ function launch(id){const t=fx(id);if(t<25)return true;act(id);S3.count();
   say(L3(['Drei, zwei, eins, Start!','Three, two, one, lift-off!','¡Tres, dos, uno, despegue!']));
   const P=PADS3[id];['3','2','1'].forEach((n,i)=>later(i,()=>textP(P.x,P.base-290,n,'#FFFFFF',34)));
   later(3,()=>{S3.launch();K.shake=5;});later(5,()=>S3.cheer());
-  later(4.5,()=>{K.flyTo(K.viewOf(P.x-260,-700,P.x+260,P.base+120,1),1600);});return true;}
+  later(4.5,()=>{if(K.FIND&&K.FIND())return;K.flyTo(K.viewOf(P.x-260,-700,P.x+260,P.base+120,1),1600);});return true;}
 
 /* =============================================================
    WILD WEST

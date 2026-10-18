@@ -968,7 +968,7 @@ const pxy=e=>{const r=cv.getBoundingClientRect();return [e.clientX-r.left,e.clie
 cv.addEventListener('pointerdown',e=>{e.preventDefault();ac();try{cv.setPointerCapture(e.pointerId);}catch(_){}
   ptr.set(e.pointerId,pxy(e));camAnim=null;
   if(ptr.size===1)gs={t:performance.now(),p:pxy(e),moved:false,cam:{...CAM}};
-  if(ptr.size===2){const [a,b]=[...ptr.values()];gs={pinch:true,d:Math.hypot(a[0]-b[0],a[1]-b[1]),mid:[(a[0]+b[0])/2,(a[1]+b[1])/2],cam:{...CAM},moved:true};}});
+  if(ptr.size===2){const [a,b]=[...ptr.values()];TRAIN.ride=false;gs={pinch:true,d:Math.hypot(a[0]-b[0],a[1]-b[1]),mid:[(a[0]+b[0])/2,(a[1]+b[1])/2],cam:{...CAM},moved:true};}});
 cv.addEventListener('pointermove',e=>{if(!ptr.has(e.pointerId)||!gs)return;e.preventDefault();ptr.set(e.pointerId,pxy(e));
   if(ptr.size>=2&&gs.pinch){const [a,b]=[...ptr.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]),mid=[(a[0]+b[0])/2,(a[1]+b[1])/2],C0=gs.cam;
     const wx=C0.x+gs.mid[0]/C0.k,wy=C0.y+gs.mid[1]/C0.k;CAM.k=C0.k*d/gs.d;CAM.x=wx-mid[0]/CAM.k;CAM.y=wy-mid[1]/CAM.k;clampCam(CAM);return;}
@@ -981,10 +981,10 @@ const pend=e=>{if(!ptr.has(e.pointerId))return;const p=ptr.get(e.pointerId);ptr.
     else{lastTap=now;lastXY=p;tapAt(p[0],p[1]);}}
   if(!ptr.size)gs=null;};
 ['pointerup','pointercancel'].forEach(ev=>cv.addEventListener(ev,pend));
-cv.addEventListener('wheel',e=>{e.preventDefault();const p=pxy(e);camAnim=null;zoomAt(p[0],p[1],e.deltaY<0?1.2:1/1.2);},{passive:false});
+cv.addEventListener('wheel',e=>{e.preventDefault();const p=pxy(e);camAnim=null;TRAIN.ride=false;zoomAt(p[0],p[1],e.deltaY<0?1.2:1/1.2);},{passive:false});
 $('cZin').onclick=()=>{ac();camAnim=null;flyTo({k:CAM.k*1.6,x:CAM.x+VW/2/CAM.k-VW/2/(CAM.k*1.6),y:CAM.y+VH/2/CAM.k-VH/2/(CAM.k*1.6)},250);};
 $('cZout').onclick=()=>{ac();camAnim=null;flyTo({k:CAM.k/1.6,x:CAM.x+VW/2/CAM.k-VW/2*1.6/CAM.k,y:CAM.y+VH/2/CAM.k-VH/2*1.6/CAM.k},250);};
-$('cHome').onclick=()=>{ac();flyTo(CAM.k>kMin()*1.3?worldView():homeView(),900);};
+$('cHome').onclick=()=>{ac();TRAIN.ride=false;flyTo(CAM.k>kMin()*1.3?worldView():homeView(),900);};
 
 /* =============================================================
    WHAT A TAP DOES
@@ -1068,7 +1068,7 @@ function placeBubble(){const el=$('cityBub');if(!BUB)return;if(T-BUB.t>3){el.cla
 ============================================================= */
 let FIND=null,findHist=[];
 function findNext(){
-  if(!primed)primeAt();
+  TRAIN.ride=false;if(!primed)primeAt();
   const pool=Object.values(ENT).filter(e=>(e.find||(e.animal&&FOUND.has(e.id)))&&e.at&&!findHist.includes(e.id));
   const e=pool[Math.random()*pool.length|0];findHist.push(e.id);if(findHist.length>8)findHist.shift();
   /* the world is big: fly to the neighbourhood of the answer (not exactly onto it, so there is still something to find) */
@@ -1086,7 +1086,10 @@ function findTap(e,b,x,y,ref){
   if(FIND.done)return;
   if(e.id===FIND.id){FIND.done=true;SAVE.stars++;store();showQ();if(typeof award==='function')award(Math.min(FIND.miss,2),1);TAP[e.id]&&TAP[e.id](ref,x,y);
     burst((b[0]+b[2])/2,(b[1]+b[3])/2,'star',22,'#FFD23F');SND.yay();bubble(e,b);say(W.yes[li()]+' '+cap(e.n[li()])+'!');later(3,()=>{if(FIND)findNext();});}
-  else{FIND.miss++;nope();bubble(e,b);say(W.that(e.n[li()])+' '+W.where(ENT[FIND.id].n[li()]));}}
+  else{bubble(e,b);let got='';
+    if(e.animal&&!FOUND.has(e.id)){FOUND.add(e.id);store();paws();got=' '+W.found[li()];burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();if(typeof addPower==='function')addPower(2);}
+    else{FIND.miss++;nope();}
+    say(W.that(e.n[li()])+got+' '+W.where(ENT[FIND.id].n[li()]));}}
 $('cFind').onclick=()=>{ac();if(FIND){FIND=null;$('cFind').classList.remove('on');showQ();return;}$('cFind').classList.add('on');findNext();};
 function drawHint(){if(!FIND||FIND.miss<2||FIND.done)return;const b=ENT[FIND.id].at;if(!b)return;
   const cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,r=Math.max(b[2]-b[0],b[3]-b[1])/2+14+Math.sin(T*6)*5;
@@ -1106,8 +1109,9 @@ $('cNight').onclick=()=>{ac();nightOn=!nightOn;setNightBtn();
 function onLang(){if(FIND){showQ();say(W.where(ENT[FIND.id].n[li()]));}else if(BUB)bubble(BUB.e,BUB.b);}
 let pendingFocus=null;
 function show(){fit();paws();
-  if(pendingFocus){const {id,c}=pendingFocus;pendingFocus=null;if(!primed)primeAt();const e=ENT[id],b=e.at||[c[0]-60,c[1]-60,c[0]+60,c[1]+60],cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,R=e.at?260:520;
-    flyTo(viewOf(cx-R,cy-R,cx+R,cy+R,1),900);if(e.at&&FOUND.has(id))later(1,()=>bubble(e,b));return;}
+  if(pendingFocus){const {id,c}=pendingFocus;pendingFocus=null;TRAIN.ride=false;if(!primed)primeAt();
+    const e=ENT[id],known=FOUND.has(id)&&e.at,b=known||[c[0]-60,c[1]-60,c[0]+60,c[1]+60],cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,R=known?260:520;   // not found yet: only the area
+    flyTo(viewOf(cx-R,cy-R,cx+R,cy+R,1),900);if(known)later(1,()=>bubble(e,b));return;}
   say(['Willkommen in der Stadt! Tippe auf alles.','Welcome to the town! Tap on anything.','¡Bienvenido a la ciudad! Toca todo.'][li()]);}
 /* the sticker book sends the child here: fly to the animal (or only to its area if not found yet) */
 function showAt(id,c){pendingFocus={id,c};}
@@ -1179,7 +1183,7 @@ function frame(now){requestAnimationFrame(frame);if(document.hidden||activeTab!=
   const dt=Math.min(0.05,(now-last)/1000);last=now;T+=dt;update(dt);render(now);}
 const K={rr,circ,ell,poly,ln,star,shade,FONT,sign,win,gableB,flatB,kid,SKIN,HAIR,ent,ENT,ANIMALS,S,hit,fx,act,later,puff,burst,textP,PARTS,LIT,LIGHTS,
   SND,swp,tree,TCOL,sr,sm,li,ST,TAP,VIEW,TAU,wheel,shakeTree,g,rideTrain,TRAIN,STOP_WEST,flyTo,viewOf,
-  GROUND0:[],GROUND1:[],UPDATE:[],DYN:[],TOP:[],ZONES:[],shake:0};
+  GROUND0:[],GROUND1:[],UPDATE:[],DYN:[],TOP:[],ZONES:[],shake:0,FIND:()=>FIND};
 if(typeof cityWild==='function')cityWild(K);
 if(typeof cityFar==='function')cityFar(K);
 if(typeof cityWest==='function')cityWest(K);
