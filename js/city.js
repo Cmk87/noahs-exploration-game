@@ -418,7 +418,13 @@ PIGEONS.forEach((p,i)=>S(p[1],[p[0]-30,p[1]-120,p[0]+30,p[1]+5],()=>{
 S(498,[556,380,742,512],()=>{
   const x=566,y=452,w=170,d=46,h=56,{Ye,Yr}=gableB(x,y,w,d,h,'#FFE27A','#3F6FD8'),base=y+d;
   sign(x+w/2,Ye+12,56,14,SIGN.post[li()],'#2B2233','#FFE27A');
-  win(x+14,Ye+22,24,16);win(x+w-38,Ye+22,24,16);
+  const pt=fx('post');
+  room(x+8,Ye+18,54,28,'#FFF6D8',()=>{kid(x+28,Ye+40,'#3F6FD8',SKIN[1],HAIR[0],1.3);cap2(x+28,Ye+40,'#FFC928',1.3);  // clerk stamps a letter
+    rr(x+8,Ye+38,54,8,1,'#C98A4E');rr(x+8,Ye+38,54,2,0,'#E0A868');rr(x+40,Ye+34,12,5,1,'#FFFFFF');
+    const sy=pt<2.2?Math.abs(Math.sin(pt*9))*6:0;rr(x+43,Ye+25-sy,6,8,1,'#8E5B3A');rr(x+42,Ye+32-sy,8,3,1,'#D9473C');});
+  room(x+w-62,Ye+18,54,28,'#FFF6D8',()=>{rr(x+w-62,Ye+30,54,2,0,'#9A6440');      // shelf of parcels
+    [[x+w-58,14,10,'#C98A4E'],[x+w-42,10,8,'#E0A868'],[x+w-30,16,12,'#B9773F'],[x+w-56,12,10,'#E0A868'],[x+w-40,18,10,'#C98A4E'],[x+w-20,10,10,'#D99A5A']].forEach(([px,pw,ph,c],i)=>{
+      const py=i<3?Ye+30:Ye+46;rr(px,py-ph,pw,ph,1,c);ln('#8E5B3A',1,px+pw/2,py-ph,px+pw/2,py);});});
   rr(x+w/2-12,base-26,24,26,[4,4,0,0],'#3F6FD8');ln('#2E57B0',1.4,x+w/2,base-26,x+w/2,base);
   rr(x+w-12,base-14,12,18,[4,4,1,1],'#FFC928');rr(x+w-10,base-10,8,2,1,'#2B2233');
   if(fx('post')<2.2&&Math.random()<0.18)PARTS.push({x:x+w/2,y:base-20,vx:rnd(-40,40),vy:rnd(-60,-30),life:0,max:1.6,k:'emoji',t:'✉️',r:12,gr:20});
@@ -550,7 +556,14 @@ S(1208,[330,1090,530,1210],()=>{
   const now=new Date(),hr=(now.getHours()%12+now.getMinutes()/60)/12*TAU,mn=now.getMinutes()/60*TAU;
   ln('#2B2233',1.8,cx,Ye+13,cx+Math.sin(hr)*5,Ye+13-Math.cos(hr)*5);ln('#2B2233',1.2,cx,Ye+13,cx+Math.sin(mn)*7.5,Ye+13-Math.cos(mn)*7.5);
   sign(cx,Ye+32,72,13,SIGN.station[li()],'#2F5FD0','#FFFFFF');
-  [x+14,x+44,x+w-66,x+w-36].forEach(wx=>{rr(wx-1.5,Ye+20,25,28,[11,11,1,1],'#FFFFFF');rr(wx,Ye+21.5,22,25,[10,10,1,1],'#8ED2F4');LIT.push(wx,Ye+22,22,24);});
+  room(x+8,Ye+20,44,28,'#EFE6D6',()=>{kid(x+24,Ye+44,'#2F5FD0',SKIN[0],HAIR[2],1.3);cap2(x+24,Ye+44,'#2F5FD0',1.3);   // ticket counter
+    rr(x+8,Ye+38,44,10,1,'#8E5B3A');rr(x+10,Ye+22,28,16,0,'rgba(190,230,255,.45)');ln('#FFFFFF',1,x+10,Ye+30,x+38,Ye+30);
+    rr(x+39,Ye+34,10,5,1,'#FFD23F');});
+  room(x+w-52,Ye+20,44,28,'#EFE6D6',()=>{rr(x+w-50,Ye+22,40,9,1,'#2B2D3A');                // waiting room: board, bench, passengers
+    g.fillStyle='#FFD23F';g.font=FONT(6);g.textAlign='center';g.textBaseline='middle';g.fillText(TRAIN.dwell&&TRAIN.leg===1?'🤠 ▶':'🤠 10:'+String(Math.floor(T/4)%60).padStart(2,'0'),x+w-30,Ye+26.5);
+    rr(x+w-50,Ye+42,32,4,1,'#8E5B3A');rr(x+w-48,Ye+46,3,2,0,'#5A3A2E');rr(x+w-22,Ye+46,3,2,0,'#5A3A2E');
+    kid(x+w-42,Ye+44,'#7ED957',SKIN[2],HAIR[1],1.25);kid(x+w-28,Ye+44,'#FF8A3D',SKIN[3],HAIR[3],1.05);
+    rr(x+w-17,Ye+37,8,9,2,'#C0473A');rr(x+w-15,Ye+35,4,2,1,'#5A3A2E');});
   rr(cx-12,base-22,24,22,[10,10,0,0],'#8E5B3A');
   hit('station',x-6,Yr-6,x+w+6,base+30);
 });
@@ -926,7 +939,8 @@ function drawGround(){
   rr(752,772,136,4,2,'#FFFFFF');for(let px=760;px<=880;px+=12)rr(px,766,3,8,1,'#FFFFFF');
   rr(766,826,108,8,2,'rgba(0,40,80,.22)');
   // railway
-  const RX=3790;              // the railway ends just past the Wild West stationrr(-40,1243,RX+40,24,0,'#BDB1A0');g.fillStyle='#7B5B45';for(let x=Math.max(-40,VIEW[0]-20);x<Math.min(RX,VIEW[2]+20);x+=13)g.fillRect(x,1245,5,20);
+  const RX=3790;              // the railway ends just past the Wild West station
+  rr(-40,1243,RX+40,24,0,'#BDB1A0');g.fillStyle='#7B5B45';for(let x=Math.max(-40,VIEW[0]-20);x<Math.min(RX,VIEW[2]+20);x+=13)g.fillRect(x,1245,5,20);
   ln('#8F96A3',3,-40,1249,RX,1249);ln('#8F96A3',3,-40,1261,RX,1261);ln('#DDE2EA',1,-40,1248,RX,1248);ln('#DDE2EA',1,-40,1260,RX,1260);
   for(const f of K.GROUND1)f();
   rr(762,1238,116,5,2,'#C0473A');

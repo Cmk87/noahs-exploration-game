@@ -230,6 +230,18 @@
   .parrotBtns{display:flex;gap:14px;justify-content:center;align-items:center;margin-top:8px}
   .parrotBtns button{border:4px solid var(--ink);border-radius:14px;background:#fff;font-size:30px;padding:10px 18px;box-shadow:5px 5px 0 var(--ink);cursor:pointer;line-height:1}
   #parrotRec{font-size:46px!important;padding:14px 26px!important;background:var(--bolt)!important;border-radius:50%!important}
+  #parrotRec{position:relative;overflow:visible}
+  #parrotRec.call{animation:recBob 1s ease-in-out infinite}
+  #parrotRec.call::before,#parrotRec.call::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:5px solid var(--blaze);
+    animation:recRing 1.4s ease-out infinite;pointer-events:none}
+  #parrotRec.call::after{animation-delay:.7s}
+  .parrotBtns{position:relative}
+  #recHand{display:none;position:absolute;left:50%;top:100%;margin-left:-6px;font-size:40px;line-height:1;pointer-events:none;animation:recHand .7s ease-in-out infinite alternate}
+  #parrotRec.call~#recHand{display:block}
+  #parrotMsg.big{font-size:26px;color:var(--bolt);text-shadow:2px 2px 0 var(--ink)}
+  @keyframes recRing{from{transform:scale(1);opacity:.9}to{transform:scale(1.7);opacity:0}}
+  @keyframes recBob{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+  @keyframes recHand{from{transform:translateY(4px)}to{transform:translateY(-10px)}}
   #parrotRec.rec{background:var(--blaze)!important;animation:pulse .45s ease-in-out infinite alternate}
   .parrotBtns button:active{transform:translate(4px,4px);box-shadow:none}
   #storyDots{display:flex;gap:8px;justify-content:center;margin:8px 0 2px}

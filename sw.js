@@ -1,7 +1,7 @@
 /* Offline support. Network first, so every launch with a connection picks
    up the newest version from the server; the cached copy is only used
    when there is no network (car, plane, flaky Wi-Fi). */
-const CACHE='explorer-v13';
+const CACHE='explorer-v14';
 const FILES=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-180.png','./css/app.css','./fonts/baloo-2-latin-700-normal.woff2','./fonts/baloo-2-latin-800-normal.woff2','./fonts/nunito-latin-600-normal.woff2','./fonts/nunito-latin-800-normal.woff2',
   ...['core','shapes','vocab','audio','trace','learn','space','dinoshow','prizes','world-data','world','city-wild','city-far','city-west','city-industry','city','stickers','app'].map(n=>`./js/${n}.js`)];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)));self.skipWaiting();});

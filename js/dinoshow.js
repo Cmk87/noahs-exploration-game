@@ -925,7 +925,7 @@ function parrotNext(){
   }else{const it=pick(VOCAB.filter(x=>x.c!=='form'));PARROT={kind:'noun',e:it.e,html:nounHTML(it)};}
   PARROT.text=stripTags(PARROT.html);PARROT.cheer=0;
   $('parrotText').innerHTML=PARROT.html;$('parrotMsg').textContent='';
-  setTimeout(()=>say(PARROT.text),250);
+  setTimeout(()=>say(PARROT.text),250);parrotCall(250+sayTime(PARROT.text));
 }
 function parrotMsg(k){$('parrotMsg').textContent={
   you:{es:'🎤 ¡Ahora tú!',en:'🎤 Now you!',de:'🎤 Jetzt du!'},
@@ -936,7 +936,8 @@ async function startRec(){
   if(!navigator.mediaDevices||!window.MediaRecorder){parrotMsg('nomic');return;}
   try{speechSynthesis.cancel();}catch(e){}
   try{
-    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    unCall();setAudioSession('play-and-record');
+    const stream=await navigator.mediaDevices.getUserMedia({audio:{autoGainControl:true,noiseSuppression:true,echoCancellation:false}});
     const chunks=[];recorder=new MediaRecorder(stream);
     recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
     recorder.onstop=()=>{
@@ -945,26 +946,53 @@ async function startRec(){
       $('parrotRec').classList.remove('rec');$('parrotRec').textContent='🎤';
       if(recorder===null&&recT0<0)return;                    // cancelled
       if(dur<500||!chunks.length){parrotMsg('short');return;}
-      const a=new Audio(URL.createObjectURL(new Blob(chunks,{type})));
-      // recordings often carry no duration, so "ended" may never fire: fall back to a timer
       let done=false;const cheer=()=>{if(done||!PARROT)return;done=true;PARROT.cheer=performance.now();bigWin();
         say({es:'¡Muy bien!',en:'Well done!',de:'Super gemacht!'}[lang]);
         if(!PARROT.paid){PARROT.paid=1;addPower(1);}};
-      a.onended=cheer;setTimeout(cheer,dur+700);
-      a.play().catch(cheer);
+      playLoud(new Blob(chunks,{type}),dur,cheer);
     };
     recT0=performance.now();recorder.start();
     $('parrotRec').classList.add('rec');$('parrotRec').textContent='⏹';$('parrotMsg').textContent='';
     clearTimeout(recTimer);recTimer=setTimeout(()=>stopRec(),7000);
   }catch(e){recorder=null;parrotMsg('nomic');}
 }
+/* Phone mics record quietly, and on iPhone the replay can come out of the
+   ear speaker. So: switch the audio session back to playback, then play the
+   recording through Web Audio, boosted to full level (peak-normalised, up to
+   12x) with a compressor so loud bits do not distort. */
+function setAudioSession(t){try{if(navigator.audioSession)navigator.audioSession.type=t;}catch(e){}}
+async function playLoud(blob,dur,done){
+  setAudioSession('playback');
+  // recordings often carry no duration, so "ended" may never fire: always keep a fallback timer
+  let fallback=setTimeout(done,dur+900);
+  try{
+    const a=ac();if(!a)throw 0;
+    const buf=await a.decodeAudioData(await blob.arrayBuffer());
+    let peak=0;for(let c=0;c<buf.numberOfChannels;c++){const d=buf.getChannelData(c);for(let i=0;i<d.length;i+=4){const v=Math.abs(d[i]);if(v>peak)peak=v;}}
+    const src=a.createBufferSource(),gain=a.createGain(),comp=a.createDynamicsCompressor();
+    gain.gain.value=Math.min(12,Math.max(1.5,0.95/Math.max(peak,1e-3)));
+    comp.threshold.value=-10;comp.knee.value=6;comp.ratio.value=8;comp.attack.value=0.003;comp.release.value=0.15;
+    src.buffer=buf;src.connect(gain);gain.connect(comp);comp.connect(a.destination);
+    clearTimeout(fallback);fallback=setTimeout(done,buf.duration*1000+900);
+    src.onended=()=>{clearTimeout(fallback);done();};src.start();
+  }catch(e){                                              // older browsers: plain audio element at full volume
+    const el=new Audio(URL.createObjectURL(blob));el.volume=1;el.onended=()=>{clearTimeout(fallback);done();};
+    el.play().catch(()=>{clearTimeout(fallback);done();});}
+}
+/* After the model sentence has been read out, the 🎤 starts calling:
+   glowing rings, a bouncing hand and "Jetzt du!". */
+let callTimer=null;
+function unCall(){clearTimeout(callTimer);$('parrotRec').classList.remove('call');$('parrotMsg').classList.remove('big');}
+function parrotCall(delay){unCall();
+  callTimer=setTimeout(()=>{if(actMode!=='parrot'||recorder)return;$('parrotRec').classList.add('call');parrotMsg('you');$('parrotMsg').classList.add('big');},delay);}
+const sayTime=t=>600+t.length*85;
 function stopRec(cancel){
   clearTimeout(recTimer);
   if(recorder&&recorder.state==='recording'){if(cancel)recT0=-1;recorder.stop();}
   $('parrotRec').classList.remove('rec');$('parrotRec').textContent='🎤';
 }
 $('parrotRec').onclick=()=>{ac();if(recorder&&recorder.state==='recording')stopRec();else startRec();};
-$('parrotHear').onclick=()=>{ac();if(PARROT)say(PARROT.text);};
+$('parrotHear').onclick=()=>{ac();if(PARROT){say(PARROT.text);parrotCall(sayTime(PARROT.text));}};
 $('parrotNext').onclick=()=>{ac();parrotNext();};
 function drawParrot(g,W,t){
   const P=PARROT;if(!P)return;
@@ -974,7 +1002,7 @@ function drawParrot(g,W,t){
     g.save();g.font=`${W*0.34}px serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(P.e,W*0.3,W*0.32+Math.sin(t*2)*W*0.01);g.restore();}
 }
 function setActMode(m){
-  if(actMode==='parrot'&&m!=='parrot')stopRec(true);
+  if(actMode==='parrot'&&m!=='parrot'){stopRec(true);unCall();}
   actMode=m;
   $('actQuiz').classList.toggle('on',m==='quiz');$('actPlay').classList.toggle('on',m==='play');$('actParrot').classList.toggle('on',m==='parrot');$('actStory').classList.toggle('on',m==='story');
   $('actLevel').style.visibility=m==='quiz'?'visible':'hidden';$('actSkip').style.display=m==='quiz'?'':'none';
