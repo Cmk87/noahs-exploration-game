@@ -29,6 +29,14 @@ sirens, the helicopter takes off, the train comes in, the power station lights e
 hide around town (+2 ⚡ each the first time); 🔎 asks "Wo ist …?" (points like the quizzes) and 🌙 switches
 to night.
 
+Around the town lies a whole world to scroll into (`js/city-wild.js`, 🧭 toggles town ↔ whole world):
+mountains with a waterfall, cable car, hut, snowman, ibex, marmot and eagle; a volcano that erupts above
+a dinosaur valley (Brachiosaurus, T. rex, Triceratops, Stegosaurus, a pterosaur and an egg that hatches);
+a deep forest with a beaver pond, tree house, wolf, boar, badger, woodpecker, stag, snail and butterflies;
+a campsite with a campfire; an airport whose plane takes off and flies around the world; a castle with a
+fire-breathing dragon, horses and sunflowers; and the beach and sea (crab, gull, starfish, seal, octopus,
+turtle, dolphins, whale, shark, an island with treasure, a pirate ship and a submarine). 42 animals in all.
+
 ## Automatic difficulty
 
 Words, Listen and Dino Show share one engine: a weighted up-down staircase. A round solved on the first

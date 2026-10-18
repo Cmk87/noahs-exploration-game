@@ -118,16 +118,24 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.evaluate(() => showTab('city'));
   await page.waitForTimeout(400);
   check(await page.evaluate(() => CITY.HITS().length > 50), 'city: the town is drawn');
-  await page.evaluate(() => Object.keys(CITY.ENT).forEach(id => {
-    const h = CITY.HITS().find(h => h.id === id), b = (h && h.b) || CITY.ENT[id].at || [100, 100, 120, 120];
-    CITY.trigger(id, b, (b[0] + b[2]) / 2, (b[1] + b[3]) / 2, h && h.ref);
-  }));
-  await page.waitForTimeout(2500);
-  check(await page.evaluate(() => CITY.FOUND.size === 14), 'city: every animal can be found');
+  // visit each quarter of the world so everything is drawn once, and tap everything there
+  for (const v of [[0, -900, 1400, 700], [1400, -900, 2800, 700], [0, 700, 1400, 2400], [1400, 700, 2800, 2400]]) {
+    for (let k = 0; k < 2; k++) { await page.evaluate(v => Object.assign(CITY.CAM, CITY.viewOf(...v, 1)), v); await page.waitForTimeout(400); }
+    await page.evaluate(() => { const seen = new Set(); CITY.HITS().forEach(h => { if (seen.has(h.id)) return; seen.add(h.id);
+      CITY.trigger(h.id, h.b, (h.b[0] + h.b[2]) / 2, (h.b[1] + h.b[3]) / 2, h.ref); }); });
+    await page.waitForTimeout(1000);
+  }
+  await page.evaluate(() => { if (rewardOpen) closeReward(false); });
+  check(await page.evaluate(() => CITY.FOUND.size === CITY.total() && CITY.total() >= 40), 'city: every animal in the whole world can be found');
   await page.click('#cFind');
   check(await page.evaluate(() => !!CITY.FIND() && !!CITY.ENT[CITY.FIND().id].at), 'city: "where is …?" picks a target');
   await page.click('#homeBtn');
   check(await page.evaluate(() => activeTab === 'home'), '🏠 goes back to the home screen');
+  await page.evaluate(() => { showTab('words'); document.dispatchEvent(new Event('visibilitychange')); });
+  await page.evaluate(() => { Object.defineProperty(document, 'hidden', { value: true, configurable: true }); document.dispatchEvent(new Event('visibilitychange')); });
+  await page.waitForTimeout(2200);
+  await page.evaluate(() => { Object.defineProperty(document, 'hidden', { value: false, configurable: true }); document.dispatchEvent(new Event('visibilitychange')); });
+  check(await page.evaluate(() => activeTab === 'home'), 'coming back to the app opens the home screen');
 
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();

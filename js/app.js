@@ -27,7 +27,7 @@ function buildHome(){
     let extra='';
     if(t.id==='adv'&&ADV)extra=ADV.done?'✅':`${ADV.idx+1} / ${ADV.plan.length}`;
     if(t.id==='dig')extra=power>=DIG_COST?'🎁 !':`${power} / ${DIG_COST} ⚡`;
-    if(t.id==='city'&&window.CITY)extra='🐾 '+CITY.FOUND.size+' / 14';
+    if(t.id==='city'&&window.CITY)extra='🐾 '+CITY.FOUND.size+' / '+CITY.total();
     b.innerHTML=`<span class="hi">${t.icon}</span><span class="hl">${t[lang]}</span>${extra?`<span class="hx">${extra}</span>`:''}`;
     b.setAttribute('aria-label',t[lang]);
     b.onclick=()=>{ac();say(t[lang]);showTab(t.id);};
@@ -245,6 +245,15 @@ function unlock(e){
   setTimeout(()=>{if(!speechReady)showWarn();},3000);
   fit();fitSky();
 }
+/* coming back to the app (switching apps, screen off) always lands on the home screen;
+   games keep their state, so nothing is lost */
+let hiddenAt=0;
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){hiddenAt=Date.now();return;}
+  if(hiddenAt&&Date.now()-hiddenAt>2000&&gate.style.display==='none'&&activeTab!=='home'&&!$('sleep').classList.contains('on'))showTab('home');
+  hiddenAt=0;
+});
+window.addEventListener('pageshow',e=>{if(e.persisted&&gate.style.display==='none'&&activeTab!=='home')showTab('home');});
 gate.addEventListener('pointerdown',unlock,{once:true});
 gate.addEventListener('click',unlock,{once:true});
 
