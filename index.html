@@ -211,6 +211,10 @@
   .artPic{grid-column:1 / span 3;aspect-ratio:auto!important;height:min(34vw,22dvh,170px);font-size:min(26vw,17dvh,130px)!important}
   .artBtn{color:#fff!important;font:bold min(9vw,40px) Impact,"Arial Black",sans-serif!important;aspect-ratio:auto!important;padding:18px 0;
     text-shadow:2px 2px 0 var(--ink)}
+  .plCard{flex-wrap:wrap;align-content:center;gap:0 2px;line-height:1.05;padding:4px;text-align:center}
+  .plCard.pl1{font-size:min(14vw,62px)!important}.plCard.pl2{font-size:min(10vw,46px)!important}
+  .plCard.pl3,.plCard.pl4{font-size:min(8vw,36px)!important}
+  #quizWord b{color:var(--blaze)}
   #grid.nine .card{font-size:min(10vw,48px)}
   #actSentence,#playSentence{min-height:46px;margin:12px 14px 0;font-size:min(6vw,26px);text-align:center;font-weight:bold;color:#fff;
     text-shadow:2px 2px 0 var(--ink)}
@@ -1572,10 +1576,11 @@ function promptText(html){
   if(lang==='de')return `Wo ${pl?'sind':'ist'} ${art} ${word}?`;
   return `Where ${pl?'are':'is'} ${art} ${word}?`;
 }
-function sayPrompt(){if(!target)return;say(artMode?`Der, die oder das… ${target.de[1]}?`:promptText());}
+function sayPrompt(){if(plMode){say(plQuestion());return;}if(!target)return;say(artMode?`Der, die oder das… ${target.de[1]}?`:promptText());}
 function newRound(){
-  misses=0;roundDone=false;gotT=[];artMode=false;
+  misses=0;roundDone=false;gotT=[];artMode=false;plMode=null;
   const L=level('words',8),cfg=WLVL[L],SET=catPool();
+  if(activeCat==='*'&&L>=4&&Math.random()<0.15){pluralRound(L);return;}
   if(lang==='de'&&L>=3&&Math.random()<0.2&&artRound(SET,L))return;
   let pool=SET.filter(v=>!recent.includes(v.e));
   if(pool.length<Math.min(8,SET.length)){recent=[];pool=SET.slice();}
@@ -1602,6 +1607,64 @@ function newRound(){
   options.forEach((o,i)=>{const b=document.createElement('div');b.className='card';b.textContent=o.e;
     b.style.animationDelay=(i*0.04)+'s';b.onclick=()=>choose(o,b);g.appendChild(b);});
   sayPrompt();
+}
+/* ---- plurals: "Wo sind drei Hunde?" — German plurals are irregular, so
+   every form here is written out (and checked) by hand ---- */
+const PLURALS=[
+ ['🐶','der','Hund','Hunde','dog','dogs','el','perro','perros'],['🐱','die','Katze','Katzen','cat','cats','el','gato','gatos'],
+ ['🐟','der','Fisch','Fische','fish','fish','el','pez','peces'],['🐦','der','Vogel','Vögel','bird','birds','el','pájaro','pájaros'],
+ ['🐴','das','Pferd','Pferde','horse','horses','el','caballo','caballos'],['🐮','die','Kuh','Kühe','cow','cows','la','vaca','vacas'],
+ ['🐷','das','Schwein','Schweine','pig','pigs','el','cerdo','cerdos'],['🐔','das','Huhn','Hühner','hen','hens','la','gallina','gallinas'],
+ ['🐝','die','Biene','Bienen','bee','bees','la','abeja','abejas'],['🦋','der','Schmetterling','Schmetterlinge','butterfly','butterflies','la','mariposa','mariposas'],
+ ['🐢','die','Schildkröte','Schildkröten','turtle','turtles','la','tortuga','tortugas'],['🦆','die','Ente','Enten','duck','ducks','el','pato','patos'],
+ ['🐭','die','Maus','Mäuse','mouse','mice','el','ratón','ratones'],['🐑','das','Schaf','Schafe','sheep','sheep','la','oveja','ovejas'],
+ ['🦁','der','Löwe','Löwen','lion','lions','el','león','leones'],['🐘','der','Elefant','Elefanten','elephant','elephants','el','elefante','elefantes'],
+ ['🐸','der','Frosch','Frösche','frog','frogs','la','rana','ranas'],['🐌','die','Schnecke','Schnecken','snail','snails','el','caracol','caracoles'],
+ ['🦕','der','Dinosaurier','Dinosaurier','dinosaur','dinosaurs','el','dinosaurio','dinosaurios'],
+ ['🍎','der','Apfel','Äpfel','apple','apples','la','manzana','manzanas'],['🍌','die','Banane','Bananen','banana','bananas','el','plátano','plátanos'],
+ ['🍓','die','Erdbeere','Erdbeeren','strawberry','strawberries','la','fresa','fresas'],['🥕','die','Karotte','Karotten','carrot','carrots','la','zanahoria','zanahorias'],
+ ['🥚','das','Ei','Eier','egg','eggs','el','huevo','huevos'],['🍪','der','Keks','Kekse','cookie','cookies','la','galleta','galletas'],
+ ['⭐','der','Stern','Sterne','star','stars','la','estrella','estrellas'],['🎈','der','Luftballon','Luftballons','balloon','balloons','el','globo','globos'],
+ ['🚗','das','Auto','Autos','car','cars','el','coche','coches'],['🚂','der','Zug','Züge','train','trains','el','tren','trenes'],
+ ['✈️','das','Flugzeug','Flugzeuge','plane','planes','el','avión','aviones'],['⚽','der','Ball','Bälle','ball','balls','la','pelota','pelotas'],
+ ['🔑','der','Schlüssel','Schlüssel','key','keys','la','llave','llaves'],['📕','das','Buch','Bücher','book','books','el','libro','libros'],
+ ['🌸','die','Blume','Blumen','flower','flowers','la','flor','flores'],['🌳','der','Baum','Bäume','tree','trees','el','árbol','árboles'],
+ ['🍂','das','Blatt','Blätter','leaf','leaves','la','hoja','hojas'],['🎁','das','Geschenk','Geschenke','present','presents','el','regalo','regalos'],
+ ['👟','der','Schuh','Schuhe','shoe','shoes','el','zapato','zapatos'],['🏠','das','Haus','Häuser','house','houses','la','casa','casas']
+].map(([e,da,ds,dp,es1,ep1,ea,ss,sp])=>({e,de:[da,ds,dp],en:[es1,ep1],es:[ea,ss,sp]}));
+const NUMW={de:['','ein','zwei','drei','vier'],en:['','a','two','three','four'],es:['','un','dos','tres','cuatro']};
+let plMode=null;
+function plPhrase(it,n,hl){
+  hl=hl||(x=>x);
+  if(lang==='de'){const one=it.de[0]==='die'?'eine':'ein';return n===1?`${hl(one)} ${it.de[1]}`:`${hl(NUMW.de[n])} ${hl(it.de[2])}`;}
+  if(lang==='en'){const one=/^[aeiou]/.test(it.en[0])?'an':'a';return n===1?`${hl(one)} ${it.en[0]}`:`${hl(NUMW.en[n])} ${hl(it.en[1])}`;}
+  const one=it.es[0]==='la'?'una':'un';return n===1?`${hl(one)} ${it.es[1]}`:`${hl(NUMW.es[n])} ${hl(it.es[2])}`;
+}
+function plQuestion(){const {it,n}=plMode;
+  if(lang==='de')return n===1?`Wo ist ${plPhrase(it,1)}?`:`Wo sind ${plPhrase(it,n)}?`;
+  if(lang==='en')return n===1?`Where is ${plPhrase(it,1)}?`:`Where are ${plPhrase(it,n)}?`;
+  return `¿Dónde hay ${plPhrase(it,n)}?`;}
+function pluralRound(L){
+  const it=pick(PLURALS),max=L>=5?4:3,counts=shuffle([1,2,3,4].slice(0,max)),n=counts[0];
+  plMode={it,n};target=null;targets=[];
+  const g=document.getElementById('grid');g.innerHTML='';g.classList.remove('nine');
+  g.style.gridTemplateColumns=max===4?'repeat(2,1fr)':'repeat(3,1fr)';
+  shuffle(counts).forEach((k,i)=>{const b=document.createElement('div');b.className='card plCard pl'+k;
+    b.textContent=Array(k).fill(it.e).join('');b.style.animationDelay=(i*0.05)+'s';b.onclick=()=>plChoose(k,b);g.appendChild(b);});
+  document.getElementById('quizPrompt').textContent=plQuestion();
+  document.getElementById('levelPill').textContent='🎯 '+L;
+  say(plQuestion());
+}
+function plChoose(k,el){
+  ac();if(roundDone)return;
+  if(k===plMode.n){
+    roundDone=true;el.classList.add('right');bigWin();award(misses);
+    levelFx(document.getElementById('levelPill'),adapt('words',8,misses===0));
+    showWin(Array(k).fill(plMode.it.e).join(''),plPhrase(plMode.it,k,x=>`<b>${x}</b>`),plPhrase(plMode.it,k),true);
+    setTimeout(newRound,2600);
+  }else{misses++;nope();el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),450);
+    if(misses>=2)[...document.querySelectorAll('#grid .plCard')].forEach(c=>{if(c.classList.contains('pl'+plMode.n))c.classList.add('hint');});
+    say(plQuestion());}
 }
 function artRound(SET,L){
   const pool=SET.filter(v=>!v.p&&v.c!=='form'&&['der','die','das'].includes(v.de[0])&&!recent.includes(v.e));
