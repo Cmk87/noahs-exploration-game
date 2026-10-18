@@ -75,7 +75,10 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.evaluate(() => setActMode('quiz'));
 
   await page.evaluate(() => { showTab('space'); SKILL['space|de'] = { s: 4.2, n: 10, h: [] }; spaceAsk(); spaceAnswer(spaceTargetIdx); });
-  await page.evaluate(() => { showTab('geo'); SKILL['geo|de'] = { s: 2.2, n: 10, h: [] }; geoAsk(); geoAnswer(geoTarget); });
+  await page.evaluate(() => { showTab('geo'); SKILL['geo|de'] = { s: 2.2, n: 10, h: [] };
+    for (const m of ['continents', 'countries', 'flags', 'oceans']) setGeoMode(m);
+    setGeoMode('countries'); answerCountry(C_BY[GEO.target]);
+    setGeoMode('flags'); answerFlag(GEO.glow, document.querySelector('.flagBtn')); setGeoMode('explore'); });
   check(true, 'space and world quizzes');
 
   console.log('Points and prizes');

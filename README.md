@@ -16,7 +16,7 @@ The tabs are big icons that all fit on one row; tapping one also says its name.
 | 👂 Listen | Hear a word, tap the picture, 6 levels up to sound-alike distractors |
 | 🦖 Dino Show | Verbs and adjectives acted out by an animated dino (43 verbs, 22 adjectives); "how many dinos…?" (plural verbs) and "who is NOT…?" (negation) rounds; answers echoed as full sentences; 🎮 free-play sentence builder; act-it-out breaks |
 | 🪐 Space | Orrery of the solar system with facts and a quiz |
-| 🌍 World | The seven continents with facts and a quiz |
+| 🌍 World | Zoomable real map (pinch, drag, double-tap): continents → 223 countries with flags and names; quizzes for continents, countries, flags and the five oceans |
 | 🎁 Prizes | Spend 40 ⚡ on a prize game (see below) |
 | ⚙ (top bar, hold 1 s) | Parent panel: weekly report, play-time limit, adventure length, voice, backup/restore, levels, most-missed words, prize points |
 

@@ -253,11 +253,28 @@
   .pchip{border-radius:999px;font-size:20px;padding:5px 7px}
   .pchip.on,.pverb.on{background:var(--bolt);transform:translateY(-3px) rotate(-4deg)}
   .pchip:active,.pverb:active{transform:translate(3px,3px);box-shadow:none}
-  #map{width:calc(100% - 28px);max-width:520px;aspect-ratio:1.6/1;background:#123A63;border:5px solid var(--ink);
-    border-radius:8px;box-shadow:6px 6px 0 var(--ink);display:block;margin:8px auto 0;touch-action:none}
+  #geoHead{display:flex;align-items:center;justify-content:space-between;width:100%;padding-right:14px}
+  #geoHead .segs{gap:5px;padding-right:4px}
+  #geoHead .modeBtn{padding:4px 9px;font-size:21px}
+  #geoLevel{background:var(--blaze);color:#fff;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:3px 12px 5px;font-size:15px}
+  #geoLevel.pop{animation:slam .5s cubic-bezier(.2,1.7,.4,1)}#geoLevel.down{animation:shake .4s}
+  #geoQ{display:none;font-size:min(5.4vw,24px);margin:6px 14px 10px}
+  #geoQ.on{display:block}
+  #mapWrap{position:relative;width:calc(100% - 28px);max-width:520px;margin:6px auto 0}
+  #map{width:100%;height:min(calc(100vw - 28px),calc(100dvh - 330px),520px);min-height:240px;background:#165FAE;border:5px solid var(--ink);
+    border-radius:12px;box-shadow:6px 6px 0 var(--ink);display:block;touch-action:none}
+  #mapBtns{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+  #mapBtns button{width:40px;height:40px;border:3px solid var(--ink);border-radius:10px;background:#fff;font-size:18px;box-shadow:2px 2px 0 var(--ink);cursor:pointer;padding:0}
+  #mapBtns button:active{transform:translate(2px,2px);box-shadow:none}
+  #geoFlags{display:none;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 14px 0}
+  #geoFlags.on{display:flex}
+  .flagBtn{font-size:min(10vw,44px);line-height:1;padding:5px 8px;border:4px solid var(--ink);border-radius:12px;background:#fff;box-shadow:4px 4px 0 var(--ink);cursor:pointer;
+    animation:cardIn .4s cubic-bezier(.2,1.6,.4,1) both}
+  .flagBtn.right{background:var(--bolt);transform:scale(1.12)}.flagBtn.wrong{animation:shake .4s;border-color:var(--blaze)}
   #geoBox{margin:12px auto 0;width:calc(100% - 28px);background:#fff;border:4px solid var(--ink);box-shadow:6px 6px 0 var(--ink);
-    color:var(--ink);padding:10px 14px 13px;text-align:center;min-height:64px;max-width:520px}
-  #geoName{font-family:Impact,sans-serif;font-size:min(7vw,32px);letter-spacing:1px}
+    color:var(--ink);padding:8px 14px 11px;text-align:center;min-height:60px;max-width:520px;border-radius:10px}
+  #geoName{font-family:Impact,sans-serif;font-size:min(7vw,30px);letter-spacing:1px}
+  .geoFlag{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",serif;font-size:1.2em;vertical-align:-0.1em}
   #geoText{font-size:min(4.4vw,18px);margin-top:4px}
   /* ---------- prizes ---------- */
   .pane{display:none;flex-direction:column;align-items:center;width:100%}

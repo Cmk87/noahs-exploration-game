@@ -103,9 +103,13 @@
 
 <!-- ============ WORLD MAP ============ -->
 <div class="view" id="v-geo">
-  <canvas id="map"></canvas>
+  <div id="geoHead"><div class="segs" id="geoModes"></div><div id="geoLevel" class="display">🎯 1</div></div>
+  <div id="geoQ" class="prompt display"></div>
+  <div id="mapWrap"><canvas id="map"></canvas>
+    <div id="mapBtns"><button id="geoZin">➕</button><button id="geoZout">➖</button><button id="geoHome">🌍</button></div></div>
+  <div id="geoFlags"></div>
   <div id="geoBox"><div id="geoName" class="display">🌍</div><div id="geoText">…</div></div>
-  <div class="tools"><button id="geoQuiz">🎯</button><button id="geoSay">🔊</button></div>
+  <div class="tools"><button id="geoSay">🔊</button></div>
 </div>
 
 <!-- ============ PRIZES ============ -->
@@ -238,6 +242,7 @@
 <script src="js/space.js"></script>
 <script src="js/dinoshow.js"></script>
 <script src="js/prizes.js"></script>
+<script src="js/world-data.js"></script>
 <script src="js/world.js"></script>
 <script src="js/app.js"></script>
 </body>

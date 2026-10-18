@@ -42,7 +42,7 @@ function buildChips(){
    saved per mode and per language, so they survive a reload.
 ============================================================= */
 const SKILL_START={words:{es:4,en:2,de:2},ear:{es:2,en:1,de:1},act:{es:2,en:1,de:1},space:{es:1,en:1,de:1},geo:{es:1,en:1,de:1}};
-const SKILL_MAX={words:8,ear:6,act:6,space:4,geo:2};
+const SKILL_MAX={words:8,ear:6,act:6,space:4,geo:3};
 let SKILL={};try{SKILL=JSON.parse(localStorage.getItem('sl_skill')||'{}');}catch(e){}
 function skillRec(mode,lg){const k=mode+'|'+(lg||lang);
   return SKILL[k]||(SKILL[k]={s:SKILL_START[mode][lg||lang],n:0,h:[]});}

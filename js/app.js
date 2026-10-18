@@ -12,7 +12,7 @@ const TABS=[
   {id:'dig',   icon:'🎁', es:'Premios', en:'Prizes',  de:'Preise'}
 ];
 const ALLVIEWS=['adv','trace','words','ear','act','space','geo','dig','parent'];
-let activeTab='trace';
+activeTab='trace';                 // declared in core.js so early animation loops can read it
 function buildTabs(){
   const box=document.getElementById('tabs');box.innerHTML='';
   TABS.forEach(t=>{
@@ -34,7 +34,7 @@ function showTab(id){
   if(id==='ear'){newEarRound();}
   if(id==='act'){showAct();}
   if(id==='space'){fitSky();selectPlanet(selected);}
-  if(id==='geo'){fitMap();geoSelect(selectedGeo,false);}
+  if(id==='geo'){showGeo();}
   if(id==='dig'){if(pane==='digLock')showDigLock();else resumeGame();}
   if(id==='parent'){renderParent();}
 }
@@ -52,7 +52,7 @@ function setLang(code,btn){
   else if(activeTab==='ear')newEarRound();
   else if(activeTab==='act')showAct();
   else if(activeTab==='space')selectPlanet(selected);
-  else if(activeTab==='geo'){fitMap();geoSelect(selectedGeo,false);}
+  else if(activeTab==='geo'){if(GEO.mode!=='explore')setGeoMode(GEO.mode);else showGeo();}
   else if(activeTab==='dig'){if(pane==='digLock')showDigLock();}
   else if(activeTab==='adv')renderAdv();
   else renderParent();
