@@ -571,3 +571,5 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .card.withWord .cw{line-height:1.05}
 .card.withWord .cl{font:800 min(5.4vw,24px)/1.1 'Baloo 2','Nunito',sans-serif;color:var(--ink);max-width:100%;overflow-wrap:anywhere;text-align:center}
 .card.withWord .cl b{color:var(--blaze);font-size:1.3em}
+/* difficulty levels stay internal (shown in the parent panel), not on the child's screen */
+#levelPill,#earLevelPill,#actLevel,#geoLevel{display:none!important}

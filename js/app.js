@@ -196,8 +196,9 @@ document.getElementById('againBtn').onclick=()=>{ac();resetTrace();sayCurrent();
 document.getElementById('nextBtn').onclick=()=>{ac();advance();};
 document.getElementById('repeatBtn').onclick=()=>{ac();sayPrompt();};
 document.getElementById('skipBtn').onclick=()=>{ac();newRound();};
-document.getElementById('earAgain').onclick=()=>{ac();earSay();};
-document.getElementById('earSlow').onclick=()=>{ac();earSay(0.45);};
+/* 🔊 repeats the word; pressed again straight away, it says it slowly */
+let earAgainT=0;
+document.getElementById('earAgain').onclick=()=>{ac();const now=performance.now(),slow=now-earAgainT<4000;earAgainT=slow?0:now;earSay(slow?0.45:undefined);};
 document.getElementById('earSkip').onclick=()=>{ac();newEarRound();};
 (function(){
   const g=document.getElementById('gearBtn');
@@ -380,7 +381,7 @@ function closeRewardIfOpen(){if(rewardOpen)closeReward(false);}
 /* ---- Rexi, the mascot: cheers on right answers, puzzles on misses, waves when tapped ---- */
 const mascotCv=$('mascot'),mascotG=mascotCv.getContext('2d');
 let mascotState='idle',mascotUntil=0,mascotRun=false;
-const MASCOT_TABS=['trace','words','ear','space','geo'];
+const MASCOT_TABS=[];               // Rexi is switched off for now (too busy on screen); list tabs here to bring him back
 function mascot(state,ms){mascotState=state;mascotUntil=performance.now()+(ms||1700);}
 function mascotLoop(){
   const show=MASCOT_TABS.includes(activeTab)&&gate.style.display==='none'&&!rewardOpen;
