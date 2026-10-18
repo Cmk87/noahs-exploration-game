@@ -360,6 +360,23 @@
     border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);background:radial-gradient(circle at 50% 35%,#E6F7FF,#9ED8FF);cursor:pointer;display:none}
   #mascot.on{display:block}
   .view{padding-bottom:max(92px,env(safe-area-inset-bottom))}
+  #advTitle{font-size:min(7vw,30px);color:var(--bolt);-webkit-text-stroke:4px var(--ink);paint-order:stroke fill;margin:10px 0 4px;text-align:center}
+  #advMap{position:relative;width:100%;max-width:440px;margin:0 auto}
+  #advMap svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .advStop{position:absolute;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;border:4px solid var(--ink);background:#C9CFE0;
+    box-shadow:4px 4px 0 var(--ink);display:flex;align-items:center;justify-content:center;font-size:30px;filter:grayscale(.7);cursor:pointer}
+  .advStop.done{background:#2ED17A;filter:none}
+  .advStop.done::after{content:"✓";position:absolute;right:-8px;top:-8px;width:24px;height:24px;border-radius:50%;background:#fff;
+    border:3px solid var(--ink);font:bold 15px/18px sans-serif;text-align:center;color:#13B85E}
+  .advStop.now{background:var(--bolt);filter:none;width:80px;height:80px;margin:-40px 0 0 -40px;font-size:40px;animation:pulse .6s ease-in-out infinite alternate;z-index:2}
+  .advStop.chest{background:#FFB020;filter:none;font-size:34px}
+  .advRexi{position:absolute;font-size:34px;margin:-22px 0 0 44px;animation:hover .5s ease-in-out infinite alternate;z-index:3;pointer-events:none}
+  #advGo{font-size:min(8vw,32px);padding:12px 34px;margin:14px auto 0;display:block;background:var(--bolt);animation:pulse .7s ease-in-out infinite alternate}
+  #advAgain{display:none;margin:12px auto 0;background:#fff;font-size:15px}
+  #advBar{display:none;flex:0 0 auto;align-items:center;gap:8px;margin:2px 14px 0;padding:4px 12px;background:#fff;color:var(--ink);
+    border:3px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);font-weight:bold;font-size:16px;cursor:pointer;position:relative;z-index:2}
+  #advBar.on{display:flex}
+  #advBar .stars{letter-spacing:1px}
   #gearTip{position:fixed;z-index:40;top:62px;left:50%;transform:translateX(-50%);background:#fff;color:var(--ink);
     border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);border-radius:8px;padding:6px 12px;font-weight:bold;font-size:15px;
     display:none;white-space:nowrap}
@@ -380,6 +397,15 @@
 </header>
 
 <div class="tabs" id="tabs"></div>
+<div id="advBar"></div>
+
+<!-- ============ ADVENTURE MAP ============ -->
+<div class="view" id="v-adv">
+  <div id="advTitle" class="display"></div>
+  <div id="advMap"></div>
+  <button class="btn" id="advGo"></button>
+  <button class="btn" id="advAgain"></button>
+</div>
 
 <!-- ============ TRACE ============ -->
 <div class="view on" id="v-trace">
@@ -502,6 +528,10 @@
     <h3 id="pPowerTitle">⚡</h3>
     <div class="row"><span id="pPowerVal">0</span>
       <span><button class="btn" id="pPlus">+10 ⚡</button> <button class="btn" id="pZero">0</button></span></div>
+  </div>
+  <div class="panel">
+    <h3 id="pAdvTitle">🗺️</h3>
+    <div id="advSizes" class="segs" style="padding:0"></div>
   </div>
   <div class="panel">
     <h3 id="pVoiceTitle">🔊</h3>
@@ -1360,7 +1390,7 @@ function finishItem(){
   bigWin();boom();
   setTimeout(()=>boom(70,S*0.25,S*0.58,.9),240);
   setTimeout(()=>boom(70,S*0.75,S*0.58,.9),440);
-  addPower(3);mascot('cheer');
+  addPower(3);mascot('cheer');advTick('trace');
 
   const faceEl=document.getElementById('face'),wordEl=document.getElementById('wordText');
   faceEl.classList.remove('small');
@@ -2938,7 +2968,7 @@ function actChoose(correct,el){
     }
   }
 }
-$('tprDone').onclick=()=>{ac();bigWin();addPower();setTimeout(newActRound,900);};
+$('tprDone').onclick=()=>{ac();bigWin();addPower();advTick('act');setTimeout(newActRound,900);};
 $('actAgain').onclick=()=>{ac();if(actMode==='play')playSay();else actAsk();};
 $('actSkip').onclick=()=>{ac();if(actMode==='quiz')newActRound();};
 
@@ -3110,7 +3140,7 @@ function addPower(n=1){
    still ends happily). Five first-try answers in a row earn a 🔥 bonus. */
 let fireStreak=0;
 function award(misses,base){
-  base=base||1;mascot('cheer');
+  base=base||1;mascot('cheer');advTick(activeTab);
   if(misses>=2){fireStreak=0;return 0;}
   if(misses===0){fireStreak++;}else fireStreak=0;
   addPower(base);
@@ -4273,6 +4303,7 @@ document.getElementById('geoSay').onclick=()=>{ac();
    9. TABS / LANGUAGE / PARENT
 ============================================================= */
 const TABS=[
+  {id:'adv',   icon:'🗺️', es:'Aventura',en:'Adventure',de:'Abenteuer'},
   {id:'trace', icon:'✍️', es:'Escribir',en:'Write',   de:'Schreiben'},
   {id:'words', icon:'🖼️', es:'Palabras',en:'Words',   de:'Wörter'},
   {id:'ear',   icon:'👂', es:'Escucha', en:'Listen',  de:'Hören'},
@@ -4281,7 +4312,7 @@ const TABS=[
   {id:'geo',   icon:'🌍', es:'Mundo',   en:'World',   de:'Welt'},
   {id:'dig',   icon:'🎁', es:'Premios', en:'Prizes',  de:'Preise'}
 ];
-const ALLVIEWS=['trace','words','ear','act','space','geo','dig','parent'];
+const ALLVIEWS=['adv','trace','words','ear','act','space','geo','dig','parent'];
 let activeTab='trace';
 function buildTabs(){
   const box=document.getElementById('tabs');box.innerHTML='';
@@ -4295,9 +4326,10 @@ function buildTabs(){
   });
 }
 function showTab(id){
-  activeTab=id;buildTabs();window.scrollTo(0,0);
+  activeTab=id;buildTabs();window.scrollTo(0,0);if(typeof renderAdvBar==='function')renderAdvBar();
   const vEl=document.getElementById('v-'+id);if(vEl)vEl.scrollTop=0;
   ALLVIEWS.forEach(v=>document.getElementById('v-'+v).classList.toggle('on',v===id));
+  if(id==='adv'){renderAdv();}
   if(id==='trace'){fit();sayCurrent();}
   if(id==='words'){buildChips();if(!target)newRound();else sayPrompt();}
   if(id==='ear'){newEarRound();}
@@ -4323,6 +4355,7 @@ function setLang(code,btn){
   else if(activeTab==='space')selectPlanet(selected);
   else if(activeTab==='geo'){fitMap();geoSelect(selectedGeo,false);}
   else if(activeTab==='dig'){if(pane==='digLock')showDigLock();}
+  else if(activeTab==='adv')renderAdv();
   else renderParent();
 }
 ['es','en','de'].forEach(c=>document.getElementById(c).onclick=e=>setLang(c,e.currentTarget));
@@ -4333,6 +4366,11 @@ function renderParent(){
            de:['Name für den 🦸 Tab','Level','Meist verfehlte Wörter','Zurücksetzen']}[lang];
   document.getElementById('pNameTitle').textContent=L[0];
   renderVoices();
+  $('pAdvTitle').textContent={es:'🗺️ Largo de la aventura diaria',en:'🗺️ Daily adventure length',de:'🗺️ Länge des täglichen Abenteuers'}[lang];
+  const sz=$('advSizes');sz.innerHTML='';
+  [['short',{es:'Corta (4)',en:'Short (4)',de:'Kurz (4)'}],['normal',{es:'Normal (6)',en:'Normal (6)',de:'Normal (6)'}],['long',{es:'Larga (8)',en:'Long (8)',de:'Lang (8)'}]].forEach(([k,l])=>{
+    const b=document.createElement('button');b.className='seg'+(advSize===k?' on':'');b.textContent=l[lang];
+    b.onclick=()=>{advSize=k;try{localStorage.setItem('sl_advsize',k);}catch(e){}if(ADV&&!ADV.started)advEnsure(true);renderParent();};sz.appendChild(b);});
   $('pBackupTitle').textContent={es:'💾 Copia de seguridad',en:'💾 Backup',de:'💾 Sicherung'}[lang];
   $('pBackupText').textContent={es:'Todo el progreso vive solo en este móvil. Guarda una copia de vez en cuando (Archivos, Drive, WhatsApp…) y cárgala en un móvil nuevo.',
     en:'All progress lives only on this phone. Save a copy now and then (Files, Drive, WhatsApp…) and load it on a new phone.',
@@ -4459,8 +4497,11 @@ const gate=document.getElementById('gate');
 function unlock(e){
   e.preventDefault();ac();loadVoices();
   gate.style.display='none';
-  sayCurrent();
-  setTimeout(()=>{loadVoices();if(!speechReady)sayCurrent();},900);
+  showTab('adv');advEnsure();
+  const hello=ADV.done?{es:'¡Hola! Ya has hecho tu aventura de hoy.',en:'Hi! You already did today\'s adventure.',de:'Hallo! Dein Abenteuer heute hast du schon geschafft.'}[lang]
+    :{es:'¡Hola! ¿Empezamos la aventura?',en:'Hi! Shall we start the adventure?',de:'Hallo! Wollen wir das Abenteuer starten?'}[lang];
+  say(hello);
+  setTimeout(()=>{loadVoices();if(!speechReady)say(hello);},900);
   setTimeout(()=>{if(!speechReady)showWarn();},3000);
   fit();fitSky();
 }
@@ -4470,6 +4511,84 @@ gate.addEventListener('click',unlock,{once:true});
 /* ---- the page itself must never scroll (only the tabs' content does) ---- */
 window.addEventListener('scroll',()=>{if(window.scrollY||window.scrollX)window.scrollTo(0,0);});
 document.body.addEventListener('scroll',()=>{if(document.body.scrollTop)document.body.scrollTop=0;});
+
+/* =============================================================
+   DAILY ADVENTURE — a guided path through the learning tabs, so a
+   four-year-old doesn't have to choose (and doesn't only pick his
+   favourite). Each stop has a small goal; the path ends in a chest.
+   The first adventure of the day pays a bonus.
+============================================================= */
+const ADV_GOAL={trace:2,words:4,ear:3,act:4};
+const ADV_LEN={short:4,normal:6,long:8};
+let ADV=null,advSize='normal';
+try{ADV=JSON.parse(localStorage.getItem('sl_adv')||'null');advSize=localStorage.getItem('sl_advsize')||'normal';}catch(e){}
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();};
+const advSave=()=>{try{localStorage.setItem('sl_adv',JSON.stringify(ADV));}catch(e){}};
+function advPlan(){
+  const n=ADV_LEN[advSize]||6,bag=['words','act','trace','ear','act','words','ear','trace'];
+  let plan;do{plan=shuffle(bag).slice(0,n);}while(plan.some((t,i)=>i&&t===plan[i-1]));
+  return plan.map(tab=>({tab,got:0}));
+}
+function advEnsure(fresh){
+  if(fresh||!ADV||ADV.date!==today()||!ADV.plan)ADV={date:today(),plan:advPlan(),idx:0,started:false,done:false,bonus:ADV&&ADV.date===today()?ADV.bonus:false};
+  advSave();
+}
+const advCur=()=>ADV&&!ADV.done?ADV.plan[ADV.idx]:null;
+const TABICON=id=>(TABS.find(t=>t.id===id)||{}).icon||'⭐';
+function renderAdv(){
+  advEnsure();
+  $('advTitle').textContent={es:'Tu aventura de hoy',en:"Today's adventure",de:'Dein Abenteuer heute'}[lang];
+  const m=$('advMap'),n=ADV.plan.length,X=[28,72,34,70,30,68,36,70,50],stepY=92,H=60+(n+1)*stepY;
+  m.style.height=H+'px';m.innerHTML='';
+  const pts=ADV.plan.map((p,i)=>[X[i],50+i*stepY]).concat([[50,50+n*stepY]]);
+  let d=`M ${pts[0][0]} ${pts[0][1]}`;
+  for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],my=(a[1]+b[1])/2;d+=` C ${a[0]} ${my}, ${b[0]} ${my}, ${b[0]} ${b[1]}`;}
+  m.insertAdjacentHTML('beforeend',`<svg viewBox="0 0 100 ${H}" preserveAspectRatio="none"><path d="${d}" fill="none" stroke="#FFD400" stroke-width="2.4" stroke-dasharray="3 3" vector-effect="non-scaling-stroke" style="stroke-width:6px"/></svg>`);
+  pts.forEach(([x,y],i)=>{
+    const el=document.createElement('div');el.style.left=x+'%';el.style.top=y+'px';
+    if(i===n){el.className='advStop chest';el.textContent=ADV.done?'🏆':'🎁';}
+    else{const st=ADV.plan[i];el.className='advStop'+(i<ADV.idx||ADV.done?' done':i===ADV.idx?' now':'');el.textContent=TABICON(st.tab);
+      if(i===ADV.idx&&!ADV.done)el.onclick=()=>{ac();advGo();};}
+    m.appendChild(el);
+    if((i===ADV.idx&&!ADV.done)||(i===n&&ADV.done)){const r=document.createElement('div');r.className='advRexi';r.textContent='🦖';r.style.left=x+'%';r.style.top=y+'px';m.appendChild(r);}
+  });
+  $('advGo').textContent=ADV.done?{es:'🏆 ¡Lo has conseguido!',en:'🏆 You did it!',de:'🏆 Geschafft!'}[lang]
+    :ADV.idx?{es:'▶ ¡Seguimos!',en:'▶ Keep going!',de:'▶ Weiter!'}[lang]:{es:'▶ ¡Vamos!',en:"▶ Let's go!",de:"▶ Los geht's!"}[lang];
+  $('advAgain').style.display=ADV.done?'block':'none';
+  $('advAgain').textContent={es:'🔁 Otra aventura',en:'🔁 Another adventure',de:'🔁 Noch ein Abenteuer'}[lang];
+}
+function advGo(){
+  if(ADV.done){say({es:'¡Lo has conseguido! ¡Hasta mañana!',en:'You did it! See you tomorrow!',de:'Geschafft! Bis morgen!'}[lang]);return;}
+  ADV.started=true;advSave();
+  const st=advCur();if(st.tab==='act'&&typeof actMode!=='undefined'&&actMode!=='quiz')actMode='quiz';
+  showTab(st.tab);
+}
+function renderAdvBar(){
+  const st=advCur(),bar=$('advBar');
+  const on=!!(st&&ADV.started&&activeTab===st.tab);bar.classList.toggle('on',on);
+  if(!on)return;const goal=ADV_GOAL[st.tab];
+  bar.innerHTML=`🗺️ ${ADV.idx+1}/${ADV.plan.length} <span class="stars">${'⭐'.repeat(Math.min(st.got,goal))}${'☆'.repeat(Math.max(0,goal-st.got))}</span>`;
+}
+function advTick(tab){
+  const st=advCur();if(!st||!ADV.started||st.tab!==tab)return;
+  st.got++;advSave();renderAdvBar();
+  if(st.got<ADV_GOAL[tab])return;
+  ADV.idx++;if(ADV.idx>=ADV.plan.length)ADV.done=true;advSave();
+  setTimeout(()=>{
+    rainEmoji(['⭐','🗺️','✨'],16);[784,988,1175,1568].forEach((f,i)=>beep(f,i*0.09,0.2,'triangle',0.16));
+    if(ADV.done){showTab('adv');setTimeout(advFinish,600);}
+    else{say({es:'¡Parada conseguida! ¡Sigamos!',en:'Stop done! On we go!',de:'Station geschafft! Weiter geht\'s!'}[lang]);showTab('adv');}
+  },2700);                                  // let the answer's own celebration finish first
+}
+function advFinish(){
+  fanfare();rainEmoji(['🏆','⭐','🦖','🎉','✨'],34);
+  if(!ADV.bonus){ADV.bonus=true;advSave();flyBolt(10,'+10⚡');addPowerQuiet(10);}
+  say({es:'¡Aventura completada! ¡Eres un campeón!',en:'Adventure complete! You are a champion!',de:'Abenteuer geschafft! Du bist ein Champion!'}[lang]);
+  try{const L=JSON.parse(localStorage.getItem('sl_log')||'{}'),d=today();L[d]=L[d]||{};L[d].adv=(L[d].adv||0)+1;localStorage.setItem('sl_log',JSON.stringify(L));}catch(e){}
+}
+$('advGo').onclick=()=>{ac();advGo();};
+$('advAgain').onclick=()=>{ac();advEnsure(true);renderAdv();say({es:'¡Una nueva aventura!',en:'A new adventure!',de:'Ein neues Abenteuer!'}[lang]);};
+$('advBar').onclick=()=>{ac();showTab('adv');};
 
 /* ---- Rexi, the mascot: cheers on right answers, puzzles on misses, waves when tapped ---- */
 const mascotCv=$('mascot'),mascotG=mascotCv.getContext('2d');
