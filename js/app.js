@@ -445,7 +445,7 @@ function goToSleep(){
   say({es:'¡Buenas noches! Rexi está cansado. ¡Hasta mañana!',en:'Good night! Rexi is tired. See you tomorrow!',de:'Gute Nacht! Rexi ist müde. Bis morgen!'}[lang]);
   [523,440,392,330].forEach((f,i)=>beep(f,i*0.45,0.6,'sine',0.12));
   const cn=$('sleepCv');(function loop(){if(!$('sleep').classList.contains('on'))return;
-    const r=cn.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2.5),w=Math.round(r.width*dpr);
+    const r=cn.getBoundingClientRect(),dpr=DPRX(2.5),w=Math.round(r.width*dpr);
     if(w&&cn.width!==w){cn.width=w;cn.height=w;}const g=cn.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
     drawDino(g,r.width,r.width,{verb:'sleep'},performance.now()/1000);requestAnimationFrame(loop);})();
 }
@@ -467,7 +467,7 @@ function mascotLoop(){
   const show=MASCOT_TABS.includes(activeTab)&&gate.style.display==='none'&&!rewardOpen;
   mascotCv.classList.toggle('on',show);
   if(show){
-    const dpr=Math.min(window.devicePixelRatio||1,2.5),W=78,w=Math.round(W*dpr);
+    const dpr=DPRX(2.5),W=78,w=Math.round(W*dpr);
     if(mascotCv.width!==w){mascotCv.width=w;mascotCv.height=w;}
     const g=mascotG,now=performance.now(),t=now/1000;
     if(now>mascotUntil)mascotState='idle';

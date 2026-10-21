@@ -46,7 +46,7 @@
     font-size:15px;padding:6px 12px;box-shadow:3px 3px 0 var(--ink);cursor:pointer;font-family:inherit}
   .seg.on{background:var(--beam)}
   #stage{width:100%;display:flex;align-items:center;justify-content:center}
-  #wrap{position:relative;width:min(94vw,470px,calc(100dvh - 330px));min-width:240px;aspect-ratio:1/1}
+  #wrap{position:relative;width:min(94vw,470px,calc(100vh - 330px));width:min(94vw,470px,calc(100dvh - 330px));min-width:240px;aspect-ratio:1/1}
   #c{touch-action:none;position:absolute;inset:0;width:100%;height:100%;background:#F4F7FF;border:5px solid var(--ink);
     border-radius:8px;box-shadow:8px 8px 0 var(--ink);display:block}
   #wrap.shake{animation:shake .4s}
@@ -97,9 +97,10 @@
     padding:3px 12px 5px;font-size:15px}
   #levelPill.pop{animation:slam .5s cubic-bezier(.2,1.7,.4,1)}
   .prompt{background:#fff;border:4px solid var(--ink);box-shadow:6px 6px 0 var(--ink);color:var(--ink);
+    font-size:min(6vw,27px,3.4vh);
     font-size:min(6vw,27px,3.4dvh);padding:9px 16px 12px;margin:10px 14px 14px;text-align:center;transform:rotate(-1deg)}
-  #grid,#earGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;padding:0 14px;max-width:min(100%,calc((100dvh - 270px)*1.5))}
-  #earGrid{max-width:min(100%,calc((100dvh - 200px)*1.5))}
+  #grid,#earGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;padding:0 14px;max-width:min(100%,calc((100vh - 270px)*1.5));max-width:min(100%,calc((100dvh - 270px)*1.5))}
+  #earGrid{max-width:min(100%,calc((100vh - 200px)*1.5));max-width:min(100%,calc((100dvh - 200px)*1.5))}
   .card{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:#F4F7FF;
     border:4px solid var(--ink);border-radius:8px;box-shadow:5px 5px 0 var(--ink);font-size:min(12vw,60px);cursor:pointer}
   .card:active{transform:translate(5px,5px);box-shadow:none}
@@ -116,7 +117,7 @@
   #earHead{display:flex;justify-content:center;align-items:center;gap:10px;width:100%;margin:10px 0 14px}
   #earHead button{border:3px solid var(--ink);border-radius:10px;background:#fff;font-size:26px;padding:8px 16px;
     box-shadow:4px 4px 0 var(--ink);cursor:pointer;line-height:1}
-  #earLetter{text-transform:none;display:none;font-size:min(18vw,11dvh,90px);line-height:1;color:var(--ink);background:var(--bolt);border:5px solid var(--ink);
+  #earLetter{text-transform:none;display:none;font-size:min(18vw,11vh,90px);font-size:min(18vw,11dvh,90px);line-height:1;color:var(--ink);background:var(--bolt);border:5px solid var(--ink);
     border-radius:16px;box-shadow:6px 6px 0 var(--ink);padding:6px 28px 10px;margin:-4px 0 14px;animation:slam .5s cubic-bezier(.2,1.7,.4,1)}
   #earLetter.on{display:block}
   #earAgain{background:var(--beam)!important;font-size:32px!important;padding:10px 24px!important}
@@ -127,7 +128,8 @@
   #earSpeaker{
     font-size:min(26vw,120px);line-height:1;margin:8px 0 2px;background:var(--beam);
     border:5px solid var(--ink);border-radius:50%;box-shadow:6px 6px 0 var(--ink);
-    width:min(34vw,150px,15dvh);height:min(34vw,150px,15dvh);font-size:min(26vw,120px,11dvh);cursor:pointer;padding:0;
+    width:min(34vw,150px,15vh);
+    width:min(34vw,150px,15dvh);height:min(34vw,150px,15vh);height:min(34vw,150px,15dvh);font-size:min(26vw,120px,11vh);font-size:min(26vw,120px,11dvh);cursor:pointer;padding:0;
   }
   #earSpeaker:active{transform:translate(6px,6px);box-shadow:none}
   #earSpeaker.playing{animation:pulse .6s ease-in-out infinite alternate}
@@ -203,7 +205,7 @@
   .art.g-m,.artBtn.g-m{background:#2F6BFF}.art.g-f,.artBtn.g-f{background:#FF3B30}
   .art.g-n,.artBtn.g-n{background:#13B85E}.art.g-pl{background:#FF8A00}
   #actSentence .art,#playSentence .art{font-size:.95em;color:#fff}
-  .artPic{grid-column:1 / span 3;aspect-ratio:auto!important;height:min(34vw,22dvh,170px);font-size:min(26vw,17dvh,130px)!important}
+  .artPic{grid-column:1 / span 3;aspect-ratio:auto!important;height:min(34vw,22vh,170px);height:min(34vw,22dvh,170px);font-size:min(26vw,17vh,130px)!important;font-size:min(26vw,17dvh,130px)!important}
   .artBtn{color:#fff!important;font:bold min(9vw,40px) Impact,"Arial Black",sans-serif!important;aspect-ratio:auto!important;padding:18px 0;
     text-shadow:2px 2px 0 var(--ink)}
   .plCard{flex-wrap:wrap;align-content:center;gap:0 2px;line-height:1.05;padding:4px;text-align:center}
@@ -220,9 +222,9 @@
   #tprStage{width:min(80vw,340px)}
   #tprStage .acard{width:100%}
   #tprDone{font-size:34px;padding:12px 46px;background:var(--kiwi,#2ED17A)}
-  #playCv{width:min(calc(100% - 28px),calc(100dvh - 430px),420px);min-width:200px;aspect-ratio:1/1;border:5px solid var(--ink);
+  #playCv{width:min(calc(100% - 28px),calc(100vh - 430px),420px);width:min(calc(100% - 28px),calc(100dvh - 430px),420px);min-width:200px;aspect-ratio:1/1;border:5px solid var(--ink);
     border-radius:10px;box-shadow:8px 8px 0 var(--ink);display:block;margin-top:8px;cursor:pointer}
-  #parrotCv{width:min(calc(100% - 28px),calc(100dvh - 400px),400px);min-width:200px;aspect-ratio:1/1;border:5px solid var(--ink);
+  #parrotCv{width:min(calc(100% - 28px),calc(100vh - 400px),400px);width:min(calc(100% - 28px),calc(100dvh - 400px),400px);min-width:200px;aspect-ratio:1/1;border:5px solid var(--ink);
     border-radius:10px;box-shadow:8px 8px 0 var(--ink);display:block;margin-top:8px}
   #parrotText{min-height:46px;margin:12px 14px 0;font-size:min(6.4vw,28px);text-align:center;font-weight:bold;color:#fff;text-shadow:2px 2px 0 var(--ink)}
   #parrotText b{color:var(--bolt)}
@@ -248,7 +250,7 @@
   #storyDots span{width:16px;height:16px;border-radius:50%;border:3px solid var(--ink);background:#fff}
   #storyDots span.on{background:var(--bolt);transform:scale(1.25)}
   #storyDots span.done{background:#2ED17A}
-  #storyCv{width:min(calc(100% - 28px),calc(100dvh - 420px),400px);min-width:200px;aspect-ratio:1/1;border:5px solid var(--ink);
+  #storyCv{width:min(calc(100% - 28px),calc(100vh - 420px),400px);width:min(calc(100% - 28px),calc(100dvh - 420px),400px);min-width:200px;aspect-ratio:1/1;border:5px solid var(--ink);
     border-radius:10px;box-shadow:8px 8px 0 var(--ink);display:block;margin-top:6px}
   #storyText{min-height:46px;margin:12px 14px 0;font-size:min(6.2vw,27px);text-align:center;font-weight:bold;color:#fff;text-shadow:2px 2px 0 var(--ink)}
   #storyText b{color:var(--bolt)}
@@ -273,7 +275,7 @@
   #geoQ{display:none;font-size:min(5.4vw,24px);margin:6px 14px 10px}
   #geoQ.on{display:block}
   #mapWrap{position:relative;width:calc(100% - 28px);max-width:520px;margin:6px auto 0}
-  #map{width:100%;height:min(calc(100vw - 28px),calc(100dvh - 330px),520px);min-height:240px;background:#165FAE;border:5px solid var(--ink);
+  #map{width:100%;height:min(calc(100vw - 28px),calc(100vh - 365px),520px);height:min(calc(100vw - 28px),calc(100dvh - 365px),520px);min-height:240px;background:#165FAE;border:5px solid var(--ink);
     border-radius:12px;box-shadow:6px 6px 0 var(--ink);display:block;touch-action:none}
   #mapBtns{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
   #mapBtns button{width:40px;height:40px;border:3px solid var(--ink);border-radius:10px;background:#fff;font-size:18px;box-shadow:2px 2px 0 var(--ink);cursor:pointer;padding:0}
@@ -416,7 +418,7 @@
   #sleep{position:fixed;inset:0;z-index:45;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;
     background:radial-gradient(circle at 50% 30%,#2A3270,#0B1030 70%);padding:20px}
   #sleep.on{display:flex}
-  #sleepCv{width:min(70vw,45dvh,320px);aspect-ratio:1/1;border-radius:20px;border:5px solid var(--ink);box-shadow:8px 8px 0 var(--ink)}
+  #sleepCv{width:min(70vw,45vh,320px);width:min(70vw,45dvh,320px);aspect-ratio:1/1;border-radius:20px;border:5px solid var(--ink);box-shadow:8px 8px 0 var(--ink)}
   #sleepTitle{font-size:min(9vw,40px);color:var(--bolt);-webkit-text-stroke:4px var(--ink);paint-order:stroke fill;margin-top:18px}
   #sleepSub{font-size:min(5vw,20px);font-weight:bold;margin-top:6px;color:#fff}
   #sleepMore{margin-top:26px;border:2px solid rgba(255,255,255,.35);border-radius:10px;background:conic-gradient(rgba(255,212,0,.6) var(--hold,0%),transparent var(--hold,0%));
@@ -481,7 +483,7 @@ button,.btn,input,select{font-family:'Nunito',system-ui,sans-serif}
 .chip.on{background:var(--bolt);box-shadow:0 4px 0 #C99600,var(--soft)}
 
 /* text bubbles */
-.prompt{transform:none;border-radius:22px;padding:10px 20px 12px;font-size:min(6vw,26px,3.6dvh);line-height:1.15}
+.prompt{transform:none;border-radius:22px;padding:10px 20px 12px;font-size:min(6vw,26px,3.6vh);font-size:min(6vw,26px,3.6dvh);line-height:1.15}
 #quizWord,#wordText{transform:none;border-radius:18px;padding:6px 22px 8px}
 #levelPill,#earLevelPill,#actLevel,#geoLevel{border-radius:999px;background:var(--blaze);padding:3px 14px 4px}
 .art{border:none;box-shadow:0 2px 0 rgba(0,0,0,.25)}
@@ -641,3 +643,34 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 #quitSheet .qsTitle{font-size:24px;color:var(--ink)}
 #quitSheet .btn{font-size:20px;padding:12px}
 #qsStay{background:var(--good);color:#fff}
+/* ---------- big and small screens ----------
+   Home: the cards shrink a little on short screens so all of them fit without scrolling. */
+.hcard{min-height:min(30vw,128px,calc((100vh - 230px)/6 - 14px));min-height:min(30vw,128px,calc((100dvh - 230px)/6 - 14px));padding:8px 10px}
+.hcard .hi{font-size:min(13vw,56px,6vh);font-size:min(13vw,56px,6dvh)}
+.hcard.wide{min-height:min(26vw,108px,calc((100vh - 230px)/6 - 14px));min-height:min(26vw,108px,calc((100dvh - 230px)/6 - 14px))}
+.hcard.wide .hi{font-size:min(16vw,66px,7vh);font-size:min(16vw,66px,7dvh)}
+/* Landscape tablets and computers: use the width. Home cards in four columns, game screens a bit wider. */
+@media (orientation:landscape) and (min-width:700px){
+  header,.tabs,#v-home,#v-words,#v-ear,#v-city,#v-geo{max-width:min(1100px,100%)}
+  /* four answers sit in one row; six in 3×2 and nine in 3×3, sized by the height */
+  #grid,#earGrid{max-width:min(100%,calc((100vh - 300px)*1.5));max-width:min(100%,calc((100dvh - 300px)*1.5))}
+  #grid.four,#earGrid.four{max-width:min(100%,900px)}
+  #grid.nine{max-width:calc(100vh - 300px);max-width:calc(100dvh - 300px)}
+  #wrap{width:min(94vw,470px,calc(100vh - 370px));width:min(94vw,470px,calc(100dvh - 370px))}
+  #sky{width:min(100%,calc(100vh - 330px));width:min(100%,calc(100dvh - 330px));margin:0 auto}
+  #mapWrap,#geoBox{max-width:min(1000px,100%)}
+  #map{height:min(calc(100vh - 370px),560px);height:min(calc(100dvh - 370px),560px)}
+  #homeGrid{grid-template-columns:repeat(4,1fr);max-width:1000px;margin:0 auto}
+  .hcard{min-height:min(19vw,calc((100vh - 190px)/3 - 14px));min-height:min(19vw,calc((100dvh - 190px)/3 - 14px))}
+  .hcard.wide{grid-column:span 2;min-height:0}
+  .hcard .hi{font-size:min(6vw,10vh,64px);font-size:min(6vw,10dvh,64px)}
+  .hcard .hl{font-size:min(2.6vw,26px)}
+}
+/* A phone on its side is too low for any of the games: ask (without words) to turn it upright. */
+#rotate{display:none}
+@media (orientation:landscape) and (max-height:500px){
+  #rotate{display:flex;position:fixed;inset:0;z-index:9999;background:var(--night);color:#fff;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+  #rotate .ph{font-size:96px;line-height:1;animation:turnMe 2.4s ease-in-out infinite}
+  #rotate .ar{font-size:48px;line-height:1;opacity:.85}
+}
+@keyframes turnMe{0%,25%{transform:rotate(-90deg)}55%,100%{transform:rotate(0deg)}}

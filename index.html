@@ -3,6 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<script>
+/* The layout is designed for a phone-sized screen. On a tablet held upright the whole
+   page is scaled up (the browser zooms a narrower layout), so buttons, cards and text
+   grow with the screen instead of sitting small in the middle. Phones and landscape
+   screens stay at 1:1. UISCALE is read by the canvases so they stay sharp. */
+(function(){var m=document.querySelector('meta[name=viewport]'),last='';window.UISCALE=1;
+  function fitUI(){var sw=screen.width,sh=screen.height,land=innerWidth>innerHeight,
+      w=land?Math.max(sw,sh):Math.min(sw,sh),h=(land?Math.min(sw,sh):Math.max(sw,sh))-80,
+      s=Math.max(1,Math.min(1.7,w/500,h/840)),c;
+    if(s<1.08){s=1;c='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';}
+    else{var vw=Math.round(w/s);s=w/vw;c='width='+vw+', initial-scale='+s.toFixed(4)+', maximum-scale='+s.toFixed(4)+', user-scalable=no, viewport-fit=cover';}
+    window.UISCALE=s;if(c!==last){last=c;m.setAttribute('content',c);}}
+  fitUI();addEventListener('orientationchange',function(){setTimeout(fitUI,200);});addEventListener('resize',fitUI);
+  window.DPRX=function(cap){return Math.min((window.devicePixelRatio||1)*window.UISCALE,cap||3);};
+})();
+</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0B1030">
@@ -15,6 +31,7 @@
 <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
+<div id="rotate" aria-hidden="true"><div class="ph">📱</div><div class="ar">🔄</div></div>
 
 <header>
   <button id="homeBtn" aria-label="Home">🏠</button>

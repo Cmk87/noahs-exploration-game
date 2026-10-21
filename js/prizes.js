@@ -545,7 +545,7 @@ function prepParts(sp){
 }
 const thumbCache={};
 function drawThumb(cn,d,silh){
-  const r=cn.getBoundingClientRect();if(!r.width)return;const dpr=Math.min(window.devicePixelRatio||1,2);
+  const r=cn.getBoundingClientRect();if(!r.width)return;const dpr=DPRX(2);
   cn.width=r.width*dpr;cn.height=r.height*dpr;const g=cn.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
   const {parts,box}=thumbCache[d.k]||(thumbCache[d.k]=prepParts(d));
   const K=Math.min(r.width*0.92/(box[2]-box[0]),r.height*0.9/(box[3]-box[1]));
@@ -560,7 +560,7 @@ let DS=340,DIG=null,digPtr=false,digLast=null;
 const GRID=36,BR=0.07;               // erase grid resolution, brush radius (fraction of the site)
 function fitDig(){
   const r=dg.getBoundingClientRect();if(!r.width)return;
-  const dpr=Math.min(window.devicePixelRatio||1,2.5),w=Math.round(r.width*dpr);
+  const dpr=DPRX(2.5),w=Math.round(r.width*dpr);
   DS=r.width;dx.setTransform(1,0,0,1,0,0);
   if(dg.width!==w){
     dg.width=dg.height=w;
@@ -890,7 +890,7 @@ function memWin(){
 const bc=$('bal'),bx=bc.getContext('2d');let BAL=null;
 const BCOL=['#FF3B30','#FFD400','#00C2FF','#2ED17A','#FF8A00','#B65CFF','#FF5BA8'];
 function fitCv(cn,g){
-  const r=cn.getBoundingClientRect();if(!r.width)return null;const dpr=Math.min(window.devicePixelRatio||1,2.5);
+  const r=cn.getBoundingClientRect();if(!r.width)return null;const dpr=DPRX(2.5);
   const w=Math.round(r.width*dpr),h=Math.round(r.height*dpr);
   if(cn.width!==w||cn.height!==h){cn.width=w;cn.height=h;}
   g.setTransform(dpr,0,0,dpr,0,0);return {W:r.width,H:r.height};
@@ -1045,7 +1045,7 @@ const BURIED=[
  {ic:'👑',de:'Eine Krone!',en:'A crown!',es:'¡Una corona!'},{ic:'🐚',de:'Eine Muschel!',en:'A shell!',es:'¡Una concha!'},
  {ic:'💍',de:'Ein Ring!',en:'A ring!',es:'¡Un anillo!'},{ic:'⚓',de:'Ein Anker!',en:'An anchor!',es:'¡Un ancla!'}];
 const BG_G=0.3;                                     // ground level, as a share of the height
-function bagSoil(W,H){const dpr=Math.min(window.devicePixelRatio||1,2.5),c=document.createElement('canvas');c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);
+function bagSoil(W,H){const dpr=DPRX(2.5),c=document.createElement('canvas');c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);
   const g=c.getContext('2d');g.scale(dpr,dpr);const G=H*BG_G;
   [[G,H*0.47,'#8A5A3B'],[H*0.47,H*0.66,'#B0703E'],[H*0.66,H*0.84,'#7A4E33'],[H*0.84,H+2,'#6E6A72']].forEach(([a,b,col])=>{g.fillStyle=col;g.fillRect(0,a,W,b-a);});
   for(let i=0;i<260;i++){const y=G+Math.random()*(H-G),x=Math.random()*W;g.fillStyle=`rgba(${y>H*0.84?'255,255,255':'0,0,0'},${0.08+Math.random()*0.1})`;g.beginPath();g.arc(x,y,1+Math.random()*3,0,7);g.fill();}

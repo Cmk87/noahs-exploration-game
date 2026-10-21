@@ -127,7 +127,7 @@ const toWorld=(sx,sy)=>[CAM.x+sx/CAM.k,CAM.y+sy/CAM.k];
 function zoomAt(sx,sy,f){const [wx,wy]=toWorld(sx,sy);CAM.k*=f;CAM.x=wx-sx/CAM.k;CAM.y=wy-sy/CAM.k;clampCam(CAM);redraw();}
 function fitMap(){
   const r=mapC.getBoundingClientRect();if(!r.width)return;
-  const dpr=Math.min(window.devicePixelRatio||1,2.5),w=Math.round(r.width*dpr),h=Math.round(r.height*dpr);
+  const dpr=DPRX(2.5),w=Math.round(r.width*dpr),h=Math.round(r.height*dpr);
   const first=!MW||MW===360&&MH===360;MW=r.width;MH=r.height;
   if(mapC.width!==w||mapC.height!==h){mapC.width=w;mapC.height=h;}
   if(first||CAM.k<kWorld()*0.5)Object.assign(CAM,worldView());clampCam(CAM);redraw();

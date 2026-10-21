@@ -140,6 +140,10 @@ function promptText(html){
 function sayPrompt(){if(plMode){say(plQuestion());return;}if(!target)return;say(artMode?`Der, die oder das… ${target.de[1]}?`:promptText());}
 let roundT=null;
 function nextRound(ms){clearTimeout(roundT);roundT=setTimeout(()=>{if(activeTab==='words')newRound();else target=null;},ms);}
+/* four pictures: 2×2 upright, one row of four on a wide landscape screen */
+const wideScreen=()=>innerWidth>innerHeight&&innerWidth>=700;
+function gridCols(g,n){const four=n===4&&wideScreen();g.classList.toggle('four',four);g.style.gridTemplateColumns=n===4?(four?'repeat(4,1fr)':'repeat(2,1fr)'):'repeat(3,1fr)';}
+addEventListener('resize',()=>['grid','earGrid'].forEach(id=>{const g=$(id);if(g&&g.children.length===4&&!g.querySelector('.artBtn'))gridCols(g,4);}));
 function newRound(){
   clearTimeout(roundT);
   misses=0;roundDone=false;gotT=[];artMode=false;plMode=null;
@@ -163,7 +167,7 @@ function newRound(){
   let j=0;while(picked.length<need&&j<other.length)picked.push(other[j++]);
   let k=cfg.same;while(picked.length<need&&k<same.length)picked.push(same[k++]);
   options=shuffle([...targets,...picked]);
-  document.getElementById('grid').style.gridTemplateColumns=options.length===4?'repeat(2,1fr)':'repeat(3,1fr)';
+  gridCols(document.getElementById('grid'),options.length);
   document.getElementById('grid').classList.toggle('nine',options.length>6);
   document.getElementById('quizPrompt').innerHTML=promptText(true);
   document.getElementById('levelPill').textContent='🎯 '+L;
@@ -212,7 +216,7 @@ function pluralRound(L){
   const it=pick(PLURALS),max=L>=5?4:3,counts=shuffle([1,2,3,4].slice(0,max)),n=counts[0];
   plMode={it,n};target=null;targets=[];
   const g=document.getElementById('grid');g.innerHTML='';g.classList.remove('nine');
-  g.style.gridTemplateColumns=max===4?'repeat(2,1fr)':'repeat(3,1fr)';
+  gridCols(g,max);
   shuffle(counts).forEach((k,i)=>{const b=document.createElement('div');b.className='card plCard pl'+k;
     b.textContent=Array(k).fill(it.e).join('');b.style.animationDelay=(i*0.05)+'s';b.onclick=()=>plChoose(k,b);g.appendChild(b);});
   document.getElementById('quizPrompt').textContent=plQuestion();
@@ -234,7 +238,7 @@ function artRound(SET,L){
   const pool=SET.filter(v=>!(v.p&&!v.sgde)&&v.c!=='form'&&['der','die','das'].includes(v.de[0])&&!recent.includes(v.e));
   if(pool.length<3)return false;
   artMode=true;target=pick(pool);targets=[target];recent.push(target.e);if(recent.length>12)recent.shift();
-  const g=document.getElementById('grid');g.innerHTML='';g.style.gridTemplateColumns='repeat(3,1fr)';g.classList.remove('nine');
+  const g=document.getElementById('grid');g.innerHTML='';g.style.gridTemplateColumns='repeat(3,1fr)';g.classList.remove('nine','four');
   const pic=document.createElement('div');pic.className='card artPic';pic.textContent=target.e;g.appendChild(pic);
   [['der','g-m'],['die','g-f'],['das','g-n']].forEach(([a,c],i)=>{
     const b=document.createElement('div');b.className='card artBtn '+c;b.textContent=a;b.style.animationDelay=(0.15+i*0.07)+'s';
@@ -329,7 +333,7 @@ function firstRound(L){
   if(opts.length<n)return false;
   earTarget=t;earFirst=c;
   $('earLetter').textContent=c.toUpperCase()+c;$('earLetter').classList.add('on');
-  const g=document.getElementById('earGrid');g.innerHTML='';g.style.gridTemplateColumns=n===4?'repeat(2,1fr)':'repeat(3,1fr)';
+  const g=document.getElementById('earGrid');g.innerHTML='';gridCols(g,n);
   /* the written word under each picture, first letter big and coloured, so he can match it to the letter above */
   shuffle(opts).forEach((o,i)=>{const b=document.createElement('div');b.className='card withWord';b.dataset.e=o.e;b.style.animationDelay=(i*0.05)+'s';
     const w=o[lang][1],pic=document.createElement('span'),lab=document.createElement('span'),f=document.createElement('b');
@@ -386,7 +390,7 @@ function newEarRound(){
   const opts=shuffle([earTarget,...others]);
   document.getElementById('earLevelPill').textContent='🎧 '+L;
   const g=document.getElementById('earGrid');g.innerHTML='';
-  g.style.gridTemplateColumns=opts.length===4?'repeat(2,1fr)':'repeat(3,1fr)';
+  gridCols(g,opts.length);
   opts.forEach((o,i)=>{
     const b=document.createElement('div');
     b.className='card'; b.textContent=o.e; b.style.animationDelay=(i*0.05)+'s';

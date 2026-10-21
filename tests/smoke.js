@@ -172,6 +172,19 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    await p2.touchscreen.tap(100, 600); await p2.waitForTimeout(600);
    check(await p2.evaluate(() => activeTab === 'home'), 'the "tap to start" touch does not fall through to a home card'); await p2.close();}
 
+  for (const [w, h, what] of [[800, 1280, 'tablet upright'], [1280, 800, 'tablet on its side']]) {
+    const t = await browser.newPage({ viewport: { width: w, height: h - 60 }, screen: { width: w, height: h }, isMobile: true, hasTouch: true });
+    await t.goto(page.url().split('#')[0]); await t.waitForTimeout(300); await t.touchscreen.tap(w / 2, h / 3); await t.waitForTimeout(500);
+    const r = await t.evaluate(() => { const v = $('v-home'); return { s: UISCALE, fits: v.scrollHeight <= v.clientHeight + 2 }; });
+    check(r.fits && (w < h ? r.s > 1.2 : true), `${what}: home screen fits${w < h ? ' and is scaled up (' + r.s.toFixed(2) + '×)' : ''}`);
+    for (const tab of ['words', 'ear', 'space', 'geo', 'city']) {
+      await t.evaluate(tb => showTab(tb), tab); await t.waitForTimeout(500);
+      const ok = await t.evaluate(() => { const v = $('v-' + activeTab); return v.scrollHeight <= v.clientHeight + 2; });
+      if (!ok) check(false, `${what}: ${tab} fits without scrolling`);
+    }
+    await t.close();
+  }
+
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();
   console.log(failures ? `\n${failures} check(s) failed` : '\nAll checks passed');

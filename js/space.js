@@ -52,7 +52,7 @@ const MINZ=0.55, MAXZ=7;
 
 function fitSky(){
   const r=sky.getBoundingClientRect(); if(!r.width) return;
-  const dpr=Math.min(window.devicePixelRatio||1,3);
+  const dpr=DPRX(3);
   SS=r.width; sky.width=SS*dpr; sky.height=SS*dpr;
   sx.setTransform(dpr,0,0,dpr,0,0);
   if(!stars.length) for(let i=0;i<110;i++)

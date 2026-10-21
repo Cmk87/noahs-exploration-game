@@ -959,7 +959,7 @@ function flyTo(v,ms){camAnim={from:{...CAM},to:clampCam({...v}),t0:performance.n
 const toW=(sx,sy)=>[CAM.x+sx/CAM.k,CAM.y+sy/CAM.k];
 function zoomAt(sx,sy,f){const [wx,wy]=toW(sx,sy);CAM.k*=f;CAM.x=wx-sx/CAM.k;CAM.y=wy-sy/CAM.k;clampCam(CAM);}
 let firstFit=true;
-function fit(){const r=cv.getBoundingClientRect();if(!r.width)return;const dpr=Math.min(window.devicePixelRatio||1,2);
+function fit(){const r=cv.getBoundingClientRect();if(!r.width)return;const dpr=DPRX(2);
   VW=r.width;VH=r.height;cv.width=Math.round(VW*dpr);cv.height=Math.round(VH*dpr);
   if(firstFit){Object.assign(CAM,homeView());firstFit=false;}clampCam(CAM);}
 new ResizeObserver(fit).observe(cv);

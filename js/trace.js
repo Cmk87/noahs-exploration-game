@@ -12,7 +12,7 @@ const HERO=['💥','⚡','🚀','🔥','🛡️','🏆','💪','🦖'];
 
 function fit(){
   const r=cv.getBoundingClientRect(); if(!r.width) return;
-  DPR=Math.min(window.devicePixelRatio||1,3);
+  DPR=DPRX(3);
   cv.width=r.width*DPR;cv.height=r.height*DPR;S=r.width;
   ctx.setTransform(DPR,0,0,DPR,0,0);
 }

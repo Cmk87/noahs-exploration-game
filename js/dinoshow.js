@@ -116,7 +116,7 @@ function makeCard(drawFn){
   wrap.appendChild(cn);
   requestAnimationFrame(()=>{
     const r=cn.getBoundingClientRect();
-    const dpr=Math.min(window.devicePixelRatio||1,3);
+    const dpr=DPRX(3);
     cn.width=r.width*dpr; cn.height=r.height*dpr;
     const g=cn.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0);
     const rec={g,w:r.width,h:r.height,draw:drawFn};
@@ -852,7 +852,7 @@ function buildPlay(){
 function playLoop(){
   if(activeTab!=='act'||!['play','parrot','story'].includes(actMode)){playAnim=null;return;}
   const cn=$({play:'playCv',parrot:'parrotCv',story:'storyCv'}[actMode]),r=cn.getBoundingClientRect();
-  if(r.width){const dpr=Math.min(window.devicePixelRatio||1,2.5),w=Math.round(r.width*dpr);
+  if(r.width){const dpr=DPRX(2.5),w=Math.round(r.width*dpr);
     if(cn.width!==w){cn.width=w;cn.height=w;}const g=cn.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
     const t=performance.now()/1000;if(actMode==='play')drawDino(g,r.width,r.width,playState(),t);
     else if(actMode==='story'){if(STORY&&STORY.phase==='tell')drawDino(g,r.width,r.width,{verb:STORY.v[STORY.i].k},t);}
