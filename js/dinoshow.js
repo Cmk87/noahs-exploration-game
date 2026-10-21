@@ -264,7 +264,17 @@ function dpose(v,t,st){
         txt(g,'z',80+ph*12+i*2,32-ph*26,6+ph*6,'#BFD7FF',-0.2);}g.globalAlpha=1;};break;
     case 'eat':{const ch=(Math.sin(t*9)+1)/2;P.a1=P.a2=-2.05;P.head=0.08;P.mouth=ch>0.5?'open':'flat';P.hold='apple';
       P.eyes='happy';P.post=g=>{if(ch>0.8){g.fillStyle='#FFE08A';g.fillRect(88+Math.random()*4,46+Math.random()*6,1.5,1.5);}};break;}
-    case 'drink':P.a1=P.a2=-2.2;P.head=-0.28;P.eyes='closed';P.mouth='flat';P.hold='cup';P.dy=Math.sin(t*6)*0.5;break;
+    case 'drink':{const ph=(t*0.3)%1,lvl=ph<0.85?1-ph/0.85*0.8:0.2+(ph-0.85)/0.15*0.8;   // sips the juice down, then a refill
+      P.a1=-0.5;P.a2=-0.75;P.head=0.06;P.eyes='happy';P.mouth='flat';P.dy=Math.sin(t*9)*0.3;
+      P.mid=g=>{const gx=71,gy=45,gw=13,gh=20,top=gy+2+(gh-3)*(1-lvl);
+        g.lineCap='round';g.strokeStyle=INK;g.lineWidth=3.4;g.beginPath();g.moveTo(gx+8,gy+12);g.lineTo(gx+9,gy-5);g.lineTo(85.5,40.6);g.stroke();
+        g.strokeStyle='#FF5A8A';g.lineWidth=2;g.stroke();                                           // the straw, into the mouth
+        g.fillStyle='#FFA53B';g.beginPath();g.moveTo(gx+0.8,top);g.lineTo(gx+gw-0.8,top);g.lineTo(gx+gw-1.6,gy+gh-0.8);g.lineTo(gx+1.6,gy+gh-0.8);g.closePath();g.fill();
+        g.fillStyle='rgba(255,255,255,.85)';for(let i=0;i<3;i++){const u=(t*1.4+i/3)%1,by=gy+gh-2-u*(gy+gh-2-top);if(by>top+1.2){g.beginPath();g.arc(gx+3.5+i*3,by,0.9,0,7);g.fill();}}
+        g.fillStyle='rgba(225,242,255,.35)';g.strokeStyle=INK;g.lineWidth=1.5;g.beginPath();g.moveTo(gx,gy);g.lineTo(gx+gw,gy);g.lineTo(gx+gw-1.3,gy+gh);g.lineTo(gx+1.3,gy+gh);g.closePath();g.fill();g.stroke();
+        g.strokeStyle='rgba(255,255,255,.9)';g.lineWidth=1.2;g.beginPath();g.moveTo(gx+2.4,gy+3);g.lineTo(gx+3,gy+gh-3);g.stroke();};
+      P.post=g=>{const k=Math.floor(t*0.3*4)%2;if(lvl<0.95){g.strokeStyle='rgba(255,165,59,.9)';g.lineWidth=1.2;     // little "slurp" lines at the straw
+        for(let i=0;i<2;i++){const a=-0.9+i*0.5+k*0.15;g.beginPath();g.arc(88+P.dx,36+P.dy,6+i*2.5,a,a+0.5);g.stroke();}}};break;}
     case 'swim':{const f=t*5;P.dy=8+Math.sin(t*2)*2;P.l1=Math.sin(f)*0.7;P.l2=-Math.sin(f)*0.7;P.a1=-1.3+Math.sin(f)*0.9;
       P.a2=-1.3-Math.sin(f)*0.9;P.shadow=0;P.mouth='smile';P.tail=Math.sin(f)*0.3;
       P.post=g=>{g.fillStyle='rgba(60,170,255,.55)';g.beginPath();g.moveTo(-50,74);
@@ -356,13 +366,13 @@ function dpose(v,t,st){
       P.post=g=>{for(let i=0;i<6;i++){const ph=(t*0.35+i/6)%1,x=88+ph*10+Math.sin(ph*9+i)*5,y=34-ph*32,r=2+(i*7)%5;g.globalAlpha=1-ph*0.7;
         g.strokeStyle='rgba(90,180,255,.95)';g.lineWidth=0.9;g.fillStyle='rgba(200,240,255,.3)';g.beginPath();g.arc(x,y,r,0,7);g.fill();g.stroke();
         g.fillStyle='rgba(255,255,255,.9)';g.beginPath();g.arc(x-r*0.35,y-r*0.35,r*0.25,0,7);g.fill();}g.globalAlpha=1;};break;
-    case 'swing':{const a=Math.sin(t*2.4)*0.55,L=70;P.dx=4+Math.sin(a)*L;P.dy=-10-(1-Math.cos(a))*L;P.rot=a*0.5;P.l1=P.l2=-1.35;P.a1=P.a2=-2.4;
+    case 'swing':{const a=Math.sin(t*2.4)*0.36,L=70;P.dx=4+Math.sin(a)*L;P.dy=-10-(1-Math.cos(a))*L;P.rot=a*0.5;P.l1=P.l2=-1.35;P.a1=P.a2=-2.4;
       P.mouth='grin';P.eyes='happy';P.shadow=0.5;
       P.pre=g=>{g.strokeStyle='#A4683A';g.lineWidth=3;g.beginPath();g.moveTo(8,89);g.lineTo(22,2);g.lineTo(80,2);g.lineTo(94,89);g.stroke();
         const sx=50+Math.sin(a)*L,sy=2+Math.cos(a)*L,c=Math.cos(a)*10,d=Math.sin(a)*10;
         g.strokeStyle='#555';g.lineWidth=1.2;g.beginPath();g.moveTo(40,2);g.lineTo(sx-c,sy-d);g.moveTo(60,2);g.lineTo(sx+c,sy+d);g.stroke();
         g.save();g.translate(sx,sy);g.rotate(a);g.fillStyle='#FF5A4F';g.strokeStyle=INK;g.lineWidth=1;g.fillRect(-12,0,24,3);g.strokeRect(-12,0,24,3);g.restore();};break;}
-    case 'slide':{const ph=(t*0.45)%1,u=Math.min(1,ph/0.75);P.dx=-32+u*48;P.dy=-46+u*44;P.rot=u<1?0.55:0;P.l1=P.l2=-1.4;P.a1=P.a2=-2.5;
+    case 'slide':{const ph=(t*0.45)%1,u=Math.min(1,ph/0.75);P.dx=-30+u*38;P.dy=-46+u*44;P.rot=u<1?0.55:0;P.l1=P.l2=-1.4;P.a1=P.a2=-2.5;
       P.mouth='grin';P.eyes='happy';P.shadow=u<1?0:1;
       P.pre=g=>{g.strokeStyle='#888';g.lineWidth=2;g.beginPath();g.moveTo(4,34);g.lineTo(4,89);g.moveTo(11,34);g.lineTo(11,89);g.stroke();
         g.lineWidth=1.4;for(let y=42;y<89;y+=8){g.beginPath();g.moveTo(4,y);g.lineTo(11,y);g.stroke();}
@@ -392,6 +402,7 @@ function dpose(v,t,st){
     case 'spin':P.flip=Math.cos(t*6);P.a1=P.a2=-1.6;P.mouth='grin';P.eyes='happy';
       P.post=g=>{g.strokeStyle='rgba(5,6,15,.45)';g.lineWidth=1.4;for(let i=0;i<2;i++){g.beginPath();g.ellipse(46,60,30+i*5,8,0,t*3+i,t*3+i+2.2);g.stroke();}};break;
     case 'hide':{const ph=(t*0.4)%1,peek=ph>0.5&&ph<0.85?Math.sin((ph-0.5)/0.35*Math.PI):0;P.dy=24-peek*14;P.eyes='wide';P.mouth='smile';P.shadow=0;
+      P.pre=g=>{g.beginPath();g.rect(-80,-80,260,171);g.clip();};       // behind the bush, nothing pokes out under the ground
       P.post=g=>{g.fillStyle='#3FA650';g.strokeStyle=INK;g.lineWidth=1.6;const B=[[16,80,13],[34,70,16],[56,68,17],[76,76,15],[46,84,18]];
         B.forEach(([x,y,r])=>{g.beginPath();g.arc(x,y,r,0,7);g.stroke();});B.forEach(([x,y,r])=>{g.beginPath();g.arc(x,y,r,0,7);g.fill();});
         g.fillStyle='#5BD06B';[[28,66],[50,60],[70,70],[40,78]].forEach(([x,y])=>{g.beginPath();g.ellipse(x,y,3,1.8,0.6,0,7);g.fill();});};break;}
@@ -511,6 +522,17 @@ function dscene(g,v,t,st,P){
   if(ground){g.fillStyle=ground;g.fillRect(0,88,100,12);g.fillStyle='rgba(0,0,0,.12)';
     for(let i=0;i<6;i++){const x=((i*22-P.scroll)%132+132)%132-16;g.fillRect(x,91+(i%2)*4,6,1.6);}}
 }
+/* Every action's dino-plus-props over its whole animation, measured once (tests/ can re-measure).
+   A card fits that box (at the biggest dino size) inside itself, so nothing gets cut off at the
+   edge; one fit per action keeps big and small dinos in proportion to each other. Swim is left
+   out: its water is meant to run past the edges. */
+const DBOX={jump:[0,-6,94,90],run:[-3,17,99,92],walk:[0,16,94,91],sleep:[0,7,97,90],eat:[0,18,95,91],drink:[0,18,97,91],dance:[-4,2,103,92],sing:[0,1,103,91],laugh:[-1,2,96,91],cry:[0,19,96,91],wave:[0,15,94,91],fly:[4,4,102,79],read:[0,21,97,91],paint:[-8,18,101,91],throw:[0,17,116,91],catch:[0,9,116,91],climb:[-6,-16,88,90],sit:[0,25,94,90],shower:[0,2,102,91],sneeze:[0,5,115,91],yawn:[0,8,94,91],cook:[-8,4,99,91],drum:[-9,18,95,91],dig:[2,22,100,92],fish:[-12,21,114,96],bike:[1,10,97,90],teeth:[0,18,97,91],bubbles:[0,-4,106,91],swing:[-24,0,132,91],slide:[-13,-8,124,90],skate:[-2,9,95,90],ski:[3,18,100,89],kick:[0,18,121,92],water:[-8,19,98,91],carry:[0,16,94,91],sweep:[0,20,96,95],push:[-5,23,97,93],pull:[0,21,114,92],spin:[-2,18,94,91],hide:[0,28,94,91],smell:[-6,19,100,91],guitar:[0,12,95,91],stand:[0,17,94,91]};
+const DFIT={};
+function dfit(v){if(DFIT[v])return DFIT[v];const b=DBOX[v];if(!b)return DFIT[v]=[1,0,0];
+  const S=1.1,x0=52+(b[0]-52)*S,y0=88+(b[1]-88)*S,x1=52+(b[2]-52)*S,y1=88+(b[3]-88)*S;
+  const s=Math.max(0.6,Math.min(1,94/(x1-x0),96/(y1-y0))),X0=50+(x0-50)*s,X1=50+(x1-50)*s,Y0=90+(y0-90)*s,Y1=90+(y1-90)*s;
+  const dx=X1-X0>94?50-(X0+X1)/2:X0<3?3-X0:X1>97?97-X1:0,dy=Y0<2?2-Y0:Y1>99?99-Y1:0;
+  return DFIT[v]=[s,dx,dy];}
 function drawDino(g,W,H,st,t,inner){
   st=Object.assign({verb:'stand',size:1,color:'green',mood:'',wet:0,dirt:0,age:0,speed:1,seed:0,toff:0},st);t+=st.toff;
   const v=st.verb,P=dpose(v,t,st),C=DCOL[st.color]||DCOL.green;
@@ -529,6 +551,7 @@ function drawDino(g,W,H,st,t,inner){
   if(st.wet>0){g.fillStyle='#E9EEF3';g.strokeStyle=INK;g.lineWidth=1.3;[[34,10,7],[44,7,9],[55,10,7]].forEach(([x,y,r])=>{g.beginPath();g.arc(x,y,r,0,7);g.fill();g.stroke();});
     g.fillRect(30,10,30,6);g.strokeStyle='rgba(60,140,230,.8)';g.lineWidth=1;
     for(let i=0;i<10;i++){const x=30+i*3.2,o=(t*70+i*17)%60;g.beginPath();g.moveTo(x,18+o);g.lineTo(x-1,22+o);g.stroke();}}
+  if(!inner||inner==='fit'){const [fs,fx,fy]=dfit(v);g.translate(fx,fy);g.translate(50,90);g.scale(fs,fs);g.translate(-50,-90);}
   g.translate(52,88);g.scale(st.size,st.size);g.translate(-52,-88);
   if(P.shadow){g.fillStyle='rgba(0,0,0,.18)';g.beginPath();g.ellipse(46+P.dx,89,22*P.shadow,3.2*P.shadow,0,0,7);g.fill();}
   if(st.wet>0){g.fillStyle='rgba(90,160,230,.45)';g.beginPath();g.ellipse(46,89.5,28,3.5,0,0,7);g.fill();}
