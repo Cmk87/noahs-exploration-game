@@ -20,7 +20,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.reload();
   await page.mouse.click(180, 320);
   await page.waitForTimeout(300);
-  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 10), 'opens on the home screen with 10 sections');
+  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 11), 'opens on the home screen with 11 sections');
   check(await page.evaluate(() => lang === 'de'), 'starts in German');
 
   console.log('Layout');
@@ -177,13 +177,29 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     await t.goto(page.url().split('#')[0]); await t.waitForTimeout(300); await t.touchscreen.tap(w / 2, h / 3); await t.waitForTimeout(500);
     const r = await t.evaluate(() => { const v = $('v-home'); return { s: UISCALE, fits: v.scrollHeight <= v.clientHeight + 2 }; });
     check(r.fits && (w < h ? r.s > 1.2 : true), `${what}: home screen fits${w < h ? ' and is scaled up (' + r.s.toFixed(2) + '×)' : ''}`);
-    for (const tab of ['words', 'ear', 'space', 'geo', 'city']) {
+    for (const tab of ['read', 'words', 'ear', 'space', 'geo', 'city']) {
       await t.evaluate(tb => showTab(tb), tab); await t.waitForTimeout(500);
       const ok = await t.evaluate(() => { const v = $('v-' + activeTab); return v.scrollHeight <= v.clientHeight + 2; });
       if (!ok) check(false, `${what}: ${tab} fits without scrolling`);
     }
     await t.close();
   }
+
+  // reading: build a word by pulling the pieces together, then read one and pick its picture
+  for (const lg of ['de', 'es', 'en']) {
+    const r = await page.evaluate(async lg => {
+      if (lang !== lg) $(lg).click(); showTab('read'); skillRec('read').s = 3;
+      for (let k = 0; k < 80 && RD.kind !== 'build'; k++) readRound();
+      await new Promise(res => setTimeout(res, 200));
+      while (document.querySelector('.rGap')) document.querySelector('.rGap').click();
+      const built = RD.done, word = RD.word.text;
+      for (let k = 0; k < 80 && RD.kind !== 'read'; k++) readRound();
+      document.querySelectorAll('#readGrid .rOpt')[RD.opts.indexOf(RD.word)].click();
+      return { built, word, read: RD.done };
+    }, lg);
+    check(r.built && r.read, `reading (${lg}): "${r.word}" built from its pieces, and a word read and matched to its picture`);
+  }
+  await page.evaluate(() => { $('de').click(); showTab('home'); });
 
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();

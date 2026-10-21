@@ -4,6 +4,7 @@
 const TABS=[
   {id:'adv',   icon:'🗺️', es:'Aventura',en:'Adventure',de:'Abenteuer'},
   {id:'trace', icon:'✍️', es:'Escribir',en:'Write',   de:'Schreiben'},
+  {id:'read',  icon:'📚', es:'Leer',    en:'Reading', de:'Lesen'},
   {id:'words', icon:'🖼️', es:'Palabras',en:'Words',   de:'Wörter'},
   {id:'ear',   icon:'👂', es:'Escucha', en:'Listen',  de:'Hören'},
   {id:'act',   icon:'🦖', es:'Dino Show',en:'Dino Show',de:'Dino-Show'},
@@ -13,17 +14,17 @@ const TABS=[
   {id:'stickers',icon:'📒',es:'Álbum',  en:'Stickers',de:'Stickerbuch'},
   {id:'dig',   icon:'🎁', es:'Premios', en:'Prizes',  de:'Preise'}
 ];
-const ALLVIEWS=['home','adv','trace','words','ear','act','city','space','geo','stickers','dig','parent'];
+const ALLVIEWS=['home','adv','trace','read','words','ear','act','city','space','geo','stickers','dig','parent'];
 activeTab='trace';                 // declared in core.js so early animation loops can read it
 /* The home screen: one big card per section. 🏠 in the header always comes back here. */
-const CARD_COL={adv:['#FFB938','#FF8A3D'],trace:['#FF7A7A','#E8445A'],words:['#4FC3F7','#2F7FE0'],ear:['#B58CFF','#7A5AE0'],
+const CARD_COL={adv:['#FFB938','#FF8A3D'],trace:['#FF7A7A','#E8445A'],read:['#FFD54F','#F29A16'],words:['#4FC3F7','#2F7FE0'],ear:['#B58CFF','#7A5AE0'],
   act:['#6FD86A','#2EA84F'],city:['#3DD6C0','#1C9E9A'],stickers:['#FFB347','#E07B1A'],geo:['#4FD1F5','#2A8BD0'],space:['#7A7FF0','#4A3FB8'],dig:['#FF8FC8','#E0559A']};
 function buildHome(){
   const box=$('homeGrid');box.innerHTML='';
   $('homeHello').textContent=kidName?{es:'¡Hola, ',en:'Hi, ',de:'Hallo, '}[lang]+kidName+'!':{es:'¿Qué jugamos?',en:'What shall we play?',de:'Was spielen wir?'}[lang];
   TABS.forEach(t=>{
     const b=document.createElement('button'),c=CARD_COL[t.id];
-    b.className='hcard'+(t.id==='adv'||t.id==='dig'?' wide':'')+(t.id==='dig'&&power>=DIG_COST?' ready':'');b.dataset.id=t.id;
+    b.className='hcard'+(t.id==='adv'?' wide':'')+(t.id==='dig'&&power>=DIG_COST?' ready':'');b.dataset.id=t.id;
     b.style.background=`linear-gradient(150deg,${c[0]},${c[1]})`;b.style.setProperty('--edge',c[1]);
     let extra='';
     if(t.id==='adv'&&ADV)extra=ADV.done?'✅':`${ADV.idx+1} / ${ADV.plan.length}`;
@@ -43,6 +44,7 @@ function showTab(id){
   ALLVIEWS.forEach(v=>document.getElementById('v-'+v).classList.toggle('on',v===id));
   if(id==='adv'){renderAdv();}
   if(id==='trace'){fit();sayCurrent();}
+  if(id==='read'){showRead();}
   if(id==='words'){buildChips();if(!target)newRound();else sayPrompt();}
   if(id==='ear'){newEarRound();}
   if(id==='act'){showAct();}
@@ -65,6 +67,7 @@ function setLang(code,btn){
   if(activeTab==='trace')sayCurrent();
   else if(activeTab==='words'){buildChips();newRound();}
   else if(activeTab==='ear')newEarRound();
+  else if(activeTab==='read')readRound();
   else if(activeTab==='act')showAct();
   else if(activeTab==='space'){spaceQuiz=false;selectPlanet(selected);}
   else if(activeTab==='geo'){if(GEO.mode!=='explore')setGeoMode(GEO.mode);else showGeo();}
@@ -303,14 +306,14 @@ document.body.addEventListener('scroll',()=>{if(document.body.scrollTop)document
    favourite). Each stop has a small goal; the path ends in a chest.
    The first adventure of the day pays a bonus.
 ============================================================= */
-const ADV_GOAL={trace:2,words:4,ear:3,act:4};
+const ADV_GOAL={trace:2,words:4,ear:3,act:4,read:3};
 const ADV_LEN={short:4,normal:6,long:8};
 let ADV=null,advSize='normal';
 try{ADV=JSON.parse(localStorage.getItem('sl_adv')||'null');advSize=localStorage.getItem('sl_advsize')||'normal';}catch(e){}
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();};
 const advSave=()=>{try{localStorage.setItem('sl_adv',JSON.stringify(ADV));}catch(e){}};
 function advPlan(){
-  const n=ADV_LEN[advSize]||6,bag=['words','act','trace','ear','act','words','ear','trace'];
+  const n=ADV_LEN[advSize]||6,bag=['words','act','trace','ear','read','act','words','read','ear','trace'];
   let plan;do{plan=shuffle(bag).slice(0,n);}while(plan.some((t,i)=>i&&t===plan[i-1]));
   return plan.map(tab=>({tab,got:0}));
 }
