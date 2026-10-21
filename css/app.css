@@ -715,3 +715,15 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 #readTrack:empty{display:none}
 #readPic .ear{font-size:min(22vw,100px,12vh);cursor:pointer}
 #readPic.hop{animation:slam .35s}
+
+/* voice check in the parent panel; a red dot on ⚙ while a language has no voice */
+#voiceCheck{margin-bottom:12px}
+.vcRow{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:12px;margin:5px 0;background:#EAF7EE;font-weight:700}
+.vcRow.no{background:#FDE8EA}
+.vcRow .vcState{margin-left:auto;font-size:14px}
+.vcRow.ok .vcState{color:#1E8A4A}.vcRow.no .vcState{color:#C62F3A}
+.vcRow .vcTest{padding:4px 12px;margin:0}
+.vcNote{font-size:13px;margin-top:6px}
+.vcHelp{font-size:13px;line-height:1.4;margin:8px 0;background:#FFF6D6;border-radius:12px;padding:8px 10px}
+.vcStore{display:inline-block;text-decoration:none;color:inherit;margin-top:2px}
+#gearBtn.warn::after{content:"";position:absolute;top:-3px;right:-3px;width:13px;height:13px;border-radius:50%;background:#FF3B30;border:2px solid #fff}

@@ -149,7 +149,7 @@ function renderParent(){
   $('pPowerTitle').textContent={es:'Puntos de premio (40 ⚡ = 1 premio)',en:'Prize points (40 ⚡ = 1 prize)',de:'Preispunkte (40 ⚡ = 1 Preis)'}[lang];
   $('pPowerVal').textContent='⚡ '+power;
   const lr=document.getElementById('levelRows');lr.innerHTML='';
-  const MN={words:'🖼️',ear:'👂',act:'🦖',space:'🪐',geoK:'🌍',geoF:'🏳️'};
+  const MN={read:'📚',words:'🖼️',ear:'👂',act:'🦖',space:'🪐',geoK:'🌍',geoF:'🏳️'};
   [['🇪🇸','es'],['🇬🇧','en'],['🇩🇪','de']].forEach(([f,c])=>{
     const cells=Object.keys(MN).map(m=>{const r=skillRec(m,c),acc=r.h.length?Math.round(r.h.reduce((a,b)=>a+b,0)/r.h.length*100)+'%':'–';
       return `${MN[m]} ${level(m,SKILL_MAX[m],c)}/${SKILL_MAX[m]} <small>(${acc})</small>`;}).join(' &nbsp;');
@@ -170,7 +170,43 @@ document.getElementById('saveName').onclick=()=>{
 };
 $('pPlus').onclick=()=>{power+=10;savePower();renderPower(true);renderParent();};
 $('pZero').onclick=()=>{power=0;savePower();renderPower(true);renderParent();};
+/* Voice check: which of the switched-on languages has a voice on this device?
+   A web app cannot change the system speech engine, so it checks and shows the way. */
+const VC_NAME={de:'🇩🇪 Deutsch',en:'🇬🇧 English',es:'🇪🇸 Español'};
+const VC_SAMPLE={de:'Hallo! Ich spreche Deutsch.',en:'Hello! I speak English.',es:'¡Hola! Hablo español.'};
+const IS_IOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+function voiceGaps(){if(!('speechSynthesis' in window))return LANGS_ON.slice();if(!voices.length)return null;   // null: not known yet
+  return LANGS_ON.filter(L=>!langVoices(L).length);}
+function markGear(){const m=voiceGaps();$('gearBtn').classList.toggle('warn',!!(m&&m.length));}
+function renderVoiceCheck(){
+  const box=$('voiceCheck'),miss=voiceGaps(),T={
+    title:{de:'🔊 Stimmen-Check',en:'🔊 Voice check',es:'🔊 Comprobar voces'},
+    ok:{de:'✓ bereit',en:'✓ ready',es:'✓ lista'},no:{de:'✗ fehlt',en:'✗ missing',es:'✗ falta'},
+    wait:{de:'Stimmen werden geladen …',en:'Loading voices …',es:'Cargando voces …'},
+    all:{de:'Alle Sprachen haben eine Stimme.',en:'Every language has a voice.',es:'Todos los idiomas tienen voz.'},
+    andr:{de:'So geht’s: Einstellungen → nach „Text-in-Sprache“ suchen → Bevorzugtes Modul: „Sprachdienste von Google“ → Zahnrad daneben → „Sprachdaten installieren“ → Deutsch, Englisch und Spanisch laden. Danach die App neu öffnen.',
+      en:'How to: Settings → search “Text-to-speech” → Preferred engine: “Speech Services by Google” → the gear next to it → “Install voice data” → download German, English and Spanish. Then reopen the app.',
+      es:'Así se hace: Ajustes → busca «Síntesis de voz» → Motor preferido: «Servicios de voz de Google» → la rueda de al lado → «Instalar datos de voz» → descarga alemán, inglés y español. Después vuelve a abrir la app.'},
+    ios:{de:'So geht’s: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → die fehlende Sprache wählen und eine Stimme laden (am besten „Erweitert“ oder „Premium“).',
+      en:'How to: Settings → Accessibility → Spoken Content → Voices → pick the missing language and download a voice (“Enhanced” or “Premium” sound best).',
+      es:'Así se hace: Ajustes → Accesibilidad → Contenido leído → Voces → elige el idioma que falta y descarga una voz (las «Mejoradas» o «Premium» suenan mejor).'},
+    other:{de:'Die Stimmen kommen vom Gerät. In den Systemeinstellungen unter Sprache/Sprachausgabe die fehlende Sprache installieren.',
+      en:'Voices come from the device. Install the missing language in the system settings under language / text-to-speech.',
+      es:'Las voces vienen del dispositivo. Instala el idioma que falta en los ajustes del sistema, en idioma / síntesis de voz.'},
+    store:{de:'Google-Sprachdienste im Play Store',en:'Google speech services in the Play Store',es:'Servicios de voz de Google en Play Store'}};
+  let h=`<h3>${T.title[lang]}</h3>`;
+  if(miss===null)h+=`<div class="vcNote">${T.wait[lang]}</div>`;
+  else{h+=LANGS_ON.map(L=>{const n=('speechSynthesis' in window)?langVoices(L).length:0;
+      return `<div class="vcRow ${n?'ok':'no'}"><span>${VC_NAME[L]}</span><span class="vcState">${n?T.ok[lang]+' ('+n+')':T.no[lang]}</span>${n?`<button class="btn vcTest" data-l="${L}">▶</button>`:''}</div>`;}).join('');
+    if(!miss.length)h+=`<div class="vcNote">${T.all[lang]}</div>`;
+    else h+=`<div class="vcHelp">${IS_ANDROID?T.andr[lang]:IS_IOS?T.ios[lang]:T.other[lang]}</div>`+
+      (IS_ANDROID?`<a class="btn vcStore" href="https://play.google.com/store/apps/details?id=com.google.android.tts" target="_blank" rel="noopener">▶ ${T.store[lang]}</a>`:'');}
+  box.innerHTML=h;
+  box.querySelectorAll('.vcTest').forEach(b=>b.onclick=()=>{ac();try{speechSynthesis.cancel();}catch(e){}utter(VC_SAMPLE[b.dataset.l],true,0.8,b.dataset.l);});
+  markGear();
+}
 function renderVoices(){
+  renderVoiceCheck();
   const sel=$('voiceSel'),list=langVoices(),cur=pickVoice();
   $('pVoiceTitle').textContent={es:'🔊 Voz (español)',en:'🔊 Voice (English)',de:'🔊 Stimme (Deutsch)'}[lang];
   sel.innerHTML=list.length?list.map(v=>`<option value="${v.voiceURI.replace(/"/g,'&quot;')}">${v.name} (${v.lang})${v.localService?'':' ☁'}</option>`).join('')
@@ -184,7 +220,8 @@ function renderVoices(){
 $('voiceSel').onchange=e=>{try{localStorage.setItem('sl_voice_'+lang,e.target.value);}catch(err){}
   say({es:'Hola, soy tu dinosaurio.',en:'Hello, I am your dinosaur.',de:'Hallo, ich bin dein Dinosaurier.'}[lang]);};
 $('voiceTest').onclick=()=>{ac();say({es:'Hola, soy tu dinosaurio.',en:'Hello, I am your dinosaur.',de:'Hallo, ich bin dein Dinosaurier.'}[lang]);};
-if('speechSynthesis' in window)speechSynthesis.addEventListener&&speechSynthesis.addEventListener('voiceschanged',()=>{if(activeTab==='parent')renderVoices();});
+if('speechSynthesis' in window)speechSynthesis.addEventListener&&speechSynthesis.addEventListener('voiceschanged',()=>{markGear();if(activeTab==='parent')renderVoices();});
+setTimeout(markGear,1500);   // some browsers fill the voice list without an event
 /* ---- backup: every sl_* key in one JSON file ---- */
 function backupData(){const d={app:'the-little-explorer',v:1,saved:new Date().toISOString(),data:{}};
   try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('sl_'))d.data[k]=localStorage.getItem(k);}}catch(e){}
