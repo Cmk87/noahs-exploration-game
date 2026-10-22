@@ -41,8 +41,10 @@ ent('guard','👮',['der Wärter','the guard','el guardia'],['Der Wärter! Er ha
 ent('watchtower','🗼',['der Wachturm','the watchtower','la torre de vigilancia'],['Der Wachturm! Von hier sieht man alles.','The watchtower! You can see everything from here.','¡La torre de vigilancia! Desde aquí se ve todo.'],{find:1});
 ent('policevan','🚐',['der Polizeibus','the police van','el furgón policial'],['Der Polizeibus! Er bringt einen neuen Räuber.','The police van! It brings a new robber.','¡El furgón policial! Trae a un nuevo ladrón.'],{find:1});
 ent('jailyard','🏀',['der Gefängnishof','the jail yard','el patio de la cárcel'],['Der Gefängnishof! Hier spielen die Räuber Basketball.','The jail yard! The robbers play basketball here.','¡El patio de la cárcel! Aquí los ladrones juegan al baloncesto.'],{find:1});
+ANI('elephant','🐘',['der Elefant','the elephant','el elefante'],['Der Elefant! Törööö! Eigentlich wohnt er im Zirkus.','The elephant! Toot toot! He really lives at the circus.','¡El elefante! ¡Tuuut! En realidad vive en el circo.']);
+ent('gate','🚪',['das Tor','the gate','la puerta'],null);
 ANI('rat','🐀',['die Ratte','the rat','la rata'],['Die Ratte! Sie sucht Essensreste im Müll.','The rat! It looks for food in the rubbish.','¡La rata! Busca comida en la basura.']);
-ANI('policedog','🐕',['der Polizeihund','the police dog','el perro policía'],['Der Polizeihund! Wuff, wuff!','The police dog! Woof, woof!','¡El perro policía! ¡Guau, guau!']);
+ANI('policedog','🐕‍🦺',['der Polizeihund','the police dog','el perro policía'],['Der Polizeihund! Wuff, wuff!','The police dog! Woof, woof!','¡El perro policía! ¡Guau, guau!']);
 const PCOL=['#FF5A5F','#3CC8F5','#FFC928','#7ED957','#B78CFF'];
 
 /* ---------- sounds ---------- */
@@ -94,8 +96,41 @@ S(-130,[4080,-330,4420,-128],()=>{const T=TT(),x=4090,y=-200,w=320,d=70,h=96,bas
   for(let k=0;k<6;k++)win(x+14+k*50,base-h+30,32,26,'#7A3A2A');sign(x+w/2,base-h+14,110,16,L3(['FABRIK','FACTORY','FÁBRICA']),'#2B2233','#FFFFFF');
   rr(x+w/2-24,base-30,48,30,[3,3,0,0],'#5A6074');hit('works',x-4,y-h-120,x+w+4,base);});
 /* warehouse with a forklift in front */
-S(-110,[4770,-300,5090,-108],()=>{const x=4780,y=-190,w=300,d=80,h=80,Fy=flatB(x,y,w,d,h,'#7EA0C8','#B9C1CC','#5A7FB0'),base=y+d;
-  for(let k=0;k<3;k++){rr(x+20+k*96,Fy+20,76,h-20,[3,3,0,0],'#E9ECF2');for(let j=0;j<6;j++)rr(x+20+k*96,Fy+24+j*9,76,2,0,'#C9D0DB');}
+/* warehouse with three roller gates: tap one and it rolls up, and something unexpected is inside */
+const GATES=[0,1,2].map(()=>({t0:-99,kind:''}));let gateN=0,gateBag=[];
+const GATE_KINDS=['balloons','dino','teddies','disco','elephant'];
+const GATE_SAY={elephant:['Huch! Ein Elefant aus dem Zirkus! Tipp ihn an!','Whoa! An elephant from the circus! Tap it!','¡Anda! ¡Un elefante del circo! ¡Tócalo!'],
+  balloons:['Ganz viele Luftballons!','Lots and lots of balloons!','¡Un montón de globos!'],
+  dino:['Hilfe, ein Dinosaurier! Der ist aus dem Dino-Tal ausgebüxt.','Help, a dinosaur! It ran away from Dino Valley.','¡Socorro, un dinosaurio! Se escapó del valle de los dinosaurios.'],
+  teddies:['Lauter Teddybären! Die kommen in die Spielzeugläden.','Teddy bears! They are going to the toy shops.','¡Ositos de peluche! Van a las jugueterías.'],
+  disco:['Eine Disko im Lager! Alle tanzen!','A disco in the warehouse! Everybody dance!','¡Una discoteca en el almacén! ¡Todos a bailar!']};
+function elephant(x,y,f,trunkUp,step){g.save();g.translate(x,y);g.scale(f,1);const c='#9AA4B8',d='#7E889C';
+  [[-14,0],[-6,1],[8,0],[15,1]].forEach(([lx,o],i)=>rr(lx-3.5,-12+((i+step)%2?-1.5:0)*o,7,12,2,i%2?d:c));
+  ell(0,-20,22,13,c);circ(-20,-26,11,c);ell(-12,-26,8,10,d);
+  g.strokeStyle=c;g.lineWidth=5;g.lineCap='round';g.beginPath();g.moveTo(-28,-24);
+  if(trunkUp)g.quadraticCurveTo(-40,-30,-38,-44);else g.quadraticCurveTo(-36,-16,-32,-6);g.stroke();g.lineCap='butt';
+  circ(-23,-29,1.6,'#222');poly('#FFFFFF',-26,-20,-31,-19,-27,-17);ln(d,1.6,20,-22,25,-14);g.restore();}
+S(-110,[4770,-300,5090,-60],()=>{const T=TT(),x=4780,y=-190,w=300,d=80,h=80,Fy=flatB(x,y,w,d,h,'#7EA0C8','#B9C1CC','#5A7FB0'),base=y+d;
+  for(let k=0;k<3;k++){const dx=x+20+k*96,G=GATES[k],tt=T-G.t0,o=tt<0||tt>8?0:tt<1?sm(tt):tt<7?1:1-sm(tt-7),cx=dx+38,dh=h-20;
+    if(o>0){rr(dx,Fy+20,76,dh,[3,3,0,0],G.kind==='disco'?'#1A1030':'#2B2F3E');
+      g.save();g.beginPath();g.rect(dx,Fy+20,76,dh);g.clip();
+      if(G.kind==='disco'){for(let j=0;j<4;j++){const a=T*3+j*1.6,c=['#FF5A8A','#3CC8F5','#FFD23F','#7ED957'][j];g.globalAlpha=0.55;
+          poly(c,cx,Fy+26,cx+Math.cos(a)*60-6,base,cx+Math.cos(a)*60+10,base);g.globalAlpha=1;}
+        circ(cx,Fy+28,6,'#D9DEE8');LIGHTS.push(cx,Fy+40,50,['#FF5A8A','#3CC8F5','#FFD23F'][Math.floor(T*4)%3]);
+        for(let j=0;j<3;j++){const bx=dx+16+j*22,hop=Math.abs(Math.sin(T*8+j))*6;kid(bx,base-2-hop,['#FF5A5F','#3CC8F5','#7ED957'][j],SKIN[j],HAIR[j],1.2);}}
+      if(G.kind==='teddies')for(let j=0;j<6;j++){g.font=FONT(18);g.textAlign='center';g.textBaseline='bottom';g.fillText('🧸',dx+12+(j%3)*26,base-(j>2?20:2));}
+      if(G.kind==='balloons'&&tt<1.2)for(let j=0;j<5;j++){g.font=FONT(18);g.textAlign='center';g.textBaseline='bottom';g.fillText('🎈',dx+10+j*14,base-4-(j%2)*16);}
+      g.restore();}
+    if(G.kind==='dino'&&o>0.3){const pk=Math.min(1,(tt-0.6)*1.5)*(tt<6.6?1:Math.max(0,(7-tt)*2.5)),sw=Math.sin(T*3)*3;   // a T-rex head pokes out
+      if(pk>0){const hx=cx-6+sw,hy=Fy+20+dh*0.5;g.save();g.translate(hx,hy);g.scale(pk,pk);
+        rr(-14,-14,38,24,10,'#5BC06A');rr(-14,4,30,10,4,'#4AA85A');circ(6,-6,4,'#FFFFFF');circ(7,-6,2,'#222');
+        for(let j=0;j<5;j++)poly('#FFFFFF',-6+j*6,4,-3+j*6,8,0+j*6,4);g.restore();}}
+    rr(dx,Fy+20,76,dh*(1-o),[3,3,0,0],'#E9ECF2');for(let j=0;j<6;j++){const ly=Fy+24+j*9;if(ly<Fy+20+dh*(1-o)-2)rr(dx,ly,76,2,0,'#C9D0DB');}
+    if(o>0)rr(dx-2,Fy+18,80,6,2,'#9AA4B8');                                              // the rolled-up shutter
+    if(G.kind==='elephant'&&tt>0.8&&tt<7.6){const u=tt<2.6?sm((tt-0.8)/1.8):tt<6?1:1-sm((tt-6)/1.6),ey=base-6+u*46,up=tt>3&&tt<4.6;
+      elephant(cx+u*8,ey,1,up,Math.floor(T*4));hit('elephant',cx-36,ey-46,cx+30,ey+2,{moving:1,small:1});
+      if(up&&Math.random()<0.5)PARTS.push({x:cx-30,y:ey-48,vx:-20+Math.random()*-40,vy:-60+Math.random()*-40,life:0,max:1.2,k:'drop',r:2.5,c:'#BFE9FF',gr:160});}
+    hit('gate',dx,Fy+20,dx+76,base,{small:1,ref:k});}
   sign(x+w/2,Fy+10,110,13,L3(['LAGER','WAREHOUSE','ALMACÉN']),'#FFFFFF','#2B3A6B');hit('warehouse',x-4,y-h,x+w+4,base);});
 const PALS=[[4820,40],[4860,40],[4820,0]];
 S(60,[4800,-20,5200,64],()=>{PALS.forEach(([px,py],k)=>{rr(px-14,py-4,28,4,1,'#B07A4E');rr(px-12,py-22,24,18,2,PCOL[k+1]);});
@@ -284,7 +319,17 @@ Object.assign(TAP,{
   robot:()=>{act('carfactory');S5.weld();},incinerator:()=>{act('incinerator');S5.fire();},trash:()=>{act('incinerator');S5.crunch();},
   garbagetruck:()=>{act('garbagetruck');S5.crunch();},recycling:()=>S5.clink(),glass:()=>{act('glass');S5.clink();},paper:()=>{act('paper');S5.rustle();},
   plastic:()=>{act('plastic');S5.rustle();},metal:()=>{act('metal');S5.clang();},biowaste:()=>{act('biowaste');S5.splat();},
-  warehouse:()=>S5.beep(),forklift:()=>{act('forklift');S5.beep();},portcrane:()=>{act('portcrane');S5.beep();},
+  warehouse:()=>S5.beep(),
+  gate:k=>{if(typeof k!=='number')return;const G=GATES[k],T=TT();if(T-G.t0<8)return true;   // still open
+    const found=K.FOUND&&K.FOUND().has('elephant');if(!gateBag.length)gateBag=shuffle(GATE_KINDS.slice());G.kind=!found&&gateN===0?'elephant':gateBag.pop();gateN++;G.t0=T;   // the elephant first, then every surprise once before any repeats
+    noise(0.8,0.06);const dx=4800+k*96,cx=dx+38,base=-110;
+    if(G.kind==='balloons')later(0.9,()=>{for(let j=0;j<12;j++)PARTS.push({x:cx+(Math.random()-0.5)*50,y:base-10,vx:(Math.random()-0.5)*30,vy:-40-Math.random()*40,life:0,max:5,k:'emoji',t:'🎈',r:16+Math.random()*6,gr:-4});SND.pop();});
+    if(G.kind==='teddies')later(1,()=>{for(let j=0;j<8;j++)PARTS.push({x:cx+(Math.random()-0.5)*40,y:base-20,vx:(Math.random()-0.5)*90,vy:-70-Math.random()*40,life:0,max:1.4,k:'emoji',t:'🧸',r:16,gr:200});});
+    if(G.kind==='dino')later(1.4,()=>{textP(cx+20,base-70,'ROAAAR!','#FFFFFF',14);swp(180,60,0.9,'sawtooth',0.12);});
+    if(G.kind==='disco')later(0.8,()=>{SND.music();for(let j=0;j<6;j++)later(j*0.6,()=>textP(cx+(Math.random()-0.5)*50,base-60,'♪','#FFFFFF',13));});
+    if(G.kind==='elephant')later(3,()=>{swp(420,900,0.45,'sawtooth',0.07);swp(380,820,0.5,'square',0.04);});
+    return L3(GATE_SAY[G.kind]);},
+  elephant:()=>{swp(420,900,0.45,'sawtooth',0.07);},forklift:()=>{act('forklift');S5.beep();},portcrane:()=>{act('portcrane');S5.beep();},
   jail:()=>{act('guard');S5.keys();},guard:()=>{act('guard');S5.keys();},watchtower:()=>{act('watchtower');S5.alarm();},
   robber:(i)=>{CELL.open=typeof i==='number'?i:-1;act('cell');POSES[i]==='harmonica'?S5.harmonica():S5.keys();return CRIMES[i]?L3(CRIMES[i]):undefined;},
   cell:()=>S5.keys(),jailyard:()=>{act('jailyard');S5.bounce();},policevan:()=>{if(VAN.t<0){VAN.t=0;act('policevan');}SND.wail();},

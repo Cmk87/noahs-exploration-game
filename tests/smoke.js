@@ -145,6 +145,12 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
       CITY.trigger(h.id, h.b, (h.b[0] + h.b[2]) / 2, (h.b[1] + h.b[3]) / 2, h.ref); }); });
     await page.waitForTimeout(1000);
   }
+  // the elephant only comes out when a warehouse gate is opened
+  await page.evaluate(() => { Object.assign(CITY.CAM, CITY.viewOf(4700, -320, 5150, 0, 1)); });
+  await page.waitForTimeout(400);
+  await page.evaluate(() => { const h = CITY.HITS().find(h => h.id === 'gate' && h.ref === 1); CITY.trigger('gate', h.b, h.b[0], h.b[1], 1); });
+  await page.waitForTimeout(2500);
+  check(await page.evaluate(() => { const h = CITY.HITS().find(h => h.id === 'elephant'); if (h) CITY.trigger('elephant', h.b, h.b[0], h.b[1]); return !!h; }), 'city: a warehouse gate opens and the elephant walks out');
   await page.evaluate(() => { if (rewardOpen) closeReward(false); });
   check(await page.evaluate(() => CITY.FOUND.size === CITY.total() && CITY.total() >= 40), 'city: every animal in the whole world can be found');
   await page.evaluate(() => { Object.assign(CITY.CAM, CITY.viewOf(250, 1000, 700, 1350, 1)); });

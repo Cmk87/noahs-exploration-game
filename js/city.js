@@ -1232,7 +1232,7 @@ function frame(now){requestAnimationFrame(frame);if(document.hidden||activeTab!=
   const dt=Math.min(0.05,(now-last)/1000);last=now;T+=dt;update(dt);render(now);}
 const K={rr,circ,ell,poly,ln,star,shade,FONT,sign,win,gableB,flatB,kid,SKIN,HAIR,ent,ENT,ANIMALS,S,hit,fx,act,later,puff,burst,textP,PARTS,LIT,LIGHTS,
   SND,swp,tree,TCOL,sr,sm,li,ST,TAP,VIEW,TAU,wheel,shakeTree,g,rideTrain,TRAIN,STOP_WEST,flyTo,viewOf,
-  GROUND0:[],GROUND1:[],UPDATE:[],DYN:[],TOP:[],ZONES:[],shake:0,FIND:()=>FIND};
+  GROUND0:[],GROUND1:[],UPDATE:[],DYN:[],TOP:[],ZONES:[],shake:0,FIND:()=>FIND,FOUND:()=>FOUND};
 if(typeof cityWild==='function')cityWild(K);
 if(typeof cityFar==='function')cityFar(K);
 if(typeof cityWest==='function')cityWest(K);
