@@ -117,7 +117,10 @@ ent('bus','🚌',['der Bus','the bus','el autobús'],['Der Bus! Alle einsteigen!
 ent('firetruck','🚒',['das Feuerwehrauto','the fire engine','el camión de bomberos'],['Das Feuerwehrauto! Tatütata!','The fire engine! Nee-naw!','¡El camión de bomberos! ¡Ninooo!']);
 ent('policecar','🚓',['das Polizeiauto','the police car','el coche de policía'],['Das Polizeiauto! Tatütata!','The police car! Nee-naw!','¡El coche de policía! ¡Ninooo!']);
 ent('ambulance','🚑',['der Krankenwagen','the ambulance','la ambulancia'],['Der Krankenwagen! Tatütata!','The ambulance! Nee-naw!','¡La ambulancia! ¡Ninooo!']);
-ent('heli','🚁',['der Hubschrauber','the helicopter','el helicóptero'],['Der Hubschrauber! Er fliegt los!','The helicopter! Off it goes!','¡El helicóptero! ¡Despega!'],{find:1});
+ent('heli','🚁',['der Rettungshubschrauber','the rescue helicopter','el helicóptero de rescate'],['Der Rettungshubschrauber! Er fliegt los und hilft Menschen.','The rescue helicopter! Off it goes to help people.','¡El helicóptero de rescate! Despega para ayudar a la gente.'],{find:1});
+ent('tourheli','🚁',['der gelbe Hubschrauber','the yellow helicopter','el helicóptero amarillo'],['Der gelbe Hubschrauber! Er fliegt eine Runde über die ganze Welt.','The yellow helicopter! It flies a tour around the whole world.','¡El helicóptero amarillo! Da una vuelta por todo el mundo.'],{find:1});
+ent('heliport','🅷',['der Hubschrauberlandeplatz','the heliport','el helipuerto'],['Der Hubschrauberlandeplatz! Hier landen die Hubschrauber, genau auf dem großen H.','The heliport! The helicopters land right on the big H.','¡El helipuerto! Los helicópteros aterrizan justo en la H grande.'],{find:1});
+ent('windsock','🎏',['der Windsack','the windsock','la manga de viento'],['Der Windsack! Er zeigt dem Piloten, woher der Wind weht.','The windsock! It shows the pilot where the wind is blowing from.','¡La manga de viento! Le dice al piloto de dónde sopla el viento.'],{find:1});
 const ANIMALS=[
   ['bear','🐻',['der Bär','the bear','el oso'],['Der Bär! Er ist aufgewacht. Gäähn!','The bear! It woke up. Yaaawn!','¡El oso! Se ha despertado. ¡Aaah!']],
   ['fox','🦊',['der Fuchs','the fox','el zorro'],['Der Fuchs! Er hat sich im Busch versteckt.','The fox! It was hiding in the bush.','¡El zorro! Estaba escondido en el arbusto.']],
@@ -893,14 +896,58 @@ function heliPos(){if(HELI.t<0)return {x:650,y:172,alt:0,f:1};const t=HELI.t;
   if(t<1.5)return {x:650,y:172,alt:sm(t/1.5)*60,f:1};
   if(t<9.5){const a=(t-1.5)/8*TAU;return {x:560+Math.cos(a)*120+30*(1-Math.cos(a)),y:172+Math.sin(a)*70,alt:60,f:-Math.sin(a)>=0?1:-1};}
   return {x:650,y:172,alt:60*(1-sm((t-9.5)/1.5)),f:1};}
-function drawHeli(){const p=heliPos(),y=p.y-p.alt,spin=HELI.t>=0?T*40:T*0.3;
-  if(p.alt>2)ell(p.x,p.y+p.alt*0.9,14,4,'rgba(0,0,0,.15)');
-  g.save();g.translate(p.x,y);g.scale(p.f,1);
-  rr(-30,-12,22,4,2,'#E8443A');poly('#E8443A',-30,-12,-34,-22,-27,-12);ln('#555',1,-32,-16,-32,-8);
-  ell(0,-10,14,9,'#E8443A');ell(6,-12,6.5,5,'#BFE6FA');rr(-3,-20,6,3,1,'#555');
+/* one helicopter drawing for both: body colour, scale, rotor spin */
+function chopper(x,y,alt,f,spin,sc,body,flying){
+  if(alt>2)ell(x,y+alt*0.15,14*sc,4*sc,'rgba(0,0,0,.15)');
+  g.save();g.translate(x,y-alt);g.scale(f*sc,sc);
+  rr(-30,-12,22,4,2,body);poly(body,-30,-12,-34,-22,-27,-12);ln('#555',1,-32,-16,-32,-8);
+  ell(0,-10,14,9,body);ell(6,-12,6.5,5,'#BFE6FA');rr(-3,-20,6,3,1,'#555');
   ln('#555',1.4,-10,0,10,0);ln('#555',1.2,-6,0,-6,-3);ln('#555',1.2,6,0,6,-3);
-  const r=30*Math.abs(Math.cos(spin));ln('#3A3F52',2,-r,-21,r,-21);if(HELI.t>=0)ell(0,-21,30,2.2,'rgba(60,60,70,.25)');
-  g.restore();hit('heli',p.x-26,y-24,p.x+20,y+2,{moving:1,small:1});}
+  const r=30*Math.abs(Math.cos(spin));ln('#3A3F52',2,-r,-21,r,-21);if(flying)ell(0,-21,30,2.2,'rgba(60,60,70,.25)');
+  g.restore();}
+const HSC=1.4;   // the hospital's rescue helicopter, a bit bigger so it is noticed
+function drawHeli(){const p=heliPos(),fl=HELI.t>=0;
+  chopper(p.x,p.y,p.alt,p.f,fl?T*40:T*0.3,HSC,'#E8443A',fl);
+  if(fl&&NIGHT>0.2)LIGHTS.push(p.x,p.y-p.alt-8,26,'#FF5050');
+  const y=p.y-p.alt;hit('heli',p.x-26*HSC,y-24*HSC,p.x+20*HSC,y+2,{moving:1,small:1});}
+/* heliport in the meadow between the castle and the Wild West: pad with a big H, landing lights,
+   hangar, control tower, windsock; the yellow helicopter flies sightseeing tours over the whole world */
+const H2={t:-1,next:35},H2PAD=[2645,1505],H2SC=1.9;
+const H2PATH=(()=>{const P=[H2PAD,[2420,1250],[1500,1650],[700,950],[600,300],[1200,-250],[2200,-80],[3300,150],[3600,950],[3200,1450],H2PAD],out=[];
+  for(let i=0;i<P.length-1;i++){const p0=P[Math.max(0,i-1)],p1=P[i],p2=P[i+1],p3=P[Math.min(P.length-1,i+2)];
+    for(let k=0;k<12;k++){const t=k/12,t2=t*t,t3=t2*t;out.push([0,1].map(j=>0.5*((2*p1[j])+(-p0[j]+p2[j])*t+(2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*t2+(-p0[j]+3*p1[j]-3*p2[j]+p3[j])*t3)));}}
+  out.push(H2PAD);return out;})();
+const H2UP=2.2,H2FLY=26,H2DOWN=2.4;
+function h2Pos(){const [px,py]=H2PAD;if(H2.t<0)return {x:px,y:py,alt:0,f:1};const t=H2.t;
+  if(t<H2UP)return {x:px,y:py,alt:sm(t/H2UP)*150,f:-1};
+  if(t<H2UP+H2FLY){const u=(t-H2UP)/H2FLY,fp=u*(H2PATH.length-1),i=Math.min(H2PATH.length-2,fp|0),k=fp-i,a=H2PATH[i],b=H2PATH[i+1];
+    return {x:a[0]+(b[0]-a[0])*k,y:a[1]+(b[1]-a[1])*k,alt:150,f:b[0]>=a[0]?1:-1};}
+  return {x:px,y:py,alt:150*(1-sm((t-H2UP-H2FLY)/H2DOWN)),f:1};}
+function drawH2(){const p=h2Pos(),fl=H2.t>=0;
+  chopper(p.x,p.y,p.alt,p.f,fl?T*40:T*0.25,H2SC,'#FFC928',fl);
+  if(fl&&NIGHT>0.2){LIGHTS.push(p.x,p.y-p.alt-10,30,'#FFF2A0');if(Math.sin(T*8)>0)LIGHTS.push(p.x-30*H2SC*p.f,p.y-p.alt-20,18,'#FF4040');}
+  const y=p.y-p.alt;hit('tourheli',p.x-30*H2SC,y-26*H2SC,p.x+22*H2SC,y+4,{moving:1,small:1});}
+S(1560,[2520,1440,2770,1562],()=>{const [cx,cy]=H2PAD,tl=fx('heliport');
+  ell(cx,cy+6,112,48,'rgba(0,0,0,.10)');ell(cx,cy,108,44,'#8D96A8');ell(cx,cy,100,40,'#A7B0C2');
+  g.strokeStyle='#FFD23F';g.lineWidth=5;g.beginPath();g.ellipse(cx,cy,82,32,0,0,TAU);g.stroke();
+  g.save();g.translate(cx,cy+2);g.scale(1,0.42);g.font=FONT(92);g.fillStyle='#FFFFFF';g.textAlign='center';g.textBaseline='middle';g.fillText('H',0,0);g.restore();
+  for(let k=0;k<10;k++){const a=k/10*TAU,lx=cx+Math.cos(a)*96,ly=cy+Math.sin(a)*38,on=tl<4?(Math.floor(T*6)+k)%3===0:NIGHT>0.3;
+    circ(lx,ly,3.4,on?'#7CFF8A':'#3D8C4A');if(on)LIGHTS.push(lx,ly,16,'#7CFF8A');}
+  hit('heliport',cx-108,cy-44,cx+108,cy+44);});
+S(1402,[2455,1290,2610,1404],()=>{const x=2465,y=1340,w=130,d=62,h=58,{Ye,Yr}=gableB(x,y,w,d,h,'#C9D0DB','#7E889C'),base=y+d;
+  sign(x+w/2,Ye+10,96,14,['HELIPORT','HELIPORT','HELIPUERTO'][li()],'#2F5FD0','#FFFFFF');
+  rr(x+18,base-38,w-36,38,[16,16,0,0],'#3A3F52');for(let k=1;k<5;k++)ln('#4F5568',1.2,x+18,base-38+k*8,x+w-18,base-38+k*8);
+  hit('heliport',x-4,Yr-6,x+w+4,base);});
+S(1398,[2735,1250,2800,1400],()=>{const x=2768,b=1396;rr(x-7,b-110,14,110,2,'#C9D0DB');
+  rr(x-17,b-136,34,26,4,'#5F6B80');rr(x-14,b-133,28,14,3,'#8ED2F4');LIT.push(x-14,b-133,28,14);rr(x-20,b-140,40,6,3,'#3A3F52');
+  if(Math.sin(T*3)>0){circ(x,b-144,3,'#FF3030');LIGHTS.push(x,b-144,20,'#FF3030');}else circ(x,b-144,3,'#8A3A3A');
+  hit('heliport',x-20,b-146,x+20,b);});
+S(1640,[2770,1560,2880,1642],()=>{const x=2790,b=1638,t=fx('windsock'),gust=t<3?1.8:1,wv=Math.sin(T*3*gust);
+  rr(x-2,b-70,4,70,1,'#9AA4B8');
+  g.save();g.translate(x+2,b-66);g.rotate(0.12+wv*0.12*gust-(t<3?0.15:0));
+  for(let k=0;k<5;k++){const x0=k*12,x1=x0+12,h0=9-k*1.2,h1=9-(k+1)*1.2,dy=Math.sin(T*6+k)*1.5*gust;
+    poly(k%2?'#FFFFFF':'#FF7A2A',x0,-h0+dy*0.6,x1,-h1+dy,x1,h1+dy,x0,h0+dy*0.6);}
+  g.restore();hit('windsock',x-8,b-80,x+66,b);});
 const CLOUDS=[[4400,300,1.2],[5000,1300,1.1],[4700,2100,1.2],[-900,100,1.2],[-600,1200,1.1],[-1100,2000,1.3],[3100,200,1.2],[3600,1300,1.1],[3300,2100,1.3],[150,300,1.1],[700,700,1.3],[300,1250,1],[1000,1100,1.2],[1500,-500,1.4],[2300,100,1.2],[1800,900,1.1],[2500,1500,1.3],[600,2050,1.2],[1900,2200,1],[400,-300,1]].map(([x,y,s])=>({x,y,s}));
 function drawClouds(){const z=CAM.k/kFit(),ca=Math.max(0,Math.min(0.8,(1.7-z)*1.4))*(1-NIGHT*0.7);if(ca<=0.01)return;
   for(const c of CLOUDS){g.globalAlpha=ca*0.5;ell(c.x+40*c.s,c.y+80*c.s,55*c.s,16*c.s,'rgba(30,70,40,.25)');
@@ -994,7 +1041,8 @@ const TAP={
   firetruck:()=>SND.siren(),policecar:()=>SND.wail(),ambulance:()=>SND.siren(),
   police:()=>{if(VEH.some(v=>v.kind==='police'))return;act('police');SND.wail();emergency('police','h0','h',170);},
   hospital:()=>{if(VEH.some(v=>v.kind==='ambulance'))return;act('hospital');SND.siren();emergency('ambulance','f','e',712);},
-  heli:()=>{if(HELI.t<0){HELI.t=0;SND.chop();}},
+  heli:()=>{if(HELI.t<0){HELI.t=0;SND.chop();}},tourheli:()=>{if(H2.t<0){H2.t=0;SND.chop();}},
+  heliport:()=>{act('heliport');SND.ding();},windsock:()=>{act('windsock');SND.whoosh&&SND.whoosh();},
   school:()=>{act('school');SND.bell();},playground:()=>{act('playground');SND.hop();},
   bakery:()=>{act('bakery');SND.ding();},fountain:()=>{act('fountain');SND.splash();burst(385,600,'drop',30,'#BFE9FF',1.2);},
   post:()=>{act('post');SND.ding();},
@@ -1127,7 +1175,8 @@ function update(dt){
   SPIN.coaster+=fast('coaster',0.5,0.16);SPIN.crane+=fast('crane',1.6,0.35);SPIN.digger+=fast('digger',3,1.2);
   stepVeh(dt);stepTrain(dt);stepParts(dt);for(const f of K.UPDATE)f(dt);K.shake=Math.max(0,K.shake-dt*6);
   if(TUG.t>=0){TUG.t+=dt;if(TUG.t>14)TUG.t=-1;}
-  if(HELI.t>=0){HELI.t+=dt;if(HELI.t>11)HELI.t=-1;}
+  if(HELI.t>=0){HELI.t+=dt;if(HELI.t>11){HELI.t=-1;HELI.next=T+45+Math.random()*40;}}else if(T>(HELI.next||30))HELI.t=0;   // also flies on its own now and then
+  if(H2.t>=0){H2.t+=dt;if(H2.t>H2UP+H2FLY+H2DOWN){H2.t=-1;H2.next=T+50+Math.random()*40;}}else if(T>H2.next)H2.t=0;
   if(FROG.t<5)FROG.t+=dt;
   boatA+=dt*0.07;
   duckU+=duckD*dt*0.006;if(duckU>0.8)duckD=-1;if(duckU<0.25)duckD=1;
@@ -1163,7 +1212,7 @@ function render(now){
   L.push({y:tugPos().y,f:drawTug});L.push({y:1505+Math.sin(boatA)*62,f:drawBoat});
   L.push({y:riverAt(duckU)[1],f:drawDucks});L.push({y:FIELD_ROWS[TRAC.row]+8,f:drawTractor});
   L.push({y:990,f:drawChicks});
-  L.push({y:HELI.t<0?331:WY1+500,f:drawHeli});
+  L.push({y:HELI.t<0?331:WY1+500,f:drawHeli});L.push({y:H2.t<0?1565:WY1+510,f:drawH2});   // parked: in front of the pad
   for(const f of K.DYN)f(L);
   L.sort((a,b)=>a.y-b.y);for(const o of L)o.f();
   drawFish();drawParts();drawZaps();for(const f of K.TOP)f();drawClouds();drawHint();
