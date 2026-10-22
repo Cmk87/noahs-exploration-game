@@ -217,6 +217,16 @@ function robber(x,y,pose,s,T,i){s=s||1;const by=pose==='sleep'?0:0;
   g.restore();}
 const POSES=['sleep','read','harmonica','push','wave','read','sleep','wave'];
 const CELL={open:-1};
+/* every prisoner has his own story (cell number → what he did), matching what he does in his cell */
+const CRIMES=[
+  ['Psst, er schläft! Er hat im Kaufhaus alle Kopfkissen geklaut.','Shh, he is asleep! He stole all the pillows from the shop.','¡Shh, está dormido! Robó todas las almohadas de la tienda.'],
+  ['Er hat alle Bücher aus der Bücherei mitgenommen und nie zurückgebracht. Jetzt liest er sie hier.','He took all the books from the library and never brought them back. Now he reads them here.','Se llevó todos los libros de la biblioteca y nunca los devolvió. Ahora los lee aquí.'],
+  ['Er hat dem Straßenmusiker die Mundharmonika geklaut. Jetzt spielt er traurige Lieder.','He stole the street musician’s harmonica. Now he plays sad songs.','Le robó la armónica al músico de la calle. Ahora toca canciones tristes.'],
+  ['Er wollte ein Dino-Ei aus dem Dino-Tal stehlen! Jetzt macht er Liegestütze.','He tried to steal a dinosaur egg from Dino Valley! Now he does push-ups.','¡Quiso robar un huevo del valle de los dinosaurios! Ahora hace flexiones.'],
+  ['Er hat die Krone aus der Burg geklaut! Der König war sehr böse.','He stole the crown from the castle! The king was very cross.','¡Robó la corona del castillo! El rey se enfadó mucho.'],
+  ['Er hat ein Geschenk vom Schlitten des Weihnachtsmanns geklaut. Er sagt: Es tut mir leid!','He took a present from Santa’s sleigh. He says: I am sorry!','Robó un regalo del trineo de Papá Noel. Dice: ¡Lo siento!'],
+  ['Er schnarcht! Er hat nachts die Luft aus allen Fahrradreifen gelassen.','He is snoring! At night he let the air out of all the bike tyres.','¡Está roncando! Por la noche desinfló las ruedas de todas las bicis.'],
+  ['Er hat dem Bäcker alle Brezeln weggegessen. Jetzt winkt er dir zu!','He ate all the baker’s pretzels. Now he is waving at you!','Se comió todo el pan del panadero. ¡Ahora te saluda!']];
 S(1132,[4320,890,4900,1134],()=>{const T=TT(),x=4320,y=1040,w=580,d=92,h=176,Ye=y+d-h,base=y+d,ct=fx('cell');
   rr(x+6,base-5,w+8,10,5,'rgba(0,0,0,.15)');rr(x,y-h,w,d,4,'#B9B4AA');rr(x,Ye,w,h,[0,0,3,3],'#D3CDC2');rr(x,Ye,w,8,0,'#2F5FD0');
   sign(x+w/2,Ye+20,150,18,L3(['GEFÄNGNIS','JAIL','CÁRCEL']),'#2F5FD0','#FFFFFF');
@@ -276,7 +286,7 @@ Object.assign(TAP,{
   plastic:()=>{act('plastic');S5.rustle();},metal:()=>{act('metal');S5.clang();},biowaste:()=>{act('biowaste');S5.splat();},
   warehouse:()=>S5.beep(),forklift:()=>{act('forklift');S5.beep();},portcrane:()=>{act('portcrane');S5.beep();},
   jail:()=>{act('guard');S5.keys();},guard:()=>{act('guard');S5.keys();},watchtower:()=>{act('watchtower');S5.alarm();},
-  robber:(i)=>{CELL.open=typeof i==='number'?i:-1;act('cell');POSES[i]==='harmonica'?S5.harmonica():S5.keys();},
+  robber:(i)=>{CELL.open=typeof i==='number'?i:-1;act('cell');POSES[i]==='harmonica'?S5.harmonica():S5.keys();return CRIMES[i]?L3(CRIMES[i]):undefined;},
   cell:()=>S5.keys(),jailyard:()=>{act('jailyard');S5.bounce();},policevan:()=>{if(VAN.t<0){VAN.t=0;act('policevan');}SND.wail();},
   rat:()=>{act('rat');S5.squeak();},policedog:()=>{act('policedog');S5.woof();}});
 K.ZONES.unshift((x,y)=>{if(x<IX0||y>1715)return null;if(y>-300&&y<790)return 'industry';if(y>=830)return x>JX0&&x<JX1&&y>JY0-40&&y<JY1?'jail':'meadow';return null;});
