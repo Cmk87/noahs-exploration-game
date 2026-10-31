@@ -148,7 +148,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   // the elephant only comes out when a warehouse gate is opened
   await page.evaluate(() => { Object.assign(CITY.CAM, CITY.viewOf(4700, -320, 5150, 0, 1)); });
   await page.waitForTimeout(400);
-  await page.evaluate(() => { const h = CITY.HITS().find(h => h.id === 'gate' && h.ref === 1); CITY.trigger('gate', h.b, h.b[0], h.b[1], 1); });
+  await page.evaluate(() => { [1, 2].forEach(k => { const h = CITY.HITS().find(h => h.id === 'gate' && h.ref === k); CITY.trigger('gate', h.b, h.b[0], h.b[1], k); }); });
   await page.waitForTimeout(2500);
   check(await page.evaluate(() => { const h = CITY.HITS().find(h => h.id === 'elephant'); if (h) CITY.trigger('elephant', h.b, h.b[0], h.b[1]); return !!h; }), 'city: a warehouse gate opens and the elephant walks out');
   await page.evaluate(() => { if (rewardOpen) closeReward(false); });

@@ -322,7 +322,7 @@ Object.assign(TAP,{
   plastic:()=>{act('plastic');S5.rustle();},metal:()=>{act('metal');S5.clang();},biowaste:()=>{act('biowaste');S5.splat();},
   warehouse:()=>S5.beep(),
   gate:k=>{if(typeof k!=='number')return;const G=GATES[k],T=TT();if(T-G.t0<8)return true;   // still open
-    const found=K.FOUND&&K.FOUND().has('elephant');if(!gateBag.length)gateBag=shuffle(GATE_KINDS.slice());G.kind=!found&&gateN===0?'elephant':gateBag.pop();gateN++;G.t0=T;   // the elephant first, then every surprise once before any repeats
+    const found=K.FOUND&&K.FOUND().has('elephant');if(!gateBag.length)gateBag=shuffle(GATE_KINDS.slice());G.kind=!found&&gateN%2===0?'elephant':gateBag.pop();gateN++;G.t0=T;   // until he has the elephant sticker, every second gate brings the elephant
     noise(0.8,0.06);const dx=4800+k*96,cx=dx+38,base=-110;
     if(G.kind==='balloons')later(0.9,()=>{for(let j=0;j<12;j++)PARTS.push({x:cx+(Math.random()-0.5)*50,y:base-10,vx:(Math.random()-0.5)*30,vy:-40-Math.random()*40,life:0,max:5,k:'emoji',t:'🎈',r:16+Math.random()*6,gr:-4});SND.pop();});
     if(G.kind==='teddies')later(1,()=>{for(let j=0;j<8;j++)PARTS.push({x:cx+(Math.random()-0.5)*40,y:base-20,vx:(Math.random()-0.5)*90,vy:-70-Math.random()*40,life:0,max:1.4,k:'emoji',t:'🧸',r:16,gr:200});});
