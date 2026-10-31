@@ -140,13 +140,13 @@ const RD=[['Rudolph','Rudolph','Rodolfo'],['Dasher'],['Dancer'],['Prancer'],['Vi
   .map((n,i)=>({n:n.length>1?n:[n[0],n[0],n[0]],c:['#A8784A','#9A6A40','#B08A5E','#8E623C','#A27448','#B48C62','#946640','#A07050','#8A5E3A'][i],
     x:-910+(i%3)*120+(i>>1&1)*10,y:200+Math.floor(i/3)*62,f:i%2?-1:1,tap:-9}));
 const rdName=r=>r.n[li()];
-let ROLL=-1;                                   // roll call running since this time
-const rdHop=(r,i,T)=>{const a=T-r.tap,b=ROLL>=0?T-ROLL-i*0.8:9;return Math.max(a>=0&&a<1.2?Math.abs(Math.sin(a*8))*12:0,b>=0&&b<0.7?Math.abs(Math.sin(b*9))*12:0);};
+let ROLL=-1;const RSTEP=1.05,RSTART=0.4;       // roll call: one name every RSTEP seconds, each reindeer hops as its name is said
+const rdHop=(r,i,T)=>{const a=T-r.tap,b=ROLL>=0?T-ROLL-RSTART-i*RSTEP:9;return Math.max(a>=0&&a<1.2?Math.abs(Math.sin(a*8))*12:0,b>=0&&b<0.7?Math.abs(Math.sin(b*9))*12:0);};
 RD.forEach((r,i)=>S(r.y,[r.x-40,r.y-60,r.x+40,r.y+6],()=>{if(SL.t>=0)return;        // out flying with the sleigh
   const T=TT(),t=fx('reindeer'),xx=r.x+Math.sin(T*0.3+i*2)*14,h=rdHop(r,i,T);
   reindeer(xx,r.y-h,r.f,r.c,i===0,t,i);
   if(i===0){const nx=xx+r.f*25,ny=r.y-h-37;LIGHTS.push(nx,ny,26,'#FF3030');}
-  const rc=ROLL>=0?T-ROLL:99,tag=(rc>=i*0.8&&rc<9*0.8+2.5)||T-r.tap<2.5;      // name tag: during the roll call, or after a tap
+  const rc=ROLL>=0?T-ROLL:99,tag=(rc>=RSTART+i*RSTEP&&rc<RSTART+9*RSTEP+2.5)||T-r.tap<2.5;      // name tag: during the roll call, or after a tap
   if(tag){const nm=rdName(r);g.font=FONT(11);sign(xx,r.y-h-68,g.measureText(nm).width+14,14,nm,'#FFFFFF','#8A3A2A');}
   hit('reindeer',xx-22,r.y-58,xx+24,r.y+2,{small:1,ref:{i,label:rdName(r)}});}));
 /* paddock fence: back with gaps for the stable, sides, front */
@@ -410,7 +410,8 @@ const oldBoat=TAP.boat,oldSub=TAP.submarine;
 Object.assign(TAP,{
   northpole:()=>S4.bells(),santa:()=>{act('santa');S4.hoho();},santahouse:()=>S4.bells(),factory:()=>{act('factory');S4.machine();},elf:()=>{act('factory');S4.jingle();},
   presents:()=>{act('presents');S4.jingle();},sleigh:()=>{if(SL.t<0){SL.t=0;S4.bells();}else S4.jingle();},xmastree:()=>{act('xmastree');S4.bells();},rink:()=>{act('rink');S4.jingle();},
-  stable:()=>{if(SL.t>=0)return;ROLL=TT();S4.jingle();    say(RD.map(rdName).join(', ')+'!');return true;},gingerbread:()=>SND.ding(),snow:(r,x,y)=>burst(x,y,'drop',10,'#FFFFFF',0.6),
+  stable:()=>{if(SL.t>=0)return;if(ROLL>=0&&TT()-ROLL<RSTART+9*RSTEP+1)return true;ROLL=TT();S4.jingle();
+    RD.forEach((r,i)=>K.later(RSTART+i*RSTEP,()=>sayAt(rdName(r),0.8)));K.later(RSTART+9*RSTEP+0.3,()=>say(L3(['Alle neun Rentiere!','All nine reindeer!','¡Los nueve renos!'])));return true;},gingerbread:()=>SND.ding(),snow:(r,x,y)=>burst(x,y,'drop',10,'#FFFFFF',0.6),
   reindeer:ref=>{S4.jingle();if(!ref)return;const r=RD[ref.i];r.tap=TT();
     return ref.i===0?L3(['Das ist Rudolph mit der roten Nase!','This is Rudolph, the red-nosed reindeer!','¡Este es Rodolfo, el reno de la nariz roja!'])
       :L3([`Das ist ${rdName(r)}!`,`This is ${rdName(r)}!`,`¡Este es ${rdName(r)}!`]);},polarbear:()=>{act('polarbear');S4.growl();},arcticfox:()=>{act('arcticfox');SND.squeak();},snowyowl:()=>{act('snowyowl');SND.hoot();},

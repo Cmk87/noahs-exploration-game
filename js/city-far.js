@@ -446,12 +446,24 @@ function cowboyFig(x,y,f,s,shirt,pose,T,hat){flip(x,y,f,()=>{g.scale(s,s);
   if(pose==='draw'){rr(3,-23,13,3.4,1.5,shirt);rr(14,-25,7,3,1,'#5A6074');rr(14,-23,2,4,1,'#5A6074');}
   else if(pose==='laugh'){g.save();g.translate(4,-22);g.rotate(-2.2+Math.sin(T*12)*0.3);rr(-1.6,0,3.2,10,1.6,shirt);g.restore();}
   else rr(4,-23,3,10,1.5,shirt);});}
-function hatFly(x,y,t,f){const tt=t-3,yy=y-40-Math.max(0,90*tt-60*tt*tt),xx=x+f*tt*14,land=yy>=y-4;g.save();g.translate(xx,Math.min(yy,y-3));g.rotate(land?0:tt*6*f);
+/* The duel: "Ein Duell!", then three, two, one (each number spoken as it appears), then the shot.
+   Every new duel ends differently: both hats fly off / the gun is shot out of a hand /
+   one falls over backwards, gets up again and waves – nobody gets hurt. */
+const DUEL={v:-1},DSH=4.7,DEND=DSH+6.2;
+function hatFly(x,y,t,f){const tt=t,yy=y-40-Math.max(0,90*tt-60*tt*tt),xx=x+f*tt*14,land=yy>=y-4;g.save();g.translate(xx,Math.min(yy,y-3));g.rotate(land?0:tt*6*f);
   ell(0,0,11,2.6,'#8A5A3B');rr(-5.5,-7,11,7.5,3,'#8A5A3B');g.restore();}
-S(1126,[3130,1050,3370,1130],()=>{const T=TT(),t=fx('duel'),on=t<9,shot=on&&t>=3,draw=on&&t>2.6&&t<4.6,flyH=shot&&t<7.6,laugh=on&&t>=4.6&&t<7.6;
-  const A=[3175,1124,1,'#3CC8F5'],B=[3325,1124,-1,'#FF8A3D'];
-  [A,B].forEach(([x,y,f,c])=>{cowboyFig(x,y,f,1.5,c,draw?'draw':laugh?'laugh':'stand',T,!flyH);if(flyH)hatFly(x,y,t,-f);});
-  if(on&&t>=3&&t<3.25){circ(3175+31,1124-36,6,'#FFF2A0');circ(3325-31,1124-36,6,'#FFF2A0');}
+function gunFly(x,y,t,f){const yy=y-36-Math.max(0,110*t-70*t*t),xx=x+f*t*22,land=yy>=y-4;g.save();g.translate(xx,Math.min(yy,y-3));g.rotate(land?0.2:t*9);
+  rr(-5,-1.5,10,3,1,'#5A6074');rr(-5,-1.5,3,6,1,'#5A6074');g.restore();}
+S(1126,[3130,1050,3370,1130],()=>{const T=TT(),t=fx('duel'),on=t<DEND,v=DUEL.v,u=t-DSH,shot=on&&u>=0;
+  const A=[3175,1124,1,'#3CC8F5'],B=[3325,1124,-1,'#FF8A3D'],aims=on&&t>4.2&&u<1.6;
+  // A: the blue one on the left
+  {const [x,y,f,c]=A,fall=v===2&&shot?(u<0.4?u/0.4:u<2.6?1:u<3.4?1-(u-2.6)/0.8:0):0,pose=aims&&!(v===2&&shot)?'draw':shot&&u<4.2&&(v===0||v===2&&u>3.4)?'laugh':'stand';
+    g.save();g.translate(x,y);g.rotate(-1.45*fall);g.translate(-x,-y);cowboyFig(x,y,f,1.5,c,pose,T,!(v===0&&shot&&u<4.6));g.restore();
+    if(v===0&&shot&&u<4.6)hatFly(x,y,u,-f);}
+  // B: the orange one on the right
+  {const [x,y,f,c]=B,lostGun=v===1&&shot,pose=lostGun?(u<4.2?'laugh':'stand'):aims?'draw':v===0&&shot&&u<4.2?'laugh':'stand';
+    cowboyFig(x,y,f,1.5,c,pose,T,!(v===0&&shot&&u<4.6));if(v===0&&shot&&u<4.6)hatFly(x,y,u,-f);if(lostGun&&u<4.6)gunFly(x-f*20,y,u,-f);}
+  if(shot&&u<0.25){if(v!==2)circ(3175+31,1124-36,6,'#FFF2A0');if(v!==1)circ(3325-31,1124-36,6,'#FFF2A0');}
   hit('duel',3150,1060,3350,1126);});
 const RIDE={x:2960,dir:1};
 K.UPDATE.push(dt=>{RIDE.x+=RIDE.dir*dt*(fx('rider')<4?220:70);if(RIDE.x>3920)RIDE.dir=-1;if(RIDE.x<2930)RIDE.dir=1;});
@@ -519,11 +531,15 @@ Object.assign(TAP,{
   treasure:()=>{S3.coins();},mummy:()=>{swp(320,160,1.4,'sine',0.08);},sphinx:()=>{act('sphinx');swp(140,90,0.8,'sawtooth',0.06);},
   obelisk:()=>{act('obelisk');SND.ding();},pharaoh:()=>{act('pharaoh');S3.coins();},egypt:()=>SND.whoosh(),
   camel:()=>{act('camel');CAM2.stop=2.5;swp(220,120,0.6,'sawtooth',0.06);},
-  duel:()=>{if(fx('duel')<9)return true;act('duel');['3','2','1'].forEach((n,i)=>later(i*0.9,()=>textP(3250,1040,n,'#FFFFFF',22)));
-    later(3,()=>{noise(0.25,0.3);setTimeout(()=>noise(0.2,0.25),120);textP(3250,1020,'PENG!','#FFE14D',20);
-      say(L3(['Peng! Beide daneben – nur die Hüte sind weggeflogen!','Bang! They both missed – only their hats flew off!','¡Pum! Los dos fallaron: ¡solo salieron volando los sombreros!']));});
-    later(4.8,()=>textP(3250,1030,'Haha!','#FFFFFF',14));
-    return L3(['Ein Duell! Drei, zwei, eins …','A duel! Three, two, one…','¡Un duelo! Tres, dos, uno…']);},
+  duel:()=>{if(fx('duel')<DEND)return true;DUEL.v=(DUEL.v+1)%3;const v=DUEL.v;act('duel');
+    [['3','Drei','Three','Tres'],['2','Zwei','Two','Dos'],['1','Eins','One','Uno']].forEach(([n,...w],i)=>later(1.6+i,()=>{textP(3250,1040,n,'#FFFFFF',22);sayAt(L3(w),0.8);}));
+    later(DSH,()=>{noise(0.25,0.3);if(v===0)setTimeout(()=>noise(0.2,0.25),120);textP(3250,1020,'PENG!','#FFE14D',20);
+      say(L3([['Peng! Beide daneben – nur die Hüte sind weggeflogen!','Bang! They both missed – only their hats flew off!','¡Pum! Los dos fallaron: ¡solo salieron volando los sombreros!'],
+        ['Peng! Er hat ihm den Revolver aus der Hand geschossen!','Bang! He shot the gun right out of his hand!','¡Pum! ¡Le quitó el revólver de la mano de un disparo!'],
+        ['Peng! Oh nein, umgefallen!','Bang! Oh no, he fell over!','¡Pum! ¡Oh no, se ha caído!']][v]));});
+    if(v===2)later(DSH+2.7,()=>{say(L3(['Aber er steht wieder auf! Nur ein Schreck.','But he gets up again! Just a fright.','¡Pero se levanta otra vez! Solo fue un susto.']));});
+    later(DSH+(v===2?3.6:0.6),()=>textP(3250,1030,v===1?'Hoppla!':'Haha!','#FFFFFF',14));
+    return L3(['Ein Duell!','A duel!','¡Un duelo!']);},
   rider:()=>{act('rider');S3.yeehaw();S3.trot();},
   tipi:()=>{SND.whoosh();},campfire:()=>{act('campfire');noise(0.6,0.08);},
   lakota:()=>{act('lakota');for(let i=0;i<8;i++)beep(i%4===0?90:70,i*0.28,0.18,'sine',0.25);},coyote:()=>{act('coyote');S3.howl();},snake:()=>{act('snake');S3.rattle();},

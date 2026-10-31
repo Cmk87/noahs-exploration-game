@@ -1002,8 +1002,8 @@ let VW=360,VH=600,CAM={x:0,y:0,k:0.3},camAnim=null;
 const kFit=()=>Math.min(VW/CW,VH/CH),kMin=()=>Math.min(VW/(WX1-WX0),VH/(WY1-WY0));
 function viewOf(x0,y0,x1,y1,pad){const k=Math.min(VW/(x1-x0),VH/(y1-y0))*(pad||0.92);return {x:(x0+x1)/2-VW/2/k,y:(y0+y1)/2-VH/2/k,k};}
 const homeView=()=>viewOf(0,0,CW,CH,1),worldView=()=>viewOf(WX0,WY0,WX1,WY1,1);
-function clampCam(c){c.k=Math.max(kMin()*0.95,Math.min(kFit()*7,c.k));const vw=VW/c.k,vh=VH/c.k,W=WX1-WX0,H=WY1-WY0;
-  c.x=vw>=W?WX0+(W-vw)/2:Math.max(WX0-20,Math.min(WX1+20-vw,c.x));c.y=vh>=H?WY0+(H-vh)/2:Math.max(WY0-20,Math.min(WY1+20-vh,c.y));return c;}
+function clampCam(c){c.k=Math.max(kMin(),Math.min(kFit()*7,c.k));const vw=VW/c.k,vh=VH/c.k,W=WX1-WX0,[Y0,Y1]=K.EDGE_Y||[WY0,WY1],H=Y1-Y0;   // up into space, down into the deep sea
+  c.x=vw>=W?WX0+(W-vw)/2:Math.max(WX0-20,Math.min(WX1+20-vw,c.x));c.y=vh>=H?Y0+(H-vh)/2:Math.max(Y0-20,Math.min(Y1+20-vh,c.y));return c;}
 function flyTo(v,ms){camAnim={from:{...CAM},to:clampCam({...v}),t0:performance.now(),d:ms||700};}
 const toW=(sx,sy)=>[CAM.x+sx/CAM.k,CAM.y+sy/CAM.k];
 function zoomAt(sx,sy,f){const [wx,wy]=toW(sx,sy);CAM.k*=f;CAM.x=wx-sx/CAM.k;CAM.y=wy-sy/CAM.k;clampCam(CAM);}
@@ -1243,6 +1243,7 @@ if(typeof cityWild==='function')cityWild(K);
 if(typeof cityFar==='function')cityFar(K);
 if(typeof cityWest==='function')cityWest(K);
 if(typeof cityIndustry==='function')cityIndustry(K);
+if(typeof cityEdge==='function')cityEdge(K);
 paws();
 if(document.fonts)document.fonts.load(FONT(20)).catch(()=>{});
 requestAnimationFrame(frame);

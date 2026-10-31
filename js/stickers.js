@@ -15,10 +15,11 @@ const STK_AREAS=[
   ['north','🎅',{es:'El Polo Norte',en:'The North Pole',de:'Der Nordpol'},[-700,250],['reindeer','polarbear','arcticfox','snowyowl','penguin']],
   ['spooky','🎃',{es:'El rincón del miedo',en:'The spooky corner',de:'Die Gruselecke'},[-700,1250],['bat','raven','spider','blackcat']],
   ['west','🤠',{es:'El Lejano Oeste',en:'The Wild West',de:'Der Wilde Westen'},[3400,1200],['bison','coyote','snake','roadrunner','vulture','lizard']],
+  ['deep','🤿',{es:'Las profundidades del mar',en:'The deep sea',de:'Die Tiefsee'},[2000,3400],['manta','spermwhale','jellyfish','squid','anglerfish']],
   ['egypt','🏺',{es:'Egipto',en:'Egypt',de:'Ägypten'},[3450,630],['camel']],
   ['space','🚀',{es:'El centro espacial',en:'The space centre',de:'Das Raumfahrtzentrum'},[3500,100],['alien']],
   ['industry','🏭',{es:'La zona industrial',en:'The industrial area',de:'Das Industriegebiet'},[4700,800],['rat','policedog','elephant']]];
-const STK_FALLBACK={policedog:'🐩',beaver:'🦫',ptera:'🦅',raven:'🐦',blackcat:'🐈',polarbear:'🐻'};
+const STK_FALLBACK={jellyfish:'🎐',policedog:'🐩',beaver:'🦫',ptera:'🦅',raven:'🐦',blackcat:'🐈',polarbear:'🐻'};
 let STK_SEEN=new Set();try{STK_SEEN=new Set(JSON.parse(localStorage.getItem('sl_stkseen')||'[]'));}catch(e){}
 const stickersNew=()=>window.CITY?[...CITY.FOUND].filter(id=>!STK_SEEN.has(id)).length:0;
 let stkOK={};
