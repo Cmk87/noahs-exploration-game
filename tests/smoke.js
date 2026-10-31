@@ -46,6 +46,15 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   check(true, 'words quiz levels 1–8 (incl. der/die/das and plurals)');
   await page.evaluate(() => { for (let i = 0; i < 30; i++) { SKILL['words|de'] = { s: 5.2, n: 10, h: [] }; pluralRound(5); } artRound(VOCAB, 4); });
   check(await page.evaluate(() => artMode && !!target), 'der/die/das round builds');
+  check(await page.evaluate(() => {
+    const prev = lang; lang = 'es';
+    const need = ['hada', 'agua', 'águila'];
+    const arts = Object.fromEntries(VOCAB.filter(v => need.includes(v.es[1])).map(v => [v.es[1], v.es[0]]));
+    const one = w => plPhrase({ es: ['el', w, w + 's'], de: ['die', 'x', 'xs'], en: ['x', 'xs'] }, 1);
+    const ok = need.every(w => arts[w] === 'el') && one('hada') === 'un hada' && one('agua') === 'un agua' && one('águila') === 'un águila'
+      && plPhrase({ es: ['la', 'casa', 'casas'], de: ['das', 'Haus', 'Häuser'], en: ['house', 'houses'] }, 1) === 'una casa';
+    lang = prev; return ok;
+  }), 'feminine nouns with a stressed a/ha keep el and un (el hada, el agua, el águila)');
 
   await page.evaluate(() => showTab('ear'));
   for (const L of [1, 4, 6]) {

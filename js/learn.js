@@ -206,6 +206,8 @@ function plPhrase(it,n,hl){
   hl=hl||(x=>x);
   if(lang==='de'){const one=it.de[0]==='die'?'eine':'ein';return n===1?`${hl(one)} ${it.de[1]}`:`${hl(NUMW.de[n])} ${hl(it.de[2])}`;}
   if(lang==='en'){const one=/^[aeiou]/.test(it.en[0])?'an':'a';return n===1?`${hl(one)} ${it.en[0]}`:`${hl(NUMW.en[n])} ${hl(it.en[1])}`;}
+  /* la → una; anything else (el) → un. Feminine nouns with a stressed a/ha
+     are stored as el (el hada, el agua, el águila) and take un, not una. */
   const one=it.es[0]==='la'?'una':'un';return n===1?`${hl(one)} ${it.es[1]}`:`${hl(NUMW.es[n])} ${hl(it.es[2])}`;
 }
 function plQuestion(){const {it,n}=plMode;

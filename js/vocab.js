@@ -353,7 +353,7 @@ const VOCAB=[
  {e:'🦸',c:'people',es:['el','superhéroe'],en:['the','superhero'],de:['der','Superheld']},
  {e:'🤡',c:'people',es:['el','payaso'],en:['the','clown'],de:['der','Clown']},
  {e:'🧜‍♀️',c:'people',es:['la','sirena'],en:['the','mermaid'],de:['die','Meerjungfrau']},
- {e:'🧚',c:'people',es:['la','hada'],en:['the','fairy'],de:['die','Fee']},
+ {e:'🧚',c:'people',es:['el','hada'],en:['the','fairy'],de:['die','Fee']},
  {e:'👻',c:'people',es:['el','fantasma'],en:['the','ghost'],de:['das','Gespenst']},
  {e:'🥷',c:'people',es:['el','ninja'],en:['the','ninja'],de:['der','Ninja']},
  {e:'👷',c:'job',es:['el','obrero'],en:['the','builder'],de:['der','Bauarbeiter']},
