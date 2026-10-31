@@ -307,23 +307,39 @@ function unlock(e){
   const hello=ADV.done?{es:'¡Hola! Ya has hecho tu aventura de hoy.',en:'Hi! You already did today\'s adventure.',de:'Hallo! Dein Abenteuer heute hast du schon geschafft.'}[lang]
     :{es:'¡Hola! ¿Empezamos la aventura?',en:'Hi! Shall we start the adventure?',de:'Hallo! Wollen wir das Abenteuer starten?'}[lang];
   say(hello);
+  if(pgRefunded)setTimeout(()=>{flyBolt(DIG_COST,'+'+DIG_COST+'⚡');renderPower(true);say({es:'Tu juego se interrumpió. ¡Te devuelvo tus puntos!',en:'Your game was interrupted. Here are your points back!',de:'Dein Spiel wurde unterbrochen. Du bekommst deine Punkte zurück!'}[lang]);},2600);
   setTimeout(()=>{loadVoices();if(!speechReady)say(hello);},900);
   setTimeout(()=>{if(!speechReady)showWarn();},3000);
   fit();fitSky();
 }
-/* coming back to the app (switching apps, screen off) always lands on the home screen;
-   games keep their state, so nothing is lost */
+/* Coming back to the app after an interruption:
+   - a short break (under 5 minutes): exactly where he was, and the current question, letter or
+     word is said again, so he knows what he was doing;
+   - a longer break: the home screen. Everything learned and collected is saved either way;
+     a game in progress keeps its state.
+   If the system closed the app in the background, it starts fresh (start screen, then home). */
+const AWAY_HOME=5*60*1000;
 let hiddenAt=0,lastTouch=Date.now();
-const goHomeIf=away=>{if(away&&gate.style.display==='none'&&activeTab!=='home'&&!$('sleep').classList.contains('on'))showTab('home');};
+const canResume=()=>gate.style.display==='none'&&!$('sleep').classList.contains('on');
+const RESUME_SAY={trace:'sayBtn',read:'readHear',words:'repeatBtn',ear:'earAgain',geo:'geoSay',space:'spaceSayBtn'};
+function resumeSay(){
+  if(activeTab==='act'){const b={parrot:'parrotHear',story:'storyHear'}[actMode]||'actAgain';$(b).click();return;}
+  if(activeTab==='city'){CITY.onLang();return;}
+  const id=RESUME_SAY[activeTab];if(id&&$(id))$(id).click();
+}
+function cameBack(away){
+  if(!canResume())return;
+  if(away>=AWAY_HOME){if(activeTab!=='home')showTab('home');}
+  else if(away>3000&&activeTab!=='home')setTimeout(resumeSay,400);
+}
 document.addEventListener('pointerdown',()=>{lastTouch=Date.now();},true);
 document.addEventListener('visibilitychange',()=>{
-  if(document.hidden){hiddenAt=Date.now();return;}
-  goHomeIf((hiddenAt&&Date.now()-hiddenAt>2000)||Date.now()-lastTouch>60000);
-  hiddenAt=0;
+  if(document.hidden){hiddenAt=Date.now();try{speechSynthesis.cancel();}catch(e){}return;}   // no voice talking on in the background
+  cameBack(hiddenAt?Date.now()-hiddenAt:Date.now()-lastTouch);hiddenAt=0;
 });
-// iOS home-screen apps sometimes come back without a visibility event: an idle minute also counts as "away"
-window.addEventListener('focus',()=>goHomeIf(Date.now()-lastTouch>60000));
-window.addEventListener('pageshow',e=>goHomeIf(e.persisted||Date.now()-lastTouch>60000));
+// iOS home-screen apps sometimes come back without a visibility event: a long idle time also counts as away
+window.addEventListener('focus',()=>{if(!hiddenAt&&Date.now()-lastTouch>=AWAY_HOME)cameBack(Date.now()-lastTouch);});
+window.addEventListener('pageshow',e=>{if(e.persisted)cameBack(Date.now()-lastTouch);});
 gate.addEventListener('pointerdown',unlock,{once:true});
 gate.addEventListener('click',unlock,{once:true});
 

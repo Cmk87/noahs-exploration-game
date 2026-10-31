@@ -167,11 +167,17 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   check(await page.evaluate(() => activeTab === 'city'), 'a sticker can show its animal in the town');
   await page.click('#homeBtn');
   check(await page.evaluate(() => activeTab === 'home'), '🏠 goes back to the home screen');
-  await page.evaluate(() => { showTab('words'); document.dispatchEvent(new Event('visibilitychange')); });
-  await page.evaluate(() => { Object.defineProperty(document, 'hidden', { value: true, configurable: true }); document.dispatchEvent(new Event('visibilitychange')); });
-  await page.waitForTimeout(2200);
-  await page.evaluate(() => { Object.defineProperty(document, 'hidden', { value: false, configurable: true }); document.dispatchEvent(new Event('visibilitychange')); });
-  check(await page.evaluate(() => activeTab === 'home'), 'coming back to the app opens the home screen');
+  // interruptions: a short break resumes in place and repeats the question; a long one goes home
+  const away = async ms => {
+    await page.evaluate(() => { Object.defineProperty(document, 'hidden', { value: true, configurable: true }); document.dispatchEvent(new Event('visibilitychange')); });
+    await page.evaluate(ms => { hiddenAt = Date.now() - ms; Object.defineProperty(document, 'hidden', { value: false, configurable: true }); document.dispatchEvent(new Event('visibilitychange')); }, ms);
+    await page.waitForTimeout(700);
+  };
+  await page.evaluate(() => { showTab('words'); window.SAID = []; const o = window.say; window.say = t => { SAID.push(t); o(t); }; });
+  await away(60 * 1000);
+  check(await page.evaluate(() => activeTab === 'words' && SAID.some(t => /\?/.test(t))), 'a 1-minute break: back exactly where he was, and the question is asked again');
+  await away(6 * 60 * 1000);
+  check(await page.evaluate(() => activeTab === 'home'), 'a 6-minute break: back on the home screen');
 
   {const p2 = await browser.newPage({ viewport: { width: 390, height: 800 }, isMobile: true, hasTouch: true });
    await p2.goto(page.url().split('#')[0]); await p2.waitForTimeout(400);
@@ -216,6 +222,12 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     check(!said.length && !qerr.length, `silent before the start tap${langs ? ' (languages ' + langs + ')' : ''}` + (said.length ? ': ' + said.join(' | ') : '') + (qerr.length ? ' ' + qerr[0] : ''));
     await q.close();
   }
+
+  {const q = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+   await q.addInitScript(() => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', 1); localStorage.setItem('sl_power', '5'); localStorage.setItem('sl_pgame', 'bal'); } });
+   await q.goto(page.url().split('#')[0]); await q.waitForTimeout(400);
+   check(await q.evaluate(() => power === 45 && !localStorage.getItem('sl_pgame')), 'a prize game cut off by the system gives its points back');
+   await q.close();}
 
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();

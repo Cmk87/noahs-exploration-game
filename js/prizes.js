@@ -10,6 +10,10 @@ const DIG_COST=40;                       // price of any prize game
 
 /* ---------- the ⚡ counter ---------- */
 function savePower(){try{localStorage.setItem('sl_power',String(power));}catch(e){}}
+/* a prize game in progress is marked; if the app was closed by the system before it ended,
+   the points come back on the next start */
+const pgMark=k=>{try{localStorage.setItem('sl_pgame',k);}catch(e){}},pgClear=()=>{try{localStorage.removeItem('sl_pgame');}catch(e){}};
+let pgRefunded=false;try{if(localStorage.getItem('sl_pgame')){power+=DIG_COST;savePower();pgClear();pgRefunded=true;}}catch(e){}
 let lastTap={x:innerWidth/2,y:innerHeight/2};
 document.addEventListener('pointerdown',e=>{lastTap={x:e.clientX,y:e.clientY};},true);
 function renderPower(bump){
@@ -196,7 +200,7 @@ function startGame(k,card){
     say({es:`Te faltan ${n} puntos`,en:`You need ${n} more points`,de:`Dir fehlen noch ${n} Punkte`}[lang]);
     return;
   }
-  spendPower(DIG_COST);
+  spendPower(DIG_COST);pgMark(k);
   if(k==='dig')startDig();else if(k==='mem')startMem();else if(k==='bal')startBal();else if(k==='bag')startBag();else startFw();
 }
 function resumeGame(){
@@ -231,7 +235,7 @@ function quitGuard(btn){
     $('qsStay').textContent='▶ '+{es:'Seguir jugando',en:'Keep playing',de:'Weiterspielen'}[lang];
     sh.classList.add('on');say($('qsTitle').textContent);
     $('qsStay').onclick=()=>{ac();sh.classList.remove('on');};
-    $('qsLeave').onclick=()=>{ac();sh.classList.remove('on');
+    $('qsLeave').onclick=()=>{ac();sh.classList.remove('on');pgClear();
       if(refund){power+=DIG_COST;savePower();flyBolt(DIG_COST,'+'+DIG_COST+'⚡');setTimeout(()=>renderPower(true),800);
         say({es:'¡Te devuelvo tus puntos! Elige otro juego.',en:'Here are your points back! Pick another game.',de:'Du bekommst deine Punkte zurück! Such dir ein anderes Spiel aus.'}[lang]);}
       showDigLock();};
@@ -774,7 +778,7 @@ function finishDig(){
   $('digPrompt').textContent={es:'¡Mira cómo se monta!',en:'Watch it come together!',de:'Schau, wie er zusammenpasst!'}[lang];
 }
 function goAlive(){
-  const D=DIG;D.phase='alive';D.aliveT=performance.now();D.roarT=0;D.done=true;
+  const D=DIG;D.phase='alive';D.aliveT=performance.now();D.roarT=0;D.done=true;pgClear();
   roar(D.sp.big);shakeEl(dg);
   D.parts.forEach(pt=>sparkle(pt.H.x,pt.H.y,5,pick(['#FFD400','#FFFFFF','#7DF9FF'])));
   setTimeout(()=>{bigWin();rainEmoji(['🦴','⭐','🦖','🦕','✨'],24);},1200);
@@ -879,7 +883,7 @@ function memFlip(d,it){
 }
 function memWin(){
   if(!MEM||pane!=='memPlay')return;
-  MEM.done=true;bigWin();rainEmoji(['⭐','🎉','🃏','✨'],26);
+  MEM.done=true;pgClear();bigWin();rainEmoji(['⭐','🎉','🃏','✨'],26);
   const w={es:'¡Lo has conseguido!',en:'You did it!',de:'Geschafft!'}[lang];
   $('memPrompt').textContent='🏆 '+w;say(w);
 }
@@ -961,7 +965,7 @@ function balPop(b,i){
   BAL.fx.push({x:b.dx,y:b.y,txt:b.gold?'⭐':b.it.e,t:now,vy:-60});
   if(b.gold){BAL.pops+=3;chime();say({es:'¡Estrella de oro!',en:'Gold star!',de:'Goldstern!'}[lang]);}
   else{BAL.pops++;balSay(b.it[lang][1]);}
-  if(!BAL.done&&BAL.pops>=BAL.goal){BAL.done=true;BAL.pops=BAL.goal;
+  if(!BAL.done&&BAL.pops>=BAL.goal){BAL.done=true;pgClear();BAL.pops=BAL.goal;
     const bl=BAL;setTimeout(()=>{if(BAL!==bl||pane!=='balPlay'||activeTab!=='dig')return;BAL.queue=[];bigWin();rainEmoji(['🎈','🎉','⭐'],28);
       say({es:'¡Genial! ¡Todos los globos!',en:'Great! All the balloons!',de:'Super! Alle Ballons!'}[lang]);},1600);}
   balText();
@@ -1025,7 +1029,7 @@ fwc.addEventListener('pointerdown',e=>{
   e.preventDefault();ac();if(!FW||FW.done)return;
   const r=fwc.getBoundingClientRect();launch(e.clientX-r.left,e.clientY-r.top,r.width,r.height);
   FW.shots++;
-  if(FW.shots>=FW.goal){FW.done=true;FW.nextFin=performance.now()+900;
+  if(FW.shots>=FW.goal){FW.done=true;pgClear();FW.nextFin=performance.now()+900;
     setTimeout(()=>{rainEmoji(['🎆','✨','⭐','🎇'],26);bigWin();
       say({es:'¡Qué bonito!',en:'So pretty!',de:'Wie schön!'}[lang]);},3800);}
   fwText();
@@ -1068,7 +1072,7 @@ function bagCheck(now){const {W,H,soil}=BAG,d=soil.dpr;
     for(const [ox,oy] of [[0,0],[-r,0],[r,0],[0,-r],[0,r]]){const a=soil.g.getImageData(Math.round((cx+ox)*d),Math.round((cy+oy)*d),1,1).data[3];if(a<150)open++;}
     if(open>=3){it.found=true;it.t=now;BAG.lastFind=now;chime();say(it.it[lang]);for(let k=0;k<14;k++)BAG.fx.push({x:cx,y:cy,vx:rnd(-120,120),vy:rnd(-200,-60),t:now,c:pick(['#FFD400','#FFFFFF','#FF8A00'])});
       bagText();if(BAG.items.every(i=>i.found)){const bg=BAG;setTimeout(()=>{if(BAG===bg)bagWin();},1400);}}}}
-function bagWin(){if(!BAG||pane!=='bagPlay'||BAG.done)return;BAG.done=true;bigWin();rainEmoji(BAG.items.map(i=>i.it.ic).concat(['⭐','🎉']),28);bagText();
+function bagWin(){if(!BAG||pane!=='bagPlay'||BAG.done)return;BAG.done=true;pgClear();bigWin();rainEmoji(BAG.items.map(i=>i.it.ic).concat(['⭐','🎉']),28);bagText();
   say({es:'¡Lo encontraste todo! ¡Eres un gran excavador!',en:'You found everything! You are a great digger!',de:'Du hast alles gefunden! Du bist ein toller Baggerfahrer!'}[lang]);}
 function bagArm(W,H){const G=H*BG_G,bx=BAG.ex*W;return {P0:[bx+W*0.05,G-H*0.1],L1:H*0.36,L2:H*0.34};}
 function bagLoop(now){
