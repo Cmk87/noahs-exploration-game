@@ -219,16 +219,16 @@ function jobTask(j,fem,skin){
     const board=document.createElement('div');board.className='jBoard';sc.appendChild(board);
     const ask=()=>{if(!jLive(r))return;[...sc.querySelectorAll('.jT')].forEach(b=>b.remove());if(round>=3){finish();return;}
       const pick3=shuffle(words).slice(0,3),[L,w]=pick3[0];board.textContent=lang==='de'?L.toUpperCase():L;
-      shuffle(pick3).forEach(([l2,w2],i)=>tgt(w2[0],22+i*28,70,b=>{if(l2===L){b.classList.add('ok');beep(880,0,0.12,'triangle',0.16);sayAt(w2[1],0.75);round++;setTimeout(ask,1300);}
+      r.lock=false;shuffle(pick3).forEach(([l2,w2],i)=>tgt(w2[0],22+i*28,70,b=>{if(r.lock)return;if(l2===L){r.lock=true;b.classList.add('ok');beep(880,0,0.12,'triangle',0.16);sayAt(w2[1],0.75);round++;setTimeout(ask,1300);}
         else{nope();b.classList.remove('wrong');void b.offsetWidth;b.classList.add('wrong');sayAt(w2[1],0.75);}}));
       const q=T.go[lang]+' '+(lang==='de'?L.toUpperCase():L);$('jobPrompt').textContent=q;say(q);};
     ask();return;}
   if(T.houses){    // the mail carrier: bring each letter to the house with the right number
-    const houses=[];for(let i=1;i<=T.houses;i++){const h=tgt('🏠',10+(i-1)*20,62,b=>{if(r.want===i){b.classList.add('ok');beep(880,0,0.12,'triangle',0.16);sayAt(jNum(i),0.8);r.n++;setTimeout(next,1200);}
+    const houses=[];for(let i=1;i<=T.houses;i++){const h=tgt('🏠',10+(i-1)*20,62,b=>{if(r.lock)return;if(r.want===i){r.lock=true;b.classList.add('ok');beep(880,0,0.12,'triangle',0.16);sayAt(jNum(i),0.8);r.n++;setTimeout(next,1200);}
         else{nope();b.classList.remove('wrong');void b.offsetWidth;b.classList.add('wrong');sayAt(jNum(i),0.8);}});
       const num=document.createElement('span');num.className='jNum';num.textContent=i;h.appendChild(num);houses.push(h);}
     const letter=document.createElement('div');letter.className='jDeco jLetter';letter.textContent='✉️';sc.appendChild(letter);
-    const next=()=>{if(!jLive(r))return;houses.forEach(h=>h.classList.remove('ok'));if(r.n>=3){finish();return;}
+    const next=()=>{if(!jLive(r))return;r.lock=false;houses.forEach(h=>h.classList.remove('ok'));if(r.n>=3){finish();return;}
       let w;do{w=1+Math.floor(Math.random()*T.houses);}while(w===r.want);r.want=w;letter.innerHTML='✉️<b>'+w+'</b>';
       const q={de:`Bring den Brief zu Haus Nummer ${jNum(w)}!`,en:`Take the letter to house number ${jNum(w)}!`,es:`¡Lleva la carta a la casa número ${jNum(w)}!`}[lang];$('jobPrompt').textContent=q;say(q);};
     next();return;}

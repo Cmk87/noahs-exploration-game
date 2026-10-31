@@ -261,7 +261,7 @@ function buildGeoModes(){
     b.onclick=()=>{ac();setGeoMode(m);};box.appendChild(b);});
 }
 function setGeoMode(m){
-  clearTimeout(geoT);GEO.hint=null;GEO.mode=m;GEO.target=null;GEO.sel=null;GEO.glow=null;GEO.selCont=null;buildGeoModes();$('geoFlags').innerHTML='';$('geoFlags').classList.remove('on');
+  $('v-geo').classList.toggle('flagsOn',m==='flags');clearTimeout(geoT);GEO.hint=null;GEO.mode=m;GEO.target=null;GEO.sel=null;GEO.glow=null;GEO.selCont=null;buildGeoModes();$('geoFlags').innerHTML='';$('geoFlags').classList.remove('on');
   $('geoLevel').style.visibility=m==='explore'?'hidden':'visible';
   if(m==='explore'){$('geoQ').textContent='';$('geoQ').classList.remove('on');flyTo(worldView());geoInfo(null);
     say({es:'¡Explora el mundo!',en:'Explore the world!',de:'Entdecke die Welt!'}[lang]);return;}

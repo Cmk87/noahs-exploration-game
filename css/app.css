@@ -397,7 +397,6 @@
   #mascot{position:fixed;left:8px;bottom:max(8px,env(safe-area-inset-bottom));z-index:7;width:78px;height:78px;border-radius:50%;
     border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);background:radial-gradient(circle at 50% 35%,#E6F7FF,#9ED8FF);cursor:pointer;display:none}
   #mascot.on{display:block}
-  .view{padding-bottom:max(92px,env(safe-area-inset-bottom))}
   #advTitle{font-size:min(7vw,30px);color:var(--bolt);-webkit-text-stroke:4px var(--ink);paint-order:stroke fill;margin:10px 0 4px;text-align:center}
   #advMap{position:relative;width:100%;max-width:440px;margin:0 auto}
   #advMap svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -774,3 +773,23 @@ header{gap:6px;padding-left:10px;padding-right:10px}
   .hcard.wide{grid-column:span 3}.hcard.last{grid-column:span 2}
   .hcard .hl{font-size:min(2.2vw,24px)}
 }
+/* the job picker: all ten fit on a phone (four per row, smaller names) */
+@media (max-width:520px){.jGrid.pick{grid-template-columns:repeat(4,1fr);gap:8px}.jGrid.pick .jCard{padding-bottom:24px;border-radius:16px}.jGrid.pick .jLab{font-size:10px;line-height:1.05}}
+/* flags quiz: the map gives room to the row of flags */
+#v-geo.flagsOn #map{height:min(calc(100vw - 28px),calc(100vh - 470px),520px);height:min(calc(100vw - 28px),calc(100dvh - 470px),520px)}
+@media (orientation:landscape) and (min-width:700px){#v-geo.flagsOn #map{height:min(calc(100vh - 460px),560px);height:min(calc(100dvh - 460px),560px)}}
+/* Dino Show free play: the dino and the sentence stay in view, the many buttons scroll in their own box */
+#actPlay.on{flex:1 1 auto;min-height:0}
+#actPlay.on #playCv{flex:0 0 auto;width:min(calc(100% - 28px),calc(100vh - 520px),420px);width:min(calc(100% - 28px),calc(100dvh - 520px),420px);min-width:170px}
+#actPlay.on #playVerbs{flex:1 1 auto;min-height:70px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px;align-content:flex-start}
+/* short phones (iPhone SE and smaller): the big pictures give way so nothing needs scrolling */
+#sky{width:min(100%,calc(100vh - 310px));width:min(100%,calc(100dvh - 310px));margin-left:auto;margin-right:auto}
+#v-geo.flagsOn #map{min-height:150px}
+#grid,#earGrid{max-width:min(100%,calc((100vh - 290px)*1.5));max-width:min(100%,calc((100dvh - 290px)*1.5))}
+.jGrid.pick{max-width:min(720px,calc((100vh - 290px)*1.25));max-width:min(720px,calc((100dvh - 290px)*1.25))}
+@media (max-height:620px){
+  .flagBtn{font-size:min(9vw,36px)}
+  .jScene{width:min(100%,calc((100vh - 260px)*1.33));width:min(100%,calc((100dvh - 260px)*1.33))}
+  #map{min-height:180px}
+}
+#grid[style*="repeat(2"],#earGrid[style*="repeat(2"]{max-width:min(100%,calc(100vh - 300px));max-width:min(100%,calc(100dvh - 300px))}
