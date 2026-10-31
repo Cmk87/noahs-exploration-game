@@ -1132,8 +1132,12 @@ function showQ(){const q=$('cityQ');if(!FIND){q.classList.remove('on');return;}c
   q.innerHTML='';const s=document.createElement('span');s.textContent=W.where(e.n[li()])+' 🔊';const st=document.createElement('span');st.className='st';st.textContent='⭐ '+SAVE.stars;
   q.append(s,st);q.classList.add('on');}
 $('cityQ').onclick=()=>{if(FIND)say(W.where(ENT[FIND.id].n[li()]));};
+/* a question about a whole area (the North Pole, Egypt, the sea, the forest …): any tap inside it is right */
+const isArea=e=>e&&e.at&&!e.animal&&(e.at[2]-e.at[0])*(e.at[3]-e.at[1])>=100000;
 function findTap(e,b,x,y,ref){
   if(FIND.done)return;
+  const want=ENT[FIND.id];
+  if(e.id!==FIND.id&&isArea(want)&&x>=want.at[0]&&x<=want.at[2]&&y>=want.at[1]&&y<=want.at[3]){e=want;ref=undefined;b=[x-30,y-30,x+30,y+30];}
   if(e.id===FIND.id){FIND.done=true;SAVE.stars++;store();showQ();if(typeof award==='function')award(Math.min(FIND.miss,2),1);TAP[e.id]&&TAP[e.id](ref,x,y);
     burst((b[0]+b[2])/2,(b[1]+b[3])/2,'star',22,'#FFD23F');SND.yay();bubble(e,b,ref&&ref.label);say(W.yes[li()]+' '+cap(e.n[li()])+'!');later(3,()=>{if(FIND)findNext();});}
   else{bubble(e,b,ref&&ref.label);let got='';
