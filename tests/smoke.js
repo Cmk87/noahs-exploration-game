@@ -20,7 +20,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.reload();
   await page.mouse.click(180, 320);
   await page.waitForTimeout(300);
-  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 11), 'opens on the home screen with 11 sections');
+  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 12), 'opens on the home screen with 12 sections');
   check(await page.evaluate(() => lang === 'de'), 'starts in German');
 
   console.log('Layout');
@@ -189,7 +189,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     await t.goto(page.url().split('#')[0]); await t.waitForTimeout(300); await t.touchscreen.tap(w / 2, h / 3); await t.waitForTimeout(500);
     const r = await t.evaluate(() => { const v = $('v-home'); return { s: UISCALE, fits: v.scrollHeight <= v.clientHeight + 2 }; });
     check(r.fits && (w < h ? r.s > 1.2 : true), `${what}: home screen fits${w < h ? ' and is scaled up (' + r.s.toFixed(2) + '×)' : ''}`);
-    for (const tab of ['read', 'words', 'ear', 'space', 'geo', 'city']) {
+    for (const tab of ['read', 'jobs', 'words', 'ear', 'space', 'geo', 'city']) {
       await t.evaluate(tb => showTab(tb), tab); await t.waitForTimeout(500);
       const ok = await t.evaluate(() => { const v = $('v-' + activeTab); return v.scrollHeight <= v.clientHeight + 2; });
       if (!ok) check(false, `${what}: ${tab} fits without scrolling`);
@@ -228,6 +228,18 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    await q.goto(page.url().split('#')[0]); await q.waitForTimeout(400);
    check(await q.evaluate(() => power === 45 && !localStorage.getItem('sl_pgame')), 'a prize game cut off by the system gives its points back');
    await q.close();}
+
+  // jobs: a 'who helps?' round answered right, and every job's little game played to the end
+  {const r = await page.evaluate(async () => { showTab('jobs'); JM = 'need'; jobRound(); const i = JR.opts.findIndex(o => o.j === JR.j); document.querySelectorAll('#jobStage .jCard')[i].click();
+     const ok = JR.done; const sleep = ms => new Promise(r => setTimeout(r, ms)); const ends = [];
+     for (const j of JOBS) { jobTask(j, true, 1); await sleep(80); const T = TASKS[j.k];
+       for (let s = 0; s < 12 && !document.querySelector('.jEnd'); s++) { const bs = [...document.querySelectorAll('.jScene .jT')].filter(b => !b.classList.contains('done')); if (!bs.length) break;
+         if (T.houses) { bs.find(b => b.querySelector('.jNum').textContent == JR.want).click(); await sleep(1300); }
+         else if (T.letters) { const L = document.querySelector('.jBoard').textContent.toLowerCase(); const w = LETTERWORD[lang][L][0]; bs.find(b => b.textContent === w).click(); await sleep(1400); }
+         else { bs[0].click(); await sleep(60); } }
+       await sleep(1000); if (document.querySelector('.jEnd')) ends.push(j.k); }
+     showTab('home'); return { ok, ends: ends.length };});
+   check(r.ok && r.ends === 10, `jobs: a "who helps?" answer, and all ${r.ends}/10 job games finished`);}
 
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();

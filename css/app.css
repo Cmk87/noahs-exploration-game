@@ -645,9 +645,9 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 #qsStay{background:var(--good);color:#fff}
 /* ---------- big and small screens ----------
    Home: the cards shrink a little on short screens so all of them fit without scrolling. */
-.hcard{min-height:min(30vw,128px,calc((100vh - 230px)/6 - 14px));min-height:min(30vw,128px,calc((100dvh - 230px)/6 - 14px));padding:8px 10px}
+.hcard{min-height:min(30vw,128px,calc((100vh - 230px)/7 - 14px));min-height:min(30vw,128px,calc((100dvh - 230px)/7 - 14px));padding:8px 10px}
 .hcard .hi{font-size:min(13vw,56px,6vh);font-size:min(13vw,56px,6dvh)}
-.hcard.wide{min-height:min(26vw,108px,calc((100vh - 230px)/6 - 14px));min-height:min(26vw,108px,calc((100dvh - 230px)/6 - 14px))}
+.hcard.wide{min-height:min(26vw,108px,calc((100vh - 230px)/7 - 14px));min-height:min(26vw,108px,calc((100dvh - 230px)/7 - 14px))}
 .hcard.wide .hi{font-size:min(16vw,66px,7vh);font-size:min(16vw,66px,7dvh)}
 /* Landscape tablets and computers: use the width. Home cards in four columns, game screens a bit wider. */
 @media (orientation:landscape) and (min-width:700px){
@@ -661,7 +661,7 @@ header{gap:6px;padding-left:10px;padding-right:10px}
   #mapWrap,#geoBox{max-width:min(1000px,100%)}
   #map{height:min(calc(100vh - 370px),560px);height:min(calc(100dvh - 370px),560px)}
   #homeGrid{grid-template-columns:repeat(4,1fr);max-width:1000px;margin:0 auto}
-  .hcard{min-height:min(19vw,calc((100vh - 190px)/3 - 14px));min-height:min(19vw,calc((100dvh - 190px)/3 - 14px))}
+  .hcard{min-height:min(19vw,calc((100vh - 190px)/4 - 14px));min-height:min(19vw,calc((100dvh - 190px)/4 - 14px))}
   .hcard.wide{grid-column:span 2;min-height:0}
   .hcard .hi{font-size:min(6vw,10vh,64px);font-size:min(6vw,10dvh,64px)}
   .hcard .hl{font-size:min(2.6vw,26px)}
@@ -727,3 +727,50 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .vcHelp{font-size:13px;line-height:1.4;margin:8px 0;background:#FFF6D6;border-radius:12px;padding:8px 10px}
 .vcStore{display:inline-block;text-decoration:none;color:inherit;margin-top:2px}
 #gearBtn.warn::after{content:"";position:absolute;top:-3px;right:-3px;width:13px;height:13px;border-radius:50%;background:#FF3B30;border:2px solid #fff}
+
+/* ---------- jobs ---------- */
+#v-jobs{justify-content:flex-start}
+#jobModes{flex-wrap:wrap;justify-content:center;gap:6px;padding:0 10px}
+#jobModes .seg{font-size:15px}
+#jobStage{width:100%;display:flex;flex-direction:column;align-items:center;gap:12px;padding:0 14px}
+.jTop{font-size:min(20vw,100px,12vh);line-height:1.15;background:#fff;border-radius:24px;padding:6px 28px;box-shadow:var(--lift),var(--soft)}
+.jTop.fixed{animation:slam .5s}
+.jGrid{display:grid;gap:12px;width:100%;max-width:min(560px,calc((100vh - 360px)*1.5));max-width:min(560px,calc((100dvh - 360px)*1.5))}
+.jGrid.n3{grid-template-columns:repeat(3,1fr)}
+.jGrid.n4{grid-template-columns:repeat(4,1fr);max-width:min(640px,calc((100vh - 360px)*2.6));max-width:min(640px,calc((100dvh - 360px)*2.6))}
+.jGrid.pick{grid-template-columns:repeat(auto-fill,minmax(86px,1fr));max-width:720px}
+.jCard{position:relative;aspect-ratio:5/6.4;border:none;border-radius:20px;background:#fff;box-shadow:var(--lift),var(--soft);padding:4px 4px 20px;cursor:pointer}
+.jCard canvas{width:100%;height:100%;display:block}
+.jLab{position:absolute;left:4px;right:4px;bottom:3px;font:800 12px/1.1 'Baloo 2',sans-serif;color:var(--ink);text-align:center}
+.jCard.right{box-shadow:0 0 0 6px var(--bolt),0 0 26px 8px rgba(255,212,0,.8);transform:scale(1.05)}
+.jCard.wrong{animation:shake .4s}
+.jCard.hint{animation:pulse .5s ease-in-out infinite alternate;box-shadow:0 0 0 5px var(--beam)}
+#jobPlay{background:var(--bolt);animation:pulse .7s ease-in-out infinite alternate}
+.jScene{position:relative;width:min(100%,calc((100vh - 300px)*1.33),640px);width:min(100%,calc((100dvh - 300px)*1.33),640px);aspect-ratio:4/3;border-radius:24px;overflow:hidden;box-shadow:var(--lift),var(--soft)}
+.jMe{position:absolute;left:1%;bottom:0;width:20%;aspect-ratio:5/6;pointer-events:none}
+.jDeco{position:absolute;transform:translate(-50%,-50%);line-height:1;pointer-events:none;transition:left .8s ease-in-out,top .8s ease-in-out}
+.jT{position:absolute;transform:translate(-50%,-50%);border:none;background:none;font-size:min(10vw,52px);line-height:1;cursor:pointer;padding:6px;transition:transform .9s ease-in,opacity .9s}
+.jT.pop{animation:slam .4s}
+.jT.drive{transform:translate(500%,-50%);opacity:0}
+.jT.done.pop:not(.drive){opacity:.9}
+.jT.ok{animation:slam .4s;filter:drop-shadow(0 0 10px #FFD23F)}
+.jT.wrong{animation:shake .4s}
+.jPlus{position:absolute;right:-10%;top:-20%;font-size:55%}
+.jNum{position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);font:800 min(5vw,22px)/1 'Baloo 2',sans-serif;color:#fff;background:#C0473A;border-radius:8px;padding:1px 6px}
+.jLetter{left:50%;top:20%;font-size:min(10vw,52px)}.jLetter b{font:800 min(6vw,28px)/1 'Baloo 2',sans-serif;color:#C0473A;margin-left:4px}
+.jBoard{position:absolute;left:50%;top:22%;transform:translate(-50%,-50%);background:#1E3D2E;border:6px solid #9A6440;border-radius:8px;color:#fff;font:800 min(14vw,72px)/1 'Baloo 2',sans-serif;padding:6px 26px}
+.jEnd{display:flex;gap:12px;justify-content:center}
+/* twelve sections: three columns upright (Abenteuer across the top, Preise two wide at the end), five on a landscape screen */
+#homeGrid{grid-template-columns:repeat(3,1fr);gap:10px}
+.hcard{min-height:min(30vw,128px,calc((100vh - 220px)/5 - 10px));min-height:min(30vw,128px,calc((100dvh - 220px)/5 - 10px));padding:6px 4px;border-radius:22px}
+.hcard .hi{font-size:min(10vw,52px,6vh);font-size:min(10vw,52px,6dvh)}
+.hcard .hl{font-size:min(4.3vw,21px)}
+.hcard .hx{font-size:12px;padding:0 8px}
+.hcard.last{grid-column:span 2;flex-direction:row;gap:12px}
+.hcard.last .hi{font-size:min(13vw,60px,7vh);font-size:min(13vw,60px,7dvh)}.hcard.last .hl{font-size:min(5.6vw,26px)}
+@media (orientation:landscape) and (min-width:700px){
+  #homeGrid{grid-template-columns:repeat(5,1fr);max-width:1100px}
+  .hcard,.hcard.wide{min-height:min(19vw,calc((100vh - 190px)/3 - 12px));min-height:min(19vw,calc((100dvh - 190px)/3 - 12px))}
+  .hcard.wide{grid-column:span 3}.hcard.last{grid-column:span 2}
+  .hcard .hl{font-size:min(2.2vw,24px)}
+}
