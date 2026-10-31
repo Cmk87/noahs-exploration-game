@@ -15,6 +15,7 @@ const STK_AREAS=[
   ['north','🎅',{es:'El Polo Norte',en:'The North Pole',de:'Der Nordpol'},[-700,250],['reindeer','polarbear','arcticfox','snowyowl','penguin']],
   ['spooky','🎃',{es:'El rincón del miedo',en:'The spooky corner',de:'Die Gruselecke'},[-700,1250],['bat','raven','spider','blackcat']],
   ['west','🤠',{es:'El Lejano Oeste',en:'The Wild West',de:'Der Wilde Westen'},[3400,1200],['bison','coyote','snake','roadrunner','vulture','lizard']],
+  ['egypt','🏺',{es:'Egipto',en:'Egypt',de:'Ägypten'},[3450,630],['camel']],
   ['space','🚀',{es:'El centro espacial',en:'The space centre',de:'Das Raumfahrtzentrum'},[3500,100],['alien']],
   ['industry','🏭',{es:'La zona industrial',en:'The industrial area',de:'Das Industriegebiet'},[4700,800],['rat','policedog','elephant']]];
 const STK_FALLBACK={policedog:'🐩',beaver:'🦫',ptera:'🦅',raven:'🐦',blackcat:'🐈',polarbear:'🐻'};

@@ -254,7 +254,8 @@ for(let i=0;i<500&&TREES.length<52;i++){const x=885+sr()*310,y=250+sr()*515;
 ============================================================= */
 const STATIC=[],VIEW=[0,0,CW,CH];
 const S=(y,b,f)=>STATIC.push({y,b,f});
-function hit(id,x0,y0,x1,y1,o){const h={id,b:[x0,y0,x1,y1]};if(o)Object.assign(h,o);HITS.push(h);if(!ENT[id].at&&!(o&&o.moving))ENT[id].at=h.b;}
+let HDY=0;                                  // a whole section can be drawn moved up or down (see city-far.js); its tap areas move with it
+function hit(id,x0,y0,x1,y1,o){const h={id,b:[x0,y0+HDY,x1,y1+HDY]};if(o)Object.assign(h,o);HITS.push(h);if(!ENT[id].at&&!(o&&o.moving))ENT[id].at=h.b;}
 
 /* trees */
 function tree(x,y,s,kind,c){
@@ -1232,7 +1233,7 @@ function frame(now){requestAnimationFrame(frame);if(document.hidden||activeTab!=
   const dt=Math.min(0.05,(now-last)/1000);last=now;T+=dt;update(dt);render(now);}
 const K={rr,circ,ell,poly,ln,star,shade,FONT,sign,win,gableB,flatB,kid,SKIN,HAIR,ent,ENT,ANIMALS,S,hit,fx,act,later,puff,burst,textP,PARTS,LIT,LIGHTS,
   SND,swp,tree,TCOL,sr,sm,li,ST,TAP,VIEW,TAU,wheel,shakeTree,g,rideTrain,TRAIN,STOP_WEST,flyTo,viewOf,
-  GROUND0:[],GROUND1:[],UPDATE:[],DYN:[],TOP:[],ZONES:[],shake:0,FIND:()=>FIND,FOUND:()=>FOUND};
+  GROUND0:[],GROUND1:[],UPDATE:[],DYN:[],TOP:[],ZONES:[],shake:0,FIND:()=>FIND,FOUND:()=>FOUND,setDY:v=>{HDY=v;},LIT};
 if(typeof cityWild==='function')cityWild(K);
 if(typeof cityFar==='function')cityFar(K);
 if(typeof cityWest==='function')cityWest(K);
