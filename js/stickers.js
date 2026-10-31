@@ -11,7 +11,7 @@ const STK_AREAS=[
   ['mountains','🏔️',{es:'Las montañas',en:'The mountains',de:'Die Berge'},[800,-400],['ibex','marmot','eagle']],
   ['dino','🦕',{es:'El valle de los dinosaurios',en:'Dinosaur valley',de:'Das Dino-Tal'},[2200,200],['brachio','trex','trike','stego','ptera','babydino']],
   ['castle','🏰',{es:'El castillo',en:'The castle',de:'Die Burg'},[2000,1480],['dragon','horse']],
-  ['sea','🏖️',{es:'La playa y el mar',en:'Beach and sea',de:'Strand und Meer'},[1200,2000],['crab','gull','starfish','seal','octopus','turtle','dolphin','whale','shark']],
+  ['sea','🏖️',{es:'La playa y el mar',en:'Beach and sea',de:'Strand und Meer'},[1200,2000],['crab','gull','starfish','seal','octopus','turtle','dolphin','whale','shark','parrot']],
   ['north','🎅',{es:'El Polo Norte',en:'The North Pole',de:'Der Nordpol'},[-700,250],['reindeer','polarbear','arcticfox','snowyowl','penguin']],
   ['spooky','🎃',{es:'El rincón del miedo',en:'The spooky corner',de:'Die Gruselecke'},[-700,1250],['bat','raven','spider','blackcat']],
   ['west','🤠',{es:'El Lejano Oeste',en:'The Wild West',de:'Der Wilde Westen'},[3400,1200],['bison','coyote','snake','roadrunner','vulture','lizard']],

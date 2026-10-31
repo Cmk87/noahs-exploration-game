@@ -50,8 +50,8 @@ ent('treasure','💰',['der Schatz','the treasure','el tesoro'],['Ein geheimer S
 ANI('camel','🐪',['das Kamel','the camel','el camello'],['Das Kamel! Es kann viele Tage ohne Wasser durch die Wüste laufen.','The camel! It can walk through the desert for days without water.','¡El camello! Puede cruzar el desierto muchos días sin agua.']);
 ent('duel','🤠',['das Duell','the duel','el duelo'],null,{find:1});
 ent('rider','🐎',['der Reiter','the rider','el jinete'],['Der Cowboy reitet durch die Prärie! Hü!','The cowboy rides across the prairie! Giddy-up!','¡El vaquero cabalga por la pradera! ¡Arre!'],{find:1});
-ent('tipi','⛺',['das Tipi','the tipi','el tipi'],['Das Tipi! Ein Zelt aus Tierhaut und langen Stangen. Darin wohnen die Lakota.','The tipi! A tent made of hides and long poles. The Lakota people live in it.','¡El tipi! Una tienda de pieles y palos largos. Ahí viven los lakota.'],{find:1});
-ent('lakota','🪶',['der Trommler','the drummer','el tamborilero'],['Der Trommler der Lakota! Die Lakota leben in der Prärie, reiten wunderbar und trommeln am Feuer.','The Lakota drummer! The Lakota live on the prairie, ride wonderfully and drum by the fire.','¡El tamborilero lakota! Los lakota viven en la pradera, montan de maravilla y tocan el tambor junto al fuego.'],{find:1});
+ent('tipi','⛺',['das Tipi','the tipi','el tipi'],['Das Tipi! Ein Zelt aus Tierhaut und langen Stangen. Darin wohnen die Indianer.','The tipi! A tent made of hides and long poles. Native Americans live in it.','¡El tipi! Una tienda de pieles y palos largos. Ahí viven los nativos americanos.'],{find:1});
+ent('lakota','🪶',['der Trommler','the drummer','el tamborilero'],['Der Trommler der Indianer! Die Indianer leben in der Prärie, reiten wunderbar und trommeln am Feuer.','The Native American drummer! They live on the prairie, ride wonderfully and drum by the fire.','¡El tamborilero de los nativos americanos! Viven en la pradera, montan de maravilla y tocan el tambor junto al fuego.'],{find:1});
 ent('campfire','🔥',['das Lagerfeuer','the campfire','la hoguera'],['Rauchzeichen! Mit dem Rauch vom Lagerfeuer kann man Nachrichten schicken.','Smoke signals! You can send messages with the smoke from the campfire.','¡Señales de humo! Con el humo de la hoguera se pueden mandar mensajes.'],{find:1});
 ANI('bison','🦬',['der Bison','the bison','el bisonte'],['Der Bison! Er ist groß und stark.','The bison! It is big and strong.','¡El bisonte! Es grande y fuerte.']);
 ANI('coyote','🐺',['der Kojote','the coyote','el coyote'],['Der Kojote! Ahuuu!','The coyote! Ahooo!','¡El coyote! ¡Auuu!']);
@@ -482,7 +482,7 @@ S(996,[2880,930,2925,998],()=>{const T=TT(),t=fx('guitar'),x=2902,y=994,strum=Ma
   hit('cowboy',x-12,y-60,x+16,y,{small:1,ref:'guitar'});});
 
 /* =============================================================
-   THE LAKOTA CAMP in the south-west of the prairie: tipis, a campfire
+   THE INDIANER CAMP (Native Americans) in the south-west of the prairie: tipis, a campfire
    that sends smoke signals, a drummer, a dancing child, a painted horse
 ============================================================= */
 function tipi(x,b,s,k){ell(x+4,b+2,32*s,6*s,'rgba(80,50,20,.18)');
