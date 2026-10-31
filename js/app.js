@@ -71,7 +71,7 @@ function setLang(code,btn){
   else if(activeTab==='words'){buildChips();newRound();}
   else if(activeTab==='ear')newEarRound();
   else if(activeTab==='read')readRound();
-  else if(activeTab==='jobs')jobRound();
+  else if(activeTab==='jobs')jobOnLang();
   else if(activeTab==='act')showAct();
   else if(activeTab==='space'){spaceQuiz=false;selectPlanet(selected);}
   else if(activeTab==='geo'){if(GEO.mode!=='explore')setGeoMode(GEO.mode);else showGeo();}
@@ -266,12 +266,37 @@ document.getElementById('skipBtn').onclick=()=>{ac();newRound();};
 let earAgainT=0;
 document.getElementById('earAgain').onclick=()=>{ac();const now=performance.now(),slow=now-earAgainT<4000;earAgainT=slow?0:now;earSay(slow?0.45:undefined);};
 document.getElementById('earSkip').onclick=()=>{ac();newEarRound();};
+/* after the hold: a two-digit sum, easy for an adult on a tablet, not for a four-year-old */
+function grownAsk(){
+  const box=$('grown');if(box.classList.contains('on'))return;
+  const a=12+Math.floor(Math.random()*6),b=3+Math.floor(Math.random()*5),ans=a*b;
+  let typed='';
+  const L={es:['Solo para adultos',`¿Cuánto es ${a} × ${b}?`,'Cancelar'],
+           en:['Grown-ups only',`What is ${a} × ${b}?`,'Cancel'],
+           de:['Nur für Erwachsene',`Was ist ${a} × ${b}?`,'Abbrechen']}[lang];
+  box.innerHTML=`<div class="qsBox"><div class="qsTitle display">${L[0]}</div><div class="grownQ display">${L[1]}</div><div class="grownAns">?</div><div class="grownKeys"></div><button class="btn" id="grownNo">${L[2]}</button></div>`;
+  const keys=box.querySelector('.grownKeys'),show=()=>{const el=box.querySelector('.grownAns');el.classList.remove('wrong');el.textContent=typed||'?';};
+  [...'123456789⌫0✓'].forEach(k=>{
+    const b=document.createElement('button');b.type='button';b.textContent=k;
+    b.onclick=()=>{ac();
+      if(k==='⌫')typed=typed.slice(0,-1);
+      else if(k==='✓'){
+        if(typed!==''&&+typed===ans){box.classList.remove('on');box.innerHTML='';showTab('parent');}
+        else{typed='';const el=box.querySelector('.grownAns');el.textContent='?';el.classList.remove('wrong');void el.offsetWidth;el.classList.add('wrong');nope();}
+        return;}
+      else if(typed.length<3)typed+=k;
+      show();};
+    keys.appendChild(b);});
+  $('grownNo').onclick=()=>{ac();box.classList.remove('on');box.innerHTML='';};
+  box.onclick=e=>{if(e.target===box)$('grownNo').click();};
+  box.classList.add('on');
+}
 (function(){
   const g=document.getElementById('gearBtn');
   // a parent HOLDS it for one second (the ring fills); a quick tap from a child just shows "hold"
   let timer=null,raf=null,t0=0;
   const fill=()=>{const p=Math.min(100,(performance.now()-t0)/10);g.style.setProperty('--hold',p+'%');if(p<100)raf=requestAnimationFrame(fill);};
-  const start=()=>{t0=performance.now();fill();timer=setTimeout(()=>{stop();ac();showTab('parent');},1000);};
+  const start=()=>{t0=performance.now();fill();timer=setTimeout(()=>{stop();ac();grownAsk();},1000);};
   const stop=()=>{clearTimeout(timer);cancelAnimationFrame(raf);
     if(performance.now()-t0<900&&activeTab!=='parent'){const tip=$('gearTip');
       tip.textContent={es:'⚙ Mantén pulsado (padres)',en:'⚙ Press and hold (parents)',de:'⚙ Gedrückt halten (Eltern)'}[lang];
@@ -458,12 +483,14 @@ function advTick(tab){
   st.got++;advSave();renderAdvBar();
   if(st.got<ADV_GOAL[tab])return;
   ADV.idx++;if(ADV.idx>=ADV.plan.length)ADV.done=true;advSave();
-  setTimeout(()=>{
-    if(activeTab!==tab){if(ADV.done){if(!ADV.bonus){ADV.bonus=true;advSave();addPowerQuiet(10);}logDay().adv++;logSave();}return;}   // he has moved on: no yanking him back
-    rainEmoji(['⭐','🗺️','✨'],16);[784,988,1175,1568].forEach((f,i)=>beep(f,i*0.09,0.2,'triangle',0.16));
-    if(ADV.done){showTab('adv');setTimeout(advFinish,600);}
-    else{say({es:'¡Parada conseguida! ¡Sigamos!',en:'Stop done! On we go!',de:'Station geschafft! Weiter geht\'s!'}[lang]);showTab('adv');}
-  },2700);                                  // let the answer's own celebration finish first
+  setTimeout(()=>advArrive(tab),2700);       // let the answer's own celebration finish first
+}
+function advArrive(tab){
+  if(activeTab!==tab){if(ADV.done){if(!ADV.bonus){ADV.bonus=true;advSave();addPowerQuiet(10);}logDay().adv++;logSave();}return;}   // he has moved on: no yanking him back
+  if(tab==='jobs'&&jobBusy()){setTimeout(()=>advArrive(tab),400);return;}   // don't pull him off a job he is still playing
+  rainEmoji(['⭐','🗺️','✨'],16);[784,988,1175,1568].forEach((f,i)=>beep(f,i*0.09,0.2,'triangle',0.16));
+  if(ADV.done){showTab('adv');setTimeout(advFinish,600);}
+  else{say({es:'¡Parada conseguida! ¡Sigamos!',en:'Stop done! On we go!',de:'Station geschafft! Weiter geht\'s!'}[lang]);showTab('adv');}
 }
 function advFinish(){
   fanfare();rainEmoji(['🏆','⭐','🦖','🎉','✨'],34);

@@ -10,7 +10,7 @@ if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loa
    the voice chosen in the parent panel; Apple "Premium"/"Enhanced" and
    Siri voices; Google/Microsoft neural or online voices. Never Apple's
    novelty voices (Albert, Bubbles, Zarvox…) or the eSpeak/Pico robots. */
-const NOVELTY=/albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|junior|ralph|fred|kathy|deranged|hysterical|pipe organ|grandpa|grandma|rocko|shelley|reed|sandy|eddy|flo/;
+const NOVELTY=/\b(albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|junior|ralph|fred|kathy|deranged|hysterical|pipe organ|grandpa|grandma|rocko|shelley|reed|sandy|eddy|flo)\b/;
 function voiceScore(v,L){
   const n=((v.name||'')+' '+(v.voiceURI||'')).toLowerCase(),l=(v.lang||'').replace('_','-').toLowerCase();let s=0;
   if(/premium/.test(n))s+=14; if(/enhanced|erweitert|mejorad/.test(n))s+=10; if(/siri/.test(n))s+=9;
@@ -39,7 +39,8 @@ function utter(text,isRetry,rate,L){
   if(!isRetry) setTimeout(()=>{
     if(!synth.speaking&&!synth.pending){loadVoices();
       const u2=new SpeechSynthesisUtterance(text);
-      u2.lang=u.lang;u2.rate=rate||0.72;u2.pitch=1.0;u2.volume=1;
+      u2.lang=u.lang;u2.rate=u.rate;u2.pitch=u.pitch;u2.volume=u.volume;
+      if(u.voice)u2.voice=u.voice;
       u2.onstart=u.onstart;u2.onend=u.onend;u2.onerror=u.onerror;
       try{synth.resume();synth.speak(u2);}catch(e){}}
   },450);

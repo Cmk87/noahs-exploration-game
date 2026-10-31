@@ -161,9 +161,9 @@ let lastDino='';
 function showDigLock(){
   DIG=null;MEM=null;BAL=null;FW=null;BAG=null;$('quitSheet').classList.remove('on');
   showPane('digLock');
-  const T={es:['¡Juegos de premio!','Te faltan','¡Elige tu premio!','Museo de dinosaurios','Tesoros'],
-           en:['Prize games!','You still need','Pick your prize!','Dinosaur museum','Treasures'],
-           de:['Preisspiele!','Dir fehlen noch','Such dir einen Preis aus!','Dino-Museum','Schätze']}[lang];
+  const T={es:['¡Juegos de premio!','Te faltan','¡Elige tu premio!'],
+           en:['Prize games!','You still need','Pick your prize!'],
+           de:['Preisspiele!','Dir fehlen noch','Such dir einen Preis aus!']}[lang];
   const ready=power>=DIG_COST;
   $('lockText').textContent=ready?T[2]:`${T[1]} ${DIG_COST-power} ⚡`;
   $('meterFill').style.width=Math.min(100,power/DIG_COST*100).toFixed(0)+'%';
@@ -176,22 +176,6 @@ function showDigLock(){
     c.onclick=()=>{ac();startGame(gm.k,c);};
     gg.appendChild(c);
   });
-  $('museumTitle').textContent=`🏛️ ${T[3]}  ${found.filter(k=>DINOS.some(d=>d.k===k)).length}/${DINOS.length}`;
-  const m=$('museum');m.innerHTML='';
-  DINOS.forEach(d=>{
-    const got=found.includes(d.k);
-    const c=document.createElement('div');c.className='mcard'+(got?' got':'');
-    const cn=document.createElement('canvas');c.appendChild(cn);
-    const lb=document.createElement('div');lb.textContent=got?d[lang][0].replace(/^(el|la|the|der|die|das)\s+/i,''):'?';
-    c.appendChild(lb);
-    c.onclick=()=>{ac();
-      if(got)say(d[lang][0]+'. '+d[lang][1]);
-      else say({es:'¿Quién será? ¡Sigue excavando!',en:'Who could it be? Keep digging!',de:'Wer das wohl ist? Grab weiter!'}[lang]);};
-    m.appendChild(c);
-    requestAnimationFrame(()=>drawThumb(cn,d,!got));
-  });
-  const tr=TREASURES.filter(t=>treasure[t.k]);
-  $('treasures').innerHTML=tr.length?`<b>${T[4]}:</b> `+tr.map(t=>`<span>${t.ic}×${treasure[t.k]}</span>`).join(' '):'';
 }
 function startGame(k,card){
   if(power<DIG_COST){
@@ -902,7 +886,7 @@ function fitCv(cn,g){
 function darker(hex){const n=parseInt(hex.slice(1),16),f=0.6;
   return `rgb(${(n>>16&255)*f|0},${(n>>8&255)*f|0},${(n&255)*f|0})`;}
 function startBal(){
-  BAL={b:[],fx:[],pops:0,goal:20,next:0,done:false,last:0,clouds:[0,1,2].map(i=>({x:Math.random(),y:0.08+i*0.13,s:rnd(0.6,1.1),v:rnd(0.01,0.03)}))};
+  BAL={b:[],fx:[],pops:0,goal:30,next:0,done:false,last:0,clouds:[0,1,2].map(i=>({x:Math.random(),y:0.08+i*0.13,s:rnd(0.6,1.1),v:rnd(0.01,0.03)}))};
   showPane('balPlay');balText();
   say({es:'¡Explota los globos!',en:'Pop the balloons!',de:'Lass die Ballons platzen!'}[lang]);
   requestAnimationFrame(balLoop);
@@ -921,8 +905,9 @@ function balLoop(now){
   bx.fillStyle='#6CD45B';bx.beginPath();bx.ellipse(W*0.25,H*1.02,W*0.5,H*0.1,0,0,7);bx.fill();
   bx.fillStyle='#4DBA45';bx.beginPath();bx.ellipse(W*0.8,H*1.04,W*0.55,H*0.12,0,0,7);bx.fill();
   if(!BAL.done&&now>BAL.next&&BAL.b.length<4){
-    BAL.next=now+rnd(1050,1600);const r=W*rnd(0.085,0.11);   // slow enough that each word can be heard
-    BAL.b.push({x:rnd(r,W-r),y:H+r*1.6,r,vy:H*rnd(0.085,0.14),ph:rnd(0,6),c:pick(BCOL),
+    BAL.next=now+rnd(900,1400);const r=W*rnd(0.085,0.11);
+    const pace=1.35*(1+0.18*BAL.pops/BAL.goal);   // about a third quicker, and a little faster as the round goes on
+    BAL.b.push({x:rnd(r,W-r),y:H+r*1.6,r,vy:H*rnd(0.085,0.14)*pace,ph:rnd(0,6),c:pick(BCOL),
       it:pick(VOCAB.filter(v=>v.c!=='form')),gold:Math.random()<0.08});
   }
   BAL.b.forEach(b=>{b.y-=b.vy*dt*(BAL.done?2.5:1);b.ph+=dt*2;});

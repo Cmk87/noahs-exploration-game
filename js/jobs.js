@@ -164,6 +164,24 @@ function jobPick(o,el){
 $('jobHear').onclick=()=>{ac();say($('jobPrompt').textContent);};
 $('jobNext').onclick=()=>{ac();jobRound();};
 function showJobs(){jobRound();}
+/* a mini-game still being played (the end card is not up yet) */
+function jobBusy(){return !!(JR&&JR.kind==='task'&&!document.querySelector('#jobStage .jEnd'));}
+const mailAsk=w=>({de:`Bring den Brief zu Haus Nummer ${jNum(w)}!`,en:`Take the letter to house number ${jNum(w)}!`,es:`¡Lleva la carta a la casa número ${jNum(w)}!`}[lang]);
+/* language switch: keep the round he is in the middle of, just say it in the new language */
+function jobOnLang(){
+  buildJobModes();const r=JR;
+  if(!r||r.kind==='pick'||(r.kind!=='task'&&r.done)){jobRound();return;}
+  if(r.kind!=='task'){$('jobPrompt').textContent=r.kind==='need'?r.j.need[lang]:JT.thingQ[lang];say($('jobPrompt').textContent);return;}
+  const T=TASKS[r.j.k],end=document.querySelector('#jobStage .jEnd');
+  if(end){const btns=[...end.children];if(btns[0])btns[0].textContent=JT.again[lang];if(btns[1])btns[1].textContent=JT.other[lang];
+    $('jobPrompt').textContent=T.done[lang];return;}
+  if(T.houses)$('jobPrompt').textContent=mailAsk(r.want);
+  else if(T.letters){const L=document.querySelector('.jBoard');
+    if(L){const c=L.textContent.toLowerCase();L.textContent=lang==='de'?c.toUpperCase():c;}
+    $('jobPrompt').textContent=T.go[lang]+(L?' '+L.textContent:'');}
+  else $('jobPrompt').textContent=T.go[lang];
+  say($('jobPrompt').textContent);
+}
 
 /* ---------- 🎮 a day as …: pick a job, then do its work ---------- */
 function jobPicker(){
@@ -230,7 +248,7 @@ function jobTask(j,fem,skin){
     const letter=document.createElement('div');letter.className='jDeco jLetter';letter.textContent='✉️';sc.appendChild(letter);
     const next=()=>{if(!jLive(r))return;r.lock=false;houses.forEach(h=>h.classList.remove('ok'));if(r.n>=3){finish();return;}
       let w;do{w=1+Math.floor(Math.random()*T.houses);}while(w===r.want);r.want=w;letter.innerHTML='✉️<b>'+w+'</b>';
-      const q={de:`Bring den Brief zu Haus Nummer ${jNum(w)}!`,en:`Take the letter to house number ${jNum(w)}!`,es:`¡Lleva la carta a la casa número ${jNum(w)}!`}[lang];$('jobPrompt').textContent=q;say(q);};
+      const q=mailAsk(w);$('jobPrompt').textContent=q;say(q);};
     next();return;}
   const total=T.targets.length;
   T.targets.forEach(([x,y],i)=>{const e=Array.isArray(T.from)?T.from[i%T.from.length]:T.from;

@@ -5,6 +5,8 @@ on:
   pull_request:
 jobs:
   smoke:
+    # ubuntu-latest is Ubuntu 26.04. Playwright 1.56 has no Chromium build for it
+    # ("Playwright does not support chromium on ubuntu26.04-x64"); 1.61+ does.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
