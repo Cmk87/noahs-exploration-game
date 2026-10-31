@@ -39,6 +39,7 @@ function buildHome(){
 }
 $('homeBtn').onclick=()=>{ac();if(activeTab!=='home')showTab('home');};
 function showTab(id){
+  if(activeTab==='act'&&id!=='act'&&typeof stopRec==='function'){stopRec(true);unCall();}   // no microphone left open behind another screen
   activeTab=id;$('homeBtn').classList.toggle('on',id==='home');if(id==='home')buildHome();window.scrollTo(0,0);if(typeof renderAdvBar==='function')renderAdvBar();
   const vEl=document.getElementById('v-'+id);if(vEl)vEl.scrollTop=0;
   ALLVIEWS.forEach(v=>document.getElementById('v-'+v).classList.toggle('on',v===id));
@@ -223,7 +224,7 @@ if('speechSynthesis' in window)speechSynthesis.addEventListener&&speechSynthesis
 setTimeout(markGear,1500);   // some browsers fill the voice list without an event
 /* ---- backup: every sl_* key in one JSON file ---- */
 function backupData(){const d={app:'the-little-explorer',v:1,saved:new Date().toISOString(),data:{}};
-  try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('sl_'))d.data[k]=localStorage.getItem(k);}}catch(e){}
+  try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('sl_')&&k!=='sl_pgame')d.data[k]=localStorage.getItem(k);}}catch(e){}
   return d;}
 $('backupSave').onclick=async()=>{
   const d=backupData(),name='explorer-backup-'+d.saved.slice(0,10)+'.json';
@@ -328,13 +329,14 @@ function resumeSay(){
   const id=RESUME_SAY[activeTab];if(id&&$(id))$(id).click();
 }
 function cameBack(away){
-  if(!canResume())return;
+  if(!canResume())return;lastTouch=Date.now();
   if(away>=AWAY_HOME){if(activeTab!=='home')showTab('home');}
   else if(away>3000&&activeTab!=='home')setTimeout(resumeSay,400);
 }
 document.addEventListener('pointerdown',()=>{lastTouch=Date.now();},true);
 document.addEventListener('visibilitychange',()=>{
-  if(document.hidden){hiddenAt=Date.now();try{speechSynthesis.cancel();}catch(e){}return;}   // no voice talking on in the background
+  if(!document.hidden)wakeIfNewDay();
+  if(document.hidden){hiddenAt=Date.now();try{speechSynthesis.cancel();}catch(e){}if(typeof stopRec==='function'){stopRec(true);unCall();}return;}   // no voice talking on in the background
   cameBack(hiddenAt?Date.now()-hiddenAt:Date.now()-lastTouch);hiddenAt=0;
 });
 // iOS home-screen apps sometimes come back without a visibility event: a long idle time also counts as away
@@ -454,7 +456,7 @@ function advTick(tab){
   if(st.got<ADV_GOAL[tab])return;
   ADV.idx++;if(ADV.idx>=ADV.plan.length)ADV.done=true;advSave();
   setTimeout(()=>{
-    if(activeTab!==tab){if(ADV.done&&!ADV.bonus){ADV.bonus=true;advSave();addPowerQuiet(10);}return;}   // he has moved on: no yanking him back
+    if(activeTab!==tab){if(ADV.done){if(!ADV.bonus){ADV.bonus=true;advSave();addPowerQuiet(10);}logDay().adv++;logSave();}return;}   // he has moved on: no yanking him back
     rainEmoji(['⭐','🗺️','✨'],16);[784,988,1175,1568].forEach((f,i)=>beep(f,i*0.09,0.2,'triangle',0.16));
     if(ADV.done){showTab('adv');setTimeout(advFinish,600);}
     else{say({es:'¡Parada conseguida! ¡Sigamos!',en:'Stop done! On we go!',de:'Station geschafft! Weiter geht\'s!'}[lang]);showTab('adv');}
@@ -481,8 +483,15 @@ const logDay=()=>LOG[today()]||(LOG[today()]={sec:0,ok:0,miss:0,adv:0,extra:0});
 const logSave=()=>{try{const keys=Object.keys(LOG).sort();while(keys.length>60)delete LOG[keys.shift()];
   localStorage.setItem('sl_log',JSON.stringify(LOG));}catch(e){}};
 let timeLimit=0;try{timeLimit=+localStorage.getItem('sl_limit')||0;}catch(e){}
-let warned5=false;
+let warned5=false,warnDay=today();
+/* the sleep screen ends when a new day starts (the app may stay open overnight) */
+function wakeIfNewDay(){
+  if(warnDay!==today()){warnDay=today();warned5=false;}
+  if($('sleep').classList.contains('on')&&(!timeLimit||logDay().sec<(timeLimit+(logDay().extra||0))*60)){$('sleep').classList.remove('on');showTab('home');}
+}
 setInterval(()=>{
+  wakeIfNewDay();
+  if(gameLive()&&gameProgress()>=0.5)pgClear();          // past half of a prize game: no refund if the app is closed now
   if(document.hidden||gate.style.display!=='none'||$('sleep').classList.contains('on'))return;
   const d=logDay();d.sec+=5;logSave();
   if(!timeLimit)return;

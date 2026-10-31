@@ -693,7 +693,9 @@ function pickVerbs(n,pool){
   const out=pool.slice(0,n);actLastVerb=out[0].k;return out;
 }
 function stOf(v,adjs,seed){const s={verb:v?v.k:'stand',seed,toff:seed*0.37};adjs.forEach(a=>Object.assign(s,a.st));return s;}
+let actNextT=null;
 function newActRound(){
+  clearTimeout(actNextT);
   actMiss=0;actDone=false;actAnim=[];actRound++;
   const grid=$('actGrid'),tpr=$('tprBox');grid.innerHTML='';grid.className='';$('actSentence').innerHTML='';
   const L=level('act',ACT_MAX);$('actLevel').textContent='🎯 '+L;
@@ -825,7 +827,7 @@ function actChoose(correct,el){
     const ch=adapt('act',ACT_MAX,actMiss===0);levelFx($('actLevel'),ch);
     const html=actAnswerHTML();$('actSentence').innerHTML=html;
     const plain=stripTags(html);say(plain);
-    setTimeout(()=>{if(activeTab==='act'&&actMode==='quiz')newActRound();},Math.max(2800,700+plain.length*85));
+    clearTimeout(actNextT);actNextT=setTimeout(()=>{if(activeTab==='act'&&actMode==='quiz')newActRound();},Math.max(2800,700+plain.length*85));
   }else{
     actMiss++;nope();el.classList.remove('wrong');void el.offsetWidth;el.classList.add('wrong');
     const T=actTarget;

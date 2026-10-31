@@ -75,9 +75,9 @@ const cName=c=>(WORLD_NAMES[lang]&&WORLD_NAMES[lang][c.a2])||c.a2;
 /* countries that take an article (and sometimes a plural verb) in a sentence */
 const C_ART={
  de:{NL:['die',1],US:['die',1],AE:['die',1],PH:['die',1],BS:['die',1],SB:['die',1],CH:['die'],TR:['die'],UA:['die'],MN:['die'],SK:['die'],
-     DO:['die'],CG:['die'],GM:['die'],IR:['der'],IQ:['der'],SD:['der'],SS:['der'],TD:['der'],LB:['der'],YE:['der'],CD:['der'],VA:['der'],NE:['der']},
- en:{US:['the'],GB:['the'],PH:['the',1],BS:['the',1],SB:['the',1],AE:['the'],DO:['the'],VA:['the'],CD:['the'],CG:['the']},
- es:{NL:['los',1],GB:['el'],AE:['los',1]}};
+     DO:['die'],CG:['die'],GM:['die'],CF:['die'],CI:['die'],EH:['die'],AQ:['die'],IR:['der'],IQ:['der'],SD:['der'],SS:['der'],TD:['der'],LB:['der'],YE:['der'],CD:['der'],VA:['der'],NE:['der']},
+ en:{NL:['the',1],CF:['the'],US:['the'],GB:['the'],PH:['the',1],BS:['the',1],SB:['the',1],AE:['the'],DO:['the'],VA:['the'],CD:['the'],CG:['the']},
+ es:{NL:['los',1],GB:['el'],AE:['los',1],AQ:['la'],CF:['la'],DO:['la'],CD:['la']}};
 function cNP(c){const a=(C_ART[lang]||{})[c.a2];return {np:(a?a[0]+' ':'')+cName(c),pl:!!(a&&a[1])};}
 const deDel=t=>t.replace(/\bde el\b/g,'del');
 const contOf=k=>CONTINENTS.find(c=>c.k===k);
@@ -92,16 +92,17 @@ function pointIn(c,x,y){
 }
 const countryAt=(x,y)=>{let hit=null;for(const c of COUNTRIES)if(pointIn(c,x,y)&&(!hit||c.area<hit.area))hit=c;return hit;};
 /* the five oceans as lon/lat boxes, matching oceanAt() below; drawn in their own colours in the ocean game */
-const OCEAN_BOX={pac:[[-180,85,180,-85]],atl:[[-100,66,40,20],[-88,20,40,15],[-83.5,15,40,10],[-77,10,20,8.5],[-62,8.5,20,0],[-68,0,20,-58]],ind:[[20,30,100,-58],[100,-10,147,-58]],arc:[[-180,85,180,66]],sou:[[-180,-58,180,-85]]};
+const OCEAN_BOX={pac:[[-180,85,180,-85]],atl:[[-100,66,42,20],[-89,20,40,15],[-83.5,15,40,10],[-84,10,20,9.2],[-77,9.2,20,8.5],[-62,8.5,20,0],[-68,0,20,-58]],ind:[[20,30,100,-58],[100,-10,147,-58]],arc:[[-180,85,180,66]],sou:[[-180,-58,180,-85]]};
 const OCEAN_COL={pac:'#2F7FD1',atl:'#22A7B8',ind:'#5C6FD6',arc:'#8FD0EE',sou:'#5FB2E2'};
 function drawOceans(now){const pulse=0.5+0.5*Math.sin(now/180);
   for(const k of ['pac','atl','ind','arc','sou']){mx.fillStyle=GEO.hint===k?`rgba(255,212,0,${0.5+0.4*pulse})`:OCEAN_COL[k];
     for(const [l0,a0,l1,a1] of OCEAN_BOX[k]){const y0=projY(a0),y1=projY(a1);mx.fillRect(l0,y0,l1-l0,y1-y0);}}
   mx.strokeStyle='rgba(255,255,255,.75)';mx.lineWidth=1.6/CAM.k;mx.setLineDash([6/CAM.k,5/CAM.k]);mx.beginPath();
   const L=(l0,a0,l1,a1)=>{mx.moveTo(l0,projY(a0));mx.lineTo(l1,projY(a1));};
-  L(-180,66,180,66);L(-180,-58,180,-58);[[-100,66],[-100,20],[-88,20],[-88,15],[-83.5,15],[-83.5,10],[-77,10],[-77,8.5],[-62,8.5],[-62,0]].reduce((a,b)=>(L(a[0],a[1],b[0],b[1]),b));L(40,66,40,30);L(20,30,20,-58);L(100,30,100,-10);L(147,-10,147,-58);L(-68,0,-68,-58);
+  L(-180,66,180,66);L(-180,-58,180,-58);[[-100,66],[-100,20],[-89,20],[-89,15],[-83.5,15],[-83.5,10],[-84,10],[-84,9.2],[-77,9.2],[-77,8.5],[-62,8.5],[-62,0]].reduce((a,b)=>(L(a[0],a[1],b[0],b[1]),b));L(40,66,40,30);L(20,30,20,-58);L(100,30,100,-10);L(147,-10,147,-58);L(-68,0,-68,-58);
   mx.stroke();mx.setLineDash([]);}
 function oceanAt(lon,lat){
+  if(lon>46&&lon<55.5&&lat>36&&lat<47.5)return null;     // the Caspian Sea is a lake, not an ocean
   if(lat>66)return 'arc';if(lat<-58)return 'sou';
   if(lon>=20&&lon<=100&&lat<=30)return 'ind';
   if(lon>100&&lon<=147&&lat<-10)return 'ind';
@@ -213,8 +214,9 @@ mapC.addEventListener('pointermove',e=>{
 });
 const mEnd=e=>{
   if(!mPtr.has(e.pointerId))return;const p=mPtr.get(e.pointerId);mPtr.delete(e.pointerId);
-  if(gStart&&gStart.pinch){if(mPtr.size===1){const q=[...mPtr.values()][0];gStart={t:0,p:q,moved:true,cam:{...CAM}};}else if(!mPtr.size)gStart=null;return;}
-  if(gStart&&!gStart.moved&&performance.now()-gStart.t<500){
+  if(gStart&&gStart.pinch){if(mPtr.size>=2){const [a,b]=[...mPtr.values()];gStart={pinch:true,d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,mid:[(a[0]+b[0])/2,(a[1]+b[1])/2],cam:{...CAM},moved:true};return;}
+    if(mPtr.size===1){const q=[...mPtr.values()][0];gStart={t:0,p:q,moved:true,cam:{...CAM}};}else if(!mPtr.size)gStart=null;return;}
+  if(e.type!=='pointercancel'&&gStart&&!gStart.moved&&performance.now()-gStart.t<500){
     const now=performance.now();
     if(now-lastTapT<320&&Math.hypot(p[0]-lastTapXY[0],p[1]-lastTapXY[1])<30){lastTapT=0;flyTo({...CAM,k:CAM.k*2,x:CAM.x+p[0]/CAM.k-p[0]/(CAM.k*2),y:CAM.y+p[1]/CAM.k-p[1]/(CAM.k*2)},300);}
     else{lastTapT=now;lastTapXY=p;geoTap(p[0],p[1]);}
@@ -228,15 +230,16 @@ $('geoZout').onclick=()=>{ac();camAnim=null;zoomAt(MW/2,MH/2,1/1.6);};
 $('geoHome').onclick=()=>{ac();GEO.selCont=null;GEO.sel=null;flyTo(worldView());geoInfo(null);};
 
 /* ---------- what a tap means ---------- */
+const contAt=(c,lon)=>!c?null:c.cont==='AN'&&c.a2!=='AQ'?null:c.a2==='RU'&&lon<60?'EU':c.cont;
 function geoTap(sx,sy){
   const [wx,wy]=toWorld(sx,sy),lon=wx,lat=unprojY(wy),c=countryAt(wx,wy),zoomed=CAM.k>kWorld()*1.7;
   const m=GEO.mode;
   if(m==='countries'&&GEO.target)return answerCountry(c);
-  if(m==='continents'&&GEO.target)return answerContinent(c&&(c.a2==='RU'&&GEO.target==='EU'&&lon<60?'EU':c.cont));   // Russia west of the Urals is Europe
+  if(m==='continents'&&GEO.target)return answerContinent(contAt(c,lon));
   if(m==='oceans'&&GEO.target)return answerOcean(c?null:oceanAt(lon,lat),c);
   if(m==='flags')return;
-  if(!c){const o=OCEANS.find(o=>o.k===oceanAt(lon,lat));geoInfo({ocean:o});say(o[lang][0]);return;}
-  if(!zoomed){const ct=contOf(c.cont);GEO.selCont=ct.k;GEO.sel=null;flyTo(viewLL(...ct.view));geoInfo({cont:ct});say(ct[lang][0]+'. '+ct[lang][1]);beep(660,0,0.12,'square',0.14);return;}
+  if(!c||!zoomed&&!contAt(c,lon)){const o=OCEANS.find(o=>o.k===oceanAt(lon,lat));if(!o)return;geoInfo({ocean:o});say(o[lang][0]);return;}
+  if(!zoomed){const ct=contOf(contAt(c,lon));GEO.selCont=ct.k;GEO.sel=null;flyTo(viewLL(...ct.view));geoInfo({cont:ct});say(ct[lang][0]+'. '+ct[lang][1]);beep(660,0,0.12,'square',0.14);return;}
   GEO.sel=c.a2;redraw();geoInfo({country:c});say(cName(c));beep(880,0,0.1,'triangle',0.14);
 }
 function geoInfo(o){
@@ -276,7 +279,7 @@ function pickCountry(L,avoid){const all=countryPool(L).filter(a=>a!==avoid),fres
   return Math.random()<0.6&&fresh.length?pick(fresh):pick(all);}
 const GEO_KEY={continents:'geoC',countries:'geoK',flags:'geoF',oceans:'geoO'};
 function geoAsk(){
-  const key=GEO_KEY[GEO.mode]||'geoK',L=level(key,SKILL_MAX[key]);GEO.miss=0;GEO.sel=null;GEO.glow=null;GEO.hint=null;$('geoLevel').textContent='🎯 '+L;
+  const key=GEO_KEY[GEO.mode]||'geoK',L=level(key,SKILL_MAX[key]);GEO.miss=0;GEO.sel=null;GEO.glow=null;GEO.hint=null;GEO.selCont=null;$('geoLevel').textContent='🎯 '+L;
   const W=(n,de)=>lang==='es'?`¿Dónde está ${n}?`:lang==='de'?`Wo ist ${n}?`:`Where is ${n}?`;
   if(GEO.mode==='continents'){
     if(L>=2&&Math.random()<0.5){const q=pick(GEO_Q.filter(q=>q.a!==GEO.target));GEO.target=q.a;flyTo(worldView());geoInfo(null);geoQSet(q[lang]);return;}
@@ -321,6 +324,7 @@ function answerContinent(k){
 }
 function answerOcean(k,c){
   if(c){const n=cNP(c);return geoWrong(n.np,n.pl);}
+  if(!k)return geoWrong(null);
   const o=OCEANS.find(x=>x.k===k);
   if(k===GEO.target){GEO.target=null;geoInfo({ocean:o});say(capFirst(o[lang][0])+'!');geoRight();}
   else geoWrong(o[lang][0]);

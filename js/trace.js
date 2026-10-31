@@ -206,6 +206,7 @@ function advance(){
   if(mode==='name'){
     nameIdx++;
     if(nameIdx>=playlist.length){        // whole name finished
+      if(activeTab!=='trace'){nameIdx=0;loadItem(playlist[0],false);return;}   // he has gone elsewhere: no party on another screen
       nameIdx=0;
       const f=document.getElementById('face'),w=document.getElementById('wordText');
       f.textContent='🏆';w.textContent=kidName;

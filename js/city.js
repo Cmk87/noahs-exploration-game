@@ -914,6 +914,7 @@ function drawHeli(){const p=heliPos(),fl=HELI.t>=0;
 /* heliport in the meadow between the castle and the Wild West: pad with a big H, landing lights,
    hangar, control tower, windsock; the yellow helicopter flies sightseeing tours over the whole world */
 const H2={t:-1,next:35},H2PAD=[2645,1505],H2SC=1.9;
+ENT.heliport.at=[2537,1461,2753,1549];             // the find game points at the pad, not the thin tower
 const H2PATH=(()=>{const P=[H2PAD,[2420,1250],[1500,1650],[700,950],[600,300],[1200,-250],[2200,-80],[3300,150],[3600,950],[3200,1450],H2PAD],out=[];
   for(let i=0;i<P.length-1;i++){const p0=P[Math.max(0,i-1)],p1=P[i],p2=P[i+1],p3=P[Math.min(P.length-1,i+2)];
     for(let k=0;k<12;k++){const t=k/12,t2=t*t,t3=t2*t;out.push([0,1].map(j=>0.5*((2*p1[j])+(-p0[j]+p2[j])*t+(2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*t2+(-p0[j]+3*p1[j]-3*p2[j]+p3[j])*t3)));}}
@@ -1118,7 +1119,7 @@ function placeBubble(){const el=$('cityBub');if(!BUB)return;if(T-BUB.t>3){el.cla
 let FIND=null,findHist=[];
 function findNext(){
   TRAIN.ride=false;if(!primed)primeAt();
-  const pool=Object.values(ENT).filter(e=>(e.find||(e.animal&&FOUND.has(e.id)))&&e.at&&!findHist.includes(e.id));
+  const pool=Object.values(ENT).filter(e=>(e.find||(e.animal&&FOUND.has(e.id)))&&e.at&&!e.nofind&&!(e.away&&e.away())&&!findHist.includes(e.id));   // never ask for something that is not there right now
   const e=pool[Math.random()*pool.length|0];findHist.push(e.id);if(findHist.length>8)findHist.shift();
   /* the world is big: fly to the neighbourhood of the answer (not exactly onto it, so there is still something to find) */
   const b=e.at,cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,R=Math.max(380,(b[2]-b[0])*0.8,(b[3]-b[1])*0.8),ox=(Math.random()-0.5)*R*0.6,oy=(Math.random()-0.5)*R*0.6;
@@ -1158,12 +1159,16 @@ $('cNight').onclick=()=>{ac();nightOn=!nightOn;setNightBtn();
 function onLang(){if(FIND){showQ();say(W.where(ENT[FIND.id].n[li()]));}else if(BUB)bubble(BUB.e,BUB.b,BUB.label);}
 let pendingFocus=null;
 function show(){fit();paws();
-  if(pendingFocus){const {id,c}=pendingFocus;pendingFocus=null;TRAIN.ride=false;if(!primed)primeAt();
-    const e=ENT[id],known=FOUND.has(id)&&e.at,b=known||[c[0]-60,c[1]-60,c[0]+60,c[1]+60],cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,R=known?260:520;   // not found yet: only the area
+  if(pendingFocus){const {id,c,ids}=pendingFocus;pendingFocus=null;TRAIN.ride=false;if(!primed)primeAt();
+    const e=ENT[id],known=FOUND.has(id)&&e.at;let b=known,R=260;
+    if(!known){   // not found yet: show the whole area where this group of animals lives, not the animal itself
+      const bs=(ids||[]).map(x=>ENT[x]&&ENT[x].at).filter(Boolean);b=bs.length?[Math.min(...bs.map(q=>q[0])),Math.min(...bs.map(q=>q[1])),Math.max(...bs.map(q=>q[2])),Math.max(...bs.map(q=>q[3]))]:[c[0]-60,c[1]-60,c[0]+60,c[1]+60];
+      R=Math.max(420,(b[2]-b[0])/2+120,(b[3]-b[1])/2+120);}
+    const cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2;
     flyTo(viewOf(cx-R,cy-R,cx+R,cy+R,1),900);if(known)later(1,()=>bubble(e,b));return;}
   say(['Willkommen in der Stadt! Tippe auf alles.','Welcome to the town! Tap on anything.','¡Bienvenido a la ciudad! Toca todo.'][li()]);}
 /* the sticker book sends the child here: fly to the animal (or only to its area if not found yet) */
-function showAt(id,c){pendingFocus={id,c};}
+function showAt(id,c,ids){pendingFocus={id,c,ids};}
 
 /* =============================================================
    MAIN LOOP

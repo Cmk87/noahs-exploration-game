@@ -51,7 +51,7 @@ ANI('camel','🐪',['das Kamel','the camel','el camello'],['Das Kamel! Es kann v
 ent('duel','🤠',['das Duell','the duel','el duelo'],null,{find:1});
 ent('rider','🐎',['der Reiter','the rider','el jinete'],['Der Cowboy reitet durch die Prärie! Hü!','The cowboy rides across the prairie! Giddy-up!','¡El vaquero cabalga por la pradera! ¡Arre!'],{find:1});
 ent('tipi','⛺',['das Tipi','the tipi','el tipi'],['Das Tipi! Ein Zelt aus Tierhaut und langen Stangen. Darin wohnen die Lakota.','The tipi! A tent made of hides and long poles. The Lakota people live in it.','¡El tipi! Una tienda de pieles y palos largos. Ahí viven los lakota.'],{find:1});
-ent('lakota','🪶',['die Lakota','the Lakota','los lakota'],['Die Lakota! Sie leben in der Prärie, reiten wunderbar und trommeln am Feuer.','The Lakota! They live on the prairie, ride wonderfully and drum by the fire.','¡Los lakota! Viven en la pradera, montan de maravilla y tocan el tambor junto al fuego.'],{find:1});
+ent('lakota','🪶',['der Trommler','the drummer','el tamborilero'],['Der Trommler der Lakota! Die Lakota leben in der Prärie, reiten wunderbar und trommeln am Feuer.','The Lakota drummer! The Lakota live on the prairie, ride wonderfully and drum by the fire.','¡El tamborilero lakota! Los lakota viven en la pradera, montan de maravilla y tocan el tambor junto al fuego.'],{find:1});
 ent('campfire','🔥',['das Lagerfeuer','the campfire','la hoguera'],['Rauchzeichen! Mit dem Rauch vom Lagerfeuer kann man Nachrichten schicken.','Smoke signals! You can send messages with the smoke from the campfire.','¡Señales de humo! Con el humo de la hoguera se pueden mandar mensajes.'],{find:1});
 ANI('bison','🦬',['der Bison','the bison','el bisonte'],['Der Bison! Er ist groß und stark.','The bison! It is big and strong.','¡El bisonte! Es grande y fuerte.']);
 ANI('coyote','🐺',['der Kojote','the coyote','el coyote'],['Der Kojote! Ahuuu!','The coyote! Ahooo!','¡El coyote! ¡Auuu!']);
@@ -190,6 +190,7 @@ TOPS(()=>{const T=TT(),ph=(T%18)/18;if(ph>0.3)return;const u=ph/0.3,x=2900+u*120
 
 /* the two launch pads */
 const PADS3={shuttle:{x:3460,base:404,col:'#C0473A'},rocket:{x:3830,base:404,col:'#3B7DE2'}};
+['shuttle','rocket'].forEach(id=>{K.ENT[id].away=()=>{const t=fx(id);return t>=3.6&&t<25;};});   // up in the sky: not a find-game question
 function rise(id){const t=fx(id);if(t>=40)return 0;if(t<3.6)return 0;const tt=t-3.6;return 22*tt*tt;}
 function flying(id){const t=fx(id);return t>=3.6&&t<16;}
 function gone(id){const t=fx(id);return t>=16&&t<22;}
@@ -418,7 +419,7 @@ K.DYN.push(L=>{const T=TT(),t=fx('mummy'),xm=3495,b=705;if(t>8||!inV(xm-40,b-60,
   const u=t<0.6?0:t<2.6?sm((t-0.6)/2):t<6?1:t<8?1-sm((t-6)/2):0,y=b-2+u*42;
   L.push({y,f:()=>{mummy(xm,y,1.3,T,t<2.6||t>6);if(t>2.6&&t<3.6&&Math.random()<0.1)textP(xm+18,y-56,'Huuuh!','#FFFFFF',12);
     hit('mummy',xm-14,y-50,xm+16,y,{moving:1,small:1});}});});
-K.UPDATE.push(()=>{const T=TT();if(fx('mummy')>40&&Math.floor(T)%37===0)act('mummy');});     // it also wanders out on its own
+let mummyNext=25;K.UPDATE.push(()=>{const T=TT();if(T>mummyNext){mummyNext=T+40+Math.random()*30;if(fx('mummy')>10)act('mummy');}});     // it also wanders out on its own now and then
 // the medium pyramid, the pharaoh, palm trees
 S(690,[3690,520,3950,694],()=>pyramid(3700,3940,690,170,'mid'));
 S(770,[3660,710,3730,772],()=>{const T=TT(),t=fx('pharaoh');pharaoh(3695,770,1.5,T,t<3);hit('pharaoh',3680,724,3712,770,{small:1});});
@@ -496,7 +497,7 @@ K.UPDATE.push(dt=>{const t=fx('campfire'),T=TT();
   if(Math.random()<dt*(t<4?0:1.2))puff(3075+rnd(-3,3),1676,{c:'#C9C4BC',r:rnd(4,7),vx:rnd(-4,4),vy:-18,max:3});
   if(t<4&&Math.floor(t*1.2)!==Math.floor((t-dt)*1.2))puff(3075,1670,{c:'#E8E4DE',r:16,vx:0,vy:-34,max:4.5});});   // smoke signals: big puffs, one after another
 S(1702,[3215,1640,3270,1704],()=>{const T=TT();horse(3240,1700,-1,T,0,'#FFFFFF',0);ell(3236,1676,7,5,'#8E5B3A');ell(3248,1680,6,4,'#8E5B3A');ell(3226,1683,5,3,'#8E5B3A');
-  hit('lakota',3214,1650,3268,1702,{small:1});});
+  hit('lakota',3214,1650,3268,1702,{small:1,moving:1});});   // the horse: tappable, but the find game points at the drummer
 
 /* =============================================================
    TAPS, TRAIN ARRIVALS, ZONES

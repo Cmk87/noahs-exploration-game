@@ -42,6 +42,7 @@ ent('watchtower','🗼',['der Wachturm','the watchtower','la torre de vigilancia
 ent('policevan','🚐',['der Polizeibus','the police van','el furgón policial'],['Der Polizeibus! Er bringt einen neuen Räuber.','The police van! It brings a new robber.','¡El furgón policial! Trae a un nuevo ladrón.'],{find:1});
 ent('jailyard','🏀',['der Gefängnishof','the jail yard','el patio de la cárcel'],['Der Gefängnishof! Hier spielen die Räuber Basketball.','The jail yard! The robbers play basketball here.','¡El patio de la cárcel! Aquí los ladrones juegan al baloncesto.'],{find:1});
 ANI('elephant','🐘',['der Elefant','the elephant','el elefante'],['Der Elefant! Törööö! Eigentlich wohnt er im Zirkus.','The elephant! Toot toot! He really lives at the circus.','¡El elefante! ¡Tuuut! En realidad vive en el circo.']);
+K.ENT.elephant.at=[4780,-300,5080,-60];K.ENT.elephant.nofind=1;   // lives behind the warehouse gates; only there when a gate is open
 ent('gate','🚪',['das Tor','the gate','la puerta'],null);
 ANI('rat','🐀',['die Ratte','the rat','la rata'],['Die Ratte! Sie sucht Essensreste im Müll.','The rat! It looks for food in the rubbish.','¡La rata! Busca comida en la basura.']);
 ANI('policedog','🐕‍🦺',['der Polizeihund','the police dog','el perro policía'],['Der Polizeihund! Wuff, wuff!','The police dog! Woof, woof!','¡El perro policía! ¡Guau, guau!']);

@@ -56,5 +56,5 @@ function stkOpen(id,center,ic,area){
   say(got?(e.l?e.l[L]:name):{es:'Todavía no lo has encontrado. Búscalo en: ',en:'You have not found this one yet. Look in: ',de:'Den hast du noch nicht gefunden. Suche hier: '}[lang]+area[lang]);
   const s=$('stkSay');if(s)s.onclick=()=>{ac();say(e.l?e.l[L]:name);};
   $('stkX').onclick=()=>{ac();c.classList.remove('on');};
-  $('stkGo').onclick=()=>{ac();c.classList.remove('on');CITY.showAt(id,center);showTab('city');};
+  $('stkGo').onclick=()=>{ac();c.classList.remove('on');CITY.showAt(id,center,(STK_AREAS.find(A=>A[4].includes(id))||[])[4]);showTab('city');};
 }

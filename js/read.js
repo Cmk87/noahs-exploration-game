@@ -39,18 +39,20 @@ const RT={
 SKILL_START.read={de:1,en:1,es:1};SKILL_MAX.read=4;
 const piece=s=>{const k=s.indexOf('=');return k<0?{t:s,say:s}:{t:s.slice(0,k),say:s.slice(k+1)};};
 const rword=w=>({pic:w[0],parts:w.slice(1).map(piece),get text(){return this.parts.map(p=>p.t).join('');}});
-let RD=null,readRecent=[],readT=null;
+let RD=null,readRecent=[],readSayT=null,readNextT=null,readPromptT=null,readBuiltT=null;
+/* every timer belongs to one round: it only acts while that round is current and Reading is open */
+const readLive=rd=>RD===rd&&activeTab==='read';
 const rlist=k=>RWORDS[lang][k].filter(w=>typeof emojiOK!=='function'||emojiOK(w[0])).map(rword);
 const RCOL=['#2F6FE0','#E8445A'];
 /* say several pieces one after another, then the whole thing */
 function readSaySlow(parts,whole,onPiece,done){
-  clearTimeout(readT);let k=0;const step=()=>{if(RD===null)return;
-    if(k<parts.length){onPiece&&onPiece(k);sayAt(parts[k].say,0.6);k++;readT=setTimeout(step,850);}
-    else{onPiece&&onPiece(-1);if(whole)sayAt(whole,0.75);done&&(readT=setTimeout(done,whole?1100:0));}};
+  clearTimeout(readSayT);const rd=RD;let k=0;const step=()=>{if(!readLive(rd))return;
+    if(k<parts.length){onPiece&&onPiece(k);sayAt(parts[k].say,0.6);k++;readSayT=setTimeout(step,850);}
+    else{onPiece&&onPiece(-1);if(whole)sayAt(whole,0.75);if(done)readSayT=setTimeout(()=>{if(readLive(rd))done();},whole?1100:0);}};
   step();}
 
 function readRound(){
-  clearTimeout(readT);if(RD)clearTimeout(RD.hintT);const L=level('read',4),de_es=lang!=='en',r=Math.random();let kind;
+  [readSayT,readNextT,readPromptT,readBuiltT].forEach(clearTimeout);if(RD)clearTimeout(RD.hintT);const L=level('read',4),de_es=lang!=='en',r=Math.random();let kind;
   if(L===1)kind=de_es?(r<0.55?'buildSyl':'hearSyl'):'build';
   else if(L===2)kind=de_es?(r<0.6?'build':'hearSyl'):(r<0.5?'build':'hearWord');
   else kind=r<0.4?'build':'read';
@@ -78,10 +80,10 @@ function readDraw(){
   if(k==='build'||k==='buildSyl'){buildTrack(w);say(RT[k==='buildSyl'?'buildSyl':'build'][lang]);}
   else if(k==='hearSyl'){RD.opts.forEach((s,i)=>{const b=document.createElement('button');b.className='rOpt syl';b.textContent=s;b.style.color=RCOL[0];
       b.onclick=()=>readPick(s===w.text,b,{t:s,say:s});$('readGrid').appendChild(b);});
-    $('readGrid').className='syls';say(RT.hear[lang]);readT=setTimeout(()=>sayAt(w.text,0.6),1300);}
+    $('readGrid').className='syls';say(RT.hear[lang]);const rd=RD;readPromptT=setTimeout(()=>{if(readLive(rd))sayAt(w.text,0.6);},1300);}
   else if(k==='hearWord'){RD.opts.forEach(o=>{const b=document.createElement('button');b.className='rOpt syl';b.innerHTML=wordHTML(o);
       b.onclick=()=>readPick(o===w,b,null);$('readGrid').appendChild(b);});
-    $('readGrid').className='syls';say(RT.hear[lang]);readT=setTimeout(()=>sayAt(w.text,0.7),1300);}
+    $('readGrid').className='syls';say(RT.hear[lang]);const rd=RD;readPromptT=setTimeout(()=>{if(readLive(rd))sayAt(w.text,0.7);},1300);}
   else{ // read: the word alone, three pictures
     $('readWord').innerHTML=wordHTML(w,true);
     $('readWord').querySelectorAll('span').forEach((s,i)=>s.onclick=()=>{ac();sayAt(w.parts[i].say,0.6);s.classList.remove('hop');void s.offsetWidth;s.classList.add('hop');});
@@ -97,9 +99,7 @@ function buildTrack(w){
   tr.innerHTML='<div id="readHand">👆</div>';
   RD.tiles=w.parts.map((p,i)=>{const d=document.createElement('div');d.className='rTile'+(p.cons?' cons':'');d.textContent=p.t;
     d.style.color=w.syl?'var(--ink)':RCOL[i%2];tr.appendChild(d);return {el:d,p,x:0,w:0,g:i};});
-  requestAnimationFrame(()=>{if(RD!==rd)return;const W=tr.clientWidth,ws=RD.tiles.map(t=>t.el.offsetWidth),sum=ws.reduce((a,b)=>a+b,0);
-    const gap=Math.max(18,Math.min(130,(W-sum-20)/(n-1||1)));let x=(W-sum-gap*(n-1))/2;
-    RD.tiles.forEach((t,i)=>{t.w=ws[i];t.x=x;x+=t.w+gap;});readPlace();readGaps();});
+  requestAnimationFrame(()=>{if(RD===rd)readLayout();});
   RD.tiles.forEach((t,i)=>{
     t.el.onpointerdown=e=>{e.preventDefault();ac();try{t.el.setPointerCapture(e.pointerId);}catch(_){}RD.drag={i,x0:e.clientX,moved:false,start:RD.tiles.map(q=>q.x)};readHint(false);};
     t.el.onpointermove=e=>{const D=RD.drag;if(!D||D.i!==i)return;const dx=e.clientX-D.x0;if(Math.abs(dx)>6)D.moved=true;if(!D.moved)return;readMove(i,dx);};
@@ -108,9 +108,19 @@ function buildTrack(w){
         if(t.p.cons&&grp.length===1&&lw)sayAt(lang==='de'?`${t.p.t.toUpperCase()} wie ${lw[1]}`:`${t.p.t}, de ${lw[1]}`,0.75);   // a lone consonant: its sound word
         else sayAt(grp.map(q=>q.p.say).join(''),0.6);                                                                     // a tap reads the piece
         t.el.classList.remove('hop');void t.el.offsetWidth;t.el.classList.add('hop');}
-      readSnap();};});
+      if(D.moved)readSnap();};});                      // a plain tap only reads the piece
   readHint(true);
 }
+/* lay the groups out along the track: pieces of a group touch, groups have a gap between them;
+   long words on narrow phones get a smaller font so everything stays inside the track */
+function readLayout(){
+  const tr=$('readTrack'),T=RD.tiles,W=tr.clientWidth;if(!W)return;T.forEach(t=>{t.el.style.fontSize='';});
+  let ws=T.map(t=>t.el.offsetWidth),sum=ws.reduce((a,b)=>a+b,0);const ng=T.filter((t,i)=>i&&t.g!==T[i-1].g).length;
+  if(sum+ng*44+16>W){const f=Math.max(0.45,(W-ng*44-16)/sum);T.forEach(t=>{t.el.style.fontSize=parseFloat(getComputedStyle(t.el).fontSize)*f+'px';});
+    ws=T.map(t=>t.el.offsetWidth);sum=ws.reduce((a,b)=>a+b,0);}
+  const gap=ng?Math.max(30,Math.min(130,(W-sum-20)/ng)):0;let x=Math.max(4,(W-sum-gap*ng)/2);
+  T.forEach((t,i)=>{if(i&&t.g!==T[i-1].g)x+=gap;t.w=ws[i];t.x=x;x+=t.w;});readPlace();readGaps();}
+addEventListener('resize',()=>{if(activeTab==='read'&&RD&&RD.tiles)requestAnimationFrame(()=>{if(RD&&RD.tiles)readLayout();});});   // turned the tablet mid-round
 function readPlace(){RD.tiles.forEach(t=>{t.el.style.transform=`translateX(${t.x}px)`;});}
 /* move the dragged tile's whole group; groups keep their order and stop at their neighbours */
 function readMove(i,dx){
@@ -143,12 +153,13 @@ function readGaps(){
 function readBuilt(){
   if(RD.done)return;RD.done=true;readHint(false);const w=RD.word,T=RD.tiles;
   // centre the finished word, then read it slowly piece by piece and once more as a whole
-  const tr=$('readTrack'),tot=T.reduce((s,t)=>s+t.w,0);let x=(tr.clientWidth-tot)/2;T.forEach(t=>{t.x=x;x+=t.w;});readPlace();
+  readLayout();
   if(w.syl)T.forEach(t=>{t.el.style.color=RCOL[0];});
-  const whole=w.syl?w.text:w.parts.map(p=>p.t).join('');
-  setTimeout(()=>readSaySlow(w.syl?[{say:w.text}]:w.parts,whole,k=>{T.forEach((t,i)=>t.el.classList.toggle('lit',i===k||(w.syl&&k===0)));},()=>{
-    T.forEach(t=>t.el.classList.remove('lit'));$('readPic').classList.add('show');bigWin();award(0);adapt('read',4,true);
-    readT=setTimeout(()=>{if(activeTab==='read')readRound();},2200);}),350);
+  award(0);adapt('read',4,true);                              // the points belong to the moment it was built, here
+  const whole=w.syl?w.text:w.parts.map(p=>p.t).join(''),rd=RD;
+  readBuiltT=setTimeout(()=>{if(!readLive(rd))return;readSaySlow(w.syl?[{say:w.text}]:w.parts,whole,k=>{T.forEach((t,i)=>t.el.classList.toggle('lit',i===k||(w.syl&&k===0)));},()=>{
+    T.forEach(t=>t.el.classList.remove('lit'));$('readPic').classList.add('show');bigWin();
+    readNextT=setTimeout(()=>{if(readLive(rd))readRound();},2200);});},350);
 }
 /* a ghost hand that shows the sliding until the child has tried */
 function readHint(on){const h=$('readHand');if(!h)return;if(!on){h.classList.remove('on');clearTimeout(RD&&RD.hintT);return;}
@@ -162,7 +173,7 @@ function readPick(ok,el,o){
     const w=RD.word;
     if(RD.kind==='read')readSaySlow(w.parts,w.text,k=>$('readWord').querySelectorAll('span').forEach((s,i)=>s.classList.toggle('lit',i===k)));
     else sayAt(w.text,0.7);
-    readT=setTimeout(()=>{if(activeTab==='read')readRound();},RD.kind==='read'?3600:2200);}
+    const rd=RD;readNextT=setTimeout(()=>{if(readLive(rd))readRound();},RD.kind==='read'?3600:2200);}
   else{RD.miss++;nope();el.classList.remove('wrong');void el.offsetWidth;el.classList.add('wrong');
     const w=RD.word;
     if(RD.kind==='read'){if(RD.miss>=2)readSaySlow(w.parts,null,k=>$('readWord').querySelectorAll('span').forEach((s,i)=>s.classList.toggle('lit',i===k)));

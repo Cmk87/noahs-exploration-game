@@ -6,7 +6,8 @@ const topo = require('topojson-client');
 const world = require('./node_modules/world-atlas/countries-50m.json');
 const iso = require('i18n-iso-countries');
 ['de', 'en', 'es'].forEach(l => iso.registerLocale(require('i18n-iso-countries/langs/' + l + '.json')));
-const CL = require('./node_modules/countries-list/countries.min.json');
+// countries-list moved its data into dist/ in later versions
+const CL = (() => { try { return require('./node_modules/countries-list/countries.min.json'); } catch (e) { return require('./node_modules/countries-list/dist/countries.min.json'); } })();
 
 const Q = 20;            // 1/20 degree grid
 const TOL = 0.06;        // simplification tolerance in degrees
@@ -29,12 +30,13 @@ const out = [], names = { de: {}, en: {}, es: {} };
 const SHORT = {  // short, child-friendly names where the official one is long
   US: { de: 'USA', en: 'United States', es: 'Estados Unidos' }, GB: { de: 'Großbritannien', en: 'United Kingdom', es: 'Reino Unido' },
   RU: { de: 'Russland', en: 'Russia', es: 'Rusia' }, KR: { de: 'Südkorea', en: 'South Korea', es: 'Corea del Sur' },
-  KP: { de: 'Nordkorea', en: 'North Korea', es: 'Corea del Norte' }, CD: { de: 'Kongo', en: 'DR Congo', es: 'R. D. del Congo' },
+  KP: { de: 'Nordkorea', en: 'North Korea', es: 'Corea del Norte' }, CD: { de: 'Kongo', en: 'DR Congo', es: 'República Democrática del Congo' },
   CG: { de: 'Republik Kongo', en: 'Congo', es: 'Congo' }, IR: { de: 'Iran', en: 'Iran', es: 'Irán' }, SY: { de: 'Syrien', en: 'Syria', es: 'Siria' },
   BO: { de: 'Bolivien', en: 'Bolivia', es: 'Bolivia' }, VE: { de: 'Venezuela', en: 'Venezuela', es: 'Venezuela' }, TZ: { de: 'Tansania', en: 'Tanzania', es: 'Tanzania' },
   LA: { de: 'Laos', en: 'Laos', es: 'Laos' }, VN: { de: 'Vietnam', en: 'Vietnam', es: 'Vietnam' }, MD: { de: 'Moldau', en: 'Moldova', es: 'Moldavia' },
-  CZ: { de: 'Tschechien', en: 'Czechia', es: 'Chequia' }, CF: { de: 'Zentralafrika', en: 'Central Africa', es: 'Centroáfrica' },
-  AE: { de: 'Emirate', en: 'UAE', es: 'Emiratos Árabes' }, DO: { de: 'Dominikanische Rep.', en: 'Dominican Rep.', es: 'Rep. Dominicana' },
+  CZ: { de: 'Tschechien', en: 'Czechia', es: 'Chequia' }, CF: { de: 'Zentralafrikanische Republik', en: 'Central African Republic', es: 'República Centroafricana' },
+  AE: { de: 'Emirate', en: 'UAE', es: 'Emiratos Árabes' }, DO: { de: 'Dominikanische Republik', en: 'Dominican Republic', es: 'República Dominicana' },
+  NL: { de: 'Niederlande', en: 'Netherlands', es: 'Países Bajos' }, XK: { de: 'Kosovo', en: 'Kosovo', es: 'Kosovo' },
   BA: { de: 'Bosnien', en: 'Bosnia', es: 'Bosnia' }, MK: { de: 'Nordmazedonien', en: 'North Macedonia', es: 'Macedonia del Norte' },
   TW: { de: 'Taiwan', en: 'Taiwan', es: 'Taiwán' }, PS: { de: 'Palästina', en: 'Palestine', es: 'Palestina' }, AQ: { de: 'Antarktis', en: 'Antarctica', es: 'Antártida' },
   FM: { de: 'Mikronesien', en: 'Micronesia', es: 'Micronesia' }, VA: { de: 'Vatikan', en: 'Vatican', es: 'Vaticano' }, BN: { de: 'Brunei', en: 'Brunei', es: 'Brunéi' },
@@ -43,9 +45,10 @@ const SHORT = {  // short, child-friendly names where the official one is long
 };
 let pts = 0, skipped = [];
 for (const f of fc.features) {
-  const a2 = f.id ? iso.numericToAlpha2(f.id) : null;
+  // features without an ISO number: Somaliland and Northern Cyprus are drawn as part of Somalia and Cyprus, Kosovo on its own
+  const a2 = f.id ? iso.numericToAlpha2(f.id) : ({ 'Somaliland': 'SO', 'N. Cyprus': 'CY', 'Kosovo': 'XK' })[f.properties.name] || null;
   if (!a2) { skipped.push(f.properties.name); continue; }
-  const cont = a2 === 'AQ' ? 'AN' : (CL[a2] && CL[a2].continent);
+  const cont = a2 === 'AQ' ? 'AN' : a2 === 'RU' ? 'AS' : (CL[a2] && CL[a2].continent);   // Russia stays Asia; the app counts it as Europe west of the Urals
   if (!cont) { skipped.push(a2); continue; }
   const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
   // closed rings start and end on the same point: split at the farthest point, simplify both halves
