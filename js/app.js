@@ -15,7 +15,7 @@ const TABS=[
   {id:'dig',   icon:'🎁', es:'Premios', en:'Prizes',  de:'Preise'}
 ];
 const ALLVIEWS=['home','adv','trace','read','words','ear','act','city','space','geo','stickers','dig','parent'];
-activeTab='trace';                 // declared in core.js so early animation loops can read it
+activeTab='home';                  // declared in core.js; the app always starts on the home screen
 /* The home screen: one big card per section. 🏠 in the header always comes back here. */
 const CARD_COL={adv:['#FFB938','#FF8A3D'],trace:['#FF7A7A','#E8445A'],read:['#FFD54F','#F29A16'],words:['#4FC3F7','#2F7FE0'],ear:['#B58CFF','#7A5AE0'],
   act:['#6FD86A','#2EA84F'],city:['#3DD6C0','#1C9E9A'],stickers:['#FFB347','#E07B1A'],geo:['#4FD1F5','#2A8BD0'],space:['#7A7FF0','#4A3FB8'],dig:['#FF8FC8','#E0559A']};
@@ -88,7 +88,6 @@ function applyLangs(){
   document.querySelector('header .lang').style.display=LANGS_ON.length>1?'':'none';
   if(!LANGS_ON.includes(lang)){const c=LANGS_ON.includes('de')?'de':LANGS_ON[0];setLang(c,$(c));}
 }
-applyLangs();
 
 function renderParent(){
   const L={es:['Nombre para la pestaña 🦸','Niveles','Palabras que más falla','Borrar'],
@@ -301,7 +300,7 @@ const gate=document.getElementById('gate');
 let gateEat=0;
 document.addEventListener('click',e=>{if(performance.now()<gateEat){e.stopPropagation();e.preventDefault();}},true);
 function unlock(e){
-  e.preventDefault();ac();loadVoices();gateEat=performance.now()+700;
+  e.preventDefault();ac();loadVoices();gateEat=performance.now()+700;appStarted=true;
   gate.style.display='none';
   advEnsure();showTab('home');
   if(timeLimit&&logDay().sec>=(timeLimit+(logDay().extra||0))*60){goToSleep();return;}
@@ -531,4 +530,5 @@ if('serviceWorker' in navigator&&location.protocol.startsWith('http'))
   window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 
 /* ---- boot ---- */
+applyLangs();          // at the end, once every section's code is loaded
 gateText();renderPower(false);setMode('abc');fit();fitSky();draw();drawSky();

@@ -45,7 +45,9 @@ function utter(text,isRetry,rate,L){
   },450);
 }
 let rewardOpen=false;                 // while the prize pop-up is up, nothing else talks over it
+let appStarted=false;                 // nothing is spoken before the "tap to start" (no letters chattering behind the start screen)
 function sayAt(text,rate,force){
+  if(!appStarted) return;
   if(rewardOpen&&!force) return;
   if(!('speechSynthesis' in window)){showWarn();return;}
   const synth=speechSynthesis;

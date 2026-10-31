@@ -3,7 +3,7 @@
 const $=id=>document.getElementById(id);
 const rnd=(a,b)=>a+Math.random()*(b-a);
 const clamp01=v=>v<0?0:v>1?1:v;
-let activeTab='trace';              // the visible tab; read by animation loops in every file
+let activeTab='home';               // the visible tab; read by animation loops in every file
 /* canvas roundRect arrived in Chrome 99 / Safari 16; older tablets (iPads stuck on iOS 15) need this */
 if(window.CanvasRenderingContext2D&&!CanvasRenderingContext2D.prototype.roundRect)
   CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){

@@ -207,6 +207,16 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   }
   await page.evaluate(() => { $('de').click(); showTab('home'); });
 
+  for (const langs of ['', 'en,es']) {   // nothing may talk behind the "tap to start" screen
+    const q = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+    const qerr = []; q.on('pageerror', e => qerr.push(e.message));
+    await q.addInitScript(l => { if (l) localStorage.setItem('sl_langs', l); window.SPOKEN = []; speechSynthesis.speak = u => SPOKEN.push(u.text); }, langs);
+    await q.goto(page.url().split('#')[0]); await q.waitForTimeout(1500);
+    const said = await q.evaluate(() => SPOKEN.slice());
+    check(!said.length && !qerr.length, `silent before the start tap${langs ? ' (languages ' + langs + ')' : ''}` + (said.length ? ': ' + said.join(' | ') : '') + (qerr.length ? ' ' + qerr[0] : ''));
+    await q.close();
+  }
+
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();
   console.log(failures ? `\n${failures} check(s) failed` : '\nAll checks passed');
