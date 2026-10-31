@@ -1,3 +1,6 @@
 /*.png
 node_modules/
 test-results/
+
+# the map build links its inputs here
+tools/node_modules
