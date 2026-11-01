@@ -8,7 +8,7 @@ const STK_AREAS=[
   ['town','🏙️',{es:'La ciudad',en:'The town',de:'Die Stadt'},[600,800],['cat','duck','frog']],
   ['forest','🌲',{es:'El bosque',en:'The forest',de:'Der Wald'},[1250,400],['bear','fox','owl','deer','squirrel','hedgehog','wolf','boar','badger','woodpecker','stag','beaver','snail','butterfly']],
   ['farm','🚜',{es:'La granja',en:'The farm',de:'Der Bauernhof'},[1040,1050],['rabbit','cow','pig','sheep','chicken']],
-  ['mountains','🏔️',{es:'Las montañas',en:'The mountains',de:'Die Berge'},[800,-400],['ibex','marmot','eagle']],
+  ['mountains','🏔️',{es:'Las montañas',en:'The mountains',de:'Die Berge'},[800,-400],['ibex','marmot','eagle','chamois']],
   ['dino','🦕',{es:'El valle de los dinosaurios',en:'Dinosaur valley',de:'Das Dino-Tal'},[2200,200],['brachio','trex','trike','stego','ptera','babydino']],
   ['castle','🏰',{es:'El castillo',en:'The castle',de:'Die Burg'},[2000,1480],['dragon','horse']],
   ['sea','🏖️',{es:'La playa y el mar',en:'Beach and sea',de:'Strand und Meer'},[1200,2000],['crab','gull','starfish','seal','octopus','turtle','dolphin','whale','shark','parrot']],

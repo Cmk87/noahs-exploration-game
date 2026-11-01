@@ -9,7 +9,7 @@
    shipwreck with a treasure chest and a little submarine on the seabed.
 ============================================================= */
 function cityEdge(K){
-const {rr,circ,ell,poly,ln,ent,ANIMALS,hit,fx,act,later,burst,textP,PARTS,SND,swp,sr,li,ST,TAP,VIEW,TAU,g}=K;
+const {rr,circ,ell,poly,ln,ent,ANIMALS,hit,fx,act,later,burst,textP,PARTS,LIGHTS,SND,swp,sr,sm,li,ST,TAP,VIEW,TAU,g}=K;
 const ANI=(id,ic,n,l)=>{ANIMALS.push([id,ic,n,l]);ent(id,ic,n,l,{animal:1});};
 const at=(id,b)=>{K.ENT[id].at=b;};
 const inV=(x0,y0,x1,y1)=>x1>VIEW[0]&&x0<VIEW[2]&&y1>VIEW[1]&&y0<VIEW[3];
@@ -217,9 +217,97 @@ K.DYN.push(L=>{if(!inV(1700,2100,2420,2400))return;const T=TT();
       hit('dolphin',dx-26,dy-14,dx+26,dy+12,{moving:1,small:1});}});});
 });
 
+/* ---------- the mountains: a ski slope in the west; in the east an old plane wreck (a marmot lives
+   in it now), climbers on their way to the summit, an ice cave with a friendly yeti, an avalanche,
+   a crystal cave, a chamois; a paraglider over the peaks ---------- */
+ent('planecrash','✈️',['das alte Flugzeugwrack','the old plane wreck','el viejo avión estrellado'],['Ein altes Flugzeug ist hier vor langer Zeit gelandet. Den Piloten geht es gut – jetzt wohnt ein Murmeltier darin!','An old plane landed here a long time ago. The pilots are fine – now a marmot lives in it!','Un avión viejo aterrizó aquí hace mucho. Los pilotos están bien, ¡ahora vive una marmota dentro!'],{find:1});
+ent('climbers','🧗',['die Bergsteiger','the climbers','los alpinistas'],['Die Bergsteiger! Sie klettern bis ganz nach oben auf den Gipfel.','The climbers! They climb all the way up to the summit.','¡Los alpinistas! Escalan hasta la cima.']);
+ent('icecave','🧊',['die Eishöhle','the ice cave','la cueva de hielo'],['Die Eishöhle! Wer wohnt denn da drin?','The ice cave! Who lives in there?','¡La cueva de hielo! ¿Quién vive ahí dentro?'],{find:1});
+ent('yeti','🦍',['der Yeti','the yeti','el yeti'],['Der Yeti! Er wohnt in der Eishöhle und ist ganz lieb. Huhu!','The yeti! It lives in the ice cave and is very friendly. Hello!','¡El yeti! Vive en la cueva de hielo y es muy simpático. ¡Hola!']);
+ent('crystals','💎',['die Kristallhöhle','the crystal cave','la cueva de cristales'],['Die Kristallhöhle! Hier glitzern lila Kristalle.','The crystal cave! Purple crystals sparkle in here.','¡La cueva de cristales! Aquí brillan cristales morados.'],{find:1});
+ent('paraglider','🪂',['der Gleitschirmflieger','the paraglider','el parapentista'],['Der Gleitschirmflieger! Er schwebt wie ein Vogel über die Berge.','The paraglider! He glides over the mountains like a bird.','¡El parapentista! Planea sobre las montañas como un pájaro.']);
+ent('skier','⛷️',['die Skifahrerin','the skier','la esquiadora'],['Die Skifahrerin saust den Berg hinunter! Hui!','The skier whizzes down the mountain! Wheee!','¡La esquiadora baja la montaña a toda velocidad! ¡Yuju!']);
+ent('skilift','🚡',['der Sessellift','the chairlift','el telesilla'],['Der Sessellift! Er bringt die Skifahrer nach oben.','The chairlift! It takes the skiers up.','¡El telesilla! Sube a los esquiadores.'],{find:1});
+ANI('chamois','🐐',['die Gämse','the chamois','el rebeco'],['Die Gämse! Sie springt sicher von Fels zu Fels.','The chamois! It leaps safely from rock to rock.','¡El rebeco! Salta seguro de roca en roca.']);
+const S=K.S,CLIMB={done:false};
+// the old plane wreck on the slope, half in the snow
+S(-520,[2870,-650,3150,-500],()=>{const T=TT(),t=fx('planecrash'),x=3000,y=-548;
+  g.save();g.translate(x,y);g.rotate(-0.42);
+  rr(-70,-14,130,28,14,'#C9D0DB');rr(-70,-14,130,8,6,'#E3E8F0');for(let k=0;k<4;k++)circ(-40+k*24,-2,5,'#5A7AB0');
+  poly('#B9C1CC',-66,-8,-96,-44,-80,-44,-50,-8);poly('#D9302A',-90,-44,-80,-44,-70,-30,-84,-30);
+  poly('#AEB6C2',-10,10,40,10,70,36,10,30);poly('#9AA4B8',-14,-12,20,-12,10,-46,-8,-40);
+  circ(64,0,7,'#7E889C');g.strokeStyle='#5A6074';g.lineWidth=4;g.beginPath();g.moveTo(64,0);g.quadraticCurveTo(76,-18,70,-30);g.moveTo(64,0);g.quadraticCurveTo(80,14,74,26);g.stroke();
+  const peek=t<4?Math.min(1,t*2):0;if(peek){circ(30,-2-peek*8,6,'#B48A5A');circ(28,-4-peek*8,1.2,'#222');circ(32,-4-peek*8,1.2,'#222');circ(26,-8-peek*8,2,'#9A7048');circ(34,-8-peek*8,2,'#9A7048');}
+  g.restore();ell(x+20,y+30,90,16,'#F4F7FB');ell(x-40,y+36,60,12,'#E9EEF5');
+  hit('planecrash',x-80,y-60,x+80,y+40);});
+// climbers: a tent halfway up; tapped, they rope up to the summit and plant a flag
+const CL0=[3330,-430],CL1=[3548,-826];
+S(-462,[3340,-530,3460,-455],()=>{poly('#FF8A3D',3350,-462,3400,-522,3450,-462);poly('#E0601E',3400,-522,3450,-462,3418,-462);poly('#5A3A22',3392,-462,3400,-490,3408,-462);ln('#5A3A22',3,3400,-522,3400,-534);});
+K.DYN.push(L=>{if(!inV(3250,-900,3650,-400))return;const T=TT(),t=fx('climbers'),u=t<10?Math.min(1,0.15+t/10*0.85):(CLIMB.done?1:0.15);if(t>=10&&t<11)CLIMB.done=true;
+  L.push({y:-440,f:()=>{const pts=[0,1,2].map(i=>{const v=Math.max(0,u-i*0.06),x=CL0[0]+(CL1[0]-CL0[0])*v,y=CL0[1]+(CL1[1]-CL0[1])*v;return [x,y];});
+    g.strokeStyle='#E8443A';g.lineWidth=2.6;g.beginPath();pts.forEach(([x,y],i)=>i?g.lineTo(x,y-18):g.moveTo(x,y-18));g.stroke();
+    pts.forEach(([x,y],i)=>{const st=t<10?Math.sin(T*8+i)*2:0;g.save();g.translate(x,y);g.scale(1.8,1.8);g.translate(-x,-y);rr(x-4,y-16+st*0.3,8,10,3,['#3B7DE2','#FFC928','#7ED957'][i]);circ(x,y-20,4,SKIN0[i]);rr(x-4.5,y-25,9,4,2,['#D9302A','#2B2233','#FF8A3D'][i]);rr(x-3,y-6,2,6,1,'#2B2233');rr(x+1,y-6,2,6,1,'#2B2233');rr(x+3,y-15,4,9,2,'#8A5A3B');g.restore();});
+    if(u>=1){ln('#5A3A22',3,CL1[0]+4,CL1[1],CL1[0]+4,CL1[1]-60);poly('#E8443A',CL1[0]+5,CL1[1]-60,CL1[0]+44,CL1[1]-50+Math.sin(T*4)*3,CL1[0]+5,CL1[1]-40);}
+    hit('climbers',Math.min(pts[2][0],pts[0][0])-24,pts[0][1]-50,Math.max(pts[2][0],pts[0][0])+24,pts[2][1]+4,{moving:1,small:1});}});});
+const SKIN0=['#F6D2B4','#D9A27E','#9C6B4E'];
+// the ice cave and its yeti
+S(-405,[3880,-520,4060,-398],()=>{const T=TT(),t=fx('icecave'),x=3965,y=-405;
+  ell(x,y,82,62,'#BFE6FA');ell(x,y+4,62,48,'#7FC4EE');g.fillStyle='#1E4A6A';g.beginPath();g.ellipse(x,y+10,40,34,0,Math.PI,TAU);g.fill();rr(x-40,y+8,80,4,0,'#1E4A6A');
+  for(let k=0;k<7;k++)poly('#E9F6FF',x-70+k*22,y-44+Math.abs(k-3)*6,x-62+k*22,y-44+Math.abs(k-3)*6,x-66+k*22,y-26+Math.abs(k-3)*6);
+  const out=t<6?(t<1?t:t<5?1:6-t):0;
+  if(!out){const bl=(T%4)<0.15;if(!bl){circ(x-8,y-6,2.6,'#FFE14D');circ(x+8,y-6,2.6,'#FFE14D');}}
+  else{const yy=y+8-out*16,wv=Math.sin(T*10)*0.5;circ(x,yy-26,18,'#F4F7FB');circ(x-14,yy-10,14,'#F4F7FB');circ(x+14,yy-10,14,'#F4F7FB');ell(x,yy-24,10,9,'#8FB8E8');
+    circ(x-4,yy-27,2,'#1D2350');circ(x+4,yy-27,2,'#1D2350');g.strokeStyle='#1D2350';g.lineWidth=1.6;g.beginPath();g.arc(x,yy-22,4,0.3,Math.PI-0.3);g.stroke();
+    g.save();g.translate(x+20,yy-18);g.rotate(-2.2+wv);rr(-5,0,10,22,5,'#F4F7FB');g.restore();
+    hit('yeti',x-30,yy-46,x+34,yy+4,{moving:1,small:1});}
+  hit('icecave',x-80,y-60,x+80,y+40);});
+// the avalanche (tap the next peak)
+K.DYN.push(L=>{const t=fx('avalanche');if(t>5||!inV(4100,-900,4750,-250))return;const T=TT();
+  L.push({y:-250,f:()=>{for(let k=0;k<14;k++){const u=Math.min(1,Math.max(0,(t-k*0.08)/2.6)),x=4400+(k%2?-1:1)*(40+k*12)*u,y=-840+u*(400+((k*37)%40));
+    if(u<=0)continue;g.globalAlpha=Math.max(0,1-Math.max(0,t-3.4)/1.6);circ(x,y,16+k*2,'#FFFFFF');circ(x+10,y-6,10+k,'#EEF4FA');g.globalAlpha=1;}}});});
+// the crystal cave
+S(-372,[4730,-470,4890,-368],()=>{const T=TT(),t=fx('crystals'),x=4810,y=-375;
+  ell(x,y,72,46,'#8E96A8');g.fillStyle='#2A2238';g.beginPath();g.ellipse(x,y+6,48,36,0,Math.PI,TAU);g.fill();rr(x-48,y+4,96,4,0,'#2A2238');
+  [[-26,0,10],[-10,-4,16],[8,-2,12],[22,2,9],[0,4,8]].forEach(([dx,dy,h],i)=>{const c=['#B78CFF','#9B6BFF','#D9B8FF','#7FE0FF','#FF9BE0'][i],gl=t<4?1:0.4+0.4*Math.sin(T*3+i);
+    g.globalAlpha=0.6+0.4*gl;poly(c,x+dx-5,y+dy+6,x+dx,y+dy-h*2,x+dx+5,y+dy+6);g.globalAlpha=1;if(gl>0.7)LIGHTS.push(x+dx,y+dy-h,26,c);});
+  if(t<4&&Math.random()<0.3)PARTS.push({x:x+(Math.random()-0.5)*80,y:y-10,vx:0,vy:-20,life:0,max:1,k:'star',r:2.5,c:'#E9D8FF'});
+  hit('crystals',x-70,y-46,x+70,y+30);});
+// the chamois leaps between rocks
+const ROCKS=[[5130,-520],[5200,-610],[5270,-700],[5330,-600]];
+ROCKS.forEach(([x,y])=>S(y+6,[x-34,y-14,x+34,y+14],()=>{ell(x,y+4,32,13,'#8E96A8');ell(x-5,y-1,24,9,'#A8B0C0');}));
+K.DYN.push(L=>{if(!inV(5080,-780,5380,-480))return;const T=TT(),t=fx('chamois'),sp=t<4?2.5:1,ph=(T*0.35*sp)%ROCKS.length,i=Math.floor(ph),u=ph-i,k=u<0.6?0:sm((u-0.6)/0.4);
+  const a=ROCKS[i],b=ROCKS[(i+1)%ROCKS.length],x=a[0]+(b[0]-a[0])*k,y=a[1]+(b[1]-a[1])*k-Math.sin(k*Math.PI)*50,f=b[0]>=a[0]?1:-1;
+  L.push({y:y+4,f:()=>{flip(x,y-6,f,()=>{g.scale(1.7,1.7);g.translate(0,-4);const c='#8A5A3B';[-8,-4,4,8].forEach(lx=>rr(lx-1.2,0,2.4,10,1,'#5A3A22'));ell(0,-2,12,6,c);rr(8,-14,6,12,3,c);ell(14,-14,6,4,c);
+    rr(13,-14,2,6,0,'#F2EDE4');g.strokeStyle='#2B2233';g.lineWidth=1.6;g.beginPath();g.moveTo(12,-18);g.quadraticCurveTo(12,-26,8,-24);g.moveTo(15,-18);g.quadraticCurveTo(16,-26,12,-25);g.stroke();circ(16,-15,1,'#222');});
+    hit('chamois',x-28,y-52,x+30,y+8,{moving:1,small:1});}});});
+// the ski slope in the west: a piste, a chairlift and two skiers
+const PISTE=[[-850,-860],[-760,-760],[-930,-660],[-760,-560],[-920,-460],[-800,-340]];
+K.GROUND0.push(()=>{if(!inV(-1000,-900,-480,-300))return;g.strokeStyle='rgba(255,255,255,.75)';g.lineWidth=26;g.lineJoin='round';g.beginPath();PISTE.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.stroke();
+  g.strokeStyle='rgba(120,160,220,.35)';g.lineWidth=2;g.setLineDash([8,8]);g.stroke();g.setLineDash([]);});
+const LIFT0=[-560,-330],LIFT1=[-820,-850];
+S(-322,[-840,-870,-540,-300],()=>{const T=TT();[[0],[0.33],[0.66],[1]].forEach(([u])=>{const x=LIFT0[0]+(LIFT1[0]-LIFT0[0])*u,y=LIFT0[1]+(LIFT1[1]-LIFT0[1])*u;rr(x-3,y-46,6,46,1,'#7E889C');rr(x-10,y-48,20,4,1,'#5A6074');});
+  ln('#3A3F52',1.6,LIFT0[0],LIFT0[1]-46,LIFT1[0],LIFT1[1]-46);
+  for(let k=0;k<6;k++){const u=((T*0.03+k/6)%1),x=LIFT0[0]+(LIFT1[0]-LIFT0[0])*u,y=LIFT0[1]+(LIFT1[1]-LIFT0[1])*u-46;ln('#3A3F52',1.2,x,y,x,y+14);rr(x-7,y+12,14,4,2,'#D9302A');
+    if(k%2===0){circ(x,y+6,3.5,SKIN0[k%3]);rr(x-3,y+8,6,6,2,['#3B7DE2','#FF8A3D','#7ED957'][k%3]);}}
+  hit('skilift',-830,-900,-540,-310);});
+K.DYN.push(L=>{if(!inV(-1000,-900,-480,-300))return;const T=TT(),t=fx('skier');
+  [0,0.5].forEach((o,i)=>{const sp=t<4?2.2:1,u=((T*0.05*sp)+o)%1,n=PISTE.length-1,fp=u*n,j=Math.min(n-1,Math.floor(fp)),k=fp-j,a=PISTE[j],b=PISTE[j+1],x=a[0]+(b[0]-a[0])*k,y=a[1]+(b[1]-a[1])*k,f=b[0]>=a[0]?1:-1;
+    L.push({y,f:()=>{flip(x,y,f,()=>{g.scale(1.7,1.7);ln('#2B2233',2.4,-12,0,12,-3);rr(-4,-14,8,10,3,i?'#E8443A':'#3B7DE2');circ(0,-18,4,SKIN0[i]);rr(-4.5,-23,9,4,2,i?'#FFC928':'#FFFFFF');ln('#7E889C',1.4,4,-10,10,0);ln('#7E889C',1.4,-4,-10,-8,0);});
+      if(Math.random()<0.2)PARTS.push({x:x-f*8,y:y,vx:-f*20,vy:-10,life:0,max:0.6,k:'smoke',r:3,c:'#FFFFFF'});hit('skier',x-24,y-44,x+24,y+5,{moving:1,small:1});}});});});
+// a paraglider drifting over the peaks
+K.TOP.push(()=>{const T=TT(),t=fx('paraglider'),x=2700+((T*(t<4?60:25))%2700),y=-1000+Math.sin(T*0.5)*50;if(!inV(x-60,y-50,x+60,y+70))return;
+  g.save();g.translate(x,y);g.fillStyle='#FF5A8A';g.beginPath();g.ellipse(0,0,48,16,0,Math.PI,TAU);g.fill();for(let k=0;k<5;k++){g.fillStyle=['#FFC928','#3CC8F5','#7ED957','#FF8A3D','#B78CFF'][k];g.beginPath();g.ellipse(-38+k*19,-2,8,12,0,Math.PI,TAU);g.fill();}
+  g.strokeStyle='rgba(60,60,80,.6)';g.lineWidth=0.8;[-44,-20,20,44].forEach(dx=>{g.beginPath();g.moveTo(dx,0);g.lineTo(0,40);g.stroke();});
+  rr(-5,38,10,12,3,'#3B7DE2');circ(0,34,4.5,SKIN0[0]);rr(-5,29,10,4,2,'#FFFFFF');g.restore();hit('paraglider',x-50,y-20,x+50,y+54,{moving:1,small:1});});
+
 /* ---------- taps and zones ---------- */
 Object.assign(TAP,{
-  sky:()=>{SND.whoosh();},space:(r,x,y)=>{burst(x,y,'star',10,'#FFFFFF',0.6);},
+  sky:()=>{SND.whoosh();},
+  planecrash:()=>{act('planecrash');SND.squeak();},climbers:()=>{if(fx('climbers')>10){act('climbers');CLIMB.done=false;}SND.yay();},
+  icecave:()=>{if(fx('icecave')>6)act('icecave');swp(200,120,0.8,'sine',0.08);later(1,()=>say(L3(K.ENT.yeti.l)));return L3(K.ENT.icecave.l);},
+  yeti:()=>{act('icecave');swp(160,260,0.5,'sawtooth',0.05);},crystals:()=>{act('crystals');[1568,2093,2637,3136].forEach((f,i)=>beep(f,i*0.09,0.2,'sine',0.08));},
+  chamois:()=>{act('chamois');SND.hop&&SND.hop();},paraglider:()=>{act('paraglider');SND.whoosh();},skier:()=>{act('skier');SND.whoosh();},skilift:()=>{SND.ding();},
+  mountain:(r,x,y)=>{if(x>4150&&x<4650&&fx('avalanche')>5){act('avalanche');noise(2.2,0.12);return L3(['Eine Lawine! Der Schnee rutscht den Berg hinunter. Zum Glück ist da niemand.','An avalanche! The snow slides down the mountain. Luckily nobody is there.','¡Un alud! La nieve baja por la montaña. Por suerte no hay nadie.']);}},space:(r,x,y)=>{burst(x,y,'star',10,'#FFFFFF',0.6);},
   mars:()=>{act('mars');SND.ding();},saturn:()=>{act('saturn');swp(300,600,0.5,'sine',0.06);},satellite:()=>{for(let i=0;i<4;i++)beep(1400,i*0.18,0.08,'square',0.05);},
   comet:()=>{SND.whoosh();},deepsea:(r,x,y)=>{burst(x,y,'drop',8,'#BFE9FF',0.5);},
   wreck:()=>{swp(160,80,1,'sawtooth',0.04);},coins:(r,x,y)=>{act('coins');burst(x,y,'star',14,'#FFD23F',0.8);[1568,2093,2637].forEach((f,i)=>beep(f,i*0.08,0.12,'triangle',0.1));},
@@ -228,7 +316,9 @@ Object.assign(TAP,{
   sub:()=>{act('sub');for(let i=0;i<3;i++)beep(1000,i*0.6,0.12,'sine',0.08);},fishschool:()=>{act('fishschool');SND.splash();},
   manta:()=>{act('manta');SND.splash();},spermwhale:()=>{act('spermwhale');swp(140,60,1.4,'sine',0.1);},jellyfish:()=>{act('jellyfish');swp(600,1200,0.4,'sine',0.05);},
   squid:()=>{act('squid');SND.splash();},anglerfish:()=>{act('anglerfish');SND.ding();}});
-K.ZONES.unshift((x,y)=>{if(y<SPACE0)return 'space';if(y<SKY0)return 'sky';if(y>DEEP0)return 'deepsea';return null;});
+K.ZONES.unshift((x,y)=>{if(y<SPACE0)return 'space';if(y<SKY0)return 'sky';if(y>DEEP0)return 'deepsea';
+  if(y<-940&&y>=SKY0)return 'sky';if(y<-300&&y>=-940&&!(x>2100&&x<2620))return 'mountain';return null;});   // the whole mountain range, not only its western half
+at('planecrash',[2920,-608,3080,-508]);at('icecave',[3885,-465,4045,-365]);at('crystals',[4740,-421,4880,-345]);at('skilift',[-830,-900,-540,-310]);
 at('mars',[2060,-4300,2340,-4020]);at('saturn',[3800,-3940,4600,-3460]);at('wreck',[560,3960,1300,4300]);at('chest',[1340,4280,1400,4322]);
 at('fishschool',[4080,2640,4320,2760]);at('clam',[1436,4300,1504,4332]);at('castaway',[2136,2256,2164,2304]);
 K.EDGE_Y=[-4700,4700];       // how far up and down the camera may go

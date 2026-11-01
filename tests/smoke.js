@@ -243,6 +243,8 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     await q.close();
   }
 
+  // the run is long: count it as touched now, so the window getting focus back is not taken as a 5-minute break
+  await page.evaluate(() => { lastTouch = Date.now(); });
   {const q = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
    await q.addInitScript(() => { if (!sessionStorage.getItem('x')) { sessionStorage.setItem('x', 1); localStorage.setItem('sl_power', '5'); localStorage.setItem('sl_pgame', 'bal'); } });
    await q.goto(page.url().split('#')[0]); await q.waitForTimeout(400);
@@ -252,7 +254,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   // jobs: a 'who helps?' round answered right, and every job's little game played to the end.
   // Wait until the house / letter / end card is actually there (a fixed sleep raced the round).
   {const r = await page.evaluate(async () => {
-     showTab('jobs'); ADV.started = false; JM = 'need'; jobRound();
+     lastTouch = Date.now(); showTab('jobs'); ADV.started = false; JM = 'need'; jobRound();
      const i = JR.opts.findIndex(o => o.j === JR.j); document.querySelectorAll('#jobStage .jCard')[i].click();
      const ok = JR.done;
      const sleep = ms => new Promise(res => setTimeout(res, ms));
