@@ -93,7 +93,7 @@ function sayWordBridge(words,opt){
   const tag=document.getElementById('bridgeTag');
   const step=i=>{
     if(gen!==bridgeGen)return;
-    if(i>=seq.length){if(tag)tag.classList.remove('on');return;}
+    if(i>=seq.length){if(tag)tag.classList.remove('on');if(opt.then)opt.then();return;}
     const s=seq[i];
     if(tag){tag.textContent=BRIDGE_MARK[s.L]+' '+s.label;tag.classList.add('on');}
     try{if('speechSynthesis' in window)speechSynthesis.cancel();}catch(e){}

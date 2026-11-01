@@ -23,11 +23,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await hookSay();
   await page.mouse.click(180, 320);
   await page.waitForTimeout(300);
-  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 12), 'opens on the home screen with 12 sections');
+  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 14), 'opens on the home screen with 14 sections');
   check(await page.evaluate(() => lang === 'de'), 'starts in German');
 
   console.log('Layout');
-  for (const t of ['home', 'adv', 'city', 'stickers', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
+  for (const t of ['home', 'adv', 'city', 'stickers', 'king', 'folk', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
     await page.evaluate(t => showTab(t), t);
     await page.waitForTimeout(150);
     await page.evaluate(() => { window.scrollTo(0, 500); const v = document.querySelector('.view.on'); v.lastElementChild && v.lastElementChild.scrollIntoView(); });
@@ -359,6 +359,94 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     await page.evaluate(() => [...document.querySelectorAll('#grown .grownKeys button')].find(x => x.textContent === '✓').click());
   }
   check(await page.evaluate(() => activeTab === 'parent' && !document.querySelector('#grown.on')), 'the right sum opens parent settings');
+
+  // photo books: habitats, a full-screen animal, people, both mini-games, passport stamps
+  {const photo = await page.evaluate(async () => {
+     const sleep = ms => new Promise(res => setTimeout(res, ms));
+     const waitFor = async fn => { for (let i = 0; i < 50; i++) { if (fn()) return true; await sleep(100); } return false; };
+     window.PHOTO_SAID = [];
+     if (!window._utter0) window._utter0 = utter;
+     utter = (t, a, b, L) => { PHOTO_SAID.push(String(t)); return window._utter0(t, a, b, L); };
+     if (rewardOpen) closeReward(false);
+     power = 5; savePower();
+     if (lang !== 'de') $('de').click();
+     const keepBridge = BRIDGE.slice();
+     BRIDGE = ['de'];
+     showTab('king');
+     const habs = document.querySelectorAll('#v-king .phHab').length;
+     const lazy = [...document.querySelectorAll('#v-king .phHab img')].every(img => img.getAttribute('loading') === 'lazy');
+     document.querySelector('#v-king .phHab[data-id="farm"]').click();
+     const farmN = document.querySelectorAll('#v-king .phAn').length;
+     document.querySelector('#v-king .phAn[data-id="cow"]').click();
+     const cow = PHOTO_PACK.animals.find(a => a.id === 'cow');
+     const card = document.querySelector('#v-king .phCard, #v-king .phHero');
+     const hero = document.querySelector('#v-king .phHero');
+     const opened = !!(hero && /\.webp/.test(hero.getAttribute('src')) && document.querySelector('#v-king .phReplay'));
+     const saidName = await waitFor(() => PHOTO_SAID.some(t => t === cow.names.de.full));
+     const saidFact = await waitFor(() => PHOTO_SAID.some(t => t === cow.facts[0].de));
+     const firstSaid = PHOTO_SAID.slice(0, 6).map(t => String(t).slice(0, 48));
+     PHOTO_SAID = [];
+     document.querySelector('#v-king .phReplay').click();
+     const saidOther = await waitFor(() => PHOTO_SAID.some(t => t === cow.facts[1].de));
+     $('es').click();
+     showTab('king');
+     document.querySelector('#v-king .phHab[data-id="birds"]').click();
+     document.querySelector('#v-king .phAn[data-id="eagle"]').click();
+     const eagleName = document.querySelector('#v-king .phName') && document.querySelector('#v-king .phName').textContent;
+     $('de').click();
+     showTab('folk');
+     const groups = document.querySelectorAll('#v-folk .phGrp').length;
+     document.querySelector('#v-folk .phGrp').click();
+     const peopleN = document.querySelectorAll('#v-folk .phAn').length;
+     document.querySelector('#v-folk .phAn').click();
+     const person = document.querySelector('#v-folk .phHero');
+     const personOk = !!(person && /people\/.+\.webp/.test(person.getAttribute('src')));
+     const pass = JSON.parse(localStorage.getItem('sl_passport') || '{}');
+     BRIDGE = keepBridge;
+     showTab('home');
+     return { habs, lazy, farmN, opened, saidName, saidFact, saidOther, eagleName, groups, peopleN, personOk,
+       lang, reward: rewardOpen, firstSaid,
+       stamped: pass.a && pass.a.includes('cow') && pass.a.includes('eagle') && pass.p && pass.p.length === 1 };
+   });
+   check(photo.habs === 10 && photo.lazy, 'animal kingdom shows 10 habitat photos, loaded lazily');
+   check(photo.farmN >= 5 && photo.opened, 'a habitat opens its animals, and an animal opens full screen');
+   check(photo.saidName && photo.saidFact && photo.saidOther, 'the animal card says the name, then one fact, and the other fact on replay'
+     + (photo.saidName && photo.saidFact && photo.saidOther ? '' : ' ' + JSON.stringify({ n: photo.saidName, f: photo.saidFact, o: photo.saidOther, lang: photo.lang, reward: photo.reward, said: photo.firstSaid })));
+   check(photo.eagleName === 'el águila', 'the card uses the Spanish article from the photo pack (el águila)');
+   check(photo.groups === 2 && photo.peopleN >= 10 && photo.personOk, 'people of the world opens long ago and today, then a person');
+   check(photo.stamped, 'the first look at an animal or a person earns one passport stamp');
+   const hide = await page.evaluate(() => {
+     showTab('king');
+     document.querySelector('#v-king .phHide').click();
+     const choices = document.querySelectorAll('#v-king .phChoice').length;
+     const blurred = !!document.querySelector('#v-king .phBlur');
+     const p0 = power;
+     document.querySelector('#v-king .phChoice[data-ok="0"]').click();
+     const held = power === p0;
+     document.querySelector('#v-king .phChoice[data-ok="1"]').click();
+     return { choices, blurred, held, up: power === p0 + 1 };
+   });
+   check(hide.choices === 3 && hide.blurred && hide.held && hide.up, "who's hiding: 3 photos, a wrong tap keeps the point, the right one earns it");
+  }
+  {await page.evaluate(() => { showTab('king'); document.querySelector('#v-king .phLive').click(); });
+   const drag = await page.locator('#v-king .phDrag').boundingBox();
+   const hab = await page.locator('#v-king .phLiveHab[data-ok="1"]').boundingBox();
+   const p0 = await page.evaluate(() => power);
+   await page.mouse.move(drag.x + drag.width / 2, drag.y + drag.height / 2);
+   await page.mouse.down();
+   await page.mouse.move(hab.x + hab.width / 2, hab.y + hab.height / 2, { steps: 12 });
+   await page.mouse.up();
+   const dropped = await page.evaluate(p0 => power === p0 + 1, p0);
+   await page.evaluate(() => { showTab('king'); document.querySelector('#v-king .phLive').click(); const p0 = power;
+     document.querySelector('#v-king .phLiveHab[data-ok="0"]').click();
+     const held = power === p0;
+     document.querySelector('#v-king .phLiveHab[data-ok="1"]').click();
+     return window._live = { held, up: power === p0 + 1 }; });
+   const live = await page.evaluate(() => window._live);
+   check(!!drag && !!hab && dropped && live.held && live.up, 'where do I live: drag or tap the animal onto its habitat'
+     + (drag && hab && dropped && live.held && live.up ? '' : ' ' + JSON.stringify({ drag: !!drag, hab: !!hab, dropped, live })));
+   await page.evaluate(() => { $('de').click(); showTab('home'); });
+  }
 
   // collecting again: a full sticker book starts round 2 from zero; a full museum starts a new round at the next dig
   {const r = await page.evaluate(() => { const keep = [...CITY.FOUND]; CITY.animals().forEach(id => CITY.FOUND.add(id)); showTab('stickers');
