@@ -1,0 +1,2051 @@
+{
+  "version": 1,
+  "imageSize": 512,
+  "format": "webp",
+  "habitats": [
+    {
+      "id": "farm",
+      "en": "Farm",
+      "es": "La granja",
+      "de": "Der Bauernhof",
+      "emoji": "🚜"
+    },
+    {
+      "id": "pets",
+      "en": "Pets",
+      "es": "Las mascotas",
+      "de": "Die Haustiere",
+      "emoji": "🏠"
+    },
+    {
+      "id": "forest",
+      "en": "Forest",
+      "es": "El bosque",
+      "de": "Der Wald",
+      "emoji": "🌲"
+    },
+    {
+      "id": "jungle",
+      "en": "Jungle",
+      "es": "La selva",
+      "de": "Der Dschungel",
+      "emoji": "🌴"
+    },
+    {
+      "id": "savanna",
+      "en": "Savanna",
+      "es": "La sabana",
+      "de": "Die Savanne",
+      "emoji": "🌍"
+    },
+    {
+      "id": "ocean",
+      "en": "Ocean",
+      "es": "El mar",
+      "de": "Das Meer",
+      "emoji": "🌊"
+    },
+    {
+      "id": "polar",
+      "en": "Ice and Snow",
+      "es": "El hielo y la nieve",
+      "de": "Eis und Schnee",
+      "emoji": "❄️"
+    },
+    {
+      "id": "birds",
+      "en": "Birds",
+      "es": "Los pájaros",
+      "de": "Die Vögel",
+      "emoji": "🐦"
+    },
+    {
+      "id": "bugs",
+      "en": "Little Critters",
+      "es": "Los bichitos",
+      "de": "Die Krabbeltiere",
+      "emoji": "🐞"
+    },
+    {
+      "id": "world",
+      "en": "Around the World",
+      "es": "Por el mundo",
+      "de": "Rund um die Welt",
+      "emoji": "🗺️"
+    }
+  ],
+  "animals": [
+    {
+      "id": "cow",
+      "habitat": "farm",
+      "image": "animals/cow.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "cow",
+          "full": "the cow"
+        },
+        "es": {
+          "article": "la",
+          "noun": "vaca",
+          "full": "la vaca",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Kuh",
+          "full": "die Kuh",
+          "gender": "f"
+        }
+      },
+      "sound": {
+        "en": "moo",
+        "es": "mu",
+        "de": "muh"
+      },
+      "facts": [
+        {
+          "en": "Cows have best friends, and they feel calmer when their friend is close by!",
+          "es": "¡Las vacas tienen mejores amigas y están más tranquilas cuando las tienen cerca!",
+          "de": "Kühe haben beste Freundinnen und sind ruhiger, wenn die in der Nähe sind!"
+        },
+        {
+          "en": "A cow's tummy has four parts!",
+          "es": "¡La barriga de una vaca tiene cuatro partes!",
+          "de": "Der Magen einer Kuh hat vier Teile!"
+        }
+      ]
+    },
+    {
+      "id": "horse",
+      "habitat": "farm",
+      "image": "animals/horse.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "horse",
+          "full": "the horse"
+        },
+        "es": {
+          "article": "el",
+          "noun": "caballo",
+          "full": "el caballo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Pferd",
+          "full": "das Pferd",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "neigh",
+        "es": "iiiih",
+        "de": "wieher"
+      },
+      "facts": [
+        {
+          "en": "Horses can sleep standing up!",
+          "es": "¡Los caballos pueden dormir de pie!",
+          "de": "Pferde können im Stehen schlafen!"
+        },
+        {
+          "en": "Horses can only breathe through their nose, not their mouth!",
+          "es": "¡Los caballos solo pueden respirar por la nariz, no por la boca!",
+          "de": "Pferde können nur durch die Nase atmen, nicht durch den Mund!"
+        }
+      ]
+    },
+    {
+      "id": "pig",
+      "habitat": "farm",
+      "image": "animals/pig.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "pig",
+          "full": "the pig"
+        },
+        "es": {
+          "article": "el",
+          "noun": "cerdo",
+          "full": "el cerdo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Schwein",
+          "full": "das Schwein",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "oink",
+        "es": "oinc",
+        "de": "grunz"
+      },
+      "facts": [
+        {
+          "en": "Pigs roll in mud to keep cool, because they can hardly sweat!",
+          "es": "¡Los cerdos se revuelcan en el barro para refrescarse, porque casi no pueden sudar!",
+          "de": "Schweine wälzen sich im Schlamm, weil sie kaum schwitzen können – so bleiben sie kühl!"
+        },
+        {
+          "en": "Baby pigs can learn their own names!",
+          "es": "¡Los cerditos pueden aprender su propio nombre!",
+          "de": "Ferkel können ihren eigenen Namen lernen!"
+        }
+      ]
+    },
+    {
+      "id": "sheep",
+      "habitat": "farm",
+      "image": "animals/sheep.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "sheep",
+          "full": "the sheep"
+        },
+        "es": {
+          "article": "la",
+          "noun": "oveja",
+          "full": "la oveja",
+          "gender": "f"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Schaf",
+          "full": "das Schaf",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "baa",
+        "es": "bee",
+        "de": "mäh"
+      },
+      "facts": [
+        {
+          "en": "Sheep can remember the faces of about 50 other sheep!",
+          "es": "¡Las ovejas pueden recordar las caras de unas 50 ovejas!",
+          "de": "Schafe können sich die Gesichter von etwa 50 anderen Schafen merken!"
+        },
+        {
+          "en": "A sheep's wool keeps on growing, so it gets a haircut every year!",
+          "es": "¡La lana de la oveja no para de crecer, por eso le cortan el pelo cada año!",
+          "de": "Die Wolle vom Schaf wächst immer weiter, darum bekommt es jedes Jahr einen Haarschnitt!"
+        }
+      ]
+    },
+    {
+      "id": "goat",
+      "habitat": "farm",
+      "image": "animals/goat.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "goat",
+          "full": "the goat"
+        },
+        "es": {
+          "article": "la",
+          "noun": "cabra",
+          "full": "la cabra",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Ziege",
+          "full": "die Ziege",
+          "gender": "f"
+        }
+      },
+      "sound": {
+        "en": "maa",
+        "es": "bee",
+        "de": "meck meck"
+      },
+      "facts": [
+        {
+          "en": "Goats have pupils shaped like little rectangles!",
+          "es": "¡Las cabras tienen las pupilas con forma de rectángulo!",
+          "de": "Ziegen haben Pupillen, die wie kleine Rechtecke aussehen!"
+        },
+        {
+          "en": "Some goats even climb up into trees to eat the leaves!",
+          "es": "¡Algunas cabras hasta se suben a los árboles para comer hojas!",
+          "de": "Manche Ziegen klettern sogar auf Bäume, um Blätter zu fressen!"
+        }
+      ]
+    },
+    {
+      "id": "chicken",
+      "habitat": "farm",
+      "image": "animals/chicken.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "chicken",
+          "full": "the chicken"
+        },
+        "es": {
+          "article": "la",
+          "noun": "gallina",
+          "full": "la gallina",
+          "gender": "f"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Huhn",
+          "full": "das Huhn",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "cluck cluck",
+        "es": "co co co",
+        "de": "gack gack"
+      },
+      "facts": [
+        {
+          "en": "Chickens are relatives of the dinosaurs!",
+          "es": "¡Las gallinas son parientes de los dinosaurios!",
+          "de": "Hühner sind mit den Dinosauriern verwandt!"
+        },
+        {
+          "en": "A hen can lay an egg almost every day!",
+          "es": "¡Una gallina puede poner un huevo casi todos los días!",
+          "de": "Ein Huhn kann fast jeden Tag ein Ei legen!"
+        }
+      ]
+    },
+    {
+      "id": "duck",
+      "habitat": "farm",
+      "image": "animals/duck.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "duck",
+          "full": "the duck"
+        },
+        "es": {
+          "article": "el",
+          "noun": "pato",
+          "full": "el pato",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Ente",
+          "full": "die Ente",
+          "gender": "f"
+        }
+      },
+      "sound": {
+        "en": "quack",
+        "es": "cuac cuac",
+        "de": "quak quak"
+      },
+      "facts": [
+        {
+          "en": "Duck feathers are waterproof, so ducks stay dry in the water!",
+          "es": "¡Las plumas del pato no se mojan, así que sale seco del agua!",
+          "de": "Entenfedern sind wasserdicht – die Ente bleibt im Wasser trocken!"
+        },
+        {
+          "en": "Baby ducks follow the first moving thing they see, usually their mom!",
+          "es": "¡Los patitos siguen a lo primero que ven moverse, normalmente a su mamá!",
+          "de": "Entenküken laufen dem Ersten hinterher, das sie sich bewegen sehen – meistens ihrer Mama!"
+        }
+      ]
+    },
+    {
+      "id": "dog",
+      "habitat": "pets",
+      "image": "animals/dog.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "dog",
+          "full": "the dog"
+        },
+        "es": {
+          "article": "el",
+          "noun": "perro",
+          "full": "el perro",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Hund",
+          "full": "der Hund",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "woof",
+        "es": "guau",
+        "de": "wau wau"
+      },
+      "facts": [
+        {
+          "en": "A dog's nose can smell thousands of times better than yours!",
+          "es": "¡La nariz de un perro huele miles de veces mejor que la tuya!",
+          "de": "Eine Hundenase riecht tausendmal besser als deine!"
+        },
+        {
+          "en": "Every dog has its own nose print, just like your fingerprint!",
+          "es": "¡Cada perro tiene una huella de nariz única, como tus huellas dactilares!",
+          "de": "Jeder Hund hat einen eigenen Nasenabdruck, so wie dein Fingerabdruck!"
+        }
+      ]
+    },
+    {
+      "id": "cat",
+      "habitat": "pets",
+      "image": "animals/cat.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "cat",
+          "full": "the cat"
+        },
+        "es": {
+          "article": "el",
+          "noun": "gato",
+          "full": "el gato",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Katze",
+          "full": "die Katze",
+          "gender": "f"
+        }
+      },
+      "sound": {
+        "en": "meow",
+        "es": "miau",
+        "de": "miau"
+      },
+      "facts": [
+        {
+          "en": "Cats sleep for more than half of the day!",
+          "es": "¡Los gatos duermen más de medio día!",
+          "de": "Katzen schlafen mehr als den halben Tag!"
+        },
+        {
+          "en": "Cats often purr when they feel happy and cozy!",
+          "es": "¡Los gatos ronronean cuando están contentos y a gusto!",
+          "de": "Katzen schnurren oft, wenn sie sich wohlfühlen!"
+        }
+      ]
+    },
+    {
+      "id": "rabbit",
+      "habitat": "pets",
+      "image": "animals/rabbit.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "rabbit",
+          "full": "the rabbit"
+        },
+        "es": {
+          "article": "el",
+          "noun": "conejo",
+          "full": "el conejo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Kaninchen",
+          "full": "das Kaninchen",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "When rabbits are super happy, they jump and twist in the air!",
+          "es": "¡Cuando los conejos están muy felices, saltan y dan vueltas en el aire!",
+          "de": "Wenn Kaninchen sich riesig freuen, springen sie hoch und drehen sich in der Luft!"
+        },
+        {
+          "en": "A rabbit's teeth never stop growing!",
+          "es": "¡Los dientes del conejo nunca dejan de crecer!",
+          "de": "Die Zähne von Kaninchen hören nie auf zu wachsen!"
+        }
+      ]
+    },
+    {
+      "id": "hamster",
+      "habitat": "pets",
+      "image": "animals/hamster.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "hamster",
+          "full": "the hamster"
+        },
+        "es": {
+          "article": "el",
+          "noun": "hámster",
+          "full": "el hámster",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Hamster",
+          "full": "der Hamster",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A hamster can stuff its cheeks full of food, like little backpacks!",
+          "es": "¡El hámster guarda comida en sus mofletes, como si fueran mochilas!",
+          "de": "Ein Hamster stopft sich Futter in die Backen – wie kleine Rucksäcke!"
+        },
+        {
+          "en": "A hamster can run many kilometers on its wheel in just one night!",
+          "es": "¡Un hámster puede correr varios kilómetros en su rueda en una sola noche!",
+          "de": "Ein Hamster kann in einer Nacht viele Kilometer in seinem Laufrad rennen!"
+        }
+      ]
+    },
+    {
+      "id": "fox",
+      "habitat": "forest",
+      "image": "animals/fox.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "fox",
+          "full": "the fox"
+        },
+        "es": {
+          "article": "el",
+          "noun": "zorro",
+          "full": "el zorro",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Fuchs",
+          "full": "der Fuchs",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A fox can hear a mouse moving under the snow, and then it jumps in!",
+          "es": "¡El zorro oye a un ratón moverse bajo la nieve y salta para atraparlo!",
+          "de": "Ein Fuchs hört eine Maus unter dem Schnee – und dann springt er hinein!"
+        },
+        {
+          "en": "A fox wraps its bushy tail around itself like a warm blanket!",
+          "es": "¡El zorro se tapa con su cola peluda como si fuera una manta!",
+          "de": "Der Fuchs wickelt sich in seinen buschigen Schwanz wie in eine warme Decke!"
+        }
+      ]
+    },
+    {
+      "id": "bear",
+      "habitat": "forest",
+      "image": "animals/bear.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "bear",
+          "full": "the bear"
+        },
+        "es": {
+          "article": "el",
+          "noun": "oso",
+          "full": "el oso",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Bär",
+          "full": "der Bär",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "grrr",
+        "es": "grrr",
+        "de": "brumm"
+      },
+      "facts": [
+        {
+          "en": "Bears sleep through the winter in a cozy den!",
+          "es": "¡Los osos duermen todo el invierno en su guarida!",
+          "de": "Bären verschlafen den Winter in ihrer gemütlichen Höhle!"
+        },
+        {
+          "en": "A newborn bear cub is smaller than a guinea pig!",
+          "es": "¡Un osito recién nacido es más pequeño que un cobaya!",
+          "de": "Ein neugeborenes Bärenbaby ist kleiner als ein Meerschweinchen!"
+        }
+      ]
+    },
+    {
+      "id": "deer",
+      "habitat": "forest",
+      "image": "animals/deer.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "deer",
+          "full": "the deer"
+        },
+        "es": {
+          "article": "el",
+          "noun": "ciervo",
+          "full": "el ciervo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Reh",
+          "full": "das Reh",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Baby deer have white spots that help them hide in the forest!",
+          "es": "¡Los bebés de ciervo tienen manchas blancas para esconderse en el bosque!",
+          "de": "Rehkitze haben weiße Punkte, damit sie sich im Wald gut verstecken können!"
+        },
+        {
+          "en": "Boy deer lose their antlers and grow brand-new ones every year!",
+          "es": "¡Los ciervos machos pierden sus cuernos y les crecen unos nuevos cada año!",
+          "de": "Rehböcke verlieren jedes Jahr ihr Geweih und bekommen ein ganz neues!"
+        }
+      ],
+      "pictured": "roe deer (de: Reh)"
+    },
+    {
+      "id": "squirrel",
+      "habitat": "forest",
+      "image": "animals/squirrel.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "squirrel",
+          "full": "the squirrel"
+        },
+        "es": {
+          "article": "la",
+          "noun": "ardilla",
+          "full": "la ardilla",
+          "gender": "f"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Eichhörnchen",
+          "full": "das Eichhörnchen",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Squirrels bury nuts to eat in winter!",
+          "es": "¡Las ardillas entierran nueces para comérselas en invierno!",
+          "de": "Eichhörnchen vergraben Nüsse als Vorrat für den Winter!"
+        },
+        {
+          "en": "Nuts that squirrels forget can grow into big new trees!",
+          "es": "¡Las nueces que olvidan las ardillas pueden convertirse en árboles nuevos!",
+          "de": "Aus Nüssen, die Eichhörnchen vergessen, können neue Bäume wachsen!"
+        }
+      ]
+    },
+    {
+      "id": "hedgehog",
+      "habitat": "forest",
+      "image": "animals/hedgehog.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "hedgehog",
+          "full": "the hedgehog"
+        },
+        "es": {
+          "article": "el",
+          "noun": "erizo",
+          "full": "el erizo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Igel",
+          "full": "der Igel",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A hedgehog has thousands of spines on its back!",
+          "es": "¡El erizo tiene miles de pinchos en la espalda!",
+          "de": "Ein Igel hat Tausende Stacheln auf dem Rücken!"
+        },
+        {
+          "en": "When it's scared, a hedgehog rolls up into a prickly ball!",
+          "es": "¡Cuando tiene miedo, el erizo se hace una bola de pinchos!",
+          "de": "Wenn er Angst hat, rollt sich der Igel zu einer stacheligen Kugel zusammen!"
+        }
+      ]
+    },
+    {
+      "id": "wolf",
+      "habitat": "forest",
+      "image": "animals/wolf.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "wolf",
+          "full": "the wolf"
+        },
+        "es": {
+          "article": "el",
+          "noun": "lobo",
+          "full": "el lobo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Wolf",
+          "full": "der Wolf",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "awooo",
+        "es": "auuuu",
+        "de": "auuuu"
+      },
+      "facts": [
+        {
+          "en": "A wolf's howl can be heard many kilometers away!",
+          "es": "¡El aullido del lobo se oye a muchos kilómetros!",
+          "de": "Das Heulen eines Wolfs hört man viele Kilometer weit!"
+        },
+        {
+          "en": "Wolves live together in families called packs!",
+          "es": "¡Los lobos viven en familias llamadas manadas!",
+          "de": "Wölfe leben zusammen in Familien, die man Rudel nennt!"
+        }
+      ]
+    },
+    {
+      "id": "monkey",
+      "habitat": "jungle",
+      "image": "animals/monkey.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "monkey",
+          "full": "the monkey"
+        },
+        "es": {
+          "article": "el",
+          "noun": "mono",
+          "full": "el mono",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Affe",
+          "full": "der Affe",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "ooh ooh aah aah",
+        "es": "u u a a",
+        "de": "uh uh ah ah"
+      },
+      "facts": [
+        {
+          "en": "Capuchin monkeys can crack nuts open with stones, like a hammer!",
+          "es": "¡Los monos capuchinos rompen nueces con piedras, como si fueran un martillo!",
+          "de": "Kapuzineraffen knacken Nüsse mit Steinen, wie mit einem Hammer!"
+        },
+        {
+          "en": "Capuchin monkeys rub smelly plants on their fur to keep bugs away!",
+          "es": "¡Los capuchinos se frotan plantas olorosas en el pelo para espantar a los bichos!",
+          "de": "Kapuzineraffen reiben sich duftende Pflanzen ins Fell, um Insekten fernzuhalten!"
+        }
+      ],
+      "pictured": "white-faced capuchin"
+    },
+    {
+      "id": "tiger",
+      "habitat": "jungle",
+      "image": "animals/tiger.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "tiger",
+          "full": "the tiger"
+        },
+        "es": {
+          "article": "el",
+          "noun": "tigre",
+          "full": "el tigre",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Tiger",
+          "full": "der Tiger",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "roar",
+        "es": "grrr",
+        "de": "grrr"
+      },
+      "facts": [
+        {
+          "en": "A tiger's skin is striped too, not just its fur!",
+          "es": "¡La piel del tigre también tiene rayas, no solo el pelo!",
+          "de": "Beim Tiger ist sogar die Haut gestreift, nicht nur das Fell!"
+        },
+        {
+          "en": "Tigers love to swim and play in the water!",
+          "es": "¡A los tigres les encanta nadar y jugar en el agua!",
+          "de": "Tiger schwimmen gern und planschen im Wasser!"
+        }
+      ]
+    },
+    {
+      "id": "gorilla",
+      "habitat": "jungle",
+      "image": "animals/gorilla.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "gorilla",
+          "full": "the gorilla"
+        },
+        "es": {
+          "article": "el",
+          "noun": "gorila",
+          "full": "el gorila",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Gorilla",
+          "full": "der Gorilla",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Gorillas laugh when they get tickled!",
+          "es": "¡Los gorilas se ríen cuando les hacen cosquillas!",
+          "de": "Gorillas lachen, wenn man sie kitzelt!"
+        },
+        {
+          "en": "Gorillas make a brand-new bed out of leaves every night!",
+          "es": "¡Los gorilas se hacen una cama nueva de hojas cada noche!",
+          "de": "Gorillas bauen sich jede Nacht ein neues Bett aus Blättern!"
+        }
+      ]
+    },
+    {
+      "id": "snake",
+      "habitat": "jungle",
+      "image": "animals/snake.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "snake",
+          "full": "the snake"
+        },
+        "es": {
+          "article": "la",
+          "noun": "serpiente",
+          "full": "la serpiente",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Schlange",
+          "full": "die Schlange",
+          "gender": "f"
+        }
+      },
+      "sound": {
+        "en": "hiss",
+        "es": "sss",
+        "de": "zisch"
+      },
+      "facts": [
+        {
+          "en": "Snakes smell with their tongue!",
+          "es": "¡Las serpientes huelen con la lengua!",
+          "de": "Schlangen riechen mit ihrer Zunge!"
+        },
+        {
+          "en": "Snakes can't blink, because they have no eyelids!",
+          "es": "¡Las serpientes no pueden parpadear porque no tienen párpados!",
+          "de": "Schlangen können nicht blinzeln, weil sie keine Augenlider haben!"
+        }
+      ]
+    },
+    {
+      "id": "frog",
+      "habitat": "jungle",
+      "image": "animals/frog.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "frog",
+          "full": "the frog"
+        },
+        "es": {
+          "article": "la",
+          "noun": "rana",
+          "full": "la rana",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Frosch",
+          "full": "der Frosch",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "ribbit",
+        "es": "croac",
+        "de": "quak"
+      },
+      "facts": [
+        {
+          "en": "Frogs drink water through their skin!",
+          "es": "¡Las ranas beben agua a través de su piel!",
+          "de": "Frösche trinken Wasser durch ihre Haut!"
+        },
+        {
+          "en": "Every frog starts life as a little tadpole swimming in the water!",
+          "es": "¡Todas las ranas empiezan siendo renacuajos que nadan en el agua!",
+          "de": "Jeder Frosch fängt als kleine Kaulquappe im Wasser an!"
+        }
+      ]
+    },
+    {
+      "id": "lion",
+      "habitat": "savanna",
+      "image": "animals/lion.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "lion",
+          "full": "the lion"
+        },
+        "es": {
+          "article": "el",
+          "noun": "león",
+          "full": "el león",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Löwe",
+          "full": "der Löwe",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "roar",
+        "es": "grrr",
+        "de": "roar"
+      },
+      "facts": [
+        {
+          "en": "A lion's roar can be heard about 8 kilometers away!",
+          "es": "¡El rugido del león se oye a unos 8 kilómetros!",
+          "de": "Das Brüllen eines Löwen hört man etwa 8 Kilometer weit!"
+        },
+        {
+          "en": "Lions can sleep up to 20 hours a day!",
+          "es": "¡Los leones pueden dormir hasta 20 horas al día!",
+          "de": "Löwen können bis zu 20 Stunden am Tag schlafen!"
+        }
+      ]
+    },
+    {
+      "id": "elephant",
+      "habitat": "savanna",
+      "image": "animals/elephant.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "elephant",
+          "full": "the elephant"
+        },
+        "es": {
+          "article": "el",
+          "noun": "elefante",
+          "full": "el elefante",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Elefant",
+          "full": "der Elefant",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "toot",
+        "es": "pruuu",
+        "de": "törööö"
+      },
+      "facts": [
+        {
+          "en": "Elephants are the biggest animals that live on land!",
+          "es": "¡Los elefantes son los animales terrestres más grandes!",
+          "de": "Elefanten sind die größten Tiere an Land!"
+        },
+        {
+          "en": "An elephant uses its trunk to smell, grab food, drink, and give hugs!",
+          "es": "¡El elefante usa la trompa para oler, coger comida, beber y dar abrazos!",
+          "de": "Ein Elefant benutzt seinen Rüssel zum Riechen, Greifen, Trinken und Kuscheln!"
+        }
+      ]
+    },
+    {
+      "id": "giraffe",
+      "habitat": "savanna",
+      "image": "animals/giraffe.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "giraffe",
+          "full": "the giraffe"
+        },
+        "es": {
+          "article": "la",
+          "noun": "jirafa",
+          "full": "la jirafa",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Giraffe",
+          "full": "die Giraffe",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Giraffes are the tallest animals in the world!",
+          "es": "¡Las jirafas son los animales más altos del mundo!",
+          "de": "Giraffen sind die größten Tiere der Welt!"
+        },
+        {
+          "en": "A giraffe's tongue is dark blue-purple and as long as your arm!",
+          "es": "¡La lengua de la jirafa es de color azul oscuro y tan larga como tu brazo!",
+          "de": "Die Zunge einer Giraffe ist dunkelblau-lila und so lang wie dein Arm!"
+        }
+      ]
+    },
+    {
+      "id": "zebra",
+      "habitat": "savanna",
+      "image": "animals/zebra.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "zebra",
+          "full": "the zebra"
+        },
+        "es": {
+          "article": "la",
+          "noun": "cebra",
+          "full": "la cebra",
+          "gender": "f"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Zebra",
+          "full": "das Zebra",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Every zebra has its very own stripe pattern!",
+          "es": "¡Cada cebra tiene sus propias rayas, distintas a todas!",
+          "de": "Jedes Zebra hat sein ganz eigenes Streifenmuster!"
+        },
+        {
+          "en": "A baby zebra learns its mom's stripes so it can always find her!",
+          "es": "¡El bebé cebra se aprende las rayas de su mamá para encontrarla siempre!",
+          "de": "Ein Zebrafohlen merkt sich die Streifen seiner Mama, damit es sie immer findet!"
+        }
+      ]
+    },
+    {
+      "id": "hippo",
+      "habitat": "savanna",
+      "image": "animals/hippo.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "hippo",
+          "full": "the hippo"
+        },
+        "es": {
+          "article": "el",
+          "noun": "hipopótamo",
+          "full": "el hipopótamo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Nilpferd",
+          "full": "das Nilpferd",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Hippos make their own red sunscreen on their skin!",
+          "es": "¡Los hipopótamos fabrican su propio protector solar rojo en la piel!",
+          "de": "Nilpferde machen ihre eigene rote Sonnencreme auf der Haut!"
+        },
+        {
+          "en": "Hippos can't really swim; they walk and bounce along the bottom of the river!",
+          "es": "¡Los hipopótamos no saben nadar de verdad: caminan y dan saltitos por el fondo del río!",
+          "de": "Nilpferde können nicht richtig schwimmen – sie laufen und hüpfen über den Flussboden!"
+        }
+      ]
+    },
+    {
+      "id": "rhino",
+      "habitat": "savanna",
+      "image": "animals/rhino.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "rhino",
+          "full": "the rhino"
+        },
+        "es": {
+          "article": "el",
+          "noun": "rinoceronte",
+          "full": "el rinoceronte",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Nashorn",
+          "full": "das Nashorn",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A rhino's horn is made of the same stuff as your fingernails!",
+          "es": "¡El cuerno del rinoceronte está hecho de lo mismo que tus uñas!",
+          "de": "Das Horn vom Nashorn ist aus dem gleichen Stoff wie deine Fingernägel!"
+        },
+        {
+          "en": "Little birds ride on rhinos and eat the bugs off their skin!",
+          "es": "¡Unos pajaritos viajan sobre los rinocerontes y se comen los bichos de su piel!",
+          "de": "Kleine Vögel reiten auf Nashörnern und picken ihnen Insekten von der Haut!"
+        }
+      ]
+    },
+    {
+      "id": "cheetah",
+      "habitat": "savanna",
+      "image": "animals/cheetah.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "cheetah",
+          "full": "the cheetah"
+        },
+        "es": {
+          "article": "el",
+          "noun": "guepardo",
+          "full": "el guepardo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Gepard",
+          "full": "der Gepard",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "The cheetah is the fastest animal on land, running about 100 kilometers an hour, as fast as a car on the highway!",
+          "es": "¡El guepardo es el animal terrestre más rápido: corre a unos 100 kilómetros por hora, como un coche en la autopista!",
+          "de": "Der Gepard ist das schnellste Landtier – er rennt etwa 100 Kilometer pro Stunde, so schnell wie ein Auto auf der Autobahn!"
+        },
+        {
+          "en": "Cheetahs can't roar, but they purr and chirp like birds!",
+          "es": "¡Los guepardos no pueden rugir, pero ronronean y pían como pájaros!",
+          "de": "Geparden können nicht brüllen, aber sie schnurren und zwitschern wie Vögel!"
+        }
+      ]
+    },
+    {
+      "id": "crocodile",
+      "habitat": "savanna",
+      "image": "animals/crocodile.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "crocodile",
+          "full": "the crocodile"
+        },
+        "es": {
+          "article": "el",
+          "noun": "cocodrilo",
+          "full": "el cocodrilo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Krokodil",
+          "full": "das Krokodil",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Crocodiles lived on Earth at the same time as the dinosaurs!",
+          "es": "¡Los cocodrilos ya vivían en la Tierra en la época de los dinosaurios!",
+          "de": "Krokodile gab es schon zur Zeit der Dinosaurier!"
+        },
+        {
+          "en": "A crocodile can't stick its tongue out!",
+          "es": "¡El cocodrilo no puede sacar la lengua!",
+          "de": "Ein Krokodil kann seine Zunge nicht herausstrecken!"
+        }
+      ]
+    },
+    {
+      "id": "dolphin",
+      "habitat": "ocean",
+      "image": "animals/dolphin.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "dolphin",
+          "full": "the dolphin"
+        },
+        "es": {
+          "article": "el",
+          "noun": "delfín",
+          "full": "el delfín",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Delfin",
+          "full": "der Delfin",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "click click",
+        "es": "clic clic",
+        "de": "klick klick"
+      },
+      "facts": [
+        {
+          "en": "Every dolphin has its own special whistle, like a name!",
+          "es": "¡Cada delfín tiene su propio silbido especial, como si fuera su nombre!",
+          "de": "Jeder Delfin hat seinen eigenen Pfiff – wie einen Namen!"
+        },
+        {
+          "en": "Dolphins sleep with one half of their brain at a time!",
+          "es": "¡Los delfines duermen con una mitad del cerebro y luego con la otra!",
+          "de": "Delfine schlafen immer nur mit einer Hälfte ihres Gehirns!"
+        }
+      ]
+    },
+    {
+      "id": "whale",
+      "habitat": "ocean",
+      "image": "animals/whale.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "whale",
+          "full": "the whale"
+        },
+        "es": {
+          "article": "la",
+          "noun": "ballena",
+          "full": "la ballena",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Wal",
+          "full": "der Wal",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Humpback whales sing long songs under the sea!",
+          "es": "¡Las ballenas jorobadas cantan canciones larguísimas bajo el mar!",
+          "de": "Buckelwale singen lange Lieder unter Wasser!"
+        },
+        {
+          "en": "Whales breathe air through a blowhole on top of their head!",
+          "es": "¡Las ballenas respiran aire por un agujero que tienen encima de la cabeza!",
+          "de": "Wale atmen Luft durch ein Blasloch oben auf dem Kopf!"
+        }
+      ]
+    },
+    {
+      "id": "shark",
+      "habitat": "ocean",
+      "image": "animals/shark.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "shark",
+          "full": "the shark"
+        },
+        "es": {
+          "article": "el",
+          "noun": "tiburón",
+          "full": "el tiburón",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Hai",
+          "full": "der Hai",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "This is a whale shark, the biggest fish in the whole world!",
+          "es": "¡Este es un tiburón ballena, el pez más grande del mundo!",
+          "de": "Das ist ein Walhai, der größte Fisch der ganzen Welt!"
+        },
+        {
+          "en": "The giant whale shark eats teeny-tiny food called plankton!",
+          "es": "¡El enorme tiburón ballena come comida diminuta llamada plancton!",
+          "de": "Der riesige Walhai frisst winziges Futter, das man Plankton nennt!"
+        }
+      ],
+      "pictured": "whale shark"
+    },
+    {
+      "id": "octopus",
+      "habitat": "ocean",
+      "image": "animals/octopus.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "octopus",
+          "full": "the octopus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "pulpo",
+          "full": "el pulpo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Oktopus",
+          "full": "der Oktopus",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "An octopus has three hearts and blue blood!",
+          "es": "¡El pulpo tiene tres corazones y sangre azul!",
+          "de": "Ein Oktopus hat drei Herzen und blaues Blut!"
+        },
+        {
+          "en": "An octopus can change its color in the blink of an eye to hide!",
+          "es": "¡El pulpo puede cambiar de color en un abrir y cerrar de ojos para esconderse!",
+          "de": "Ein Oktopus kann blitzschnell seine Farbe wechseln, um sich zu verstecken!"
+        }
+      ]
+    },
+    {
+      "id": "turtle",
+      "habitat": "ocean",
+      "image": "animals/turtle.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "turtle",
+          "full": "the turtle"
+        },
+        "es": {
+          "article": "la",
+          "noun": "tortuga",
+          "full": "la tortuga",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Schildkröte",
+          "full": "die Schildkröte",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Green sea turtles are named after the green color of their fat, not their shell!",
+          "es": "¡La tortuga verde se llama así por el color verde de su grasa, no de su caparazón!",
+          "de": "Die Grüne Meeresschildkröte heißt so wegen ihres grünen Fetts, nicht wegen ihres Panzers!"
+        },
+        {
+          "en": "Mother sea turtles swim back to the beach where they hatched to lay their own eggs!",
+          "es": "¡Las mamás tortuga vuelven a la playa donde nacieron para poner sus huevos!",
+          "de": "Meeresschildkröten-Mamas schwimmen zu dem Strand zurück, an dem sie geschlüpft sind, um ihre Eier zu legen!"
+        }
+      ]
+    },
+    {
+      "id": "jellyfish",
+      "habitat": "ocean",
+      "image": "animals/jellyfish.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "jellyfish",
+          "full": "the jellyfish"
+        },
+        "es": {
+          "article": "la",
+          "noun": "medusa",
+          "full": "la medusa",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Qualle",
+          "full": "die Qualle",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A jellyfish has no brain, no heart and no bones!",
+          "es": "¡La medusa no tiene cerebro, ni corazón, ni huesos!",
+          "de": "Eine Qualle hat kein Gehirn, kein Herz und keine Knochen!"
+        },
+        {
+          "en": "Jellyfish were swimming in the sea long before the dinosaurs!",
+          "es": "¡Las medusas ya nadaban en el mar mucho antes que los dinosaurios!",
+          "de": "Quallen schwammen schon lange vor den Dinosauriern im Meer!"
+        }
+      ]
+    },
+    {
+      "id": "crab",
+      "habitat": "ocean",
+      "image": "animals/crab.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "crab",
+          "full": "the crab"
+        },
+        "es": {
+          "article": "el",
+          "noun": "cangrejo",
+          "full": "el cangrejo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Krabbe",
+          "full": "die Krabbe",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Crabs walk sideways!",
+          "es": "¡Los cangrejos caminan de lado!",
+          "de": "Krabben laufen seitwärts!"
+        },
+        {
+          "en": "A crab wears its bones on the outside and climbs out of its old shell to grow bigger!",
+          "es": "¡El cangrejo lleva los huesos por fuera y se quita su caparazón viejo para crecer!",
+          "de": "Eine Krabbe trägt ihr Skelett außen und schlüpft aus ihrer alten Schale, um zu wachsen!"
+        }
+      ]
+    },
+    {
+      "id": "penguin",
+      "habitat": "polar",
+      "image": "animals/penguin.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "penguin",
+          "full": "the penguin"
+        },
+        "es": {
+          "article": "el",
+          "noun": "pingüino",
+          "full": "el pingüino",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Pinguin",
+          "full": "der Pinguin",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Emperor penguins can dive deeper than 500 meters, deeper than any other bird!",
+          "es": "¡Los pingüinos emperador pueden bucear a más de 500 metros, más que ningún otro pájaro!",
+          "de": "Kaiserpinguine können über 500 Meter tief tauchen – tiefer als jeder andere Vogel!"
+        },
+        {
+          "en": "Emperor penguin dads keep the egg warm on their feet for about two months!",
+          "es": "¡Los papás pingüino emperador mantienen el huevo calentito sobre sus patas durante unos dos meses!",
+          "de": "Kaiserpinguin-Papas wärmen das Ei etwa zwei Monate lang auf ihren Füßen!"
+        }
+      ]
+    },
+    {
+      "id": "polar-bear",
+      "habitat": "polar",
+      "image": "animals/polar-bear.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "polar bear",
+          "full": "the polar bear"
+        },
+        "es": {
+          "article": "el",
+          "noun": "oso polar",
+          "full": "el oso polar",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Eisbär",
+          "full": "der Eisbär",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Under its white fur, a polar bear has black skin!",
+          "es": "¡Debajo de su pelo blanco, el oso polar tiene la piel negra!",
+          "de": "Unter seinem weißen Fell hat der Eisbär schwarze Haut!"
+        },
+        {
+          "en": "Polar bears are super swimmers; one swam for nine days without stopping!",
+          "es": "¡Los osos polares nadan genial: uno nadó nueve días sin parar!",
+          "de": "Eisbären sind super Schwimmer – einer schwamm neun Tage ohne Pause!"
+        }
+      ]
+    },
+    {
+      "id": "seal",
+      "habitat": "polar",
+      "image": "animals/seal.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "seal",
+          "full": "the seal"
+        },
+        "es": {
+          "article": "la",
+          "noun": "foca",
+          "full": "la foca",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Robbe",
+          "full": "die Robbe",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Seals can take naps underwater!",
+          "es": "¡Las focas pueden echarse la siesta bajo el agua!",
+          "de": "Robben können unter Wasser ein Nickerchen machen!"
+        },
+        {
+          "en": "Seals use their whiskers to feel where fish are swimming!",
+          "es": "¡Las focas usan sus bigotes para notar dónde nadan los peces!",
+          "de": "Robben spüren mit ihren Schnurrhaaren, wo Fische schwimmen!"
+        }
+      ]
+    },
+    {
+      "id": "owl",
+      "habitat": "birds",
+      "image": "animals/owl.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "owl",
+          "full": "the owl"
+        },
+        "es": {
+          "article": "la",
+          "noun": "lechuza",
+          "full": "la lechuza",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Eule",
+          "full": "die Eule",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "An owl can turn its head almost all the way around!",
+          "es": "¡La lechuza puede girar la cabeza casi del todo!",
+          "de": "Eine Eule kann ihren Kopf fast ganz herumdrehen!"
+        },
+        {
+          "en": "Barn owls can catch a mouse in the dark just by listening!",
+          "es": "¡La lechuza puede cazar un ratón a oscuras solo escuchando!",
+          "de": "Schleiereulen können eine Maus im Dunkeln fangen, nur indem sie hinhören!"
+        }
+      ],
+      "pictured": "barn owl (es: lechuza, de: Schleiereule; barn owls screech rather than hoot, so no sound)"
+    },
+    {
+      "id": "eagle",
+      "habitat": "birds",
+      "image": "animals/eagle.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "eagle",
+          "full": "the eagle"
+        },
+        "es": {
+          "article": "el",
+          "noun": "águila",
+          "full": "el águila",
+          "gender": "f",
+          "note": "Feminine noun; takes 'el' because it starts with stressed a- (plural: las águilas)."
+        },
+        "de": {
+          "article": "der",
+          "noun": "Adler",
+          "full": "der Adler",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Eagles can spot a tiny rabbit from high up in the sky!",
+          "es": "¡Las águilas pueden ver un conejito desde muy alto en el cielo!",
+          "de": "Adler können ein kleines Kaninchen von hoch oben im Himmel entdecken!"
+        },
+        {
+          "en": "One bald eagle nest weighed more than a car!",
+          "es": "¡Un nido de águila calva pesaba más que un coche!",
+          "de": "Ein Weißkopfseeadler-Nest war schwerer als ein Auto!"
+        }
+      ]
+    },
+    {
+      "id": "parrot",
+      "habitat": "birds",
+      "image": "animals/parrot.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "parrot",
+          "full": "the parrot"
+        },
+        "es": {
+          "article": "el",
+          "noun": "loro",
+          "full": "el loro",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Papagei",
+          "full": "der Papagei",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "hello!",
+        "es": "¡hola!",
+        "de": "hallo!"
+      },
+      "facts": [
+        {
+          "en": "Some parrots can copy words that people say!",
+          "es": "¡Algunos loros pueden repetir palabras que dicen las personas!",
+          "de": "Manche Papageien können Wörter nachsprechen!"
+        },
+        {
+          "en": "Macaws like this one can live for more than 50 years!",
+          "es": "¡Los guacamayos como este pueden vivir más de 50 años!",
+          "de": "Aras wie dieser können über 50 Jahre alt werden!"
+        }
+      ]
+    },
+    {
+      "id": "flamingo",
+      "habitat": "birds",
+      "image": "animals/flamingo.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "flamingo",
+          "full": "the flamingo"
+        },
+        "es": {
+          "article": "el",
+          "noun": "flamenco",
+          "full": "el flamenco",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Flamingo",
+          "full": "der Flamingo",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Flamingos are pink because of the food they eat!",
+          "es": "¡Los flamencos son rosados por la comida que comen!",
+          "de": "Flamingos sind rosa, weil ihr Futter sie rosa färbt!"
+        },
+        {
+          "en": "Flamingos often stand on one leg, even when they sleep!",
+          "es": "¡Los flamencos se quedan a menudo sobre una pata, incluso para dormir!",
+          "de": "Flamingos stehen oft auf einem Bein – sogar beim Schlafen!"
+        }
+      ]
+    },
+    {
+      "id": "butterfly",
+      "habitat": "bugs",
+      "image": "animals/butterfly.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "butterfly",
+          "full": "the butterfly"
+        },
+        "es": {
+          "article": "la",
+          "noun": "mariposa",
+          "full": "la mariposa",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Schmetterling",
+          "full": "der Schmetterling",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Butterflies taste with their feet!",
+          "es": "¡Las mariposas saborean con las patas!",
+          "de": "Schmetterlinge schmecken mit ihren Füßen!"
+        },
+        {
+          "en": "Monarch butterflies fly thousands of kilometers to spend the winter in Mexico!",
+          "es": "¡Las mariposas monarca vuelan miles de kilómetros para pasar el invierno en México!",
+          "de": "Monarchfalter fliegen Tausende Kilometer weit, um in Mexiko zu überwintern!"
+        }
+      ]
+    },
+    {
+      "id": "bee",
+      "habitat": "bugs",
+      "image": "animals/bee.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "bee",
+          "full": "the bee"
+        },
+        "es": {
+          "article": "la",
+          "noun": "abeja",
+          "full": "la abeja",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Biene",
+          "full": "die Biene",
+          "gender": "f"
+        }
+      },
+      "sound": {
+        "en": "buzz",
+        "es": "bzzz",
+        "de": "summ"
+      },
+      "facts": [
+        {
+          "en": "Bees dance to show their friends where the flowers are!",
+          "es": "¡Las abejas bailan para enseñar a sus amigas dónde están las flores!",
+          "de": "Bienen tanzen, um ihren Freundinnen zu zeigen, wo die Blüten sind!"
+        },
+        {
+          "en": "Bees make sweet honey from the nectar of flowers!",
+          "es": "¡Las abejas hacen miel dulce con el néctar de las flores!",
+          "de": "Bienen machen süßen Honig aus dem Nektar der Blüten!"
+        }
+      ]
+    },
+    {
+      "id": "ladybug",
+      "habitat": "bugs",
+      "image": "animals/ladybug.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "ladybug",
+          "full": "the ladybug"
+        },
+        "es": {
+          "article": "la",
+          "noun": "mariquita",
+          "full": "la mariquita",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Marienkäfer",
+          "full": "der Marienkäfer",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A ladybug can eat thousands of tiny plant-eating bugs in its life!",
+          "es": "¡Una mariquita puede comerse miles de bichitos que dañan las plantas!",
+          "de": "Ein Marienkäfer kann in seinem Leben Tausende Blattläuse fressen!"
+        },
+        {
+          "en": "A ladybug's bright colors tell birds: I taste yucky!",
+          "es": "¡Los colores vivos de la mariquita avisan a los pájaros de que sabe fatal!",
+          "de": "Die bunten Farben vom Marienkäfer sagen den Vögeln: Ich schmecke eklig!"
+        }
+      ]
+    },
+    {
+      "id": "snail",
+      "habitat": "bugs",
+      "image": "animals/snail.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "snail",
+          "full": "the snail"
+        },
+        "es": {
+          "article": "el",
+          "noun": "caracol",
+          "full": "el caracol",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Schnecke",
+          "full": "die Schnecke",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A snail has thousands of teeny-tiny teeth!",
+          "es": "¡El caracol tiene miles de dientecitos diminutos!",
+          "de": "Eine Schnecke hat Tausende winzig kleine Zähne!"
+        },
+        {
+          "en": "A snail carries its house on its back wherever it goes!",
+          "es": "¡El caracol lleva su casa a cuestas vaya donde vaya!",
+          "de": "Die Schnecke trägt ihr Haus überall mit hin!"
+        }
+      ]
+    },
+    {
+      "id": "kangaroo",
+      "habitat": "world",
+      "image": "animals/kangaroo.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "kangaroo",
+          "full": "the kangaroo"
+        },
+        "es": {
+          "article": "el",
+          "noun": "canguro",
+          "full": "el canguro",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Känguru",
+          "full": "das Känguru",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A newborn baby kangaroo is about as small as a jelly bean!",
+          "es": "¡Un canguro recién nacido es tan pequeño como una gominola!",
+          "de": "Ein neugeborenes Känguru ist etwa so klein wie ein Gummibärchen!"
+        },
+        {
+          "en": "Kangaroos lean on their strong tail like an extra leg!",
+          "es": "¡Los canguros se apoyan en su fuerte cola como si fuera otra pata!",
+          "de": "Kängurus stützen sich auf ihren starken Schwanz wie auf ein extra Bein!"
+        }
+      ]
+    },
+    {
+      "id": "koala",
+      "habitat": "world",
+      "image": "animals/koala.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "koala",
+          "full": "the koala"
+        },
+        "es": {
+          "article": "el",
+          "noun": "koala",
+          "full": "el koala",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Koala",
+          "full": "der Koala",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Koalas sleep up to 20 hours a day!",
+          "es": "¡Los koalas duermen hasta 20 horas al día!",
+          "de": "Koalas schlafen bis zu 20 Stunden am Tag!"
+        },
+        {
+          "en": "Koalas have fingerprints, just like you!",
+          "es": "¡Los koalas tienen huellas dactilares, igual que tú!",
+          "de": "Koalas haben Fingerabdrücke, genau wie du!"
+        }
+      ]
+    },
+    {
+      "id": "panda",
+      "habitat": "world",
+      "image": "animals/panda.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "panda",
+          "full": "the panda"
+        },
+        "es": {
+          "article": "el",
+          "noun": "panda",
+          "full": "el panda",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Panda",
+          "full": "der Panda",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Pandas can spend about half of the day eating bamboo!",
+          "es": "¡Los pandas pueden pasarse medio día comiendo bambú!",
+          "de": "Pandas verbringen etwa den halben Tag mit Bambusfressen!"
+        },
+        {
+          "en": "A panda has a special bump on its paw that works like a thumb to hold bamboo!",
+          "es": "¡El panda tiene un bultito en la pata que usa como un pulgar para sujetar el bambú!",
+          "de": "Ein Panda hat einen kleinen Knubbel an der Pfote, der wie ein Daumen hilft, Bambus zu halten!"
+        }
+      ]
+    }
+  ]
+}
