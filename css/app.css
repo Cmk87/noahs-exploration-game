@@ -348,6 +348,24 @@
   .gameCv{width:min(calc(100% - 28px),calc((100vh - 230px)*.8),470px);width:min(calc(100% - 28px),calc((100dvh - 230px)*.8),470px);
     aspect-ratio:4/5;border:5px solid var(--ink);border-radius:8px;box-shadow:8px 8px 0 var(--ink);display:block;touch-action:none}
   #fw{background:#050826}
+  #fedAnimals{display:flex;gap:10px;width:min(calc(100% - 28px),460px);justify-content:center;margin-top:8px}
+  .fedAn{flex:1 1 0;aspect-ratio:1;max-width:150px;font-size:min(18vw,76px);line-height:1;border:4px solid var(--ink);border-radius:22px;
+    background:#fff;box-shadow:4px 4px 0 var(--ink);cursor:pointer;padding:0}
+  .fedAn.yum{background:var(--bolt);animation:memPop .5s cubic-bezier(.2,1.7,.4,1)}
+  .fedAn.wiggle{animation:shake .4s}
+  #fedFood{margin-top:14px;font-size:min(22vw,92px);line-height:1;touch-action:none;cursor:grab;user-select:none}
+  #cakeStage{position:relative;width:min(calc(100% - 28px),420px);height:min(48vw,230px);margin-top:8px}
+  #cakeBody{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:78%;height:82%}
+  .ck{position:absolute;left:50%;transform:translateX(-50%);border:4px solid var(--ink)}
+  .ck.bot{bottom:0;width:100%;height:40%;background:linear-gradient(#F7D0DE,#E89BB4);border-radius:6px}
+  .ck.mid{bottom:36%;width:86%;height:32%;background:linear-gradient(#FFE7F1,#F4B8CE);border-radius:6px}
+  .ck.top{bottom:64%;width:72%;height:30%;background:linear-gradient(#FFF,#FFE9C4);border-radius:46% 46% 8px 8px}
+  #cakePile{position:absolute;left:18%;right:18%;top:4%;bottom:34%}
+  #cakePile span{position:absolute;font-size:min(9vw,38px);line-height:1;transform:translate(-50%,-50%)}
+  #cakeTray{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:min(calc(100% - 28px),460px);margin-top:10px}
+  .cakeBit{width:min(18vw,74px);height:min(18vw,74px);font-size:min(10vw,42px);line-height:1;border:4px solid var(--ink);border-radius:16px;
+    background:#fff;box-shadow:3px 3px 0 var(--ink);cursor:pointer;padding:0}
+  .cakeBit:active{transform:translate(2px,2px);box-shadow:none}
   /* ---------- the ⚡ counter, flying points, reward pop-up ---------- */
   .power{cursor:pointer;background:linear-gradient(90deg,var(--bolt) var(--pct,0%),#fff var(--pct,0%))}
   .power.ready{animation:readyGlow .9s ease-in-out infinite alternate}

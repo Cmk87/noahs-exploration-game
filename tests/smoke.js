@@ -98,12 +98,22 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await answerWords();
   await page.waitForTimeout(900);
   check(await page.evaluate(p0 => power === p0, p0), 'guessing (3 misses) earns no points');
-  await page.evaluate(() => { power = 200; savePower(); showTab('dig'); });
-  for (const g of ['dig', 'mem', 'bal', 'fw', 'bag']) {
+  await page.evaluate(() => { power = 400; savePower(); showTab('dig'); });
+  for (const g of ['dig', 'mem', 'bal', 'fw', 'bag', 'aq', 'fed', 'cake']) {
     await page.evaluate(g => { showDigLock(); startGame(g); }, g);
     await page.waitForTimeout(300);
-    check(await page.evaluate(g => pane === { dig: 'digPlay', mem: 'memPlay', bal: 'balPlay', fw: 'fwPlay', bag: 'bagPlay' }[g], g), `prize game starts: ${g}`);
+    check(await page.evaluate(g => pane === { dig: 'digPlay', mem: 'memPlay', bal: 'balPlay', fw: 'fwPlay', bag: 'bagPlay', aq: 'aqPlay', fed: 'fedPlay', cake: 'cakePlay' }[g], g), `prize game starts: ${g}`);
   }
+  await page.evaluate(() => { power = 160; savePower(); showDigLock(); startGame('fed');
+    [...document.querySelectorAll('#fedAnimals .fedAn')].find((b, i) => FED.opts[i] !== FED.want).click(); });
+  check(await page.evaluate(() => FED && FED.n === 0), 'feeding the wrong animal does not end the round');
+  await page.evaluate(() => [...document.querySelectorAll('#fedAnimals .fedAn')].find((b, i) => FED.opts[i] === FED.want).click());
+  check(await page.evaluate(() => FED && FED.n === 1), 'feeding the animal he heard counts');
+  await page.evaluate(() => { showDigLock(); startGame('cake'); document.querySelector('#cakeTray .cakeBit').click(); });
+  check(await page.evaluate(() => CAKE && CAKE.n === 1 && $('cakePile').children.length === 1), 'a cake topping lands on the cake');
+  await page.evaluate(() => { showDigLock(); startGame('aq'); });
+  await page.waitForTimeout(500);
+  check(await page.evaluate(() => pane === 'aqPlay' && AQ && AQ.fish.length > 0), 'aquarium fish swim in');
   await page.evaluate(() => { power = 45; savePower(); showDigLock(); startGame('mem'); document.querySelector('#memPlay .quitBtn').click(); $('qsLeave').click(); });
   check(await page.evaluate(() => power === 45 && pane === 'digLock'), 'leaving a prize game right after starting gives the points back');
   await page.evaluate(() => { DINOS.forEach(d => prepParts(d)); showDigLock(); });
