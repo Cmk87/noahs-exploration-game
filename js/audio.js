@@ -26,16 +26,19 @@ function pickVoice(L){L=L||lang;
   const list=langVoices(L);let want='';try{want=localStorage.getItem('sl_voice_'+L)||'';}catch(e){}
   return (want&&list.find(v=>v.voiceURI===want))||list[0]||null;
 }
-function utter(text,isRetry,rate,L){
+function utter(text,isRetry,rate,L,done){
   const synth=speechSynthesis;
   const u=new SpeechSynthesisUtterance(text);
   u.lang=LANGTAG[L||lang]; u.rate=rate||0.72; u.pitch=1.0; u.volume=1;
   const v=pickVoice(L); if(v) u.voice=v;
   u.onstart=()=>{speechReady=true;hideWarn();clearInterval(keepAlive);
-    keepAlive=setInterval(()=>{try{synth.resume();}catch(e){}},4000);};
-  u.onend=()=>clearInterval(keepAlive);
-  u.onerror=e=>{clearInterval(keepAlive); if(e&&e.error==='interrupted')return; showWarn();};
-  try{synth.resume();synth.speak(u);}catch(e){showWarn();return;}
+    keepAlive=setInterval(()=>{try{synth.resume();}catch(e){}},4000);
+    if(typeof done==='function')done('start');};
+  u.onend=()=>{clearInterval(keepAlive); if(typeof done==='function')done('end');};
+  u.onerror=e=>{clearInterval(keepAlive);
+    if(e&&(e.error==='interrupted'||e.error==='canceled')){if(typeof done==='function')done('interrupted');return;}
+    showWarn(); if(typeof done==='function')done('error');};
+  try{synth.resume();synth.speak(u);}catch(e){showWarn();if(typeof done==='function')done('error');return;}
   if(!isRetry) setTimeout(()=>{
     if(!synth.speaking&&!synth.pending){loadVoices();
       const u2=new SpeechSynthesisUtterance(text);
@@ -65,8 +68,60 @@ function say(text){ sayAt(text,0.72); }
    collecting and celebrating. sl_bridge is separate from sl_langs. */
 var BRIDGE=['de','en','es'];
 const BRIDGE_MARK={es:'🇪🇸',en:'🇬🇧',de:'🇩🇪'};
-let bridgeGen=0,bridgeTimer=0;
-function bridgeStop(){bridgeGen++;clearTimeout(bridgeTimer);const el=document.getElementById('bridgeTag');if(el)el.classList.remove('on');}
+let bridgeGen=0,bridgeTimer=0,chainWatch=0;
+function bridgeStop(){bridgeGen++;clearTimeout(bridgeTimer);clearTimeout(chainWatch);const el=document.getElementById('bridgeTag');if(el)el.classList.remove('on');}
+/* How long a line may take. Generous on purpose: a new language voice on
+   iPhone can spend a second just starting, and a too-short timer was cutting
+   the second and third names off. The cap only moves the chain on if the
+   phone never says the line ended; it does not call cancel(). */
+function chainBudget(text){return Math.min(16000,2400+String(text||'').length*120);}
+/* Speak one line and call done after it has really finished, plus a short
+   pause. Does not cancel whatever is already speaking. An onend that arrives
+   before the voice could have said the words (an iOS quirk) is ignored. */
+function speakChained(text,L,rate,done,gen){
+  gen=gen||bridgeGen;
+  let settled=false,didStart=false,startedAt=0,extra=0;
+  const finish=()=>{
+    if(settled||gen!==bridgeGen)return;
+    settled=true;clearTimeout(chainWatch);
+    bridgeTimer=setTimeout(()=>{if(gen===bridgeGen&&done)done();},320);
+  };
+  const arm=ms=>{
+    clearTimeout(chainWatch);
+    chainWatch=setTimeout(()=>{
+      if(settled||gen!==bridgeGen)return;
+      let speaking=false;
+      try{speaking=speechSynthesis.speaking||speechSynthesis.pending;}catch(e){}
+      if(speaking&&extra<4){extra++;arm(1500);return;} // still talking: wait, never cancel
+      finish();
+    },ms);
+  };
+  utter(text,true,rate,L,why=>{
+    if(gen!==bridgeGen||settled)return;
+    if(why==='start'){didStart=true;startedAt=performance.now();return;}
+    if(why==='interrupted')return;
+    if(why==='end'){
+      const elapsed=didStart?performance.now()-startedAt:0;
+      if(!didStart||elapsed<240)return; // too early to be the real end
+      finish();
+    }else finish(); // the engine could not speak it
+  });
+  arm(chainBudget(text));
+}
+/* A new line the child just asked for. If something is already talking,
+   stop that, then wait a moment: on iPhone, speak() straight after cancel()
+   is itself cut off. */
+function speakFresh(text,L,rate,done){
+  let busy=false;
+  try{busy=speechSynthesis.speaking||speechSynthesis.pending;}catch(e){}
+  bridgeStop();
+  if(busy){try{speechSynthesis.cancel();}catch(e){}}
+  const gen=bridgeGen;
+  bridgeTimer=setTimeout(()=>{
+    if(gen!==bridgeGen)return;
+    speakChained(text,L,rate,done||function(){},gen);
+  },busy?200:0);
+}
 function bridgeOrder(prefer){
   prefer=prefer||lang;
   const on=(BRIDGE||[]).filter(c=>c==='es'||c==='en'||c==='de');
@@ -79,8 +134,7 @@ function sayWordBridge(words,opt){
   opt=opt||{};
   if(!appStarted)return;
   if(rewardOpen&&!opt.force)return;
-  bridgeStop();
-  const prefer=opt.prefer||lang,gen=bridgeGen;
+  const prefer=opt.prefer||lang;
   const tidy=s=>(s||'').replace(/^[¡¿\s]+/,'').replace(/[!?¡¿.\s]+$/,'').trim();
   const seq=[];
   bridgeOrder(prefer).forEach(L=>{
@@ -90,18 +144,22 @@ function sayWordBridge(words,opt){
   });
   if(opt.lead&&!seq.some(s=>s.L===prefer))seq.unshift({L:prefer,speak:opt.lead,label:tidy(words&&words[prefer])||opt.lead});
   if(!seq.length)return;
+  let busy=false;
+  try{busy=speechSynthesis.speaking||speechSynthesis.pending;}catch(e){}
+  bridgeStop();
+  const gen=bridgeGen;
+  /* Only the line he just left is cancelled, and not in the same breath as
+     the next speak(): iPhone applies cancel() late and chops the new voice. */
+  if(busy){try{speechSynthesis.cancel();}catch(e){}}
   const tag=document.getElementById('bridgeTag');
   const step=i=>{
     if(gen!==bridgeGen)return;
     if(i>=seq.length){if(tag)tag.classList.remove('on');if(opt.then)opt.then();return;}
     const s=seq[i];
     if(tag){tag.textContent=BRIDGE_MARK[s.L]+' '+s.label;tag.classList.add('on');}
-    try{if('speechSynthesis' in window)speechSynthesis.cancel();}catch(e){}
-    utter(s.speak,true,0.72,s.L);
-    const wait=Math.min(4200,Math.max(800,420+s.speak.length*70));
-    bridgeTimer=setTimeout(()=>step(i+1),wait);
+    speakChained(s.speak,s.L,0.72,()=>step(i+1),gen);
   };
-  step(0);
+  bridgeTimer=setTimeout(()=>{if(gen===bridgeGen)step(0);},busy?200:0);
 }
 /* "Hund… perro": the word in the current language, then the Spanish word read by a Spanish voice */
 function sayBridge(own,es,rate){
@@ -123,7 +181,7 @@ function hideWarn(){document.getElementById('voiceWarn').style.display='none';}
 ============================================================= */
 let AC=null;
 function ac(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();
-  if(AC.state==='suspended')AC.resume();}catch(e){} return AC;}
+  if(AC.state==='suspended'){const p=AC.resume();if(p&&p.catch)p.catch(function(){});}}catch(e){} return AC;}
 function beep(f,when,dur=0.14,type='triangle',vol=0.22){
   const a=ac(); if(!a)return;
   const o=a.createOscillator(),g=a.createGain();

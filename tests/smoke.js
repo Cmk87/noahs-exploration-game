@@ -366,7 +366,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const waitFor = async fn => { for (let i = 0; i < 50; i++) { if (fn()) return true; await sleep(100); } return false; };
      window.PHOTO_SAID = [];
      if (!window._utter0) window._utter0 = utter;
-     utter = (t, a, b, L) => { PHOTO_SAID.push(String(t)); return window._utter0(t, a, b, L); };
+     utter = function () { PHOTO_SAID.push(String(arguments[0])); return window._utter0.apply(null, arguments); };
      if (rewardOpen) closeReward(false);
      power = 5; savePower();
      if (lang !== 'de') $('de').click();
