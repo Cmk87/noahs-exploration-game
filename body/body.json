@@ -1,0 +1,2018 @@
+{
+ "version": 1,
+ "imageSize": 512,
+ "format": "webp",
+ "groups": [
+  {
+   "id": "bones",
+   "en": "Bones",
+   "es": "Los huesos",
+   "de": "Die Knochen",
+   "emoji": "🦴"
+  },
+  {
+   "id": "muscles",
+   "en": "Muscles",
+   "es": "Los músculos",
+   "de": "Die Muskeln",
+   "emoji": "💪"
+  },
+  {
+   "id": "heart",
+   "en": "Heart & blood",
+   "es": "El corazón y la sangre",
+   "de": "Herz und Blut",
+   "emoji": "❤️"
+  },
+  {
+   "id": "lungs",
+   "en": "Breathing",
+   "es": "La respiración",
+   "de": "Die Atmung",
+   "emoji": "🌬️"
+  },
+  {
+   "id": "brain",
+   "en": "Brain & nerves",
+   "es": "El cerebro y los nervios",
+   "de": "Gehirn und Nerven",
+   "emoji": "🧠"
+  },
+  {
+   "id": "tummy",
+   "en": "Tummy & food",
+   "es": "La barriga y la comida",
+   "de": "Bauch und Essen",
+   "emoji": "🍎"
+  },
+  {
+   "id": "senses",
+   "en": "Five senses",
+   "es": "Los cinco sentidos",
+   "de": "Die fünf Sinne",
+   "emoji": "👀"
+  },
+  {
+   "id": "skin",
+   "en": "Skin, hair & teeth",
+   "es": "La piel, el pelo y los dientes",
+   "de": "Haut, Haare und Zähne",
+   "emoji": "🪥"
+  },
+  {
+   "id": "touch",
+   "en": "Touch your body",
+   "es": "Toca tu cuerpo",
+   "de": "Berühr deinen Körper",
+   "emoji": "👆"
+  }
+ ],
+ "body": [
+  {
+   "id": "skeleton",
+   "group": "bones",
+   "image": "body/skeleton.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "skeleton",
+     "full": "the skeleton"
+    },
+    "es": {
+     "article": "el",
+     "noun": "esqueleto",
+     "full": "el esqueleto",
+     "gender": "m"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Skelett",
+     "full": "das Skelett",
+     "gender": "n"
+    }
+   },
+   "overview": true,
+   "facts": [
+    {
+     "en": "Your skeleton holds you up – without it you would be floppy like jelly!",
+     "es": "Tu esqueleto te sostiene: ¡sin él estarías blandito como una gelatina!",
+     "de": "Dein Skelett hält dich aufrecht – ohne es wärst du wabbelig wie Wackelpudding!"
+    },
+    {
+     "en": "Grown-ups have about 206 bones. Babies are born with about 300, and some join together as they grow.",
+     "es": "Los adultos tienen unos 206 huesos. Los bebés nacen con unos 300, y algunos se unen al crecer.",
+     "de": "Erwachsene haben etwa 206 Knochen. Babys kommen mit etwa 300 auf die Welt, und manche wachsen zusammen."
+    }
+   ]
+  },
+  {
+   "id": "skull",
+   "group": "bones",
+   "image": "body/skull.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "skull",
+     "full": "the skull"
+    },
+    "es": {
+     "article": "el",
+     "noun": "cráneo",
+     "full": "el cráneo",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Schädel",
+     "full": "der Schädel",
+     "gender": "m"
+    }
+   },
+   "facts": [
+    {
+     "en": "Your skull is a strong helmet made of bone that keeps your brain safe.",
+     "es": "Tu cráneo es un casco fuerte de hueso que protege tu cerebro.",
+     "de": "Dein Schädel ist ein starker Helm aus Knochen, der dein Gehirn schützt."
+    },
+    {
+     "en": "A baby's skull has soft spots that slowly close up as the baby grows.",
+     "es": "El cráneo de un bebé tiene partes blanditas que se cierran poco a poco al crecer.",
+     "de": "Der Schädel eines Babys hat weiche Stellen, die sich beim Wachsen langsam schließen."
+    }
+   ]
+  },
+  {
+   "id": "ribs",
+   "group": "bones",
+   "image": "body/ribs.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "ribs",
+     "full": "the ribs"
+    },
+    "es": {
+     "article": "las",
+     "noun": "costillas",
+     "full": "las costillas",
+     "gender": "f",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Rippen",
+     "full": "die Rippen",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your ribs make a cage that protects your heart and lungs.",
+     "es": "Tus costillas forman una jaula que protege tu corazón y tus pulmones.",
+     "de": "Deine Rippen bilden einen Korb, der dein Herz und deine Lunge schützt."
+    },
+    {
+     "en": "Most people have 24 ribs – 12 on each side.",
+     "es": "La mayoría de las personas tiene 24 costillas: 12 a cada lado.",
+     "de": "Die meisten Menschen haben 24 Rippen – 12 auf jeder Seite."
+    }
+   ]
+  },
+  {
+   "id": "spine",
+   "group": "bones",
+   "image": "body/spine.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "spine",
+     "full": "the spine"
+    },
+    "es": {
+     "article": "la",
+     "noun": "columna vertebral",
+     "full": "la columna vertebral",
+     "gender": "f"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Wirbelsäule",
+     "full": "die Wirbelsäule",
+     "gender": "f"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your spine is made of many small bones stacked up like a tower of blocks.",
+     "es": "Tu columna está hecha de muchos huesitos apilados como una torre de bloques.",
+     "de": "Deine Wirbelsäule besteht aus vielen kleinen Knochen, gestapelt wie ein Turm aus Bauklötzen."
+    },
+    {
+     "en": "Your spine lets you bend, twist and touch your toes.",
+     "es": "Tu columna te deja doblarte, girar y tocarte los dedos de los pies.",
+     "de": "Mit deiner Wirbelsäule kannst du dich bücken, drehen und deine Zehen berühren."
+    }
+   ]
+  },
+  {
+   "id": "femur",
+   "group": "bones",
+   "image": "body/femur.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "thigh bone",
+     "full": "the thigh bone"
+    },
+    "es": {
+     "article": "el",
+     "noun": "fémur",
+     "full": "el fémur",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Oberschenkelknochen",
+     "full": "der Oberschenkelknochen",
+     "gender": "m"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "The thigh bone is the longest bone in your body.",
+     "es": "El fémur es el hueso más largo de tu cuerpo.",
+     "de": "Der Oberschenkelknochen ist der längste Knochen in deinem Körper."
+    },
+    {
+     "en": "It is also super strong – it carries you when you walk, run and jump.",
+     "es": "También es súper fuerte: te sostiene cuando caminas, corres y saltas.",
+     "de": "Er ist auch super stark – er trägt dich beim Gehen, Rennen und Springen."
+    }
+   ]
+  },
+  {
+   "id": "muscles",
+   "group": "muscles",
+   "image": "body/muscles.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "muscles",
+     "full": "the muscles"
+    },
+    "es": {
+     "article": "los",
+     "noun": "músculos",
+     "full": "los músculos",
+     "gender": "m",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Muskeln",
+     "full": "die Muskeln",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "overview": true,
+   "facts": [
+    {
+     "en": "You have more than 600 muscles that help you move.",
+     "es": "Tienes más de 600 músculos que te ayudan a moverte.",
+     "de": "Du hast mehr als 600 Muskeln, die dir helfen, dich zu bewegen."
+    },
+    {
+     "en": "Muscles pull on your bones to move them, like the strings on a puppet.",
+     "es": "Los músculos tiran de los huesos para moverlos, como los hilos de una marioneta.",
+     "de": "Muskeln ziehen an deinen Knochen und bewegen sie, wie die Fäden einer Marionette."
+    }
+   ]
+  },
+  {
+   "id": "biceps",
+   "group": "muscles",
+   "image": "body/biceps.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "biceps",
+     "full": "the biceps"
+    },
+    "es": {
+     "article": "el",
+     "noun": "bíceps",
+     "full": "el bíceps",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Bizeps",
+     "full": "der Bizeps",
+     "gender": "m"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your biceps is the muscle at the front of your upper arm. Bend your arm to feel it!",
+     "es": "El bíceps es el músculo de la parte delantera del brazo. ¡Dobla el brazo para sentirlo!",
+     "de": "Der Bizeps ist der Muskel vorne an deinem Oberarm. Beug deinen Arm und fühl ihn!"
+    },
+    {
+     "en": "It gets shorter and fatter when it pulls your arm up.",
+     "es": "Se hace más corto y gordito cuando sube tu brazo.",
+     "de": "Er wird kürzer und dicker, wenn er deinen Arm hochzieht."
+    }
+   ]
+  },
+  {
+   "id": "tummy-muscles",
+   "group": "muscles",
+   "image": "body/tummy-muscles.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "tummy muscles",
+     "full": "the tummy muscles"
+    },
+    "es": {
+     "article": "los",
+     "noun": "abdominales",
+     "full": "los abdominales",
+     "gender": "m",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Bauchmuskeln",
+     "full": "die Bauchmuskeln",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your tummy muscles help you sit up and stand tall.",
+     "es": "Los abdominales te ayudan a sentarte y a estar derecho.",
+     "de": "Deine Bauchmuskeln helfen dir beim Aufsetzen und halten dich aufrecht."
+    },
+    {
+     "en": "They squeeze when you laugh, cough or sneeze!",
+     "es": "¡Se aprietan cuando te ríes, toses o estornudas!",
+     "de": "Sie spannen sich an, wenn du lachst, hustest oder niest!"
+    }
+   ]
+  },
+  {
+   "id": "smile",
+   "group": "muscles",
+   "image": "body/smile.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "smile",
+     "full": "the smile"
+    },
+    "es": {
+     "article": "la",
+     "noun": "sonrisa",
+     "full": "la sonrisa",
+     "gender": "f"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Lächeln",
+     "full": "das Lächeln",
+     "gender": "n"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your face has lots of little muscles that help you smile, frown and make funny faces.",
+     "es": "Tu cara tiene muchos musculitos que te ayudan a sonreír, fruncir el ceño y poner caras graciosas.",
+     "de": "Dein Gesicht hat viele kleine Muskeln zum Lächeln, Stirnrunzeln und Grimassenschneiden."
+    },
+    {
+     "en": "Smiles are catching – when you smile at someone, they often smile back!",
+     "es": "Las sonrisas se contagian: cuando sonríes a alguien, ¡muchas veces te sonríe también!",
+     "de": "Lächeln steckt an – wenn du jemanden anlächelst, lächelt er oft zurück!"
+    }
+   ]
+  },
+  {
+   "id": "calf",
+   "group": "muscles",
+   "image": "body/calf.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "calf",
+     "full": "the calf"
+    },
+    "es": {
+     "article": "la",
+     "noun": "pantorrilla",
+     "full": "la pantorrilla",
+     "gender": "f"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Wade",
+     "full": "die Wade",
+     "gender": "f"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your calf is the muscle at the back of your leg, below the knee.",
+     "es": "La pantorrilla es el músculo de la parte de atrás de la pierna, debajo de la rodilla.",
+     "de": "Die Wade ist der Muskel hinten an deinem Bein, unter dem Knie."
+    },
+    {
+     "en": "It lifts your heels so you can stand on tiptoe and jump.",
+     "es": "Levanta tus talones para que te pongas de puntillas y saltes.",
+     "de": "Sie hebt deine Fersen, damit du auf Zehenspitzen stehen und springen kannst."
+    }
+   ]
+  },
+  {
+   "id": "blood",
+   "group": "heart",
+   "image": "body/blood.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "blood",
+     "full": "the blood"
+    },
+    "es": {
+     "article": "la",
+     "noun": "sangre",
+     "full": "la sangre",
+     "gender": "f"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Blut",
+     "full": "das Blut",
+     "gender": "n"
+    }
+   },
+   "sound": {
+    "en": "ba-dum ba-dum",
+    "es": "pum-pum pum-pum",
+    "de": "bumm-bumm bumm-bumm"
+   },
+   "soundKey": "heartbeat",
+   "overview": true,
+   "facts": [
+    {
+     "en": "Blood travels all around your body, carrying food and air to every part.",
+     "es": "La sangre viaja por todo tu cuerpo llevando comida y aire a cada parte.",
+     "de": "Blut reist durch deinen ganzen Körper und bringt Nahrung und Luft überallhin."
+    },
+    {
+     "en": "Your blood is red because of tiny red blood cells.",
+     "es": "Tu sangre es roja por unas células diminutas: los glóbulos rojos.",
+     "de": "Dein Blut ist rot wegen winziger roter Blutkörperchen."
+    }
+   ]
+  },
+  {
+   "id": "heart",
+   "group": "heart",
+   "image": "body/heart.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "heart",
+     "full": "the heart"
+    },
+    "es": {
+     "article": "el",
+     "noun": "corazón",
+     "full": "el corazón",
+     "gender": "m"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Herz",
+     "full": "das Herz",
+     "gender": "n"
+    }
+   },
+   "sound": {
+    "en": "ba-dum ba-dum",
+    "es": "pum-pum pum-pum",
+    "de": "bumm-bumm bumm-bumm"
+   },
+   "soundKey": "heartbeat",
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your heart is a muscle about the size of your fist.",
+     "es": "Tu corazón es un músculo más o menos del tamaño de tu puño.",
+     "de": "Dein Herz ist ein Muskel, ungefähr so groß wie deine Faust."
+    },
+    {
+     "en": "It pumps blood all day and all night, even while you sleep.",
+     "es": "Bombea sangre todo el día y toda la noche, incluso mientras duermes.",
+     "de": "Es pumpt Tag und Nacht Blut, sogar wenn du schläfst."
+    }
+   ]
+  },
+  {
+   "id": "heartbeat",
+   "group": "heart",
+   "image": "body/heartbeat.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "heartbeat",
+     "full": "the heartbeat"
+    },
+    "es": {
+     "article": "el",
+     "noun": "latido",
+     "full": "el latido",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Herzschlag",
+     "full": "der Herzschlag",
+     "gender": "m"
+    }
+   },
+   "sound": {
+    "en": "ba-dum ba-dum",
+    "es": "pum-pum pum-pum",
+    "de": "bumm-bumm bumm-bumm"
+   },
+   "soundKey": "heartbeat",
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your heart beats about 100,000 times every day!",
+     "es": "¡Tu corazón late unas 100.000 veces cada día!",
+     "de": "Dein Herz schlägt etwa 100.000 Mal am Tag!"
+    },
+    {
+     "en": "Doctors listen to your heartbeat with a stethoscope. When you run, it beats faster.",
+     "es": "Los médicos escuchan tu latido con un estetoscopio. Cuando corres, late más rápido.",
+     "de": "Ärzte hören deinen Herzschlag mit einem Stethoskop ab. Wenn du rennst, schlägt es schneller."
+    }
+   ]
+  },
+  {
+   "id": "blood-vessels",
+   "group": "heart",
+   "image": "body/blood-vessels.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "blood vessels",
+     "full": "the blood vessels"
+    },
+    "es": {
+     "article": "los",
+     "noun": "vasos sanguíneos",
+     "full": "los vasos sanguíneos",
+     "gender": "m",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Blutgefäße",
+     "full": "die Blutgefäße",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "facts": [
+    {
+     "en": "Blood vessels are tiny tubes that carry blood all over your body, like roads.",
+     "es": "Los vasos sanguíneos son tubitos que llevan la sangre por todo el cuerpo, como carreteras.",
+     "de": "Blutgefäße sind kleine Röhren, die Blut durch den ganzen Körper bringen, wie Straßen."
+    },
+    {
+     "en": "You can see some of them as bluish lines under the skin of your wrist.",
+     "es": "Puedes ver algunos como líneas azuladas bajo la piel de tu muñeca.",
+     "de": "Manche kannst du als bläuliche Linien unter der Haut an deinem Handgelenk sehen."
+    }
+   ]
+  },
+  {
+   "id": "red-blood-cells",
+   "group": "heart",
+   "image": "body/red-blood-cells.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "red blood cells",
+     "full": "the red blood cells"
+    },
+    "es": {
+     "article": "los",
+     "noun": "glóbulos rojos",
+     "full": "los glóbulos rojos",
+     "gender": "m",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "roten Blutkörperchen",
+     "full": "die roten Blutkörperchen",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "facts": [
+    {
+     "en": "Red blood cells are so tiny that you need a microscope to see them.",
+     "es": "Los glóbulos rojos son tan pequeños que necesitas un microscopio para verlos.",
+     "de": "Rote Blutkörperchen sind so winzig, dass man ein Mikroskop braucht, um sie zu sehen."
+    },
+    {
+     "en": "They carry air (oxygen) from your lungs to the rest of your body.",
+     "es": "Llevan el aire (oxígeno) de tus pulmones al resto del cuerpo.",
+     "de": "Sie bringen Luft (Sauerstoff) von deiner Lunge in den ganzen Körper."
+    }
+   ]
+  },
+  {
+   "id": "breathing",
+   "group": "lungs",
+   "image": "body/breathing.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "breathing",
+     "full": "the breathing"
+    },
+    "es": {
+     "article": "la",
+     "noun": "respiración",
+     "full": "la respiración",
+     "gender": "f"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Atmung",
+     "full": "die Atmung",
+     "gender": "f"
+    }
+   },
+   "sound": {
+    "en": "whoosh",
+    "es": "fuuuu",
+    "de": "puuuh"
+   },
+   "soundKey": "breathing",
+   "overview": true,
+   "facts": [
+    {
+     "en": "You breathe air in through your nose and mouth, all day and all night.",
+     "es": "Respiras aire por la nariz y la boca todo el día y toda la noche.",
+     "de": "Du atmest Tag und Nacht Luft durch Nase und Mund ein."
+    },
+    {
+     "en": "You breathe without even thinking about it – even when you sleep!",
+     "es": "Respiras sin pensar en ello, ¡incluso cuando duermes!",
+     "de": "Du atmest, ohne darüber nachzudenken – sogar im Schlaf!"
+    }
+   ]
+  },
+  {
+   "id": "lungs",
+   "group": "lungs",
+   "image": "body/lungs.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "lungs",
+     "full": "the lungs"
+    },
+    "es": {
+     "article": "los",
+     "noun": "pulmones",
+     "full": "los pulmones",
+     "gender": "m",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Lunge",
+     "full": "die Lunge",
+     "gender": "f"
+    }
+   },
+   "sound": {
+    "en": "whoosh",
+    "es": "fuuuu",
+    "de": "puuuh"
+   },
+   "soundKey": "breathing",
+   "facts": [
+    {
+     "en": "Your lungs fill up with air like two balloons when you breathe in.",
+     "es": "Tus pulmones se llenan de aire como dos globos cuando respiras.",
+     "de": "Deine Lunge füllt sich beim Einatmen mit Luft wie zwei Luftballons."
+    },
+    {
+     "en": "Your left lung is a little smaller, to make room for your heart.",
+     "es": "El pulmón izquierdo es un poco más pequeño para dejar sitio al corazón.",
+     "de": "Der linke Lungenflügel ist etwas kleiner, damit Platz für dein Herz ist."
+    }
+   ]
+  },
+  {
+   "id": "windpipe",
+   "group": "lungs",
+   "image": "body/windpipe.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "windpipe",
+     "full": "the windpipe"
+    },
+    "es": {
+     "article": "la",
+     "noun": "tráquea",
+     "full": "la tráquea",
+     "gender": "f"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Luftröhre",
+     "full": "die Luftröhre",
+     "gender": "f"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "The windpipe is the tube that carries air from your nose and mouth down to your lungs.",
+     "es": "La tráquea es el tubo que lleva el aire de la nariz y la boca a los pulmones.",
+     "de": "Die Luftröhre ist das Rohr, das Luft von Nase und Mund zur Lunge bringt."
+    },
+    {
+     "en": "It has strong rings that keep it open, like a bendy straw.",
+     "es": "Tiene anillos fuertes que la mantienen abierta, como una pajita que se dobla.",
+     "de": "Sie hat feste Ringe, die sie offen halten, wie ein Knickstrohhalm."
+    }
+   ]
+  },
+  {
+   "id": "breath",
+   "group": "lungs",
+   "image": "body/breath.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "breath",
+     "full": "the breath"
+    },
+    "es": {
+     "article": "el",
+     "noun": "aliento",
+     "full": "el aliento",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Atem",
+     "full": "der Atem",
+     "gender": "m"
+    }
+   },
+   "sound": {
+    "en": "whoosh",
+    "es": "fuuuu",
+    "de": "puuuh"
+   },
+   "soundKey": "breathing",
+   "facts": [
+    {
+     "en": "When you blow, air comes out of your lungs – that's how you blow a dandelion!",
+     "es": "Cuando soplas, el aire sale de tus pulmones: ¡así soplas un diente de león!",
+     "de": "Wenn du pustest, kommt Luft aus deiner Lunge – so pustest du eine Pusteblume!"
+    },
+    {
+     "en": "On a cold day you can see your breath, like a little cloud.",
+     "es": "En un día frío puedes ver tu aliento, como una nubecita.",
+     "de": "An kalten Tagen kannst du deinen Atem sehen, wie eine kleine Wolke."
+    }
+   ]
+  },
+  {
+   "id": "yawn",
+   "group": "lungs",
+   "image": "body/yawn.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "yawn",
+     "full": "the yawn"
+    },
+    "es": {
+     "article": "el",
+     "noun": "bostezo",
+     "full": "el bostezo",
+     "gender": "m"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Gähnen",
+     "full": "das Gähnen",
+     "gender": "n"
+    }
+   },
+   "sound": {
+    "en": "aaah",
+    "es": "aaah",
+    "de": "aaah"
+   },
+   "soundKey": "yawn",
+   "facts": [
+    {
+     "en": "You often yawn when you are tired or sleepy.",
+     "es": "Muchas veces bostezas cuando estás cansado o tienes sueño.",
+     "de": "Du gähnst oft, wenn du müde bist."
+    },
+    {
+     "en": "Yawns are catching – seeing someone yawn can make you yawn too!",
+     "es": "Los bostezos se contagian: ¡ver a alguien bostezar puede hacerte bostezar!",
+     "de": "Gähnen steckt an – wenn du jemanden gähnen siehst, musst du oft auch gähnen!"
+    }
+   ]
+  },
+  {
+   "id": "nerves",
+   "group": "brain",
+   "image": "body/nerves.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "nerves",
+     "full": "the nerves"
+    },
+    "es": {
+     "article": "los",
+     "noun": "nervios",
+     "full": "los nervios",
+     "gender": "m",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Nerven",
+     "full": "die Nerven",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "overview": true,
+   "facts": [
+    {
+     "en": "Nerves are like tiny wires that carry messages between your brain and your body.",
+     "es": "Los nervios son como cables diminutos que llevan mensajes entre tu cerebro y tu cuerpo.",
+     "de": "Nerven sind wie winzige Kabel, die Nachrichten zwischen Gehirn und Körper tragen."
+    },
+    {
+     "en": "Their messages arrive faster than you can blink!",
+     "es": "¡Sus mensajes llegan más rápido que un parpadeo!",
+     "de": "Ihre Nachrichten kommen schneller an, als du blinzeln kannst!"
+    }
+   ]
+  },
+  {
+   "id": "brain",
+   "group": "brain",
+   "image": "body/brain.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "brain",
+     "full": "the brain"
+    },
+    "es": {
+     "article": "el",
+     "noun": "cerebro",
+     "full": "el cerebro",
+     "gender": "m"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Gehirn",
+     "full": "das Gehirn",
+     "gender": "n"
+    }
+   },
+   "facts": [
+    {
+     "en": "Your brain is the boss of your body – it helps you think, remember, feel and move.",
+     "es": "Tu cerebro es el jefe de tu cuerpo: te ayuda a pensar, recordar, sentir y moverte.",
+     "de": "Dein Gehirn ist der Chef deines Körpers – es hilft dir zu denken, dich zu erinnern, zu fühlen und dich zu bewegen."
+    },
+    {
+     "en": "Your brain uses about one fifth of all your body's energy.",
+     "es": "Tu cerebro usa más o menos una quinta parte de toda la energía de tu cuerpo.",
+     "de": "Dein Gehirn verbraucht etwa ein Fünftel der ganzen Energie deines Körpers."
+    }
+   ]
+  },
+  {
+   "id": "spinal-cord",
+   "group": "brain",
+   "image": "body/spinal-cord.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "spinal cord",
+     "full": "the spinal cord"
+    },
+    "es": {
+     "article": "la",
+     "noun": "médula espinal",
+     "full": "la médula espinal",
+     "gender": "f"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Rückenmark",
+     "full": "das Rückenmark",
+     "gender": "n"
+    }
+   },
+   "facts": [
+    {
+     "en": "The spinal cord is a long bundle of nerves that runs down inside your spine.",
+     "es": "La médula espinal es un largo manojo de nervios que baja por dentro de tu columna.",
+     "de": "Das Rückenmark ist ein langer Strang aus Nerven, der in deiner Wirbelsäule nach unten läuft."
+    },
+    {
+     "en": "It carries messages between your brain and the rest of your body.",
+     "es": "Lleva mensajes entre tu cerebro y el resto del cuerpo.",
+     "de": "Es trägt Nachrichten zwischen deinem Gehirn und dem restlichen Körper."
+    }
+   ]
+  },
+  {
+   "id": "neuron",
+   "group": "brain",
+   "image": "body/neuron.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "nerve cell",
+     "full": "the nerve cell"
+    },
+    "es": {
+     "article": "la",
+     "noun": "neurona",
+     "full": "la neurona",
+     "gender": "f"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Nervenzelle",
+     "full": "die Nervenzelle",
+     "gender": "f"
+    }
+   },
+   "facts": [
+    {
+     "en": "Nerve cells pass messages along. Your brain has billions of them!",
+     "es": "Las neuronas pasan mensajes. ¡Tu cerebro tiene miles de millones!",
+     "de": "Nervenzellen geben Nachrichten weiter. Dein Gehirn hat Milliarden davon!"
+    },
+    {
+     "en": "They send their messages with tiny sparks of electricity.",
+     "es": "Mandan sus mensajes con chispitas de electricidad.",
+     "de": "Sie schicken ihre Nachrichten mit winzigen elektrischen Signalen."
+    }
+   ]
+  },
+  {
+   "id": "sleep",
+   "group": "brain",
+   "image": "body/sleep.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "sleep",
+     "full": "the sleep"
+    },
+    "es": {
+     "article": "el",
+     "noun": "sueño",
+     "full": "el sueño",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Schlaf",
+     "full": "der Schlaf",
+     "gender": "m"
+    }
+   },
+   "sound": {
+    "en": "zzz",
+    "es": "zzz",
+    "de": "chrrr"
+   },
+   "soundKey": "snore",
+   "facts": [
+    {
+     "en": "While you sleep, your brain tidies up everything you learned during the day.",
+     "es": "Mientras duermes, tu cerebro ordena todo lo que aprendiste durante el día.",
+     "de": "Während du schläfst, sortiert dein Gehirn alles, was du am Tag gelernt hast."
+    },
+    {
+     "en": "Children need more sleep than grown-ups because they are growing.",
+     "es": "Los niños necesitan dormir más que los adultos porque están creciendo.",
+     "de": "Kinder brauchen mehr Schlaf als Erwachsene, weil sie wachsen."
+    }
+   ]
+  },
+  {
+   "id": "tummy",
+   "group": "tummy",
+   "image": "body/tummy.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "tummy",
+     "full": "the tummy"
+    },
+    "es": {
+     "article": "la",
+     "noun": "barriga",
+     "full": "la barriga",
+     "gender": "f"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Bauch",
+     "full": "der Bauch",
+     "gender": "m"
+    }
+   },
+   "sound": {
+    "en": "grumble rumble",
+    "es": "gruuu gruuu",
+    "de": "grummel grummel"
+   },
+   "soundKey": "rumble",
+   "overview": true,
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your tummy turns food into energy so you can play.",
+     "es": "Tu barriga convierte la comida en energía para que puedas jugar.",
+     "de": "Dein Bauch macht aus Essen Energie, damit du spielen kannst."
+    },
+    {
+     "en": "Food takes a long trip through your body – it can take a day or more!",
+     "es": "La comida hace un viaje largo por tu cuerpo: ¡puede tardar un día o más!",
+     "de": "Essen macht eine lange Reise durch deinen Körper – das kann einen Tag oder länger dauern!"
+    }
+   ]
+  },
+  {
+   "id": "mouth",
+   "group": "tummy",
+   "image": "body/mouth.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "mouth",
+     "full": "the mouth"
+    },
+    "es": {
+     "article": "la",
+     "noun": "boca",
+     "full": "la boca",
+     "gender": "f"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Mund",
+     "full": "der Mund",
+     "gender": "m"
+    }
+   },
+   "sound": {
+    "en": "chomp chomp",
+    "es": "ñam ñam",
+    "de": "mampf mampf"
+   },
+   "soundKey": "chewing",
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Eating starts in your mouth: your teeth chop food into little pieces.",
+     "es": "La digestión empieza en la boca: tus dientes cortan la comida en trocitos.",
+     "de": "Die Verdauung beginnt im Mund: Deine Zähne zerkleinern das Essen."
+    },
+    {
+     "en": "Spit (saliva) makes food soft and slippery so it is easy to swallow.",
+     "es": "La saliva hace la comida blandita y resbaladiza para tragarla fácilmente.",
+     "de": "Spucke macht das Essen weich und glitschig, damit du es leicht schlucken kannst."
+    }
+   ]
+  },
+  {
+   "id": "stomach",
+   "group": "tummy",
+   "image": "body/stomach.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "stomach",
+     "full": "the stomach"
+    },
+    "es": {
+     "article": "el",
+     "noun": "estómago",
+     "full": "el estómago",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Magen",
+     "full": "der Magen",
+     "gender": "m"
+    }
+   },
+   "sound": {
+    "en": "grumble rumble",
+    "es": "gruuu gruuu",
+    "de": "grummel grummel"
+   },
+   "soundKey": "rumble",
+   "facts": [
+    {
+     "en": "Your stomach is a stretchy bag that mashes up your food.",
+     "es": "Tu estómago es una bolsa elástica que tritura la comida.",
+     "de": "Dein Magen ist ein dehnbarer Beutel, der dein Essen zermatscht."
+    },
+    {
+     "en": "When your stomach is empty it can rumble – that means you're hungry!",
+     "es": "Cuando tu estómago está vacío puede hacer ruido: ¡eso es que tienes hambre!",
+     "de": "Wenn dein Magen leer ist, kann er knurren – dann hast du Hunger!"
+    }
+   ]
+  },
+  {
+   "id": "intestines",
+   "group": "tummy",
+   "image": "body/intestines.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "intestines",
+     "full": "the intestines"
+    },
+    "es": {
+     "article": "los",
+     "noun": "intestinos",
+     "full": "los intestinos",
+     "gender": "m",
+     "number": "pl"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Darm",
+     "full": "der Darm",
+     "gender": "m"
+    }
+   },
+   "facts": [
+    {
+     "en": "Your intestines are a very long tube, all folded up inside your tummy.",
+     "es": "Los intestinos son un tubo larguísimo, todo doblado dentro de tu barriga.",
+     "de": "Dein Darm ist ein sehr langer Schlauch, der in deinem Bauch zusammengefaltet ist."
+    },
+    {
+     "en": "The small intestine is several metres long – much longer than your bed!",
+     "es": "El intestino delgado mide varios metros, ¡mucho más que tu cama!",
+     "de": "Der Dünndarm ist mehrere Meter lang – viel länger als dein Bett!"
+    }
+   ]
+  },
+  {
+   "id": "liver",
+   "group": "tummy",
+   "image": "body/liver.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "liver",
+     "full": "the liver"
+    },
+    "es": {
+     "article": "el",
+     "noun": "hígado",
+     "full": "el hígado",
+     "gender": "m"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Leber",
+     "full": "die Leber",
+     "gender": "f"
+    }
+   },
+   "facts": [
+    {
+     "en": "The liver is the biggest organ inside your body.",
+     "es": "El hígado es el órgano más grande dentro de tu cuerpo.",
+     "de": "Die Leber ist das größte Organ im Inneren deines Körpers."
+    },
+    {
+     "en": "It works like a cleaner, taking away things your body doesn't need.",
+     "es": "Trabaja como un limpiador, quitando lo que tu cuerpo no necesita.",
+     "de": "Sie arbeitet wie eine Putzkraft und räumt weg, was dein Körper nicht braucht."
+    }
+   ]
+  },
+  {
+   "id": "senses",
+   "group": "senses",
+   "image": "body/senses.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "five senses",
+     "full": "the five senses"
+    },
+    "es": {
+     "article": "los",
+     "noun": "cinco sentidos",
+     "full": "los cinco sentidos",
+     "gender": "m",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "fünf Sinne",
+     "full": "die fünf Sinne",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "overview": true,
+   "facts": [
+    {
+     "en": "You have five senses: seeing, hearing, smelling, tasting and touching.",
+     "es": "Tienes cinco sentidos: la vista, el oído, el olfato, el gusto y el tacto.",
+     "de": "Du hast fünf Sinne: Sehen, Hören, Riechen, Schmecken und Fühlen."
+    },
+    {
+     "en": "Your senses send messages to your brain about the world around you.",
+     "es": "Tus sentidos mandan mensajes a tu cerebro sobre el mundo que te rodea.",
+     "de": "Deine Sinne schicken deinem Gehirn Nachrichten über die Welt um dich herum."
+    }
+   ]
+  },
+  {
+   "id": "eye",
+   "group": "senses",
+   "image": "body/eye.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "eye",
+     "full": "the eye"
+    },
+    "es": {
+     "article": "el",
+     "noun": "ojo",
+     "full": "el ojo",
+     "gender": "m"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Auge",
+     "full": "das Auge",
+     "gender": "n"
+    }
+   },
+   "facts": [
+    {
+     "en": "Your eyes help you see colours, shapes and things that move.",
+     "es": "Tus ojos te ayudan a ver colores, formas y cosas que se mueven.",
+     "de": "Deine Augen helfen dir, Farben, Formen und Bewegungen zu sehen."
+    },
+    {
+     "en": "You blink many times every minute to keep your eyes clean and wet.",
+     "es": "Parpadeas muchas veces cada minuto para mantener tus ojos limpios y húmedos.",
+     "de": "Du blinzelst jede Minute viele Male, damit deine Augen sauber und feucht bleiben."
+    }
+   ]
+  },
+  {
+   "id": "ear",
+   "group": "senses",
+   "image": "body/ear.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "ear",
+     "full": "the ear"
+    },
+    "es": {
+     "article": "la",
+     "noun": "oreja",
+     "full": "la oreja",
+     "gender": "f"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Ohr",
+     "full": "das Ohr",
+     "gender": "n"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "The smallest bone in your body is inside your ear – it is smaller than a grain of rice!",
+     "es": "El hueso más pequeño de tu cuerpo está dentro del oído: ¡es más pequeño que un grano de arroz!",
+     "de": "Der kleinste Knochen deines Körpers sitzt in deinem Ohr – er ist kleiner als ein Reiskorn!"
+    },
+    {
+     "en": "Your ears also help you keep your balance.",
+     "es": "Tus oídos también te ayudan a mantener el equilibrio.",
+     "de": "Deine Ohren helfen dir auch, das Gleichgewicht zu halten."
+    }
+   ]
+  },
+  {
+   "id": "nose",
+   "group": "senses",
+   "image": "body/nose.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "nose",
+     "full": "the nose"
+    },
+    "es": {
+     "article": "la",
+     "noun": "nariz",
+     "full": "la nariz",
+     "gender": "f"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Nase",
+     "full": "die Nase",
+     "gender": "f"
+    }
+   },
+   "sound": {
+    "en": "achoo",
+    "es": "achís",
+    "de": "hatschi"
+   },
+   "soundKey": "sneeze",
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your nose can tell apart thousands of different smells.",
+     "es": "Tu nariz puede distinguir miles de olores diferentes.",
+     "de": "Deine Nase kann tausende verschiedene Gerüche unterscheiden."
+    },
+    {
+     "en": "A sneeze blows tickly dust out of your nose – achoo!",
+     "es": "Un estornudo saca el polvo que te hace cosquillas en la nariz: ¡achís!",
+     "de": "Ein Niesen pustet kitzeligen Staub aus deiner Nase – hatschi!"
+    }
+   ]
+  },
+  {
+   "id": "tongue",
+   "group": "senses",
+   "image": "body/tongue.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "tongue",
+     "full": "the tongue"
+    },
+    "es": {
+     "article": "la",
+     "noun": "lengua",
+     "full": "la lengua",
+     "gender": "f"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Zunge",
+     "full": "die Zunge",
+     "gender": "f"
+    }
+   },
+   "facts": [
+    {
+     "en": "Your tongue has thousands of tiny taste buds for sweet, salty, sour and bitter.",
+     "es": "Tu lengua tiene miles de papilas gustativas para lo dulce, lo salado, lo ácido y lo amargo.",
+     "de": "Deine Zunge hat tausende winzige Geschmacksknospen für süß, salzig, sauer und bitter."
+    },
+    {
+     "en": "Your tongue helps you talk and moves food around when you chew.",
+     "es": "Tu lengua te ayuda a hablar y mueve la comida cuando masticas.",
+     "de": "Deine Zunge hilft dir beim Sprechen und schiebt beim Kauen das Essen herum."
+    }
+   ]
+  },
+  {
+   "id": "fingertips",
+   "group": "senses",
+   "image": "body/fingertips.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "fingertips",
+     "full": "the fingertips"
+    },
+    "es": {
+     "article": "las",
+     "noun": "yemas de los dedos",
+     "full": "las yemas de los dedos",
+     "gender": "f",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Fingerspitzen",
+     "full": "die Fingerspitzen",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your fingertips are extra good at feeling soft, rough, hot and cold.",
+     "es": "Las yemas de tus dedos sienten muy bien lo suave, lo áspero, lo caliente y lo frío.",
+     "de": "Deine Fingerspitzen können besonders gut fühlen: weich, rau, warm und kalt."
+    },
+    {
+     "en": "People who cannot see can read with their fingertips, using bumpy dots called Braille.",
+     "es": "Las personas ciegas pueden leer con las yemas de los dedos, con puntitos en relieve llamados braille.",
+     "de": "Blinde Menschen können mit den Fingerspitzen lesen – mit kleinen erhabenen Punkten, der Brailleschrift."
+    }
+   ]
+  },
+  {
+   "id": "skin",
+   "group": "skin",
+   "image": "body/skin.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "skin",
+     "full": "the skin"
+    },
+    "es": {
+     "article": "la",
+     "noun": "piel",
+     "full": "la piel",
+     "gender": "f"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Haut",
+     "full": "die Haut",
+     "gender": "f"
+    }
+   },
+   "overview": true,
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your skin is the biggest organ of your body.",
+     "es": "La piel es el órgano más grande de tu cuerpo.",
+     "de": "Deine Haut ist das größte Organ deines Körpers."
+    },
+    {
+     "en": "It keeps germs out – and it needs sunscreen to stay safe in the sun.",
+     "es": "Te protege de los gérmenes, y necesita crema solar para cuidarse del sol.",
+     "de": "Sie hält Keime fern – und braucht Sonnencreme, um in der Sonne geschützt zu sein."
+    }
+   ]
+  },
+  {
+   "id": "hair",
+   "group": "skin",
+   "image": "body/hair.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "hair",
+     "full": "the hair"
+    },
+    "es": {
+     "article": "el",
+     "noun": "pelo",
+     "full": "el pelo",
+     "gender": "m"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Haare",
+     "full": "die Haare",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your hair grows about 1 centimetre every month.",
+     "es": "Tu pelo crece más o menos 1 centímetro cada mes.",
+     "de": "Deine Haare wachsen etwa 1 Zentimeter im Monat."
+    },
+    {
+     "en": "A haircut doesn't hurt, because hair has no feeling.",
+     "es": "Cortarte el pelo no duele, porque el pelo no siente.",
+     "de": "Haareschneiden tut nicht weh, weil Haare nichts spüren."
+    }
+   ]
+  },
+  {
+   "id": "teeth",
+   "group": "skin",
+   "image": "body/teeth.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "teeth",
+     "full": "the teeth"
+    },
+    "es": {
+     "article": "los",
+     "noun": "dientes",
+     "full": "los dientes",
+     "gender": "m",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Zähne",
+     "full": "die Zähne",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "sound": {
+    "en": "chomp chomp",
+    "es": "ñam ñam",
+    "de": "mampf mampf"
+   },
+   "soundKey": "chewing",
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Children have 20 baby teeth. Later they fall out and grown-up teeth grow in.",
+     "es": "Los niños tienen 20 dientes de leche. Luego se caen y salen los dientes definitivos.",
+     "de": "Kinder haben 20 Milchzähne. Später fallen sie aus und die bleibenden Zähne wachsen nach."
+    },
+    {
+     "en": "Brushing your teeth twice a day keeps them strong and clean.",
+     "es": "Cepillarte los dientes dos veces al día los mantiene fuertes y limpios.",
+     "de": "Zweimal am Tag Zähneputzen hält deine Zähne stark und sauber."
+    }
+   ]
+  },
+  {
+   "id": "fingernail",
+   "group": "skin",
+   "image": "body/fingernail.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "fingernail",
+     "full": "the fingernail"
+    },
+    "es": {
+     "article": "la",
+     "noun": "uña",
+     "full": "la uña",
+     "gender": "f"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Fingernagel",
+     "full": "der Fingernagel",
+     "gender": "m"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Fingernails grow faster than toenails.",
+     "es": "Las uñas de las manos crecen más rápido que las de los pies.",
+     "de": "Fingernägel wachsen schneller als Fußnägel."
+    },
+    {
+     "en": "Nails are made of the same stuff as your hair, called keratin.",
+     "es": "Las uñas están hechas del mismo material que el pelo: la queratina.",
+     "de": "Nägel bestehen aus dem gleichen Stoff wie deine Haare: Keratin."
+    }
+   ]
+  },
+  {
+   "id": "fingerprint",
+   "group": "skin",
+   "image": "body/fingerprint.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "fingerprint",
+     "full": "the fingerprint"
+    },
+    "es": {
+     "article": "la",
+     "noun": "huella dactilar",
+     "full": "la huella dactilar",
+     "gender": "f"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Fingerabdruck",
+     "full": "der Fingerabdruck",
+     "gender": "m"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Nobody else in the whole world has the same fingerprints as you – not even twins!",
+     "es": "Nadie en el mundo tiene las mismas huellas que tú, ¡ni siquiera los gemelos!",
+     "de": "Niemand auf der ganzen Welt hat die gleichen Fingerabdrücke wie du – nicht einmal Zwillinge!"
+    },
+    {
+     "en": "Your fingerprints were already there before you were born.",
+     "es": "Tus huellas ya estaban ahí antes de que nacieras.",
+     "de": "Deine Fingerabdrücke waren schon da, bevor du geboren wurdest."
+    }
+   ]
+  },
+  {
+   "id": "head",
+   "group": "touch",
+   "image": "body/head.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "head",
+     "full": "the head"
+    },
+    "es": {
+     "article": "la",
+     "noun": "cabeza",
+     "full": "la cabeza",
+     "gender": "f"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Kopf",
+     "full": "der Kopf",
+     "gender": "m"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your head holds your brain, and it has your eyes, ears, nose and mouth.",
+     "es": "Tu cabeza guarda tu cerebro, y en ella están tus ojos, orejas, nariz y boca.",
+     "de": "In deinem Kopf ist dein Gehirn, und an ihm sind Augen, Ohren, Nase und Mund."
+    },
+    {
+     "en": "Babies have big heads compared to their bodies. The body catches up as you grow!",
+     "es": "Los bebés tienen la cabeza grande comparada con su cuerpo. ¡El cuerpo la alcanza al crecer!",
+     "de": "Babys haben im Vergleich zum Körper einen großen Kopf. Der Körper holt beim Wachsen auf!"
+    }
+   ]
+  },
+  {
+   "id": "shoulders",
+   "group": "touch",
+   "image": "body/shoulders.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "shoulders",
+     "full": "the shoulders"
+    },
+    "es": {
+     "article": "los",
+     "noun": "hombros",
+     "full": "los hombros",
+     "gender": "m",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Schultern",
+     "full": "die Schultern",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your shoulders let your arms swing round in a big circle.",
+     "es": "Tus hombros dejan que tus brazos giren en un círculo grande.",
+     "de": "Mit deinen Schultern kannst du deine Arme im großen Kreis schwingen."
+    },
+    {
+     "en": "Shrug your shoulders up and down – that means \"I don't know!\"",
+     "es": "Sube y baja los hombros: ¡eso significa «no sé»!",
+     "de": "Zieh die Schultern hoch – das heißt „Weiß ich nicht!“"
+    }
+   ]
+  },
+  {
+   "id": "arm",
+   "group": "touch",
+   "image": "body/arm.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "arm",
+     "full": "the arm"
+    },
+    "es": {
+     "article": "el",
+     "noun": "brazo",
+     "full": "el brazo",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Arm",
+     "full": "der Arm",
+     "gender": "m"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Each arm has an upper arm, an elbow, a forearm and a hand.",
+     "es": "Cada brazo tiene una parte de arriba, el codo, el antebrazo y la mano.",
+     "de": "Jeder Arm hat einen Oberarm, einen Ellbogen, einen Unterarm und eine Hand."
+    },
+    {
+     "en": "Your arms help you hug, throw, climb and wave.",
+     "es": "Tus brazos te ayudan a abrazar, lanzar, trepar y saludar.",
+     "de": "Mit deinen Armen kannst du umarmen, werfen, klettern und winken."
+    }
+   ]
+  },
+  {
+   "id": "elbow",
+   "group": "touch",
+   "image": "body/elbow.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "elbow",
+     "full": "the elbow"
+    },
+    "es": {
+     "article": "el",
+     "noun": "codo",
+     "full": "el codo",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Ellbogen",
+     "full": "der Ellbogen",
+     "gender": "m"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your elbow bends like a door on a hinge.",
+     "es": "Tu codo se dobla como una puerta con bisagra.",
+     "de": "Dein Ellbogen beugt sich wie eine Tür im Scharnier."
+    },
+    {
+     "en": "Try to lick your elbow – almost nobody can do it!",
+     "es": "Intenta chuparte el codo: ¡casi nadie puede!",
+     "de": "Versuch mal, deinen Ellbogen abzulecken – das schafft fast niemand!"
+    }
+   ]
+  },
+  {
+   "id": "hand",
+   "group": "touch",
+   "image": "body/hand.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "hand",
+     "full": "the hand"
+    },
+    "es": {
+     "article": "la",
+     "noun": "mano",
+     "full": "la mano",
+     "gender": "f"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Hand",
+     "full": "die Hand",
+     "gender": "f"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Each hand has five fingers: a thumb and four more.",
+     "es": "Cada mano tiene cinco dedos: un pulgar y cuatro más.",
+     "de": "Jede Hand hat fünf Finger: einen Daumen und vier weitere."
+    },
+    {
+     "en": "Your thumb can touch all your other fingers, so you can pick up tiny things.",
+     "es": "Tu pulgar puede tocar todos los demás dedos, así puedes coger cosas pequeñitas.",
+     "de": "Dein Daumen kann alle anderen Finger berühren – so kannst du winzige Dinge aufheben."
+    }
+   ]
+  },
+  {
+   "id": "belly-button",
+   "group": "touch",
+   "image": "body/belly-button.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "belly button",
+     "full": "the belly button"
+    },
+    "es": {
+     "article": "el",
+     "noun": "ombligo",
+     "full": "el ombligo",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Bauchnabel",
+     "full": "der Bauchnabel",
+     "gender": "m"
+    }
+   },
+   "sound": {
+    "en": "grumble rumble",
+    "es": "gruuu gruuu",
+    "de": "grummel grummel"
+   },
+   "soundKey": "rumble",
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your belly button is where you were joined to your mum before you were born.",
+     "es": "El ombligo es donde estabas unido a tu mamá antes de nacer.",
+     "de": "Am Bauchnabel warst du mit deiner Mama verbunden, bevor du geboren wurdest."
+    },
+    {
+     "en": "Everybody has a belly button – some go in and some poke out.",
+     "es": "Todo el mundo tiene ombligo: unos hacia dentro y otros hacia fuera.",
+     "de": "Jeder hat einen Bauchnabel – manche gehen nach innen, manche nach außen."
+    }
+   ]
+  },
+  {
+   "id": "knee",
+   "group": "touch",
+   "image": "body/knee.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "knee",
+     "full": "the knee"
+    },
+    "es": {
+     "article": "la",
+     "noun": "rodilla",
+     "full": "la rodilla",
+     "gender": "f"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Knie",
+     "full": "das Knie",
+     "gender": "n"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your knee bends so you can sit, kick and climb stairs.",
+     "es": "Tu rodilla se dobla para que puedas sentarte, dar patadas y subir escaleras.",
+     "de": "Dein Knie beugt sich, damit du sitzen, treten und Treppen steigen kannst."
+    },
+    {
+     "en": "A little round bone called the kneecap protects the front of your knee.",
+     "es": "Un huesito redondo llamado rótula protege la parte de delante de tu rodilla.",
+     "de": "Ein kleiner runder Knochen, die Kniescheibe, schützt dein Knie vorne."
+    }
+   ]
+  },
+  {
+   "id": "foot",
+   "group": "touch",
+   "image": "body/foot.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "foot",
+     "full": "the foot"
+    },
+    "es": {
+     "article": "el",
+     "noun": "pie",
+     "full": "el pie",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Fuß",
+     "full": "der Fuß",
+     "gender": "m"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Each foot has 26 bones – that's a lot of bones!",
+     "es": "Cada pie tiene 26 huesos, ¡muchísimos!",
+     "de": "Jeder Fuß hat 26 Knochen – ganz schön viele!"
+    },
+    {
+     "en": "Your feet carry you everywhere: walking, running, hopping and dancing.",
+     "es": "Tus pies te llevan a todas partes: a caminar, correr, saltar y bailar.",
+     "de": "Deine Füße tragen dich überallhin: beim Gehen, Rennen, Hüpfen und Tanzen."
+    }
+   ]
+  },
+  {
+   "id": "toes",
+   "group": "touch",
+   "image": "body/toes.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "toes",
+     "full": "the toes"
+    },
+    "es": {
+     "article": "los",
+     "noun": "dedos de los pies",
+     "full": "los dedos de los pies",
+     "gender": "m",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Zehen",
+     "full": "die Zehen",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "You have five toes on each foot – ten altogether!",
+     "es": "Tienes cinco dedos en cada pie: ¡diez en total!",
+     "de": "Du hast fünf Zehen an jedem Fuß – zusammen zehn!"
+    },
+    {
+     "en": "Your toes help you balance and push off when you walk.",
+     "es": "Tus dedos de los pies te ayudan a mantener el equilibrio y a impulsarte al caminar.",
+     "de": "Deine Zehen helfen dir, das Gleichgewicht zu halten und dich beim Gehen abzustoßen."
+    }
+   ]
+  }
+ ]
+}

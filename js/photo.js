@@ -5,13 +5,14 @@
    then a sound and one fact. No reading needed. First look at a card
    earns a passport stamp, kept on this device only.
 ============================================================= */
-const PASS={a:[],p:[],v:[],b:[]};
+const PASS={a:[],p:[],v:[],b:[],y:[]};
 try{
   const s=JSON.parse(localStorage.getItem('sl_passport')||'{}');
   if(s&&Array.isArray(s.a))PASS.a=s.a.filter(id=>PHOTO_PACK.animals.some(a=>a.id===id));
   if(s&&Array.isArray(s.p))PASS.p=s.p.filter(id=>PHOTO_PACK.people.some(p=>p.id===id));
   if(s&&Array.isArray(s.v))PASS.v=s.v.filter(id=>PHOTO_PACK.vehicles.some(x=>x.id===id));
   if(s&&Array.isArray(s.b))PASS.b=s.b.filter(id=>PHOTO_PACK.pairs.some(x=>x.id===id));
+  if(s&&Array.isArray(s.y))PASS.y=s.y.filter(id=>(PHOTO_PACK.body||[]).some(x=>x.id===id));
 }catch(e){}
 function photoSave(){try{localStorage.setItem('sl_passport',JSON.stringify(PASS));}catch(e){}}
 function photoStamp(kind,id){
@@ -22,13 +23,18 @@ function photoCount(kind){return (PASS[kind]||[]).length;}
 
 const HAB_COL={farm:'#E7A23A',pets:'#E07A6A',forest:'#2F9A45',jungle:'#1B7A48',savanna:'#D4922A',ocean:'#1E86C4',polar:'#6AAED4',birds:'#4AA0D8',bugs:'#7CB342',world:'#C47B3A'};
 const VEH_ORDER=['helpers','buildingSite','road','rails','air','water'];
-const PHOTO_VIEW={a:'v-king',p:'v-folk',v:'v-ride',b:'v-baby'};
+const PHOTO_VIEW={a:'v-king',p:'v-folk',v:'v-ride',b:'v-baby',y:'v-body'};
 const PH={kind:'a',screen:'pick',hab:null,grp:null,idx:0};
 let PUZ=null,photoGen=0,photoBound=false,photoDrag=null,photoSwallow=false;
 const factN={};
 
 function photoRoot(){return document.getElementById(PHOTO_VIEW[PH.kind]);}
 function vehicleGroups(){return VEH_ORDER.map(id=>(PHOTO_PACK.vehicleGroups||[]).find(g=>g.id===id)).filter(Boolean);}
+function bodyGroups(){return PHOTO_PACK.bodyGroups||[];}
+function bodyItems(gid){
+  const list=(PHOTO_PACK.body||[]).filter(x=>x.group===gid);
+  return list.slice().sort((a,b)=>(b.overview?1:0)-(a.overview?1:0));
+}
 function photoNames(item){return {en:item.names.en.full,es:item.names.es.full,de:item.names.de.full};}
 function photoEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function photoFact(item){
@@ -38,12 +44,14 @@ function photoFact(item){
 function photoList(){
   if(PH.kind==='a')return PHOTO_PACK.animals.filter(a=>a.habitat===PH.hab);
   if(PH.kind==='v')return PHOTO_PACK.vehicles.filter(x=>x.group===PH.grp);
+  if(PH.kind==='y')return bodyItems(PH.grp);
   if(PH.kind==='b')return PHOTO_PACK.pairs;
   return PHOTO_PACK.people.filter(p=>p.group===PH.grp);
 }
 function photoCover(hab){const a=PHOTO_PACK.animals.find(x=>x.habitat===hab);return a?a.image:'';}
 function photoCoverG(grp){const p=PHOTO_PACK.people.find(x=>x.group===grp);return p?p.image:'';}
 function photoCoverV(grp){const x=PHOTO_PACK.vehicles.find(v=>v.group===grp);return x?x.image:'';}
+function photoCoverY(grp){const x=bodyItems(grp)[0];return x?x.image:'';}
 function photoStop(){
   photoGen++;
   if(typeof bridgeStop==='function')bridgeStop();
@@ -79,7 +87,7 @@ function photoSpeak(item){
       const f=photoFact(item);
       if(f&&f[lang])photoAfter(f[lang],lang);
     };
-    if(PH.kind==='a'||PH.kind==='v'){
+    if(PH.kind==='a'||PH.kind==='v'||PH.kind==='y'){
       const snd=item.sound&&item.sound[lang];
       if(snd)photoAfter(snd,lang,fact);else fact();
     }else{
@@ -91,7 +99,7 @@ function photoSpeak(item){
 
 function photoBind(){
   if(photoBound)return;photoBound=true;
-  ['v-king','v-folk','v-ride','v-baby'].forEach(id=>{
+  ['v-king','v-folk','v-ride','v-baby','v-body'].forEach(id=>{
     const el=document.getElementById(id);
     el.addEventListener('click',photoClick);
     el.addEventListener('pointerdown',photoDown);
@@ -104,6 +112,7 @@ function showKing(){photoEnter('a');}
 function showFolk(){photoEnter('p');}
 function showRide(){photoEnter('v');}
 function showBaby(){photoEnter('b');}
+function showBody(){photoEnter('y');}
 function photoEnter(kind){
   photoBind();photoStop();
   PH.kind=kind;PH.screen='pick';PH.hab=null;PH.grp=null;PH.idx=0;PUZ=null;
@@ -113,13 +122,14 @@ function photoRelang(){
   const root=document.querySelector('.view.on');if(!root)return;
   const item=PH.screen==='card'?photoList()[PH.idx]:null;
   const nm=root.querySelector('.phName');
-  if(nm&&item&&PH.kind==='b'){
+  if(nm&&PH.screen==='touch'&&PUZ&&PUZ.item)nm.textContent=PUZ.item.names[lang].full;
+  else if(nm&&item&&PH.kind==='b'){
     const who=root.querySelector('.phMorphTop.gone')?item.adult:item.baby;
     nm.textContent=who.names[lang].full;
   }else if(nm&&item&&item.names)nm.textContent=item.names[lang].full;
   root.querySelectorAll('.phCap').forEach(el=>{
     const id=el.dataset.cap;if(!id)return;
-    const h=PHOTO_PACK.habitats.find(x=>x.id===id)||PHOTO_PACK.groups.find(x=>x.id===id)||vehicleGroups().find(x=>x.id===id);
+    const h=PHOTO_PACK.habitats.find(x=>x.id===id)||PHOTO_PACK.groups.find(x=>x.id===id)||vehicleGroups().find(x=>x.id===id)||bodyGroups().find(x=>x.id===id);
     if(h)el.textContent=h[lang];
   });
   const hero=root.querySelector('.phHero');
@@ -133,7 +143,7 @@ function photoClick(e){
   if(act==='drag')return;
   if(typeof ac==='function')ac();
   if(act==='hab'){PH.hab=id;PH.screen='list';renderPhoto();const h=PHOTO_PACK.habitats.find(x=>x.id===id);if(h)photoSay(h[lang]);}
-  else if(act==='grp'){PH.grp=id;PH.screen='list';renderPhoto();const g=(PH.kind==='v'?vehicleGroups():PHOTO_PACK.groups).find(x=>x.id===id);if(g)photoSay(g[lang]);}
+  else if(act==='grp'){PH.grp=id;PH.screen='list';renderPhoto();const g=(PH.kind==='y'?bodyGroups():PH.kind==='v'?vehicleGroups():PHOTO_PACK.groups).find(x=>x.id===id);if(g)photoSay(g[lang]);}
   else if(act==='open')openCard(id);
   else if(act==='back')photoBack();
   else if(act==='prev')stepCard(-1);
@@ -142,6 +152,8 @@ function photoClick(e){
   else if(act==='hide')startHide();
   else if(act==='live')startLive();
   else if(act==='grow')startGrow();
+  else if(act==='touch')startTouch();
+  else if(act==='touched')touchYes();
   else if(act==='pass'){photoStop();PH.screen='pass';renderPhoto();}
   else if(act==='pick')hideAnswer(b.dataset.ok==='1',b);
   else if(act==='drop')liveAnswer(b.dataset.ok==='1',b);
@@ -155,6 +167,7 @@ function stampItem(kind,id){
   if(kind==='p')return PHOTO_PACK.people.find(x=>x.id===id);
   if(kind==='v')return PHOTO_PACK.vehicles.find(x=>x.id===id);
   if(kind==='b')return PHOTO_PACK.pairs.find(x=>x.id===id);
+  if(kind==='y')return (PHOTO_PACK.body||[]).find(x=>x.id===id);
   return PHOTO_PACK.animals.find(x=>x.id===id);
 }
 function photoBack(){
@@ -207,7 +220,8 @@ function toolsHTML(){
   const hide=PH.kind==='b'?'':'<button type="button" class="phTool phHide" data-act="hide" aria-label="hide">🙈</button>';
   const live=PH.kind==='a'?'<button type="button" class="phTool phLive" data-act="live" aria-label="habitat">🏡</button>':'';
   const grow=PH.kind==='b'?'<button type="button" class="phTool phGrow" data-act="grow" aria-label="match">🐣</button>':'';
-  return `<div class="phTools">${hide}${live}${grow}<button type="button" class="phTool" data-act="pass" aria-label="passport">🛂</button></div>`;
+  const touch=PH.kind==='y'?'<button type="button" class="phTool phTouch" data-act="touch" aria-label="touch">👆</button>':'';
+  return `<div class="phTools">${hide}${live}${grow}${touch}<button type="button" class="phTool" data-act="pass" aria-label="passport">🛂</button></div>`;
 }
 function barHTML(emoji){
   return `<div class="phBar"><button type="button" class="phBack" data-act="back" aria-label="back">⬅️</button><span class="phTitle">${emoji||''}</span></div>`;
@@ -229,6 +243,9 @@ function renderPick(){
     root.innerHTML=toolsHTML()+`<div class="phGrid">${tiles}</div>`;
   }else if(PH.kind==='v'){
     tiles=vehicleGroups().map(g=>`<button type="button" class="phHab" data-act="grp" data-id="${g.id}" aria-label="${photoEsc(g[lang])}"><img src="${photoCoverV(g.id)}" alt="" loading="lazy" decoding="async" draggable="false"><span class="phEm">${g.emoji}</span><span class="phCap" data-cap="${g.id}">${photoEsc(g[lang])}</span></button>`).join('');
+    root.innerHTML=toolsHTML()+`<div class="phGrid">${tiles}</div>`;
+  }else if(PH.kind==='y'){
+    tiles=bodyGroups().map(g=>`<button type="button" class="phHab" data-act="grp" data-id="${g.id}" aria-label="${photoEsc(g[lang])}"><img src="${photoCoverY(g.id)}" alt="" loading="lazy" decoding="async" draggable="false"><span class="phEm">${g.emoji}</span><span class="phCap" data-cap="${g.id}">${photoEsc(g[lang])}</span></button>`).join('');
     root.innerHTML=toolsHTML()+`<div class="phGrid">${tiles}</div>`;
   }else if(PH.kind==='b'){
     tiles=PHOTO_PACK.pairs.map(p=>`<button type="button" class="phAn" data-act="open" data-id="${p.id}" aria-label="${photoEsc(p.baby.names[lang].full)}"><img src="${p.baby.image}" alt="" loading="lazy" decoding="async" draggable="false"></button>`).join('');
@@ -252,7 +269,7 @@ function renderBabyCard(pair,fresh){
     </div>`;
 }
 function renderList(){
-  const meta=PH.kind==='a'?PHOTO_PACK.habitats.find(h=>h.id===PH.hab):PH.kind==='v'?vehicleGroups().find(g=>g.id===PH.grp):PHOTO_PACK.groups.find(g=>g.id===PH.grp);
+  const meta=PH.kind==='a'?PHOTO_PACK.habitats.find(h=>h.id===PH.hab):PH.kind==='v'?vehicleGroups().find(g=>g.id===PH.grp):PH.kind==='y'?bodyGroups().find(g=>g.id===PH.grp):PHOTO_PACK.groups.find(g=>g.id===PH.grp);
   const tiles=photoList().map(it=>`<button type="button" class="phAn" data-act="open" data-id="${it.id}" aria-label="${photoEsc(it.names[lang].full)}"><img src="${it.image}" alt="" loading="lazy" decoding="async" draggable="false"></button>`).join('');
   photoRoot().innerHTML=barHTML(meta?meta.emoji:'')+`<div class="phGrid">${tiles}</div>`;
 }
@@ -280,7 +297,20 @@ function renderPass(){
     +block('a','🦁',PHOTO_PACK.animals)
     +block('p','👥',PHOTO_PACK.people)
     +block('v','🚗',PHOTO_PACK.vehicles)
-    +block('b','🐣',PHOTO_PACK.pairs,p=>p.baby.image,p=>p.baby.names[lang].full);
+    +block('b','🐣',PHOTO_PACK.pairs,p=>p.baby.image,p=>p.baby.names[lang].full)
+    +bodyPass();
+}
+function bodyPass(){
+  const items=PHOTO_PACK.body||[];
+  const have=(PASS.y||[]).length;
+  if(!have)return '<div class="phPassHead">🧒</div><div class="phEmpty">○</div>';
+  return bodyGroups().map(g=>{
+    const tiles=(PASS.y||[]).map(id=>{
+      const it=items.find(x=>x.id===id);if(!it||it.group!==g.id)return '';
+      return `<button type="button" class="phStamp" data-act="stamp" data-kind="y" data-id="${id}" aria-label="${photoEsc(it.names[lang].full)}"><img src="${it.image}" alt="" loading="lazy" decoding="async" draggable="false"></button>`;
+    }).join('');
+    return tiles?`<div class="phPassHead">${g.emoji}</div><div class="phStamps">${tiles}</div>`:'';
+  }).join('');
 }
 
 /* ---- Who's hiding? The photo sharpens on its own. Three pictures, no losing. ---- */
@@ -290,7 +320,7 @@ function startHide(){
   hideRound();
 }
 function hideRound(){
-  const all=PH.kind==='v'?PHOTO_PACK.vehicles:PH.kind==='a'?PHOTO_PACK.animals:PHOTO_PACK.people;
+  const all=PH.kind==='v'?PHOTO_PACK.vehicles:PH.kind==='y'?(PHOTO_PACK.body||[]):PH.kind==='a'?PHOTO_PACK.animals:PHOTO_PACK.people;
   const item=all[Math.floor(Math.random()*all.length)];
   const pool=all.filter(x=>x.id!==item.id);
   const opts=[item];
@@ -418,9 +448,55 @@ function growAnswer(ok,btn){
     });
   }});
 }
+/* ---- Touch your ___! He touches it on himself, then taps the picture. No missing. ---- */
+function touchPrompt(item){
+  const full=item.names[lang].full,noun=item.names.en.noun;
+  if(lang==='es')return '¡Toca '+full+'!';
+  if(lang==='de')return 'Fass '+full+' an!';
+  return 'Touch your '+noun+'!';
+}
+function startTouch(){
+  if(PH.kind!=='y')return;
+  photoStop();PH.screen='touch';
+  PUZ={got:0,miss:0,locked:false,item:null};
+  touchRound();
+}
+function touchRound(){
+  const all=(PHOTO_PACK.body||[]).filter(x=>x.touchable);
+  if(!all.length)return;
+  let item=all[Math.floor(Math.random()*all.length)],guard=0;
+  if(PUZ.item&&all.length>1)while(item.id===PUZ.item.id&&guard++<8)item=all[Math.floor(Math.random()*all.length)];
+  PUZ.item=item;PUZ.locked=false;PH.screen='touch';
+  renderTouch();
+  const gen=photoGen;
+  sayWordBridge(photoNames(item),{then(){
+    if(gen!==photoGen||!PUZ||PUZ.locked)return;
+    photoAfter(touchPrompt(item),lang);
+  }});
+}
+function renderTouch(){
+  const it=PUZ.item;
+  photoRoot().innerHTML=`${barHTML('👆')}
+    <button type="button" class="phTouchCard" data-act="touched"><img class="phHero" src="${it.image}" alt="${photoEsc(it.names[lang].full)}" draggable="false"></button>
+    <div class="phName">${photoEsc(it.names[lang].full)}</div>
+    <button type="button" class="phTouchGo" data-act="touched" aria-label="done">👆</button>`;
+}
+function touchYes(){
+  if(!PUZ||PUZ.locked||PH.screen!=='touch')return;
+  PUZ.locked=true;
+  if(typeof award==='function')award(0);
+  [523,659,784].forEach((f,i)=>beep(f,i*0.07,0.15,'triangle',0.15));
+  const gen=++photoGen,got=PUZ.got;
+  speakFresh(photoYay(),lang,0.8,()=>{
+    if(gen!==photoGen||!PUZ)return;
+    PUZ.got=got+1;
+    if(PUZ.got>=4)photoCheer('👆');
+    else touchRound();
+  });
+}
 function photoCheer(emoji){
   PH.screen='cheer';PUZ=null;
-  const again=emoji==='🏡'?'live':emoji==='🐣'?'grow':'hide';
+  const again=emoji==='🏡'?'live':emoji==='🐣'?'grow':emoji==='👆'?'touch':'hide';
   photoRoot().innerHTML=`${barHTML('')}<div class="phCheer"><div class="phCup">🏆</div><button type="button" class="phAgain" data-act="${again}" aria-label="again">🔁</button></div>`;
   if(typeof rainEmoji==='function')rainEmoji(['⭐','🎉','🏆','✨'],16);
   if(typeof fanfare==='function')fanfare();

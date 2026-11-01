@@ -23,11 +23,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await hookSay();
   await page.mouse.click(180, 320);
   await page.waitForTimeout(300);
-  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 16), 'opens on the home screen with 16 sections');
+  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 17), 'opens on the home screen with 17 sections');
   check(await page.evaluate(() => lang === 'de'), 'starts in German');
 
   console.log('Layout');
-  for (const t of ['home', 'adv', 'city', 'stickers', 'king', 'folk', 'ride', 'baby', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
+  for (const t of ['home', 'adv', 'city', 'stickers', 'king', 'folk', 'ride', 'baby', 'body', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
     await page.evaluate(t => showTab(t), t);
     await page.waitForTimeout(150);
     await page.evaluate(() => { window.scrollTo(0, 500); const v = document.querySelector('.view.on'); v.lastElementChild && v.lastElementChild.scrollIntoView(); });
@@ -527,6 +527,52 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    check(more.wrapped && more.stillCard, 'previous at the start of a list wraps around, and rapid next keeps a real card');
    check(more.gChoices === 3 && more.babyShown && more.gHeld && more.gUp, 'matching a baby to its grown-up: a wrong tap keeps the point');
    check(more.stamped, 'the first vehicle and the first baby earn a passport stamp');
+  }
+
+  {const body = await page.evaluate(async () => {
+     const sleep = ms => new Promise(res => setTimeout(res, ms));
+     const waitFor = async fn => { for (let i = 0; i < 60; i++) { if (fn()) return true; await sleep(100); } return false; };
+     if (rewardOpen) closeReward(false);
+     if (lang !== 'de') $('de').click();
+     BRIDGE = ['de'];
+     window.PHOTO_SAID = window.PHOTO_SAID || [];
+     if (!window._utter0) { window._utter0 = utter; utter = function () { PHOTO_SAID.push(String(arguments[0])); return window._utter0.apply(null, arguments); }; }
+     PHOTO_SAID.length = 0;
+     showTab('body');
+     const ids = [...document.querySelectorAll('#v-body .phHab')].map(b => b.dataset.id);
+     const lazy = [...document.querySelectorAll('#v-body .phHab img')].every(img => img.getAttribute('loading') === 'lazy');
+     document.querySelector('#v-body .phHab[data-id="bones"]').click();
+     const firstId = document.querySelector('#v-body .phAn') && document.querySelector('#v-body .phAn').dataset.id;
+     document.querySelector('#v-body .phAn[data-id="skeleton"]').click();
+     const sk = PHOTO_PACK.body.find(x => x.id === 'skeleton');
+     const hero = document.querySelector('#v-body .phHero');
+     const opened = !!(hero && /body\/.+\.webp/.test(hero.getAttribute('src')) && firstId === 'skeleton');
+     const saidName = await waitFor(() => PHOTO_SAID.some(t => t === sk.names.de.full));
+     const saidFact = await waitFor(() => PHOTO_SAID.some(t => t === sk.facts[0].de));
+     showTab('body');
+     document.querySelector('#v-body .phHab[data-id="heart"]').click();
+     PHOTO_SAID.length = 0;
+     document.querySelector('#v-body .phAn[data-id="heart"]').click();
+     const heart = PHOTO_PACK.body.find(x => x.id === 'heart');
+     const saidHeart = await waitFor(() => PHOTO_SAID.some(t => t === heart.names.de.full));
+     const saidSound = await waitFor(() => PHOTO_SAID.some(t => t === heart.sound.de));
+     showTab('body');
+     document.querySelector('#v-body .phTouch').click();
+     const part = document.querySelector('#v-body .phHero');
+     const shown = !!(part && /body\/.+\.webp/.test(part.getAttribute('src')) && document.querySelector('#v-body .phTouchGo'));
+     const p0 = power;
+     document.querySelector('#v-body [data-act="touched"]').click();
+     document.querySelector('#v-body [data-act="touched"]').click();
+     const once = power === p0 + 1;
+     const pass = JSON.parse(localStorage.getItem('sl_passport') || '{}');
+     showTab('home');
+     return { ids: ids.join(), lazy, opened, saidName, saidFact, saidHeart, saidSound, shown, once, stamped: pass.y && pass.y.includes('skeleton') && pass.y.includes('heart') };
+   });
+   check(body.ids === 'bones,muscles,heart,lungs,brain,tummy,senses,skin,touch' && body.lazy, 'my body shows nine groups, photos loaded lazily');
+   check(body.opened && body.saidName && body.saidFact, 'a body card says the name and a fact, overview first');
+   check(body.saidHeart && body.saidSound, 'a body card with a sound says the sound too');
+   check(body.shown && body.once, 'touch your body: one tap cheers and earns a single point');
+   check(body.stamped, 'body cards earn passport stamps');
   }
 
   // collecting again: a full sticker book starts round 2 from zero; a full museum starts a new round at the next dig
