@@ -1,0 +1,937 @@
+{
+  "version": 1,
+  "imageSize": 512,
+  "format": "webp",
+  "pairs": [
+    {
+      "id": "dog",
+      "baby": {
+        "image": "babies/dog-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "puppy",
+            "full": "the puppy"
+          },
+          "es": {
+            "article": "el",
+            "noun": "cachorro",
+            "full": "el cachorro",
+            "gender": "m"
+          },
+          "de": {
+            "article": "der",
+            "noun": "Welpe",
+            "full": "der Welpe",
+            "gender": "m"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/dog-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "dog",
+            "full": "the dog"
+          },
+          "es": {
+            "article": "el",
+            "noun": "perro",
+            "full": "el perro",
+            "gender": "m"
+          },
+          "de": {
+            "article": "der",
+            "noun": "Hund",
+            "full": "der Hund",
+            "gender": "m"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "Puppies are born with their eyes closed. They open them when they are about two weeks old.",
+          "es": "Los cachorros nacen con los ojos cerrados. Los abren cuando tienen unas dos semanas.",
+          "de": "Welpen kommen mit geschlossenen Augen auf die Welt. Mit etwa zwei Wochen machen sie sie auf."
+        }
+      ]
+    },
+    {
+      "id": "cat",
+      "baby": {
+        "image": "babies/cat-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "kitten",
+            "full": "the kitten"
+          },
+          "es": {
+            "article": "el",
+            "noun": "gatito",
+            "full": "el gatito",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Kätzchen",
+            "full": "das Kätzchen",
+            "gender": "n"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/cat-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "cat",
+            "full": "the cat"
+          },
+          "es": {
+            "article": "el",
+            "noun": "gato",
+            "full": "el gato",
+            "gender": "m"
+          },
+          "de": {
+            "article": "die",
+            "noun": "Katze",
+            "full": "die Katze",
+            "gender": "f"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "Kittens are born with their eyes closed, and they open them after about a week or two.",
+          "es": "Los gatitos nacen con los ojos cerrados y los abren al cabo de una o dos semanas.",
+          "de": "Kätzchen werden mit geschlossenen Augen geboren und öffnen sie nach ein bis zwei Wochen."
+        },
+        {
+          "en": "All kittens start with blue eyes! Their real eye colour shows up as they grow.",
+          "es": "¡Todos los gatitos tienen los ojos azules al principio! Su color de verdad aparece al crecer.",
+          "de": "Alle Kätzchen haben zuerst blaue Augen! Ihre richtige Augenfarbe zeigt sich erst beim Großwerden."
+        }
+      ]
+    },
+    {
+      "id": "chicken",
+      "baby": {
+        "image": "babies/chicken-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "chick",
+            "full": "the chick"
+          },
+          "es": {
+            "article": "el",
+            "noun": "pollito",
+            "full": "el pollito",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Küken",
+            "full": "das Küken",
+            "gender": "n"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/chicken-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "hen",
+            "full": "the hen"
+          },
+          "es": {
+            "article": "la",
+            "noun": "gallina",
+            "full": "la gallina",
+            "gender": "f"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Huhn",
+            "full": "das Huhn",
+            "gender": "n"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "A chick has a tiny hard tip on its beak, called an egg tooth, to crack its way out of the egg.",
+          "es": "El pollito tiene una puntita dura en el pico, el diente de huevo, para romper el cascarón.",
+          "de": "Ein Küken hat eine kleine harte Spitze am Schnabel, den Eizahn, um die Eierschale aufzubrechen."
+        },
+        {
+          "en": "A chick hatches about three weeks after the egg is laid.",
+          "es": "El pollito sale del huevo unas tres semanas después de que lo pongan.",
+          "de": "Ein Küken schlüpft etwa drei Wochen, nachdem das Ei gelegt wurde."
+        }
+      ],
+      "note": "Egg-hatching shot skipped (not clean enough); chick shown standing."
+    },
+    {
+      "id": "duck",
+      "baby": {
+        "image": "babies/duck-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "duckling",
+            "full": "the duckling"
+          },
+          "es": {
+            "article": "el",
+            "noun": "patito",
+            "full": "el patito",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Entenküken",
+            "full": "das Entenküken",
+            "gender": "n"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/duck-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "duck",
+            "full": "the duck"
+          },
+          "es": {
+            "article": "el",
+            "noun": "pato",
+            "full": "el pato",
+            "gender": "m"
+          },
+          "de": {
+            "article": "die",
+            "noun": "Ente",
+            "full": "die Ente",
+            "gender": "f"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "Ducklings follow the first moving thing they see after hatching – usually their mum!",
+          "es": "Los patitos siguen a lo primero que ven moverse al salir del huevo, ¡normalmente a su mamá!",
+          "de": "Entenküken laufen dem Ersten hinterher, das sie nach dem Schlüpfen sehen – meistens ihrer Mama!"
+        },
+        {
+          "en": "Ducklings can swim the very first day they leave the nest.",
+          "es": "Los patitos ya saben nadar el primer día que salen del nido.",
+          "de": "Entenküken können schon am ersten Tag schwimmen, an dem sie das Nest verlassen."
+        }
+      ]
+    },
+    {
+      "id": "cow",
+      "baby": {
+        "image": "babies/cow-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "calf",
+            "full": "the calf"
+          },
+          "es": {
+            "article": "el",
+            "noun": "ternero",
+            "full": "el ternero",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Kalb",
+            "full": "das Kalb",
+            "gender": "n"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/cow-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "cow",
+            "full": "the cow"
+          },
+          "es": {
+            "article": "la",
+            "noun": "vaca",
+            "full": "la vaca",
+            "gender": "f"
+          },
+          "de": {
+            "article": "die",
+            "noun": "Kuh",
+            "full": "die Kuh",
+            "gender": "f"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "A newborn calf can stand up and walk within about an hour of being born!",
+          "es": "¡Un ternero recién nacido puede ponerse de pie y andar en más o menos una hora!",
+          "de": "Ein neugeborenes Kalb kann schon nach etwa einer Stunde stehen und laufen!"
+        }
+      ]
+    },
+    {
+      "id": "horse",
+      "baby": {
+        "image": "babies/horse-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "foal",
+            "full": "the foal"
+          },
+          "es": {
+            "article": "el",
+            "noun": "potro",
+            "full": "el potro",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Fohlen",
+            "full": "das Fohlen",
+            "gender": "n"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/horse-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "horse",
+            "full": "the horse"
+          },
+          "es": {
+            "article": "el",
+            "noun": "caballo",
+            "full": "el caballo",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Pferd",
+            "full": "das Pferd",
+            "gender": "n"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "A foal can stand up only an hour or so after it is born.",
+          "es": "El potro se pone de pie más o menos una hora después de nacer.",
+          "de": "Ein Fohlen steht schon etwa eine Stunde nach der Geburt auf."
+        },
+        {
+          "en": "Foals are born with very long legs – almost as long as a grown-up horse's!",
+          "es": "¡Los potros nacen con las patas larguísimas, casi tan largas como las de un caballo adulto!",
+          "de": "Fohlen kommen mit sehr langen Beinen auf die Welt – fast so lang wie die eines großen Pferdes!"
+        }
+      ]
+    },
+    {
+      "id": "sheep",
+      "baby": {
+        "image": "babies/sheep-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "lamb",
+            "full": "the lamb"
+          },
+          "es": {
+            "article": "el",
+            "noun": "cordero",
+            "full": "el cordero",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Lamm",
+            "full": "das Lamm",
+            "gender": "n"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/sheep-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "sheep",
+            "full": "the sheep"
+          },
+          "es": {
+            "article": "la",
+            "noun": "oveja",
+            "full": "la oveja",
+            "gender": "f"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Schaf",
+            "full": "das Schaf",
+            "gender": "n"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "A lamb and its mother know each other's voices, so they can find each other in a big flock.",
+          "es": "El cordero y su madre reconocen la voz del otro, y así se encuentran en un rebaño grande.",
+          "de": "Lamm und Mutterschaf erkennen sich an der Stimme – so finden sie sich auch in einer großen Herde."
+        }
+      ]
+    },
+    {
+      "id": "pig",
+      "baby": {
+        "image": "babies/pig-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "piglet",
+            "full": "the piglet"
+          },
+          "es": {
+            "article": "el",
+            "noun": "cerdito",
+            "full": "el cerdito",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Ferkel",
+            "full": "das Ferkel",
+            "gender": "n"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/pig-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "pig",
+            "full": "the pig"
+          },
+          "es": {
+            "article": "el",
+            "noun": "cerdo",
+            "full": "el cerdo",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Schwein",
+            "full": "das Schwein",
+            "gender": "n"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "A mother pig can have more than ten piglets at once!",
+          "es": "¡Una cerda puede tener más de diez cerditos de una vez!",
+          "de": "Eine Muttersau kann mehr als zehn Ferkel auf einmal bekommen!"
+        },
+        {
+          "en": "Each piglet picks its own favourite spot to drink milk and goes back to it every time.",
+          "es": "Cada cerdito elige su sitio favorito para tomar leche y siempre vuelve al mismo.",
+          "de": "Jedes Ferkel sucht sich seinen Lieblingsplatz zum Milchtrinken und geht immer wieder dorthin."
+        }
+      ]
+    },
+    {
+      "id": "lion",
+      "baby": {
+        "image": "babies/lion-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "lion cub",
+            "full": "the lion cub"
+          },
+          "es": {
+            "article": "el",
+            "noun": "cachorro de león",
+            "full": "el cachorro de león",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Löwenjunge",
+            "full": "das Löwenjunge",
+            "gender": "n"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/lion-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "lion",
+            "full": "the lion"
+          },
+          "es": {
+            "article": "el",
+            "noun": "león",
+            "full": "el león",
+            "gender": "m"
+          },
+          "de": {
+            "article": "der",
+            "noun": "Löwe",
+            "full": "der Löwe",
+            "gender": "m"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "Lion cubs are born with spots on their fur, which slowly fade as they grow up.",
+          "es": "Los cachorros de león nacen con manchas en el pelo, que se van borrando al crecer.",
+          "de": "Löwenjunge haben bei der Geburt Flecken im Fell, die beim Großwerden langsam verschwinden."
+        },
+        {
+          "en": "Only boy lions grow a big fluffy mane, and it starts growing when they are about one year old.",
+          "es": "Solo a los leones machos les crece una gran melena, y empieza a salir cuando tienen más o menos un año.",
+          "de": "Nur männliche Löwen bekommen eine große Mähne – sie fängt an zu wachsen, wenn sie etwa ein Jahr alt sind."
+        }
+      ]
+    },
+    {
+      "id": "kangaroo",
+      "baby": {
+        "image": "babies/kangaroo-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "joey",
+            "full": "the joey"
+          },
+          "es": {
+            "article": "la",
+            "noun": "cría de canguro",
+            "full": "la cría de canguro",
+            "gender": "f"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Kängurujunge",
+            "full": "das Kängurujunge",
+            "gender": "n"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/kangaroo-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "kangaroo",
+            "full": "the kangaroo"
+          },
+          "es": {
+            "article": "el",
+            "noun": "canguro",
+            "full": "el canguro",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Känguru",
+            "full": "das Känguru",
+            "gender": "n"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "A newborn joey is as tiny as a jelly bean! It crawls into its mum's pouch and stays there for months.",
+          "es": "¡Una cría de canguro recién nacida es tan pequeña como una gominola! Se mete en la bolsa de su mamá y se queda allí meses.",
+          "de": "Ein neugeborenes Kängurujunges ist so klein wie ein Gummibärchen! Es krabbelt in Mamas Beutel und bleibt dort monatelang."
+        }
+      ],
+      "note": "Joey pictured peeking out of its mother's pouch."
+    },
+    {
+      "id": "frog",
+      "baby": {
+        "image": "babies/frog-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "tadpole",
+            "full": "the tadpole"
+          },
+          "es": {
+            "article": "el",
+            "noun": "renacuajo",
+            "full": "el renacuajo",
+            "gender": "m"
+          },
+          "de": {
+            "article": "die",
+            "noun": "Kaulquappe",
+            "full": "die Kaulquappe",
+            "gender": "f"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/frog-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "frog",
+            "full": "the frog"
+          },
+          "es": {
+            "article": "la",
+            "noun": "rana",
+            "full": "la rana",
+            "gender": "f"
+          },
+          "de": {
+            "article": "der",
+            "noun": "Frosch",
+            "full": "der Frosch",
+            "gender": "m"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "Tadpoles live in water and breathe with gills, just like fish.",
+          "es": "Los renacuajos viven en el agua y respiran con branquias, como los peces.",
+          "de": "Kaulquappen leben im Wasser und atmen mit Kiemen, genau wie Fische."
+        },
+        {
+          "en": "As a tadpole grows, it gets legs, and its tail slowly disappears until it is a frog!",
+          "es": "Al crecer, al renacuajo le salen patas y la cola va desapareciendo, ¡hasta que es una rana!",
+          "de": "Wenn die Kaulquappe wächst, bekommt sie Beine, und der Schwanz verschwindet langsam – bis sie ein Frosch ist!"
+        }
+      ],
+      "note": "Common frog (Rana temporaria)-style adult; tadpoles without legs yet."
+    },
+    {
+      "id": "butterfly",
+      "baby": {
+        "image": "babies/butterfly-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "caterpillar",
+            "full": "the caterpillar"
+          },
+          "es": {
+            "article": "la",
+            "noun": "oruga",
+            "full": "la oruga",
+            "gender": "f"
+          },
+          "de": {
+            "article": "die",
+            "noun": "Raupe",
+            "full": "die Raupe",
+            "gender": "f"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/butterfly-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "butterfly",
+            "full": "the butterfly"
+          },
+          "es": {
+            "article": "la",
+            "noun": "mariposa",
+            "full": "la mariposa",
+            "gender": "f"
+          },
+          "de": {
+            "article": "der",
+            "noun": "Schmetterling",
+            "full": "der Schmetterling",
+            "gender": "m"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "A caterpillar eats and eats, then makes a hard case called a chrysalis. Inside, it turns into a butterfly!",
+          "es": "La oruga come y come, y luego hace una cápsula llamada crisálida. ¡Dentro se convierte en mariposa!",
+          "de": "Die Raupe frisst und frisst, dann baut sie eine harte Hülle, die Puppe. Darin verwandelt sie sich in einen Schmetterling!"
+        },
+        {
+          "en": "Monarch caterpillars eat only one kind of plant: milkweed.",
+          "es": "Las orugas de la mariposa monarca solo comen un tipo de planta: el algodoncillo.",
+          "de": "Monarchfalter-Raupen fressen nur eine einzige Pflanzenart: die Seidenpflanze."
+        }
+      ],
+      "note": "Monarch caterpillar on milkweed / monarch butterfly."
+    },
+    {
+      "id": "swan",
+      "baby": {
+        "image": "babies/swan-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "cygnet",
+            "full": "the cygnet"
+          },
+          "es": {
+            "article": "el",
+            "noun": "polluelo de cisne",
+            "full": "el polluelo de cisne",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Schwanenküken",
+            "full": "das Schwanenküken",
+            "gender": "n"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/swan-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "swan",
+            "full": "the swan"
+          },
+          "es": {
+            "article": "el",
+            "noun": "cisne",
+            "full": "el cisne",
+            "gender": "m"
+          },
+          "de": {
+            "article": "der",
+            "noun": "Schwan",
+            "full": "der Schwan",
+            "gender": "m"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "Baby swans are fluffy and grey. They turn white as they grow up.",
+          "es": "Los polluelos de cisne son grises y esponjosos. Se vuelven blancos al crecer.",
+          "de": "Schwanenküken sind flauschig und grau. Erst beim Großwerden werden sie weiß."
+        },
+        {
+          "en": "Cygnets sometimes ride on their parents' backs to stay warm and safe!",
+          "es": "¡A veces los polluelos de cisne viajan sobre la espalda de sus padres para estar calentitos y seguros!",
+          "de": "Schwanenküken reiten manchmal auf dem Rücken ihrer Eltern, um warm und sicher zu sein!"
+        }
+      ]
+    },
+    {
+      "id": "deer",
+      "baby": {
+        "image": "babies/deer-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "fawn",
+            "full": "the fawn"
+          },
+          "es": {
+            "article": "el",
+            "noun": "cervatillo",
+            "full": "el cervatillo",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Hirschkalb",
+            "full": "das Hirschkalb",
+            "gender": "n"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/deer-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "deer",
+            "full": "the deer"
+          },
+          "es": {
+            "article": "el",
+            "noun": "ciervo",
+            "full": "el ciervo",
+            "gender": "m"
+          },
+          "de": {
+            "article": "der",
+            "noun": "Hirsch",
+            "full": "der Hirsch",
+            "gender": "m"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "A fawn's white spots help it hide in the sunny, speckled forest. The spots fade as it grows.",
+          "es": "Las manchas blancas del cervatillo le ayudan a esconderse en el bosque. Se le van borrando al crecer.",
+          "de": "Die weißen Flecken helfen dem Hirschkalb, sich im Wald zu verstecken. Beim Großwerden verschwinden sie."
+        },
+        {
+          "en": "Only boy red deer grow antlers, and they lose them and grow new ones every year!",
+          "es": "¡Solo a los ciervos machos les crecen cuernas, y se les caen y les salen nuevas cada año!",
+          "de": "Nur männliche Hirsche bekommen ein Geweih – und sie werfen es jedes Jahr ab und bekommen ein neues!"
+        }
+      ],
+      "note": "Red deer: spotted fawn and stag."
+    },
+    {
+      "id": "elephant",
+      "baby": {
+        "image": "babies/elephant-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "baby elephant",
+            "full": "the baby elephant"
+          },
+          "es": {
+            "article": "la",
+            "noun": "cría de elefante",
+            "full": "la cría de elefante",
+            "gender": "f"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Elefantenbaby",
+            "full": "das Elefantenbaby",
+            "gender": "n"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/elephant-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "elephant",
+            "full": "the elephant"
+          },
+          "es": {
+            "article": "el",
+            "noun": "elefante",
+            "full": "el elefante",
+            "gender": "m"
+          },
+          "de": {
+            "article": "der",
+            "noun": "Elefant",
+            "full": "der Elefant",
+            "gender": "m"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "A newborn elephant weighs about 100 kilos – more than a grown-up person!",
+          "es": "Una cría de elefante recién nacida pesa unos 100 kilos, ¡más que una persona mayor!",
+          "de": "Ein neugeborenes Elefantenbaby wiegt etwa 100 Kilo – mehr als ein Erwachsener!"
+        },
+        {
+          "en": "Baby elephants sometimes suck their trunks, just like a child sucks their thumb.",
+          "es": "Las crías de elefante a veces se chupan la trompa, como un niño se chupa el dedo.",
+          "de": "Elefantenbabys nuckeln manchmal an ihrem Rüssel – so wie Kinder am Daumen."
+        }
+      ],
+      "note": "African elephant."
+    },
+    {
+      "id": "penguin",
+      "baby": {
+        "image": "babies/penguin-baby.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "penguin chick",
+            "full": "the penguin chick"
+          },
+          "es": {
+            "article": "el",
+            "noun": "polluelo de pingüino",
+            "full": "el polluelo de pingüino",
+            "gender": "m"
+          },
+          "de": {
+            "article": "das",
+            "noun": "Pinguinküken",
+            "full": "das Pinguinküken",
+            "gender": "n"
+          }
+        }
+      },
+      "adult": {
+        "image": "babies/penguin-adult.webp",
+        "names": {
+          "en": {
+            "article": "the",
+            "noun": "emperor penguin",
+            "full": "the emperor penguin"
+          },
+          "es": {
+            "article": "el",
+            "noun": "pingüino emperador",
+            "full": "el pingüino emperador",
+            "gender": "m"
+          },
+          "de": {
+            "article": "der",
+            "noun": "Kaiserpinguin",
+            "full": "der Kaiserpinguin",
+            "gender": "m"
+          }
+        }
+      },
+      "facts": [
+        {
+          "en": "Emperor penguin chicks stay warm sitting on their parents' feet, under a cosy fold of skin.",
+          "es": "Los polluelos de pingüino emperador se calientan sentados en los pies de sus padres, bajo un pliegue de piel.",
+          "de": "Kaiserpinguin-Küken wärmen sich auf den Füßen ihrer Eltern, unter einer kuscheligen Hautfalte."
+        },
+        {
+          "en": "The chick's fluffy grey down isn't waterproof, so it must grow new feathers before it can swim.",
+          "es": "El plumón gris del polluelo no es impermeable, así que necesita plumas nuevas antes de poder nadar.",
+          "de": "Der graue Flaum des Kükens ist nicht wasserdicht – erst mit neuen Federn kann es schwimmen."
+        }
+      ]
+    }
+  ]
+}

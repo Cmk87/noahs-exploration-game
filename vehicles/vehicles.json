@@ -1,0 +1,1288 @@
+{
+  "version": 1,
+  "imageSize": 512,
+  "format": "webp",
+  "groups": [
+    {
+      "id": "road",
+      "en": "On the road",
+      "es": "En la carretera",
+      "de": "Auf der Straße",
+      "emoji": "🚗"
+    },
+    {
+      "id": "buildingSite",
+      "en": "Building site",
+      "es": "La obra",
+      "de": "Die Baustelle",
+      "emoji": "🏗️"
+    },
+    {
+      "id": "helpers",
+      "en": "Helpers",
+      "es": "Los ayudantes",
+      "de": "Die Helfer",
+      "emoji": "🚨"
+    },
+    {
+      "id": "rails",
+      "en": "On the rails",
+      "es": "Sobre raíles",
+      "de": "Auf Schienen",
+      "emoji": "🚆"
+    },
+    {
+      "id": "air",
+      "en": "In the air",
+      "es": "En el aire",
+      "de": "In der Luft",
+      "emoji": "✈️"
+    },
+    {
+      "id": "water",
+      "en": "On the water",
+      "es": "En el agua",
+      "de": "Auf dem Wasser",
+      "emoji": "⛵"
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "fire-truck",
+      "group": "helpers",
+      "image": "vehicles/fire-truck.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "fire truck",
+          "full": "the fire truck"
+        },
+        "es": {
+          "article": "el",
+          "noun": "camión de bomberos",
+          "full": "el camión de bomberos",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Feuerwehrauto",
+          "full": "das Feuerwehrauto",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "nee-naw nee-naw",
+        "es": "ni-no ni-no",
+        "de": "tatü-tata"
+      },
+      "facts": [
+        {
+          "en": "A fire truck carries its own big tank of water, and it can also suck up water from a fire hydrant in the street!",
+          "es": "¡El camión de bomberos lleva su propio tanque de agua, y también puede coger agua de las bocas de riego de la calle!",
+          "de": "Das Feuerwehrauto hat einen eigenen großen Wassertank – und es kann auch Wasser aus einem Hydranten auf der Straße holen!"
+        },
+        {
+          "en": "Some fire trucks have a long ladder that can reach the windows of a ten-floor building!",
+          "es": "¡Algunos camiones de bomberos tienen una escalera tan larga que llega a las ventanas de un edificio de diez pisos!",
+          "de": "Manche Feuerwehrautos haben eine lange Leiter, die bis zu den Fenstern eines zehnstöckigen Hauses reicht!"
+        }
+      ]
+    },
+    {
+      "id": "police-car",
+      "group": "helpers",
+      "image": "vehicles/police-car.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "police car",
+          "full": "the police car"
+        },
+        "es": {
+          "article": "el",
+          "noun": "coche de policía",
+          "full": "el coche de policía",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Polizeiauto",
+          "full": "das Polizeiauto",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "nee-naw nee-naw",
+        "es": "ni-no ni-no",
+        "de": "tatü-tata"
+      },
+      "facts": [
+        {
+          "en": "Police cars have flashing blue lights and a siren so other cars know to move out of the way.",
+          "es": "Los coches de policía tienen luces azules que parpadean y una sirena para que los demás coches se aparten.",
+          "de": "Polizeiautos haben blinkendes Blaulicht und ein Martinshorn, damit die anderen Autos Platz machen."
+        },
+        {
+          "en": "Police officers use a radio in the car to talk to each other and find out where help is needed.",
+          "es": "Los policías usan una radio en el coche para hablar entre ellos y saber dónde hace falta ayuda.",
+          "de": "Polizisten sprechen im Auto über Funk miteinander und erfahren so, wo Hilfe gebraucht wird."
+        }
+      ]
+    },
+    {
+      "id": "ambulance",
+      "group": "helpers",
+      "image": "vehicles/ambulance.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "ambulance",
+          "full": "the ambulance"
+        },
+        "es": {
+          "article": "la",
+          "noun": "ambulancia",
+          "full": "la ambulancia",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Krankenwagen",
+          "full": "der Krankenwagen",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "nee-naw nee-naw",
+        "es": "ni-no ni-no",
+        "de": "tatü-tata"
+      },
+      "facts": [
+        {
+          "en": "The word AMBULANCE is often written backwards on the front, so drivers can read it the right way in their mirror!",
+          "es": "¡La palabra AMBULANCIA suele estar escrita al revés en la parte delantera, para que los conductores la lean bien en su espejo!",
+          "de": "Auf vielen Krankenwagen steht vorne ein Wort spiegelverkehrt – so können Autofahrer es im Rückspiegel richtig lesen!"
+        },
+        {
+          "en": "Inside an ambulance there is a bed on wheels called a stretcher, so a poorly person can lie down on the way to hospital.",
+          "es": "Dentro de la ambulancia hay una cama con ruedas llamada camilla, para que la persona enferma vaya tumbada al hospital.",
+          "de": "Im Krankenwagen gibt es ein Bett mit Rädern, die Trage – so kann ein kranker Mensch auf dem Weg ins Krankenhaus liegen."
+        }
+      ]
+    },
+    {
+      "id": "tow-truck",
+      "group": "helpers",
+      "image": "vehicles/tow-truck.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "tow truck",
+          "full": "the tow truck"
+        },
+        "es": {
+          "article": "la",
+          "noun": "grúa de remolque",
+          "full": "la grúa de remolque",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Abschleppwagen",
+          "full": "der Abschleppwagen",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "When a car breaks down, a tow truck carries it to the garage to be fixed.",
+          "es": "Cuando un coche se estropea, la grúa lo lleva al taller para que lo arreglen.",
+          "de": "Wenn ein Auto kaputt ist, bringt der Abschleppwagen es in die Werkstatt."
+        },
+        {
+          "en": "The back of this tow truck tilts down like a slide, and a strong rope called a winch pulls the car up on top.",
+          "es": "La parte de atrás de esta grúa se inclina como un tobogán, y un cable fuerte con un torno sube el coche arriba.",
+          "de": "Die Ladefläche kippt nach hinten wie eine Rutsche, und eine Seilwinde zieht das Auto hinauf."
+        }
+      ],
+      "note": "Flatbed (tilt-bed) tow truck carrying a car."
+    },
+    {
+      "id": "snowplow",
+      "group": "helpers",
+      "image": "vehicles/snowplow.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "snowplow",
+          "full": "the snowplow"
+        },
+        "es": {
+          "article": "la",
+          "noun": "quitanieves",
+          "full": "la quitanieves",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Schneepflug",
+          "full": "der Schneepflug",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A snowplow has a big blade at the front that pushes the snow off the road.",
+          "es": "La quitanieves tiene una pala grande delante que empuja la nieve fuera de la carretera.",
+          "de": "Der Schneepflug hat vorne ein großes Schild, das den Schnee von der Straße schiebt."
+        },
+        {
+          "en": "Many snowplows also scatter salt, because salt helps melt the ice so cars don't slip.",
+          "es": "Muchas quitanieves también echan sal, porque la sal ayuda a derretir el hielo para que los coches no resbalen.",
+          "de": "Viele Schneepflüge streuen auch Salz, denn Salz lässt das Eis schmelzen, damit die Autos nicht rutschen."
+        }
+      ]
+    },
+    {
+      "id": "garbage-truck",
+      "group": "helpers",
+      "image": "vehicles/garbage-truck.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "garbage truck",
+          "full": "the garbage truck"
+        },
+        "es": {
+          "article": "el",
+          "noun": "camión de la basura",
+          "full": "el camión de la basura",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Müllauto",
+          "full": "das Müllauto",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A garbage truck has a strong press inside that squashes the rubbish so lots more fits in.",
+          "es": "El camión de la basura tiene una prensa dentro que aplasta la basura para que quepa mucha más.",
+          "de": "Im Müllauto gibt es eine starke Presse, die den Müll zusammendrückt, damit viel mehr hineinpasst."
+        },
+        {
+          "en": "In Madrid, lots of garbage trucks work at night while most people are asleep!",
+          "es": "¡En Madrid, muchos camiones de la basura trabajan por la noche, mientras casi todos duermen!",
+          "de": "In Madrid fahren viele Müllautos nachts, während die meisten Menschen schlafen!"
+        }
+      ]
+    },
+    {
+      "id": "excavator",
+      "group": "buildingSite",
+      "image": "vehicles/excavator.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "digger",
+          "full": "the digger"
+        },
+        "es": {
+          "article": "la",
+          "noun": "excavadora",
+          "full": "la excavadora",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Bagger",
+          "full": "der Bagger",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "brum brum",
+        "es": "brum brum",
+        "de": "brumm brumm"
+      },
+      "facts": [
+        {
+          "en": "The top part of a digger, with the driver's cabin and the arm, can spin all the way round in a circle!",
+          "es": "¡La parte de arriba de la excavadora, con la cabina y el brazo, puede girar una vuelta entera!",
+          "de": "Der obere Teil vom Bagger mit Fahrerkabine und Arm kann sich einmal ganz im Kreis drehen!"
+        },
+        {
+          "en": "Diggers often drive on tracks instead of wheels, so they don't sink into soft mud.",
+          "es": "Las excavadoras a menudo van sobre orugas en vez de ruedas, para no hundirse en el barro.",
+          "de": "Bagger fahren oft auf Ketten statt auf Rädern, damit sie im weichen Matsch nicht einsinken."
+        }
+      ],
+      "note": "English noun is 'digger' (what kids say); id kept as excavator."
+    },
+    {
+      "id": "bulldozer",
+      "group": "buildingSite",
+      "image": "vehicles/bulldozer.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "bulldozer",
+          "full": "the bulldozer"
+        },
+        "es": {
+          "article": "el",
+          "noun": "bulldozer",
+          "full": "el bulldozer",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Planierraupe",
+          "full": "die Planierraupe",
+          "gender": "f"
+        }
+      },
+      "sound": {
+        "en": "brum brum",
+        "es": "brum brum",
+        "de": "brumm brumm"
+      },
+      "facts": [
+        {
+          "en": "A bulldozer has a huge flat blade at the front to push dirt and rocks and make the ground flat.",
+          "es": "El bulldozer tiene una pala enorme y plana delante para empujar tierra y piedras y dejar el suelo llano.",
+          "de": "Die Planierraupe hat vorne ein riesiges flaches Schild, das Erde und Steine schiebt und den Boden eben macht."
+        },
+        {
+          "en": "Bulldozers move on metal tracks, like a tank, so they can drive over bumpy, muddy ground.",
+          "es": "El bulldozer se mueve sobre orugas de metal, como un tanque, para avanzar por suelo con baches y barro.",
+          "de": "Planierraupen fahren auf Metallketten – so kommen sie über holprigen, matschigen Boden."
+        }
+      ]
+    },
+    {
+      "id": "dump-truck",
+      "group": "buildingSite",
+      "image": "vehicles/dump-truck.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "dump truck",
+          "full": "the dump truck"
+        },
+        "es": {
+          "article": "el",
+          "noun": "camión volquete",
+          "full": "el camión volquete",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Kipplaster",
+          "full": "der Kipplaster",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "beep beep beep",
+        "es": "pi pi pi",
+        "de": "piep piep piep"
+      },
+      "facts": [
+        {
+          "en": "The big box on the back tips up to pour out sand, dirt or stones all at once.",
+          "es": "La caja grande de atrás se levanta para soltar arena, tierra o piedras de una vez.",
+          "de": "Die große Mulde hinten kippt hoch und schüttet Sand, Erde oder Steine auf einmal aus."
+        },
+        {
+          "en": "The biggest dump trucks in the world have tyres much taller than a grown-up!",
+          "es": "¡Los camiones volquete más grandes del mundo tienen ruedas mucho más altas que una persona mayor!",
+          "de": "Die größten Kipplaster der Welt haben Reifen, die viel höher sind als ein Erwachsener!"
+        }
+      ]
+    },
+    {
+      "id": "crane",
+      "group": "buildingSite",
+      "image": "vehicles/crane.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "crane",
+          "full": "the crane"
+        },
+        "es": {
+          "article": "la",
+          "noun": "grúa",
+          "full": "la grúa",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Kran",
+          "full": "der Kran",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A tower crane can grow taller: workers add new pieces to the tower as the building gets higher.",
+          "es": "La grúa torre puede crecer: los trabajadores le añaden piezas a medida que el edificio sube.",
+          "de": "Ein Turmkran kann wachsen: Arbeiter setzen neue Teile in den Turm ein, wenn das Haus höher wird."
+        },
+        {
+          "en": "Heavy concrete blocks on the short arm balance the crane so it doesn't tip over.",
+          "es": "Unos bloques de hormigón muy pesados en el brazo corto equilibran la grúa para que no se caiga.",
+          "de": "Schwere Betonklötze am kurzen Arm halten den Kran im Gleichgewicht, damit er nicht umkippt."
+        }
+      ]
+    },
+    {
+      "id": "cement-mixer",
+      "group": "buildingSite",
+      "image": "vehicles/cement-mixer.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "cement mixer",
+          "full": "the cement mixer"
+        },
+        "es": {
+          "article": "la",
+          "noun": "hormigonera",
+          "full": "la hormigonera",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Betonmischer",
+          "full": "der Betonmischer",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "The big drum keeps turning round and round so the concrete inside stays soft and doesn't go hard.",
+          "es": "El tambor grande gira y gira para que el hormigón de dentro siga blando y no se endurezca.",
+          "de": "Die große Trommel dreht sich immer weiter, damit der Beton darin weich bleibt und nicht hart wird."
+        },
+        {
+          "en": "Concrete is made by mixing cement, sand, little stones and water.",
+          "es": "El hormigón se hace mezclando cemento, arena, piedrecitas y agua.",
+          "de": "Beton macht man, indem man Zement, Sand, kleine Steine und Wasser mischt."
+        }
+      ]
+    },
+    {
+      "id": "car",
+      "group": "road",
+      "image": "vehicles/car.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "car",
+          "full": "the car"
+        },
+        "es": {
+          "article": "el",
+          "noun": "coche",
+          "full": "el coche",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Auto",
+          "full": "das Auto",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "beep beep",
+        "es": "pi pi",
+        "de": "tüt tüt"
+      },
+      "facts": [
+        {
+          "en": "One of the very first cars was built by Carl Benz in Germany in 1886. It had only three wheels!",
+          "es": "Uno de los primeros coches lo construyó Carl Benz en Alemania en 1886. ¡Solo tenía tres ruedas!",
+          "de": "Eines der allerersten Autos baute Carl Benz 1886 in Deutschland. Es hatte nur drei Räder!"
+        },
+        {
+          "en": "Electric cars don't need petrol: they plug in to charge, a bit like a phone.",
+          "es": "Los coches eléctricos no necesitan gasolina: se enchufan para cargarse, como un móvil.",
+          "de": "Elektroautos brauchen kein Benzin: Man steckt sie zum Laden ein, ein bisschen wie ein Handy."
+        }
+      ]
+    },
+    {
+      "id": "taxi",
+      "group": "road",
+      "image": "vehicles/taxi.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "taxi",
+          "full": "the taxi"
+        },
+        "es": {
+          "article": "el",
+          "noun": "taxi",
+          "full": "el taxi",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Taxi",
+          "full": "das Taxi",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Taxis in Madrid are white with a red stripe on the front door.",
+          "es": "Los taxis de Madrid son blancos con una franja roja en la puerta de delante.",
+          "de": "Die Taxis in Madrid sind weiß mit einem roten Streifen an der Vordertür."
+        },
+        {
+          "en": "When the green light on the roof of a Madrid taxi is on, it means the taxi is free!",
+          "es": "¡Cuando la luz verde del techo de un taxi de Madrid está encendida, significa que está libre!",
+          "de": "Wenn das grüne Licht auf dem Dach eines Madrider Taxis leuchtet, ist das Taxi frei!"
+        }
+      ],
+      "note": "Pictured as a Madrid taxi (white, red diagonal door stripe, green roof light); no text or licence plate."
+    },
+    {
+      "id": "school-bus",
+      "group": "road",
+      "image": "vehicles/school-bus.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "school bus",
+          "full": "the school bus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "autobús escolar",
+          "full": "el autobús escolar",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Schulbus",
+          "full": "der Schulbus",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "In America, school buses are painted bright yellow so everyone can see them easily.",
+          "es": "En Estados Unidos, los autobuses escolares son amarillo brillante para que todo el mundo los vea bien.",
+          "de": "In Amerika sind Schulbusse knallgelb, damit alle sie gut sehen können."
+        },
+        {
+          "en": "When an American school bus stops, a little STOP sign swings out from its side, and all the cars must wait.",
+          "es": "Cuando un autobús escolar americano para, saca una señal de STOP por un lado y todos los coches tienen que esperar.",
+          "de": "Wenn ein amerikanischer Schulbus hält, klappt seitlich ein kleines STOPP-Schild heraus, und alle Autos müssen warten."
+        }
+      ],
+      "note": "American-style yellow school bus; facts say 'In America'."
+    },
+    {
+      "id": "city-bus",
+      "group": "road",
+      "image": "vehicles/city-bus.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "bus",
+          "full": "the bus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "autobús",
+          "full": "el autobús",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Bus",
+          "full": "der Bus",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Many city buses can 'kneel': they tilt down at the door so it's easier to climb on with a pushchair.",
+          "es": "Muchos autobuses de ciudad se pueden 'arrodillar': se inclinan en la puerta para que sea más fácil subir con un carrito.",
+          "de": "Viele Stadtbusse können sich 'hinknien': Sie senken sich an der Tür, damit man mit dem Kinderwagen leichter einsteigt."
+        },
+        {
+          "en": "One bus can carry as many people as lots and lots of cars, so it keeps the streets less busy.",
+          "es": "Un autobús lleva a tanta gente como muchísimos coches, y así hay menos tráfico en las calles.",
+          "de": "Ein Bus fährt so viele Menschen wie ganz viele Autos – so sind die Straßen weniger voll."
+        }
+      ]
+    },
+    {
+      "id": "bicycle",
+      "group": "road",
+      "image": "vehicles/bicycle.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "bicycle",
+          "full": "the bicycle"
+        },
+        "es": {
+          "article": "la",
+          "noun": "bicicleta",
+          "full": "la bicicleta",
+          "gender": "f"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Fahrrad",
+          "full": "das Fahrrad",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "ring ring",
+        "es": "ring ring",
+        "de": "kling kling"
+      },
+      "facts": [
+        {
+          "en": "A bicycle has no engine: your legs make it go!",
+          "es": "La bicicleta no tiene motor: ¡tus piernas la hacen andar!",
+          "de": "Ein Fahrrad hat keinen Motor: Deine Beine bringen es zum Fahren!"
+        },
+        {
+          "en": "The first bicycle, made by Karl Drais in Germany in 1817, had no pedals – you pushed it along with your feet, like a balance bike!",
+          "es": "La primera bicicleta, de Karl Drais en Alemania en 1817, no tenía pedales: ¡se empujaba con los pies, como una bici sin pedales!",
+          "de": "Das erste Fahrrad, 1817 von Karl Drais in Deutschland gebaut, hatte keine Pedale – man stieß sich mit den Füßen ab, wie beim Laufrad!"
+        }
+      ]
+    },
+    {
+      "id": "motorcycle",
+      "group": "road",
+      "image": "vehicles/motorcycle.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "motorcycle",
+          "full": "the motorcycle"
+        },
+        "es": {
+          "article": "la",
+          "noun": "moto",
+          "full": "la moto",
+          "gender": "f"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Motorrad",
+          "full": "das Motorrad",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "vroom vroom",
+        "es": "brum brum",
+        "de": "brumm brumm"
+      },
+      "facts": [
+        {
+          "en": "A motorcycle has two wheels, and the rider leans to the side to go round a bend.",
+          "es": "La moto tiene dos ruedas, y el piloto se inclina hacia un lado para tomar las curvas.",
+          "de": "Ein Motorrad hat zwei Räder, und der Fahrer legt sich in die Kurve."
+        },
+        {
+          "en": "Motorcycle riders always wear a helmet to keep their heads safe.",
+          "es": "Los que van en moto siempre llevan casco para proteger la cabeza.",
+          "de": "Motorradfahrer tragen immer einen Helm, damit ihr Kopf geschützt ist."
+        }
+      ]
+    },
+    {
+      "id": "tractor",
+      "group": "road",
+      "image": "vehicles/tractor.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "tractor",
+          "full": "the tractor"
+        },
+        "es": {
+          "article": "el",
+          "noun": "tractor",
+          "full": "el tractor",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Traktor",
+          "full": "der Traktor",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "chug chug",
+        "es": "brum brum",
+        "de": "tuck tuck"
+      },
+      "facts": [
+        {
+          "en": "Tractors have giant back wheels with deep bumps so they don't get stuck in muddy fields.",
+          "es": "Los tractores tienen ruedas traseras enormes con tacos para no quedarse atascados en el barro.",
+          "de": "Traktoren haben riesige Hinterräder mit dickem Profil, damit sie auf dem matschigen Feld nicht stecken bleiben."
+        },
+        {
+          "en": "Farmers use tractors to pull a plough, which turns over the soil before planting seeds.",
+          "es": "Los agricultores usan el tractor para tirar del arado, que remueve la tierra antes de sembrar.",
+          "de": "Bauern ziehen mit dem Traktor einen Pflug, der die Erde umgräbt, bevor gesät wird."
+        }
+      ]
+    },
+    {
+      "id": "ice-cream-van",
+      "group": "road",
+      "image": "vehicles/ice-cream-van.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "ice-cream van",
+          "full": "the ice-cream van"
+        },
+        "es": {
+          "article": "la",
+          "noun": "furgoneta de los helados",
+          "full": "la furgoneta de los helados",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Eiswagen",
+          "full": "der Eiswagen",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "ding-a-ling",
+        "es": "tilín tilín",
+        "de": "bimmel bimmel"
+      },
+      "facts": [
+        {
+          "en": "Ice-cream vans play a happy tune so children know they are coming!",
+          "es": "¡Las furgonetas de helados tocan una musiquita alegre para que los niños sepan que llegan!",
+          "de": "Eiswagen spielen eine fröhliche Melodie, damit die Kinder wissen, dass sie kommen!"
+        },
+        {
+          "en": "Inside there is a freezer to keep the ice cream cold, and often a machine for soft ice cream.",
+          "es": "Dentro hay un congelador para que los helados estén fríos, y muchas veces una máquina de helado suave.",
+          "de": "Drinnen gibt es eine Tiefkühltruhe für das Eis und oft eine Maschine für Softeis."
+        }
+      ],
+      "note": "Vintage-style pink/cream van, no brand or text."
+    },
+    {
+      "id": "high-speed-train",
+      "group": "rails",
+      "image": "vehicles/high-speed-train.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "high-speed train",
+          "full": "the high-speed train"
+        },
+        "es": {
+          "article": "el",
+          "noun": "tren de alta velocidad",
+          "full": "el tren de alta velocidad",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Hochgeschwindigkeitszug",
+          "full": "der Hochgeschwindigkeitszug",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "whoosh",
+        "es": "fiuuu",
+        "de": "wusch"
+      },
+      "facts": [
+        {
+          "en": "High-speed trains can zoom along at about 300 kilometres an hour!",
+          "es": "¡Los trenes de alta velocidad pueden ir a unos 300 kilómetros por hora!",
+          "de": "Hochgeschwindigkeitszüge können etwa 300 Kilometer pro Stunde schnell fahren!"
+        },
+        {
+          "en": "Spain has the longest high-speed railway in Europe!",
+          "es": "¡España tiene la red de tren de alta velocidad más larga de Europa!",
+          "de": "Spanien hat das längste Schnellzugnetz in Europa!"
+        }
+      ]
+    },
+    {
+      "id": "steam-train",
+      "group": "rails",
+      "image": "vehicles/steam-train.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "steam train",
+          "full": "the steam train"
+        },
+        "es": {
+          "article": "el",
+          "noun": "tren de vapor",
+          "full": "el tren de vapor",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Dampflok",
+          "full": "die Dampflok",
+          "gender": "f"
+        }
+      },
+      "sound": {
+        "en": "choo-choo",
+        "es": "chu-chu",
+        "de": "tschu-tschu"
+      },
+      "facts": [
+        {
+          "en": "A steam train burns coal to boil water, and the hot steam pushes the wheels round.",
+          "es": "El tren de vapor quema carbón para hervir agua, y el vapor caliente hace girar las ruedas.",
+          "de": "Die Dampflok verbrennt Kohle, um Wasser zu kochen, und der heiße Dampf treibt die Räder an."
+        },
+        {
+          "en": "The wagon right behind the engine, called the tender, carries the coal and water.",
+          "es": "El vagón que va justo detrás de la locomotora, el ténder, lleva el carbón y el agua.",
+          "de": "Der Wagen direkt hinter der Lok, der Tender, transportiert Kohle und Wasser."
+        }
+      ]
+    },
+    {
+      "id": "tram",
+      "group": "rails",
+      "image": "vehicles/tram.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "tram",
+          "full": "the tram"
+        },
+        "es": {
+          "article": "el",
+          "noun": "tranvía",
+          "full": "el tranvía",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Straßenbahn",
+          "full": "die Straßenbahn",
+          "gender": "f"
+        }
+      },
+      "sound": {
+        "en": "ding ding",
+        "es": "tilín tilín",
+        "de": "bimm bimm"
+      },
+      "facts": [
+        {
+          "en": "A tram gets its electricity from wires above the street, through an arm on its roof.",
+          "es": "El tranvía coge la electricidad de unos cables encima de la calle, con un brazo que tiene en el techo.",
+          "de": "Die Straßenbahn bekommt ihren Strom aus Leitungen über der Straße – über einen Bügel auf dem Dach."
+        },
+        {
+          "en": "Trams run on rails right in the middle of the city streets.",
+          "es": "Los tranvías van sobre raíles en medio de las calles de la ciudad.",
+          "de": "Straßenbahnen fahren auf Schienen mitten durch die Straßen der Stadt."
+        }
+      ]
+    },
+    {
+      "id": "airplane",
+      "group": "air",
+      "image": "vehicles/airplane.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "airplane",
+          "full": "the airplane"
+        },
+        "es": {
+          "article": "el",
+          "noun": "avión",
+          "full": "el avión",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Flugzeug",
+          "full": "das Flugzeug",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "whoosh",
+        "es": "fiuuum",
+        "de": "wuuusch"
+      },
+      "facts": [
+        {
+          "en": "Big planes fly about 10 kilometres up in the sky – higher than the tallest mountain in the world!",
+          "es": "Los aviones grandes vuelan a unos 10 kilómetros de altura, ¡más alto que la montaña más alta del mundo!",
+          "de": "Große Flugzeuge fliegen etwa 10 Kilometer hoch – höher als der höchste Berg der Welt!"
+        },
+        {
+          "en": "A plane's wings are made to bend a little up and down in the wind, so they don't break.",
+          "es": "Las alas del avión están hechas para doblarse un poquito con el viento, y así no se rompen.",
+          "de": "Die Flügel eines Flugzeugs biegen sich im Wind ein bisschen auf und ab – so brechen sie nicht."
+        }
+      ]
+    },
+    {
+      "id": "helicopter",
+      "group": "air",
+      "image": "vehicles/helicopter.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "helicopter",
+          "full": "the helicopter"
+        },
+        "es": {
+          "article": "el",
+          "noun": "helicóptero",
+          "full": "el helicóptero",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Hubschrauber",
+          "full": "der Hubschrauber",
+          "gender": "m"
+        }
+      },
+      "sound": {
+        "en": "chop-chop-chop",
+        "es": "taca-taca-taca",
+        "de": "wupp-wupp-wupp"
+      },
+      "facts": [
+        {
+          "en": "A helicopter can hover in one place, and even fly backwards and sideways!",
+          "es": "¡El helicóptero puede quedarse quieto en el aire, y hasta volar hacia atrás y de lado!",
+          "de": "Ein Hubschrauber kann in der Luft stehen bleiben und sogar rückwärts und seitwärts fliegen!"
+        },
+        {
+          "en": "The little propeller on the tail stops the helicopter from spinning round and round.",
+          "es": "La hélice pequeña de la cola evita que el helicóptero dé vueltas sin parar.",
+          "de": "Der kleine Propeller am Heck sorgt dafür, dass sich der Hubschrauber nicht im Kreis dreht."
+        }
+      ]
+    },
+    {
+      "id": "hot-air-balloon",
+      "group": "air",
+      "image": "vehicles/hot-air-balloon.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "hot-air balloon",
+          "full": "the hot-air balloon"
+        },
+        "es": {
+          "article": "el",
+          "noun": "globo aerostático",
+          "full": "el globo aerostático",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Heißluftballon",
+          "full": "der Heißluftballon",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A burner heats the air inside the balloon, and hot air is lighter than cold air, so the balloon floats up!",
+          "es": "Un quemador calienta el aire del globo, y el aire caliente pesa menos que el frío, ¡así que el globo sube!",
+          "de": "Ein Brenner macht die Luft im Ballon heiß, und heiße Luft ist leichter als kalte – darum steigt der Ballon!"
+        },
+        {
+          "en": "The very first passengers in a hot-air balloon, in 1783, were a sheep, a duck and a rooster!",
+          "es": "¡Los primeros pasajeros de un globo, en 1783, fueron una oveja, un pato y un gallo!",
+          "de": "Die allerersten Passagiere eines Heißluftballons waren 1783 ein Schaf, eine Ente und ein Hahn!"
+        }
+      ]
+    },
+    {
+      "id": "rocket",
+      "group": "air",
+      "image": "vehicles/rocket.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "rocket",
+          "full": "the rocket"
+        },
+        "es": {
+          "article": "el",
+          "noun": "cohete",
+          "full": "el cohete",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Rakete",
+          "full": "die Rakete",
+          "gender": "f"
+        }
+      },
+      "sound": {
+        "en": "3, 2, 1… liftoff!",
+        "es": "3, 2, 1… ¡despegue!",
+        "de": "3, 2, 1… Start!"
+      },
+      "facts": [
+        {
+          "en": "To get into space, a rocket has to go super fast – about 28,000 kilometres an hour!",
+          "es": "Para llegar al espacio, un cohete tiene que ir rapidísimo: ¡unos 28.000 kilómetros por hora!",
+          "de": "Um ins All zu kommen, muss eine Rakete superschnell sein – etwa 28.000 Kilometer pro Stunde!"
+        },
+        {
+          "en": "There's no air in space, so a rocket carries its own oxygen to make its fuel burn.",
+          "es": "En el espacio no hay aire, así que el cohete lleva su propio oxígeno para quemar el combustible.",
+          "de": "Im All gibt es keine Luft, darum hat die Rakete ihren eigenen Sauerstoff dabei, damit der Treibstoff brennt."
+        }
+      ]
+    },
+    {
+      "id": "sailboat",
+      "group": "water",
+      "image": "vehicles/sailboat.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "sailboat",
+          "full": "the sailboat"
+        },
+        "es": {
+          "article": "el",
+          "noun": "velero",
+          "full": "el velero",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Segelboot",
+          "full": "das Segelboot",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A sailboat has no engine to go: the wind pushes its sails.",
+          "es": "El velero no necesita motor: el viento empuja sus velas.",
+          "de": "Ein Segelboot braucht keinen Motor: Der Wind bläst in die Segel."
+        },
+        {
+          "en": "To sail towards the wind, a sailboat goes in a zigzag!",
+          "es": "¡Para navegar contra el viento, el velero va en zigzag!",
+          "de": "Um gegen den Wind zu segeln, fährt das Segelboot im Zickzack!"
+        }
+      ]
+    },
+    {
+      "id": "cargo-ship",
+      "group": "water",
+      "image": "vehicles/cargo-ship.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "cargo ship",
+          "full": "the cargo ship"
+        },
+        "es": {
+          "article": "el",
+          "noun": "barco de carga",
+          "full": "el barco de carga",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Containerschiff",
+          "full": "das Containerschiff",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "toot toot",
+        "es": "tuuu tuuu",
+        "de": "tuut tuut"
+      },
+      "facts": [
+        {
+          "en": "The biggest container ships can carry more than 20,000 giant metal boxes at once!",
+          "es": "¡Los barcos portacontenedores más grandes pueden llevar más de 20.000 contenedores a la vez!",
+          "de": "Die größten Containerschiffe können über 20.000 riesige Metallkisten auf einmal tragen!"
+        },
+        {
+          "en": "The longest cargo ships are about 400 metres long – as long as four football pitches in a row!",
+          "es": "Los barcos de carga más largos miden unos 400 metros, ¡como cuatro campos de fútbol seguidos!",
+          "de": "Die längsten Containerschiffe sind etwa 400 Meter lang – so lang wie vier Fußballfelder hintereinander!"
+        }
+      ]
+    },
+    {
+      "id": "submarine",
+      "group": "water",
+      "image": "vehicles/submarine.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "submarine",
+          "full": "the submarine"
+        },
+        "es": {
+          "article": "el",
+          "noun": "submarino",
+          "full": "el submarino",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "U-Boot",
+          "full": "das U-Boot",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "ping",
+        "es": "ping",
+        "de": "ping"
+      },
+      "facts": [
+        {
+          "en": "To dive, a submarine fills special tanks with water; to come up, it blows the water out with air.",
+          "es": "Para bajar, el submarino llena unos tanques con agua; para subir, saca el agua soplando aire.",
+          "de": "Zum Tauchen füllt ein U-Boot spezielle Tanks mit Wasser; zum Auftauchen drückt es das Wasser mit Luft wieder hinaus."
+        },
+        {
+          "en": "Some little submarines are used by scientists to explore the sea and look at fish and coral.",
+          "es": "Algunos submarinos pequeños los usan los científicos para explorar el mar y ver peces y corales.",
+          "de": "Manche kleinen U-Boote benutzen Forscher, um das Meer zu erkunden und Fische und Korallen anzuschauen."
+        }
+      ],
+      "note": "Small yellow research submarine over a reef (friendlier than a military sub)."
+    },
+    {
+      "id": "speedboat",
+      "group": "water",
+      "image": "vehicles/speedboat.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "speedboat",
+          "full": "the speedboat"
+        },
+        "es": {
+          "article": "la",
+          "noun": "lancha motora",
+          "full": "la lancha motora",
+          "gender": "f"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Motorboot",
+          "full": "das Motorboot",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "vroom",
+        "es": "brum",
+        "de": "brumm"
+      },
+      "facts": [
+        {
+          "en": "When a speedboat goes fast, its front lifts up and it skims across the top of the water.",
+          "es": "Cuando la lancha va rápido, la parte delantera se levanta y se desliza por encima del agua.",
+          "de": "Wenn ein Motorboot schnell fährt, hebt sich der Bug und es gleitet über das Wasser."
+        },
+        {
+          "en": "Everyone on a boat wears a life jacket, which helps you float if you fall in.",
+          "es": "Todos en el barco llevan chaleco salvavidas, que te ayuda a flotar si te caes al agua.",
+          "de": "Alle auf dem Boot tragen eine Schwimmweste – die hält dich über Wasser, wenn du hineinfällst."
+        }
+      ]
+    },
+    {
+      "id": "kayak",
+      "group": "water",
+      "image": "vehicles/kayak.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "kayak",
+          "full": "the kayak"
+        },
+        "es": {
+          "article": "el",
+          "noun": "kayak",
+          "full": "el kayak",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Kajak",
+          "full": "das Kajak",
+          "gender": "n"
+        }
+      },
+      "sound": {
+        "en": "splish splash",
+        "es": "chof chof",
+        "de": "platsch platsch"
+      },
+      "facts": [
+        {
+          "en": "Kayaks were invented long ago by the Inuit and other Arctic peoples, who made them from animal skins stretched over a frame.",
+          "es": "Los kayaks los inventaron hace mucho los inuit y otros pueblos del Ártico, con pieles de animales sobre un armazón.",
+          "de": "Kajaks wurden vor langer Zeit von den Inuit und anderen Völkern der Arktis erfunden – aus Tierhäuten über einem Gestell."
+        },
+        {
+          "en": "A kayak paddle has a blade at each end, so you dip one side, then the other.",
+          "es": "El remo del kayak tiene una pala en cada punta: metes un lado y luego el otro.",
+          "de": "Ein Kajakpaddel hat an jedem Ende ein Blatt – man taucht erst die eine, dann die andere Seite ein."
+        }
+      ]
+    }
+  ]
+}
