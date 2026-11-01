@@ -49,6 +49,22 @@ function photoStop(){
   if(typeof bridgeStop==='function')bridgeStop();
   try{if('speechSynthesis' in window)speechSynthesis.cancel();}catch(e){}
 }
+/* A line that belongs to the card on screen. A tap on the next card bumps
+   photoGen, so a line that was still waiting (the sound, the fact) is dropped
+   instead of talking over the new card. isRetry skips the voice's second try,
+   which would otherwise speak the old line again a moment later. */
+function photoSay(text,L){
+  if(!text)return;
+  const gen=photoGen;
+  const go=()=>{
+    if(gen!==photoGen)return;
+    try{if('speechSynthesis' in window)speechSynthesis.cancel();}catch(e){}
+    utter(text,true,0.8,L||lang);
+  };
+  let busy=false;
+  try{busy=speechSynthesis.speaking||speechSynthesis.pending;}catch(e){}
+  if(busy)setTimeout(go,140);else go();
+}
 function photoYay(){
   const a={es:['¡Muy bien!','¡Genial!','¡Sí!','¡Bravo!'],en:['Well done!','Great!','Yes!','Bravo!'],de:['Sehr gut!','Super!','Ja!','Bravo!']}[lang];
   return a[Math.floor(Math.random()*a.length)];
@@ -63,17 +79,17 @@ function photoSpeak(item){
   const facts=()=>{
     if(gen!==photoGen)return;
     const f=photoFact(item);
-    if(f&&f[lang])sayAt(f[lang],0.82);
+    if(f&&f[lang])photoSay(f[lang]);
   };
   sayWordBridge(photoNames(item),{then(){
     if(gen!==photoGen)return;
     if(PH.kind==='a'||PH.kind==='v'){
       const snd=item.sound&&item.sound[lang];
-      if(snd){sayAt(snd,0.78);setTimeout(facts,Math.min(1800,Math.max(650,360+String(snd).length*80)));}
+      if(snd){photoSay(snd);setTimeout(facts,Math.min(1800,Math.max(650,360+String(snd).length*80)));}
       else facts();
     }else{
       const w=item.where&&item.where[lang];
-      if(w){sayAt(w,0.8);setTimeout(facts,Math.min(5200,Math.max(1200,520+String(w).length*46)));}
+      if(w){photoSay(w);setTimeout(facts,Math.min(5200,Math.max(1200,520+String(w).length*46)));}
       else facts();
     }
   }});
@@ -122,13 +138,13 @@ function photoClick(e){
   const act=b.dataset.act,id=b.dataset.id;
   if(act==='drag')return;
   if(typeof ac==='function')ac();
-  if(act==='hab'){PH.hab=id;PH.screen='list';renderPhoto();const h=PHOTO_PACK.habitats.find(x=>x.id===id);if(h)say(h[lang]);}
-  else if(act==='grp'){PH.grp=id;PH.screen='list';renderPhoto();const g=(PH.kind==='v'?vehicleGroups():PHOTO_PACK.groups).find(x=>x.id===id);if(g)say(g[lang]);}
+  if(act==='hab'){PH.hab=id;PH.screen='list';renderPhoto();const h=PHOTO_PACK.habitats.find(x=>x.id===id);if(h)photoSay(h[lang]);}
+  else if(act==='grp'){PH.grp=id;PH.screen='list';renderPhoto();const g=(PH.kind==='v'?vehicleGroups():PHOTO_PACK.groups).find(x=>x.id===id);if(g)photoSay(g[lang]);}
   else if(act==='open')openCard(id);
   else if(act==='back')photoBack();
   else if(act==='prev')stepCard(-1);
   else if(act==='next')stepCard(1);
-  else if(act==='replay'){const it=photoList()[PH.idx];if(it)photoSpeak(it);}
+  else if(act==='replay'){const it=photoList()[PH.idx];if(it){if(PH.kind==='b')photoSpeakBaby(it);else photoSpeak(it);}}
   else if(act==='hide')startHide();
   else if(act==='live')startLive();
   else if(act==='grow')startGrow();
@@ -187,7 +203,7 @@ function photoSpeakBaby(pair){
       sayWordBridge(photoNames(pair.adult),{then(){
         if(gen!==photoGen)return;
         const f=photoFact(pair);
-        if(f&&f[lang])sayAt(f[lang],0.82);
+        if(f&&f[lang])photoSay(f[lang]);
       }});
     },700);
   }});
@@ -205,7 +221,7 @@ function barHTML(emoji){
 function renderPhoto(){
   if(PH.screen==='pick')renderPick();
   else if(PH.screen==='list')renderList();
-  else if(PH.screen==='card'){const it=photoList()[PH.idx];if(it)renderCard(it,false);}
+  else if(PH.screen==='card'){const it=photoList()[PH.idx];if(it){if(PH.kind==='b')renderBabyCard(it,false);else renderCard(it,false);}}
   else if(PH.screen==='pass')renderPass();
   else if(PH.screen==='hide')renderHide();
   else if(PH.screen==='live')renderLive();
@@ -298,7 +314,7 @@ function hideAnswer(ok,btn){
   if(!ok){
     PUZ.miss++;
     btn.classList.remove('phBad');void btn.offsetWidth;btn.classList.add('phBad');
-    say(photoLook());
+    photoSay(photoLook());
     if(PUZ.miss>=2){const c=photoRoot().querySelector('.phChoice[data-ok="1"]');if(c)c.classList.add('phHint');}
     return;
   }
@@ -308,7 +324,7 @@ function hideAnswer(ok,btn){
   const gen=++photoGen,item=PUZ.item,got=PUZ.got;
   sayWordBridge(photoNames(item),{then(){
     if(gen!==photoGen||!PUZ)return;
-    sayAt(photoYay(),0.8);
+    photoSay(photoYay());
     setTimeout(()=>{
       if(gen!==photoGen||!PUZ)return;
       PUZ.got=got+1;
@@ -346,7 +362,7 @@ function liveAnswer(ok,btn){
   if(!ok){
     PUZ.miss++;
     if(btn){btn.classList.remove('phBad');void btn.offsetWidth;btn.classList.add('phBad');}
-    say(photoLook());
+    photoSay(photoLook());
     if(PUZ.miss>=2){const c=photoRoot().querySelector('.phLiveHab[data-ok="1"]');if(c)c.classList.add('phHint');}
     return;
   }
@@ -356,7 +372,7 @@ function liveAnswer(ok,btn){
   const gen=++photoGen,item=PUZ.item,got=PUZ.got;
   sayWordBridge(photoNames(item),{then(){
     if(gen!==photoGen||!PUZ)return;
-    sayAt(photoYay(),0.8);
+    photoSay(photoYay());
     setTimeout(()=>{
       if(gen!==photoGen||!PUZ)return;
       PUZ.got=got+1;
@@ -381,7 +397,7 @@ function growRound(){
   for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=opts[i];opts[i]=opts[j];opts[j]=t;}
   PUZ.pair=pair;PUZ.opts=opts;PUZ.locked=false;PUZ.miss=0;
   PH.screen='grow';renderGrow();
-  say(pair.baby.names[lang].full);
+  photoSay(pair.baby.names[lang].full);
 }
 function renderGrow(){
   const opts=PUZ.opts.map(p=>`<button type="button" class="phChoice" data-act="growPick" data-ok="${p.id===PUZ.pair.id?'1':'0'}"><img src="${p.adult.image}" alt="" draggable="false"></button>`).join('');
@@ -392,7 +408,7 @@ function growAnswer(ok,btn){
   if(!ok){
     PUZ.miss++;
     btn.classList.remove('phBad');void btn.offsetWidth;btn.classList.add('phBad');
-    say(photoLook());
+    photoSay(photoLook());
     if(PUZ.miss>=2){const c=photoRoot().querySelector('.phChoice[data-ok="1"]');if(c)c.classList.add('phHint');}
     return;
   }
@@ -402,7 +418,7 @@ function growAnswer(ok,btn){
   const gen=++photoGen,pair=PUZ.pair,got=PUZ.got;
   sayWordBridge(photoNames(pair.adult),{then(){
     if(gen!==photoGen||!PUZ)return;
-    sayAt(photoYay(),0.8);
+    photoSay(photoYay());
     setTimeout(()=>{
       if(gen!==photoGen||!PUZ)return;
       PUZ.got=got+1;
@@ -417,7 +433,7 @@ function photoCheer(emoji){
   photoRoot().innerHTML=`${barHTML('')}<div class="phCheer"><div class="phCup">🏆</div><button type="button" class="phAgain" data-act="${again}" aria-label="again">🔁</button></div>`;
   if(typeof rainEmoji==='function')rainEmoji(['⭐','🎉','🏆','✨'],16);
   if(typeof fanfare==='function')fanfare();
-  say(photoDoneLine());
+  photoSay(photoDoneLine());
 }
 
 function photoDown(e){
