@@ -5,11 +5,13 @@
    then a sound and one fact. No reading needed. First look at a card
    earns a passport stamp, kept on this device only.
 ============================================================= */
-const PASS={a:[],p:[]};
+const PASS={a:[],p:[],v:[],b:[]};
 try{
   const s=JSON.parse(localStorage.getItem('sl_passport')||'{}');
   if(s&&Array.isArray(s.a))PASS.a=s.a.filter(id=>PHOTO_PACK.animals.some(a=>a.id===id));
   if(s&&Array.isArray(s.p))PASS.p=s.p.filter(id=>PHOTO_PACK.people.some(p=>p.id===id));
+  if(s&&Array.isArray(s.v))PASS.v=s.v.filter(id=>PHOTO_PACK.vehicles.some(x=>x.id===id));
+  if(s&&Array.isArray(s.b))PASS.b=s.b.filter(id=>PHOTO_PACK.pairs.some(x=>x.id===id));
 }catch(e){}
 function photoSave(){try{localStorage.setItem('sl_passport',JSON.stringify(PASS));}catch(e){}}
 function photoStamp(kind,id){
@@ -19,11 +21,14 @@ function photoStamp(kind,id){
 function photoCount(kind){return (PASS[kind]||[]).length;}
 
 const HAB_COL={farm:'#E7A23A',pets:'#E07A6A',forest:'#2F9A45',jungle:'#1B7A48',savanna:'#D4922A',ocean:'#1E86C4',polar:'#6AAED4',birds:'#4AA0D8',bugs:'#7CB342',world:'#C47B3A'};
+const VEH_ORDER=['helpers','buildingSite','road','rails','air','water'];
+const PHOTO_VIEW={a:'v-king',p:'v-folk',v:'v-ride',b:'v-baby'};
 const PH={kind:'a',screen:'pick',hab:null,grp:null,idx:0};
 let PUZ=null,photoGen=0,photoBound=false,photoDrag=null,photoSwallow=false;
 const factN={};
 
-function photoRoot(){return document.getElementById(PH.kind==='a'?'v-king':'v-folk');}
+function photoRoot(){return document.getElementById(PHOTO_VIEW[PH.kind]);}
+function vehicleGroups(){return VEH_ORDER.map(id=>(PHOTO_PACK.vehicleGroups||[]).find(g=>g.id===id)).filter(Boolean);}
 function photoNames(item){return {en:item.names.en.full,es:item.names.es.full,de:item.names.de.full};}
 function photoEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function photoFact(item){
@@ -32,10 +37,13 @@ function photoFact(item){
 }
 function photoList(){
   if(PH.kind==='a')return PHOTO_PACK.animals.filter(a=>a.habitat===PH.hab);
+  if(PH.kind==='v')return PHOTO_PACK.vehicles.filter(x=>x.group===PH.grp);
+  if(PH.kind==='b')return PHOTO_PACK.pairs;
   return PHOTO_PACK.people.filter(p=>p.group===PH.grp);
 }
 function photoCover(hab){const a=PHOTO_PACK.animals.find(x=>x.habitat===hab);return a?a.image:'';}
 function photoCoverG(grp){const p=PHOTO_PACK.people.find(x=>x.group===grp);return p?p.image:'';}
+function photoCoverV(grp){const x=PHOTO_PACK.vehicles.find(v=>v.group===grp);return x?x.image:'';}
 function photoStop(){
   photoGen++;
   if(typeof bridgeStop==='function')bridgeStop();
@@ -59,7 +67,7 @@ function photoSpeak(item){
   };
   sayWordBridge(photoNames(item),{then(){
     if(gen!==photoGen)return;
-    if(PH.kind==='a'){
+    if(PH.kind==='a'||PH.kind==='v'){
       const snd=item.sound&&item.sound[lang];
       if(snd){sayAt(snd,0.78);setTimeout(facts,Math.min(1800,Math.max(650,360+String(snd).length*80)));}
       else facts();
@@ -73,7 +81,7 @@ function photoSpeak(item){
 
 function photoBind(){
   if(photoBound)return;photoBound=true;
-  ['v-king','v-folk'].forEach(id=>{
+  ['v-king','v-folk','v-ride','v-baby'].forEach(id=>{
     const el=document.getElementById(id);
     el.addEventListener('click',photoClick);
     el.addEventListener('pointerdown',photoDown);
@@ -84,6 +92,8 @@ function photoBind(){
 }
 function showKing(){photoEnter('a');}
 function showFolk(){photoEnter('p');}
+function showRide(){photoEnter('v');}
+function showBaby(){photoEnter('b');}
 function photoEnter(kind){
   photoBind();photoStop();
   PH.kind=kind;PH.screen='pick';PH.hab=null;PH.grp=null;PH.idx=0;PUZ=null;
@@ -93,14 +103,17 @@ function photoRelang(){
   const root=document.querySelector('.view.on');if(!root)return;
   const item=PH.screen==='card'?photoList()[PH.idx]:null;
   const nm=root.querySelector('.phName');
-  if(nm&&item)nm.textContent=item.names[lang].full;
+  if(nm&&item&&PH.kind==='b'){
+    const who=root.querySelector('.phMorphTop.gone')?item.adult:item.baby;
+    nm.textContent=who.names[lang].full;
+  }else if(nm&&item&&item.names)nm.textContent=item.names[lang].full;
   root.querySelectorAll('.phCap').forEach(el=>{
     const id=el.dataset.cap;if(!id)return;
-    const h=PHOTO_PACK.habitats.find(x=>x.id===id)||PHOTO_PACK.groups.find(x=>x.id===id);
+    const h=PHOTO_PACK.habitats.find(x=>x.id===id)||PHOTO_PACK.groups.find(x=>x.id===id)||vehicleGroups().find(x=>x.id===id);
     if(h)el.textContent=h[lang];
   });
   const hero=root.querySelector('.phHero');
-  if(hero&&item)hero.alt=item.names[lang].full;
+  if(hero&&item&&item.names)hero.alt=item.names[lang].full;
 }
 
 function photoClick(e){
@@ -110,7 +123,7 @@ function photoClick(e){
   if(act==='drag')return;
   if(typeof ac==='function')ac();
   if(act==='hab'){PH.hab=id;PH.screen='list';renderPhoto();const h=PHOTO_PACK.habitats.find(x=>x.id===id);if(h)say(h[lang]);}
-  else if(act==='grp'){PH.grp=id;PH.screen='list';renderPhoto();const g=PHOTO_PACK.groups.find(x=>x.id===id);if(g)say(g[lang]);}
+  else if(act==='grp'){PH.grp=id;PH.screen='list';renderPhoto();const g=(PH.kind==='v'?vehicleGroups():PHOTO_PACK.groups).find(x=>x.id===id);if(g)say(g[lang]);}
   else if(act==='open')openCard(id);
   else if(act==='back')photoBack();
   else if(act==='prev')stepCard(-1);
@@ -118,17 +131,25 @@ function photoClick(e){
   else if(act==='replay'){const it=photoList()[PH.idx];if(it)photoSpeak(it);}
   else if(act==='hide')startHide();
   else if(act==='live')startLive();
+  else if(act==='grow')startGrow();
   else if(act==='pass'){photoStop();PH.screen='pass';renderPhoto();}
   else if(act==='pick')hideAnswer(b.dataset.ok==='1',b);
   else if(act==='drop')liveAnswer(b.dataset.ok==='1',b);
+  else if(act==='growPick')growAnswer(b.dataset.ok==='1',b);
   else if(act==='stamp'){
-    const items=b.dataset.kind==='p'?PHOTO_PACK.people:PHOTO_PACK.animals;
-    const it=items.find(x=>x.id===id);if(it)sayWordBridge(photoNames(it));
+    const it=stampItem(b.dataset.kind,id);
+    if(it)sayWordBridge(photoNames(b.dataset.kind==='b'?it.baby:it));
   }
+}
+function stampItem(kind,id){
+  if(kind==='p')return PHOTO_PACK.people.find(x=>x.id===id);
+  if(kind==='v')return PHOTO_PACK.vehicles.find(x=>x.id===id);
+  if(kind==='b')return PHOTO_PACK.pairs.find(x=>x.id===id);
+  return PHOTO_PACK.animals.find(x=>x.id===id);
 }
 function photoBack(){
   photoStop();PUZ=null;
-  if(PH.screen==='card')PH.screen='list';
+  if(PH.screen==='card'&&PH.kind!=='b')PH.screen='list';
   else PH.screen='pick';
   renderPhoto();
 }
@@ -138,21 +159,45 @@ function openCard(id){
   PH.idx=i<0?0:i;PH.screen='card';
   const item=list[PH.idx];if(!item)return;
   const fresh=photoStamp(PH.kind,item.id);
-  renderCard(item,fresh);
-  photoSpeak(item);
+  if(PH.kind==='b'){renderBabyCard(item,fresh);photoSpeakBaby(item);}
+  else{renderCard(item,fresh);photoSpeak(item);}
 }
 function stepCard(d){
   const list=photoList();if(!list.length)return;
   PH.idx=(PH.idx+d+list.length)%list.length;
   const item=list[PH.idx];
   const fresh=photoStamp(PH.kind,item.id);
-  renderCard(item,fresh);
-  photoSpeak(item);
+  if(PH.kind==='b'){renderBabyCard(item,fresh);photoSpeakBaby(item);}
+  else{renderCard(item,fresh);photoSpeak(item);}
+}
+/* Baby photo slides aside, then the grown-up name, then one growing-up fact. */
+function photoSpeakBaby(pair){
+  const gen=++photoGen;
+  const root=photoRoot();
+  const top=root.querySelector('.phMorphTop');
+  const nm=root.querySelector('.phName');
+  if(top)top.classList.remove('gone');
+  if(nm)nm.textContent=pair.baby.names[lang].full;
+  sayWordBridge(photoNames(pair.baby),{then(){
+    if(gen!==photoGen)return;
+    if(top)top.classList.add('gone');
+    if(nm)nm.textContent=pair.adult.names[lang].full;
+    setTimeout(()=>{
+      if(gen!==photoGen)return;
+      sayWordBridge(photoNames(pair.adult),{then(){
+        if(gen!==photoGen)return;
+        const f=photoFact(pair);
+        if(f&&f[lang])sayAt(f[lang],0.82);
+      }});
+    },700);
+  }});
 }
 
 function toolsHTML(){
+  const hide=PH.kind==='b'?'':'<button type="button" class="phTool phHide" data-act="hide" aria-label="hide">🙈</button>';
   const live=PH.kind==='a'?'<button type="button" class="phTool phLive" data-act="live" aria-label="habitat">🏡</button>':'';
-  return `<div class="phTools"><button type="button" class="phTool phHide" data-act="hide" aria-label="hide">🙈</button>${live}<button type="button" class="phTool" data-act="pass" aria-label="passport">🛂</button></div>`;
+  const grow=PH.kind==='b'?'<button type="button" class="phTool phGrow" data-act="grow" aria-label="match">🐣</button>':'';
+  return `<div class="phTools">${hide}${live}${grow}<button type="button" class="phTool" data-act="pass" aria-label="passport">🛂</button></div>`;
 }
 function barHTML(emoji){
   return `<div class="phBar"><button type="button" class="phBack" data-act="back" aria-label="back">⬅️</button><span class="phTitle">${emoji||''}</span></div>`;
@@ -172,13 +217,32 @@ function renderPick(){
   if(PH.kind==='a'){
     tiles=PHOTO_PACK.habitats.map(h=>`<button type="button" class="phHab" data-act="hab" data-id="${h.id}" aria-label="${photoEsc(h[lang])}"><img src="${photoCover(h.id)}" alt="" loading="lazy" decoding="async" draggable="false"><span class="phEm">${h.emoji}</span><span class="phCap" data-cap="${h.id}">${photoEsc(h[lang])}</span></button>`).join('');
     root.innerHTML=toolsHTML()+`<div class="phGrid">${tiles}</div>`;
+  }else if(PH.kind==='v'){
+    tiles=vehicleGroups().map(g=>`<button type="button" class="phHab" data-act="grp" data-id="${g.id}" aria-label="${photoEsc(g[lang])}"><img src="${photoCoverV(g.id)}" alt="" loading="lazy" decoding="async" draggable="false"><span class="phEm">${g.emoji}</span><span class="phCap" data-cap="${g.id}">${photoEsc(g[lang])}</span></button>`).join('');
+    root.innerHTML=toolsHTML()+`<div class="phGrid">${tiles}</div>`;
+  }else if(PH.kind==='b'){
+    tiles=PHOTO_PACK.pairs.map(p=>`<button type="button" class="phAn" data-act="open" data-id="${p.id}" aria-label="${photoEsc(p.baby.names[lang].full)}"><img src="${p.baby.image}" alt="" loading="lazy" decoding="async" draggable="false"></button>`).join('');
+    root.innerHTML=toolsHTML()+`<div class="phGrid">${tiles}</div>`;
   }else{
     tiles=PHOTO_PACK.groups.map(g=>`<button type="button" class="phGrp" data-act="grp" data-id="${g.id}" aria-label="${photoEsc(g[lang])}"><img src="${photoCoverG(g.id)}" alt="" loading="lazy" decoding="async" draggable="false"><span class="phEm">${g.emoji}</span><span class="phCap" data-cap="${g.id}">${photoEsc(g[lang])}</span></button>`).join('');
     root.innerHTML=toolsHTML()+`<div class="phGrid phGroups">${tiles}</div>`;
   }
 }
+function renderBabyCard(pair,fresh){
+  photoRoot().innerHTML=`${barHTML(fresh?'🛂':'')}
+    <div class="phMorph">
+      <img class="phHero phAdult" src="${pair.adult.image}" alt="${photoEsc(pair.adult.names[lang].full)}" draggable="false">
+      <img class="phHero phMorphTop" src="${pair.baby.image}" alt="${photoEsc(pair.baby.names[lang].full)}" draggable="false">
+    </div>
+    <div class="phName">${photoEsc(pair.baby.names[lang].full)}</div>
+    <div class="phNav">
+      <button type="button" class="phArrow" data-act="prev" aria-label="previous">◀</button>
+      <button type="button" class="phReplay" data-act="replay" aria-label="again">🔊</button>
+      <button type="button" class="phArrow" data-act="next" aria-label="next">▶</button>
+    </div>`;
+}
 function renderList(){
-  const meta=PH.kind==='a'?PHOTO_PACK.habitats.find(h=>h.id===PH.hab):PHOTO_PACK.groups.find(g=>g.id===PH.grp);
+  const meta=PH.kind==='a'?PHOTO_PACK.habitats.find(h=>h.id===PH.hab):PH.kind==='v'?vehicleGroups().find(g=>g.id===PH.grp):PHOTO_PACK.groups.find(g=>g.id===PH.grp);
   const tiles=photoList().map(it=>`<button type="button" class="phAn" data-act="open" data-id="${it.id}" aria-label="${photoEsc(it.names[lang].full)}"><img src="${it.image}" alt="" loading="lazy" decoding="async" draggable="false"></button>`).join('');
   photoRoot().innerHTML=barHTML(meta?meta.emoji:'')+`<div class="phGrid">${tiles}</div>`;
 }
@@ -193,14 +257,20 @@ function renderCard(item,fresh){
     </div>`;
 }
 function renderPass(){
-  const block=(kind,emoji,items)=>{
+  const block=(kind,emoji,items,pic,label)=>{
     const tiles=(PASS[kind]||[]).map(id=>{
       const it=items.find(x=>x.id===id);if(!it)return '';
-      return `<button type="button" class="phStamp" data-act="stamp" data-kind="${kind}" data-id="${id}" aria-label="${photoEsc(it.names[lang].full)}"><img src="${it.image}" alt="" loading="lazy" decoding="async" draggable="false"></button>`;
+      const img=pic?pic(it):it.image;
+      const name=label?label(it):it.names[lang].full;
+      return `<button type="button" class="phStamp" data-act="stamp" data-kind="${kind}" data-id="${id}" aria-label="${photoEsc(name)}"><img src="${img}" alt="" loading="lazy" decoding="async" draggable="false"></button>`;
     }).join('');
     return `<div class="phPassHead">${emoji}</div>${tiles?`<div class="phStamps">${tiles}</div>`:'<div class="phEmpty">○</div>'}`;
   };
-  photoRoot().innerHTML=barHTML('🛂')+block('a','🦁',PHOTO_PACK.animals)+block('p','👥',PHOTO_PACK.people);
+  photoRoot().innerHTML=barHTML('🛂')
+    +block('a','🦁',PHOTO_PACK.animals)
+    +block('p','👥',PHOTO_PACK.people)
+    +block('v','🚗',PHOTO_PACK.vehicles)
+    +block('b','🐣',PHOTO_PACK.pairs,p=>p.baby.image,p=>p.baby.names[lang].full);
 }
 
 /* ---- Who's hiding? The photo sharpens on its own. Three pictures, no losing. ---- */
@@ -210,7 +280,7 @@ function startHide(){
   hideRound();
 }
 function hideRound(){
-  const all=PH.kind==='a'?PHOTO_PACK.animals:PHOTO_PACK.people;
+  const all=PH.kind==='v'?PHOTO_PACK.vehicles:PH.kind==='a'?PHOTO_PACK.animals:PHOTO_PACK.people;
   const item=all[Math.floor(Math.random()*all.length)];
   const pool=all.filter(x=>x.id!==item.id);
   const opts=[item];
@@ -295,9 +365,55 @@ function liveAnswer(ok,btn){
     },900);
   }});
 }
+/* ---- Baby and grown-up: the baby is showing, tap its grown-up photo. ---- */
+function startGrow(){
+  if(PH.kind!=='b')return;
+  photoStop();PH.screen='grow';
+  PUZ={got:0,miss:0,locked:false,pair:null,opts:[]};
+  growRound();
+}
+function growRound(){
+  const all=PHOTO_PACK.pairs.slice();
+  const pair=all[Math.floor(Math.random()*all.length)];
+  const pool=all.filter(x=>x.id!==pair.id);
+  const opts=[pair];
+  while(opts.length<3&&pool.length)opts.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=opts[i];opts[i]=opts[j];opts[j]=t;}
+  PUZ.pair=pair;PUZ.opts=opts;PUZ.locked=false;PUZ.miss=0;
+  PH.screen='grow';renderGrow();
+  say(pair.baby.names[lang].full);
+}
+function renderGrow(){
+  const opts=PUZ.opts.map(p=>`<button type="button" class="phChoice" data-act="growPick" data-ok="${p.id===PUZ.pair.id?'1':'0'}"><img src="${p.adult.image}" alt="" draggable="false"></button>`).join('');
+  photoRoot().innerHTML=`${barHTML('🐣')}<div class="phReveal"><img class="phClear" src="${PUZ.pair.baby.image}" alt="" draggable="false"></div><div class="phChoices">${opts}</div>`;
+}
+function growAnswer(ok,btn){
+  if(!PUZ||PUZ.locked||PH.screen!=='grow')return;
+  if(!ok){
+    PUZ.miss++;
+    btn.classList.remove('phBad');void btn.offsetWidth;btn.classList.add('phBad');
+    say(photoLook());
+    if(PUZ.miss>=2){const c=photoRoot().querySelector('.phChoice[data-ok="1"]');if(c)c.classList.add('phHint');}
+    return;
+  }
+  PUZ.locked=true;btn.classList.add('phGood');
+  if(typeof award==='function')award(0);
+  [523,659,784].forEach((f,i)=>beep(f,i*0.07,0.15,'triangle',0.15));
+  const gen=++photoGen,pair=PUZ.pair,got=PUZ.got;
+  sayWordBridge(photoNames(pair.adult),{then(){
+    if(gen!==photoGen||!PUZ)return;
+    sayAt(photoYay(),0.8);
+    setTimeout(()=>{
+      if(gen!==photoGen||!PUZ)return;
+      PUZ.got=got+1;
+      if(PUZ.got>=4)photoCheer('🐣');
+      else growRound();
+    },900);
+  }});
+}
 function photoCheer(emoji){
   PH.screen='cheer';PUZ=null;
-  const again=emoji==='🏡'?'live':'hide';
+  const again=emoji==='🏡'?'live':emoji==='🐣'?'grow':'hide';
   photoRoot().innerHTML=`${barHTML('')}<div class="phCheer"><div class="phCup">🏆</div><button type="button" class="phAgain" data-act="${again}" aria-label="again">🔁</button></div>`;
   if(typeof rainEmoji==='function')rainEmoji(['⭐','🎉','🏆','✨'],16);
   if(typeof fanfare==='function')fanfare();

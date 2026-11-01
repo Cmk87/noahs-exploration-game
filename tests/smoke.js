@@ -23,11 +23,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await hookSay();
   await page.mouse.click(180, 320);
   await page.waitForTimeout(300);
-  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 14), 'opens on the home screen with 14 sections');
+  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 16), 'opens on the home screen with 16 sections');
   check(await page.evaluate(() => lang === 'de'), 'starts in German');
 
   console.log('Layout');
-  for (const t of ['home', 'adv', 'city', 'stickers', 'king', 'folk', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
+  for (const t of ['home', 'adv', 'city', 'stickers', 'king', 'folk', 'ride', 'baby', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
     await page.evaluate(t => showTab(t), t);
     await page.waitForTimeout(150);
     await page.evaluate(() => { window.scrollTo(0, 500); const v = document.querySelector('.view.on'); v.lastElementChild && v.lastElementChild.scrollIntoView(); });
@@ -446,6 +446,74 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    check(!!drag && !!hab && dropped && live.held && live.up, 'where do I live: drag or tap the animal onto its habitat'
      + (drag && hab && dropped && live.held && live.up ? '' : ' ' + JSON.stringify({ drag: !!drag, hab: !!hab, dropped, live })));
    await page.evaluate(() => { $('de').click(); showTab('home'); });
+  }
+
+  {const more = await page.evaluate(async () => {
+     const sleep = ms => new Promise(res => setTimeout(res, ms));
+     const waitFor = async fn => { for (let i = 0; i < 60; i++) { if (fn()) return true; await sleep(100); } return false; };
+     if (rewardOpen) closeReward(false);
+     if (lang !== 'de') $('de').click();
+     BRIDGE = ['de'];
+     window.PHOTO_SAID = [];
+     showTab('ride');
+     const ids = [...document.querySelectorAll('#v-ride .phHab')].map(b => b.dataset.id);
+     const lazy = [...document.querySelectorAll('#v-ride .phHab img')].every(img => img.getAttribute('loading') === 'lazy');
+     document.querySelector('#v-ride .phHab[data-id="helpers"]').click();
+     const n = document.querySelectorAll('#v-ride .phAn').length;
+     document.querySelector('#v-ride .phAn[data-id="fire-truck"]').click();
+     const ft = PHOTO_PACK.vehicles.find(x => x.id === 'fire-truck');
+     const hero = document.querySelector('#v-ride .phHero');
+     const opened = !!(hero && /vehicles\/.+\.webp/.test(hero.getAttribute('src')) && document.querySelector('#v-ride .phReplay'));
+     const saidName = await waitFor(() => PHOTO_SAID.some(t => t === ft.names.de.full));
+     const saidSound = await waitFor(() => PHOTO_SAID.some(t => t === ft.sound.de));
+     const saidFact = await waitFor(() => PHOTO_SAID.some(t => t === ft.facts[0].de));
+     $('es').click();
+     const esName = document.querySelector('#v-ride .phName') && document.querySelector('#v-ride .phName').textContent;
+     const amb = PHOTO_PACK.vehicles.find(x => x.id === 'ambulance').names.es.full;
+     $('de').click();
+     showTab('ride');
+     document.querySelector('#v-ride .phHide').click();
+     const choices = document.querySelectorAll('#v-ride .phChoice').length;
+     const blurred = !!document.querySelector('#v-ride .phBlur');
+     const p0 = power;
+     document.querySelector('#v-ride .phChoice[data-ok="0"]').click();
+     const held = power === p0;
+     document.querySelector('#v-ride .phChoice[data-ok="1"]').click();
+     const hideUp = power === p0 + 1;
+     showTab('baby');
+     const pairs = document.querySelectorAll('#v-baby .phAn').length;
+     const pairLazy = [...document.querySelectorAll('#v-baby .phAn img')].every(img => img.getAttribute('loading') === 'lazy');
+     PHOTO_SAID = [];
+     document.querySelector('#v-baby .phAn[data-id="dog"]').click();
+     const babyImg = document.querySelector('#v-baby .phMorphTop');
+     const adultImg = document.querySelector('#v-baby .phAdult');
+     const morph = !!(babyImg && adultImg && /dog-baby/.test(babyImg.getAttribute('src')) && /dog-adult/.test(adultImg.getAttribute('src')));
+     const saidBaby = await waitFor(() => PHOTO_SAID.some(t => t === 'der Welpe'));
+     const saidAdult = await waitFor(() => PHOTO_SAID.some(t => t === 'der Hund'));
+     const dog = PHOTO_PACK.pairs.find(p => p.id === 'dog');
+     const saidGrow = await waitFor(() => PHOTO_SAID.some(t => t === dog.facts[0].de));
+     const slid = document.querySelector('#v-baby .phMorphTop') && document.querySelector('#v-baby .phMorphTop').classList.contains('gone');
+     showTab('baby');
+     document.querySelector('#v-baby .phGrow').click();
+     const gChoices = document.querySelectorAll('#v-baby .phChoice').length;
+     const babyShown = !!document.querySelector('#v-baby .phClear');
+     const gp0 = power;
+     document.querySelector('#v-baby .phChoice[data-ok="0"]').click();
+     const gHeld = power === gp0;
+     document.querySelector('#v-baby .phChoice[data-ok="1"]').click();
+     const pass = JSON.parse(localStorage.getItem('sl_passport') || '{}');
+     showTab('home');
+     return { ids, lazy, n, opened, saidName, saidSound, saidFact, esName, amb, choices, blurred, held, up: power >= p0 + 1,
+       pairs, pairLazy, morph, saidBaby, saidAdult, saidGrow, slid, gChoices, babyShown, gHeld, hideUp, gUp: power === gp0 + 1,
+       stamped: pass.v && pass.v.includes('fire-truck') && pass.b && pass.b.includes('dog') };
+   });
+   check(more.ids.join() === 'helpers,buildingSite,road,rails,air,water' && more.lazy, 'vehicles shows the six groups, photos loaded lazily');
+   check(more.n >= 5 && more.opened && more.saidName && more.saidSound && more.saidFact, 'a vehicle card says the name, the sound, and a fact');
+   check(more.esName === 'el camión de bomberos' && more.amb === 'la ambulancia', 'vehicle cards use the Spanish article from the photo pack');
+   check(more.choices === 3 && more.blurred && more.held && more.hideUp, "who's hiding works for vehicles");
+   check(more.pairs === 16 && more.pairLazy && more.morph && more.saidBaby && more.saidAdult && more.saidGrow && more.slid, 'a baby photo slides to the grown-up and both names are spoken');
+   check(more.gChoices === 3 && more.babyShown && more.gHeld && more.gUp, 'matching a baby to its grown-up: a wrong tap keeps the point');
+   check(more.stamped, 'the first vehicle and the first baby earn a passport stamp');
   }
 
   // collecting again: a full sticker book starts round 2 from zero; a full museum starts a new round at the next dig
