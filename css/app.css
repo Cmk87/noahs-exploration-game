@@ -927,3 +927,12 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .phTouchCard{border:none;padding:0;background:none;display:block;margin:0 auto;cursor:pointer}
 .phTouchGo{display:block;width:min(72vw,280px);height:96px;margin:12px auto 0;border:none;border-radius:28px;background:var(--bolt);font-size:56px;line-height:1;cursor:pointer;box-shadow:var(--lift),var(--soft)}
 .phTouchGo:active,.phTouchCard:active{transform:translateY(4px)}
+/* photo books on a tablet: use the width — more pictures per row, bigger hero picture */
+@media (min-width:700px){
+  #v-king,#v-folk,#v-ride,#v-baby,#v-body{max-width:min(100%,1100px)}
+  .phGrid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+  .phGroups{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+  .phStamps{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+  .phNav,.phChoices{max-width:640px;margin-left:auto;margin-right:auto}
+  .phHero,.phMorph{width:min(70vw,560px,calc(100vh - 330px));width:min(70vw,560px,calc(100dvh - 330px))}
+}

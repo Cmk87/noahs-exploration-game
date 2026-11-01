@@ -1,7 +1,7 @@
 /* Offline support. Network first, so every launch with a connection picks
    up the newest version from the server; the cached copy is only used
    when there is no network (car, plane, flaky Wi-Fi). */
-const CACHE='explorer-v49';
+const CACHE='explorer-v50';
 const FILES=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-180.png','./icons/maskable-icon-512.png','./css/app.css','./fonts/baloo-2-latin-700-normal.woff2','./fonts/baloo-2-latin-800-normal.woff2','./fonts/nunito-latin-600-normal.woff2','./fonts/nunito-latin-800-normal.woff2',
   './animals/animals.json','./people/people.json','./vehicles/vehicles.json','./babies/babies.json','./body/body.json',
   ...["./animals/bear.webp","./animals/bee.webp","./animals/butterfly.webp","./animals/cat.webp","./animals/cheetah.webp","./animals/chicken.webp","./animals/cow.webp","./animals/crab.webp","./animals/crocodile.webp","./animals/deer.webp","./animals/dog.webp","./animals/dolphin.webp","./animals/duck.webp","./animals/eagle.webp","./animals/elephant.webp","./animals/flamingo.webp","./animals/fox.webp","./animals/frog.webp","./animals/giraffe.webp","./animals/goat.webp","./animals/gorilla.webp","./animals/hamster.webp","./animals/hedgehog.webp","./animals/hippo.webp","./animals/horse.webp","./animals/jellyfish.webp","./animals/kangaroo.webp","./animals/koala.webp","./animals/ladybug.webp","./animals/lion.webp","./animals/monkey.webp","./animals/octopus.webp","./animals/owl.webp","./animals/panda.webp","./animals/parrot.webp","./animals/penguin.webp","./animals/pig.webp","./animals/polar-bear.webp","./animals/rabbit.webp","./animals/rhino.webp","./animals/seal.webp","./animals/shark.webp","./animals/sheep.webp","./animals/snail.webp","./animals/snake.webp","./animals/squirrel.webp","./animals/tiger.webp","./animals/turtle.webp","./animals/whale.webp","./animals/wolf.webp","./animals/zebra.webp"],
@@ -10,11 +10,23 @@ const FILES=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png'
   ...["./babies/butterfly-adult.webp","./babies/butterfly-baby.webp","./babies/cat-adult.webp","./babies/cat-baby.webp","./babies/chicken-adult.webp","./babies/chicken-baby.webp","./babies/cow-adult.webp","./babies/cow-baby.webp","./babies/deer-adult.webp","./babies/deer-baby.webp","./babies/dog-adult.webp","./babies/dog-baby.webp","./babies/duck-adult.webp","./babies/duck-baby.webp","./babies/elephant-adult.webp","./babies/elephant-baby.webp","./babies/frog-adult.webp","./babies/frog-baby.webp","./babies/horse-adult.webp","./babies/horse-baby.webp","./babies/kangaroo-adult.webp","./babies/kangaroo-baby.webp","./babies/lion-adult.webp","./babies/lion-baby.webp","./babies/penguin-adult.webp","./babies/penguin-baby.webp","./babies/pig-adult.webp","./babies/pig-baby.webp","./babies/sheep-adult.webp","./babies/sheep-baby.webp","./babies/swan-adult.webp","./babies/swan-baby.webp"],
   ...["./body/arm.webp","./body/belly-button.webp","./body/biceps.webp","./body/blood-vessels.webp","./body/blood.webp","./body/brain.webp","./body/breath.webp","./body/breathing.webp","./body/calf.webp","./body/ear.webp","./body/elbow.webp","./body/eye.webp","./body/femur.webp","./body/fingernail.webp","./body/fingerprint.webp","./body/fingertips.webp","./body/foot.webp","./body/hair.webp","./body/hand.webp","./body/head.webp","./body/heart.webp","./body/heartbeat.webp","./body/intestines.webp","./body/knee.webp","./body/liver.webp","./body/lungs.webp","./body/mouth.webp","./body/muscles.webp","./body/nerves.webp","./body/neuron.webp","./body/nose.webp","./body/red-blood-cells.webp","./body/ribs.webp","./body/senses.webp","./body/shoulders.webp","./body/skeleton.webp","./body/skin.webp","./body/skull.webp","./body/sleep.webp","./body/smile.webp","./body/spinal-cord.webp","./body/spine.webp","./body/stomach.webp","./body/teeth.webp","./body/toes.webp","./body/tongue.webp","./body/tummy-muscles.webp","./body/tummy.webp","./body/windpipe.webp","./body/yawn.webp"],
   ...["./js/core.js","./js/shapes.js","./js/vocab.js","./js/audio.js","./js/trace.js","./js/learn.js","./js/read.js","./js/jobs.js","./js/space.js","./js/dinoshow.js","./js/prizes.js","./js/world-data.js","./js/world.js","./js/city-wild.js","./js/city-far.js","./js/city-west.js","./js/city-industry.js","./js/city-edge.js","./js/city.js","./js/stickers.js","./js/photo-pack.js","./js/photo.js","./js/app.js"]];
-self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)));self.skipWaiting();});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim();});
+/* Pictures live in their own cache, which a version bump does NOT empty: each picture is downloaded
+   once and then always comes from the device. Only pictures not yet stored are fetched, and a picture
+   that fails to download never blocks an update. A picture is never re-fetched under the same name,
+   so a changed picture needs a new file name (or bump IMG). */
+const IMG='explorer-img-1';
+const isImg=u=>/\.(webp|png|jpe?g|gif|svg)$/i.test(new URL(u,self.location).pathname);
+self.addEventListener('install',e=>{e.waitUntil(Promise.all([
+  caches.open(CACHE).then(c=>c.addAll(FILES.filter(f=>!isImg(f)))),
+  caches.open(IMG).then(async c=>{for(const f of FILES.filter(isImg)){try{if(!(await c.match(f))){const r=await fetch(f);if(r.ok)await c.put(f,r);}}catch(err){}}})
+]));self.skipWaiting();});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE&&k!==IMG).map(k=>caches.delete(k)))));self.clients.claim();});
 self.addEventListener('fetch',e=>{
   const req=e.request;
   if(req.method!=='GET'||new URL(req.url).origin!==location.origin)return;
+  if(isImg(req.url)){   // pictures: from the device if stored, otherwise download once and keep
+    e.respondWith(caches.open(IMG).then(c=>c.match(req,{ignoreSearch:true}).then(r=>r||fetch(req).then(res=>{if(res.ok)c.put(req,res.clone());return res;}))));
+    return;}
   // a connection without real internet (car hotspot) can hang for ages: after 3 s use the cached copy
   const fromCache=()=>caches.match(req,{ignoreSearch:true}).then(r=>r||(req.mode==='navigate'?caches.match('./index.html'):r));
   e.respondWith(new Promise(resolve=>{
