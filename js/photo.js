@@ -101,7 +101,7 @@ function photoSpeak(item,L){
   photoSeq([item.names[L].full,mid,f&&f[L]],L);
 }
 /* the other languages, as small flags on a card: tap one to hear it all in that language */
-function otherLangs(){return ['de','en','es'].filter(c=>c!==lang&&(typeof LANGS_ON==='undefined'||!LANGS_ON.length||LANGS_ON.includes(c)));}
+function otherLangs(){return flagLangs();}
 function langsHTML(){
   const ls=otherLangs();if(!ls.length)return '';
   return `<div class="phLangs">${ls.map(c=>`<button type="button" class="phLang" data-act="lang" data-l="${c}" aria-label="${c}">${BRIDGE_MARK[c]}</button>`).join('')}</div>`;

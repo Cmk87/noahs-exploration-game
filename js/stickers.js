@@ -70,6 +70,25 @@ function showStickers(){
     :F.size?{es:`¡Tienes ${F.size} pegatinas!`,en:`You have ${F.size} stickers!`,de:`Du hast schon ${F.size} Sticker!`}[lang]
     :{es:'Tu álbum está vacío. ¡Busca animales en la ciudad!',en:'Your book is empty. Look for animals in the town!',de:'Dein Stickerbuch ist noch leer. Suche Tiere in der Stadt!'}[lang]);
 }
+/* one language at a time: the card speaks the app language; small flags say the same in another */
+const stkLangs=()=>flagLangs();
+const STK_FLAG={de:'🇩🇪',en:'🇬🇧',es:'🇪🇸'};
+function stkFlags(text){   // text: {de,en,es} → flag buttons that speak it
+  return stkLangs().map(L=>{const b=document.createElement('button');b.type='button';b.className='stkFlag';b.textContent=STK_FLAG[L];
+    b.onclick=()=>{ac();speakFresh(text[L],L,0.8);};return b;});
+}
+/* a dinosaur or a treasure from the museum, on the same card as a sticker */
+function stkShow(pic,name,text){
+  const c=$('stkCard');
+  c.innerHTML=`<div class="stkBig"></div><div class="stkBigName"></div><div class="stkLine"></div><div class="stkBtns"><button id="stkSay">🔊</button><button id="stkX">✕</button></div>`;
+  const big=c.querySelector('.stkBig');if(typeof pic==='string')big.textContent=pic;else{big.classList.add('stkPicCv');big.appendChild(pic.el);}
+  c.querySelector('.stkBigName').textContent=name[lang].charAt(0).toUpperCase()+name[lang].slice(1);c.querySelector('.stkLine').textContent=text[lang]===name[lang]?'':text[lang].replace(name[lang],'').replace(/^[.!\s]+/,'');
+  const btns=c.querySelector('.stkBtns');stkFlags(text).forEach(f=>btns.insertBefore(f,$('stkX')));
+  c.classList.add('on');if(pic.draw)requestAnimationFrame(pic.draw);
+  say(text[lang]);
+  $('stkSay').onclick=()=>{ac();say(text[lang]);};
+  $('stkX').onclick=()=>{ac();c.classList.remove('on');};
+}
 function stkOpen(id,center,ic,area){
   const e=CITY.ENT[id],got=CITY.FOUND.has(id),L={de:0,en:1,es:2}[lang],c=$('stkCard');
   const name=e.n[L].charAt(0).toUpperCase()+e.n[L].slice(1);
@@ -79,9 +98,10 @@ function stkOpen(id,center,ic,area){
     :`<div class="stkBig miss">${stkIcon(id)}</div><div class="stkBigName">?</div><div class="stkLine">${{es:'Todavía no lo has encontrado. Busca aquí: ',en:'Not found yet. Look here: ',de:'Noch nicht gefunden. Suche hier: '}[lang]}${ic} ${area[lang]}</div>
       <div class="stkBtns"><button id="stkGo">🔍 ${{es:'¡Vamos a buscar!',en:"Let's go and look!",de:'Los, suchen!'}[lang]}</button><button id="stkX">✕</button></div>`;
   c.classList.add('on');
-  if(got)sayWordBridge({de:e.n[0],en:e.n[1],es:e.n[2]});
+  const words={},IX={de:0,en:1,es:2};['de','en','es'].forEach(c=>{const i=IX[c];words[c]=e.l&&e.l[i]?e.l[i]:e.n[i].charAt(0).toUpperCase()+e.n[i].slice(1)+'!';});
+  if(got){say(words[lang]);const btns=c.querySelector('.stkBtns');stkFlags(words).forEach(f=>btns.insertBefore(f,$('stkGo')));}
   else say({es:'Todavía no lo has encontrado. Búscalo en: ',en:'You have not found this one yet. Look in: ',de:'Den hast du noch nicht gefunden. Suche hier: '}[lang]+area[lang]);
-  const s=$('stkSay');if(s)s.onclick=()=>{ac();sayWordBridge({de:e.n[0],en:e.n[1],es:e.n[2]});};
+  const s=$('stkSay');if(s)s.onclick=()=>{ac();say(words[lang]);};
   $('stkX').onclick=()=>{ac();c.classList.remove('on');};
   $('stkGo').onclick=()=>{ac();c.classList.remove('on');CITY.showAt(id,center,(STK_AREAS.find(A=>A[4].includes(id))||[])[4]);showTab('city');};
 }
@@ -104,7 +124,8 @@ function stkMuseum(book){
     lb.textContent=got?d[lang][0].replace(/^(el|la|the|der|die|das)\s+/i,''):'?';
     b.appendChild(lb);
     b.onclick=()=>{ac();
-      if(got)sayWordBridge({de:d.de[0],en:d.en[0],es:d.es[0]});
+      if(got){const cn=document.createElement('canvas');
+        stkShow({el:cn,draw:()=>drawThumb(cn,d,false)},{de:d.de[0],en:d.en[0],es:d.es[0]},{de:d.de[0]+'. '+d.de[1],en:d.en[0]+'. '+d.en[1],es:d.es[0]+'. '+d.es[1]});}
       else say({es:'¿Quién será? ¡Sigue excavando!',en:'Who could it be? Keep digging!',de:'Wer das wohl ist? Grab weiter!'}[lang]);};
     grid.appendChild(b);
     requestAnimationFrame(()=>drawThumb(cn,d,!got));
@@ -116,7 +137,7 @@ function stkMuseum(book){
     line.innerHTML=`<b>${{es:'Tesoros',en:'Treasures',de:'Schätze'}[lang]}:</b> `;
     tr.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='stkTre';
       b.textContent=t.ic+(treasure[t.k]>1?'×'+treasure[t.k]:'');
-      b.onclick=()=>{ac();sayWordBridge({es:t.es,en:t.en,de:t.de});};line.appendChild(b);});
+      b.onclick=()=>{ac();const n={de:t.de.replace(/[!¡]/g,''),en:t.en.replace(/[!¡]/g,''),es:t.es.replace(/[!¡]/g,'')};stkShow(t.ic,n,{de:t.de,en:t.en,es:t.es});};line.appendChild(b);});
     sec.appendChild(line);
   }
   book.appendChild(sec);

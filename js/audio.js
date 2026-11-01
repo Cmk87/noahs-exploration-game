@@ -67,6 +67,8 @@ function say(text){ sayAt(text,0.72); }
    each with its own voice. Lessons stay monolingual; this is only for
    collecting and celebrating. sl_bridge is separate from sl_langs. */
 var BRIDGE=['de','en','es'];
+/* the flags offered next to a word: the bridge languages (set by a parent), minus the one being spoken */
+function flagLangs(){return ['de','en','es'].filter(c=>c!==lang&&(BRIDGE||[]).includes(c));}
 const BRIDGE_MARK={es:'🇪🇸',en:'🇬🇧',de:'🇩🇪'};
 let bridgeGen=0,bridgeTimer=0,chainWatch=0;
 function bridgeStop(){bridgeGen++;clearTimeout(bridgeTimer);clearTimeout(chainWatch);const el=document.getElementById('bridgeTag');if(el)el.classList.remove('on');}

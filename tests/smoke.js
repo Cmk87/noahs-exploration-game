@@ -210,32 +210,28 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
       speechSynthesis.speak = function (u) { window.BRIDGE_LOG.push({ text: u.text, lang: u.lang, voice: (u.voice && u.voice.lang) || '' }); try { return window._speak0(u); } catch (e) {} };
     }
   });
-  const bridgeOf = () => page.evaluate(() => {
+  // one language at a time: a sticker speaks the app language; a flag for each bridge language says it in that language
+  const tapCat = () => page.evaluate(() => {
     const e = CITY.ENT.cat, L = { de: 0, en: 1, es: 2 };
-    const order = bridgeOrder();
     const btn = [...document.querySelectorAll('#stkBook .stk.got')].find(b => b.textContent.includes(e.n[L[lang]]));
-    window.BRIDGE_LOG = [];
-    btn.click();
-    return order.map(c => ({ lang: { es: 'es-ES', en: 'en-US', de: 'de-DE' }[c], bit: e.n[L[c]] }));
+    window.BRIDGE_LOG = []; btn.click();
+    return { lang, flags: [...document.querySelectorAll('#stkCard .stkFlag')].map(b => b.textContent), want: flagLangs() };
   });
   await page.waitForTimeout(700);
-  let expect = await bridgeOf();
-  await page.waitForFunction(n => window.BRIDGE_LOG.length >= n, expect.length, { timeout: 8000 });
-  check(await page.evaluate(exp => {
-    const got = window.BRIDGE_LOG.slice(0, exp.length);
-    const tag = document.getElementById('bridgeTag');
-    return got.length === exp.length && got.every((g, i) => g.lang === exp[i].lang && g.text.includes(exp[i].bit) && (!g.voice || g.voice.toLowerCase().startsWith(exp[i].lang.slice(0, 2))))
-      && tag && tag.classList.contains('on') && /🇪🇸|🇬🇧|🇩🇪/.test(tag.textContent);
-  }, expect), 'tapping a collected sticker says the word in each bridge language, current one first');
-  check(await page.evaluate(() => BRIDGE.includes('de') && $('de').style.display === 'none'), 'the word bridge can include a language that is switched off for learning');
+  let cat = await tapCat();
+  await page.waitForTimeout(1500);
+  check(await page.evaluate(L => window.BRIDGE_LOG.length >= 1 && window.BRIDGE_LOG.every(g => g.lang.slice(0, 2) === L), cat.lang)
+    && cat.flags.length === cat.want.length && cat.want.length >= 1, 'tapping a collected sticker speaks only the app language, with a flag for each other bridge language');
+  await page.evaluate(() => { window.BRIDGE_LOG = []; document.querySelector('#stkCard .stkFlag').click(); });
+  await page.waitForTimeout(800);
+  check(await page.evaluate(L => window.BRIDGE_LOG.length >= 1 && window.BRIDGE_LOG.every(g => g.lang.slice(0, 2) === L), cat.want[0]), 'a flag says the sticker in its own language');
+  check(await page.evaluate(() => BRIDGE.includes('de') && $('de').style.display === 'none'), 'the flags can include a language that is switched off for learning');
   await page.evaluate(() => { showTab('parent'); document.querySelector('#bridgeBtns button[data-l="en"]').click(); });
-  check(await page.evaluate(() => !BRIDGE.includes('en') && localStorage.getItem('sl_bridge').split(',').indexOf('en') < 0), 'a parent can turn one bridge language off');
+  check(await page.evaluate(() => !BRIDGE.includes('en') && localStorage.getItem('sl_bridge').split(',').indexOf('en') < 0), 'a parent can turn one flag language off');
   await page.evaluate(() => showTab('stickers'));
   await page.waitForTimeout(700);
-  expect = await bridgeOf();
-  await page.waitForFunction(n => window.BRIDGE_LOG.length >= n, expect.length, { timeout: 8000 });
-  await page.waitForTimeout(1500);
-  check(await page.evaluate(exp => window.BRIDGE_LOG.length === exp.length && window.BRIDGE_LOG.every((g, i) => g.lang === exp[i].lang) && !window.BRIDGE_LOG.some(g => g.lang === 'en-US'), expect), 'with English off the bridge, the sticker no longer says the English word');
+  cat = await tapCat();
+  check(!cat.flags.includes('🇬🇧'), 'with English off, the sticker card has no English flag');
   await page.evaluate(() => { showTab('parent'); document.querySelector('#bridgeBtns button[data-l="en"]').click(); });
   await page.evaluate(() => { document.querySelector('#stkBook .stk.got').click(); $('stkGo').click(); });
   await page.waitForTimeout(300);

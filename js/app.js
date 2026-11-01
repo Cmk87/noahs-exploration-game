@@ -161,7 +161,7 @@ function renderParent(){
       try{localStorage.setItem('sl_langs',LANGS_ON.join(','));}catch(e){}applyLangs();renderParent();};
     lgb.appendChild(b);});
   $('langInfo').textContent={es:'Los idiomas apagados desaparecen de arriba.',en:'Languages switched off disappear from the top bar.',de:'Ausgeschaltete Sprachen verschwinden oben aus der Leiste.'}[lang];
-  $('pBridgeTitle').textContent={es:'🌉 Puente de palabras',en:'🌉 Word bridge',de:'🌉 Wortbrücke'}[lang];
+  $('pBridgeTitle').textContent={es:'🌉 Banderitas: otros idiomas',en:'🌉 Little flags: other languages',de:'🌉 Fähnchen: andere Sprachen'}[lang];
   const bgb=$('bridgeBtns');bgb.innerHTML='';
   [['de','🇩🇪',{es:'Alemán',en:'German',de:'Deutsch'}],['en','🇬🇧',{es:'Inglés',en:'English',de:'Englisch'}],['es','🇪🇸',{es:'Español',en:'Spanish',de:'Spanisch'}]].forEach(([c,f,n])=>{
     const b=document.createElement('button'),on=BRIDGE.includes(c);b.className='seg'+(on?' on':'');b.dataset.l=c;b.textContent=(on?'✅ ':'⛔ ')+f+' '+n[lang];
@@ -170,7 +170,7 @@ function renderParent(){
       const next=on?BRIDGE.filter(x=>x!==c):['de','en','es'].filter(x=>x===c||BRIDGE.includes(x));
       BRIDGE=next;try{localStorage.setItem('sl_bridge',BRIDGE.join(','));}catch(e){}renderParent();};
     bgb.appendChild(b);});
-  $('bridgeInfo').textContent={es:'Al tocar una pegatina, dice la palabra en los idiomas marcados, uno tras otro. Es independiente de los idiomas de arriba: el español puede estar aquí aunque no esté en la barra.',en:'When he taps a sticker, the word is said in the ticked languages, one after another. This is separate from the languages above: Spanish can be included here even if it is not on the top bar.',de:'Beim Tippen auf einen Sticker wird das Wort in den angehakten Sprachen gesagt, eine nach der anderen. Das ist unabhängig von den Sprachen oben: Spanisch kann hier dabei sein, auch wenn es oben nicht in der Leiste ist.'}[lang];
+  $('bridgeInfo').textContent={es:'La voz habla en el idioma elegido arriba. En las fotos, las pegatinas y la ciudad, una banderita de cada idioma marcado aquí repite la palabra en ese idioma cuando él la toca. Es independiente de los idiomas de arriba.',en:'The voice speaks the language chosen at the top. On photos, stickers and in the town, a little flag for each language ticked here says the word in that language when he taps it. This is separate from the languages above.',de:'Die Stimme spricht die oben gewählte Sprache. Bei Fotos, Stickern und in der Stadt sagt ein Fähnchen für jede hier angehakte Sprache das Wort in dieser Sprache, wenn er es antippt. Unabhängig von den Sprachen oben.'}[lang];
   $('pLimitTitle').textContent={es:'⏰ Tiempo de juego al día',en:'⏰ Play time per day',de:'⏰ Spielzeit pro Tag'}[lang];
   const lb=$('limitBtns');lb.innerHTML='';
   [0,15,20,30,45].forEach(m=>{const b=document.createElement('button');b.className='seg'+(timeLimit===m?' on':'');

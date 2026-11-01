@@ -947,3 +947,9 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .phFindDots{color:#FFD23F;font-size:22px;letter-spacing:4px}
 .phChoices.phFind{grid-template-columns:repeat(2,1fr);max-width:min(100%,calc((100vh - 250px)*1.0));max-width:min(100%,calc((100dvh - 250px)*1.0));margin:0 auto}
 .phChoice.phDim{opacity:.35;transition:opacity .4s}
+/* one language with flags: the town bubble and the sticker card */
+#cityBub.flags.on{pointer-events:auto}
+#cityBub .cbFlag{border:none;background:#EEF1F8;border-radius:12px;font-size:20px;line-height:1;padding:3px 6px;margin-left:6px;cursor:pointer;vertical-align:middle}
+#cityBub .cbFlag:active{transform:translateY(2px)}
+.stkBtns button.stkFlag{background:#EEF1F8;box-shadow:0 4px 0 #C9D0DB;font-size:22px;padding:6px 12px}
+.stkBig.stkPicCv canvas{width:min(70vw,280px);aspect-ratio:4/3;display:block;margin:0 auto}
