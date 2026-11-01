@@ -46,6 +46,15 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   check(true, 'words quiz levels 1–8 (incl. der/die/das and plurals)');
   await page.evaluate(() => { for (let i = 0; i < 30; i++) { SKILL['words|de'] = { s: 5.2, n: 10, h: [] }; pluralRound(5); } artRound(VOCAB, 4); });
   check(await page.evaluate(() => artMode && !!target), 'der/die/das round builds');
+  check(await page.evaluate(() => {
+    const prev = lang; lang = 'es';
+    const need = ['hada', 'agua', 'águila'];
+    const arts = Object.fromEntries(VOCAB.filter(v => need.includes(v.es[1])).map(v => [v.es[1], v.es[0]]));
+    const one = w => plPhrase({ es: ['el', w, w + 's'], de: ['die', 'x', 'xs'], en: ['x', 'xs'] }, 1);
+    const ok = need.every(w => arts[w] === 'el') && one('hada') === 'un hada' && one('agua') === 'un agua' && one('águila') === 'un águila'
+      && plPhrase({ es: ['la', 'casa', 'casas'], de: ['das', 'Haus', 'Häuser'], en: ['house', 'houses'] }, 1) === 'una casa';
+    lang = prev; return ok;
+  }), 'feminine nouns with a stressed a/ha keep el and un (el hada, el agua, el águila)');
 
   await page.evaluate(() => showTab('ear'));
   for (const L of [1, 4, 6]) {
@@ -99,6 +108,14 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   check(await page.evaluate(() => power === 45 && pane === 'digLock'), 'leaving a prize game right after starting gives the points back');
   await page.evaluate(() => { DINOS.forEach(d => prepParts(d)); showDigLock(); });
   check(true, 'all 11 dinosaur skeletons build');
+  await page.evaluate(() => { power = 40; savePower(); showTab('dig'); startGame('bal'); });
+  await page.waitForTimeout(300);
+  const bal = await page.evaluate(() => {
+    const H = bc.getBoundingClientRect().height, b = BAL && BAL.b[0];
+    return { goal: BAL && BAL.goal, ratio: b && H ? b.vy / H : 0 };
+  });
+  check(bal.goal === 30 && bal.ratio > 0.11 && bal.ratio < 0.21, 'balloon round is longer and the balloons rise faster');
+  await page.evaluate(() => showTab('home'));
 
   console.log('Adventure');
   await page.evaluate(() => { advEnsure(true); showTab('adv'); advGo(); });
@@ -162,6 +179,9 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   check(await page.evaluate(() => !!CITY.FIND() && !!CITY.ENT[CITY.FIND().id].at), 'city: "where is …?" picks a target');
   await page.evaluate(() => showTab('stickers'));
   check(await page.evaluate(() => document.querySelectorAll('#stkBook .stk').length === CITY.total() && document.querySelectorAll('#stkBook .stk.got').length === CITY.FOUND.size), 'sticker book shows every animal, found ones as stickers');
+  check(await page.evaluate(() => !document.getElementById('museum') && document.querySelectorAll('#stkBook .stkDino').length === DINOS.length), 'dinosaur museum lives in the sticker book, not on the prize screen');
+  await page.evaluate(() => { if (!found.includes('trex')) found.push('trex'); try { localStorage.setItem('sl_dinos', JSON.stringify(found)); } catch (e) {} showStickers(); });
+  check(await page.evaluate(() => [...document.querySelectorAll('#stkBook .stkDino.got')].some(b => /Tyrannosaurus|Tiranosaurio/i.test(b.textContent))), 'a dinosaur saved earlier still shows as found');
   await page.evaluate(() => { document.querySelector('#stkBook .stk.got').click(); $('stkGo').click(); });
   await page.waitForTimeout(300);
   check(await page.evaluate(() => activeTab === 'city'), 'a sticker can show its animal in the town');
@@ -229,17 +249,59 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    check(await q.evaluate(() => power === 45 && !localStorage.getItem('sl_pgame')), 'a prize game cut off by the system gives its points back');
    await q.close();}
 
-  // jobs: a 'who helps?' round answered right, and every job's little game played to the end
-  {const r = await page.evaluate(async () => { showTab('jobs'); JM = 'need'; jobRound(); const i = JR.opts.findIndex(o => o.j === JR.j); document.querySelectorAll('#jobStage .jCard')[i].click();
-     const ok = JR.done; const sleep = ms => new Promise(r => setTimeout(r, ms)); const ends = [];
-     for (const j of JOBS) { jobTask(j, true, 1); await sleep(80); const T = TASKS[j.k];
-       for (let s = 0; s < 12 && !document.querySelector('.jEnd'); s++) { const bs = [...document.querySelectorAll('.jScene .jT')].filter(b => !b.classList.contains('done')); if (!bs.length) break;
-         if (T.houses) { bs.find(b => b.querySelector('.jNum').textContent == JR.want).click(); await sleep(1300); }
-         else if (T.letters) { const L = document.querySelector('.jBoard').textContent.toLowerCase(); const w = LETTERWORD[lang][L][0]; bs.find(b => b.textContent === w).click(); await sleep(1400); }
-         else { bs[0].click(); await sleep(60); } }
-       await sleep(1000); if (document.querySelector('.jEnd')) ends.push(j.k); }
-     showTab('home'); return { ok, ends: ends.length };});
+  // jobs: a 'who helps?' round answered right, and every job's little game played to the end.
+  // Wait until the house / letter / end card is actually there (a fixed sleep raced the round).
+  {const r = await page.evaluate(async () => {
+     showTab('jobs'); ADV.started = false; JM = 'need'; jobRound();
+     const i = JR.opts.findIndex(o => o.j === JR.j); document.querySelectorAll('#jobStage .jCard')[i].click();
+     const ok = JR.done;
+     const sleep = ms => new Promise(res => setTimeout(res, ms));
+     const waitFor = async (fn, ms = 5000) => { const t0 = performance.now(); while (performance.now() - t0 < ms) { const v = fn(); if (v) return v; await sleep(40); } return null; };
+     const ends = [];
+     for (const j of JOBS) {
+       jobTask(j, true, 1); const T = TASKS[j.k];
+       for (let s = 0; s < 12 && !document.querySelector('.jEnd'); s++) {
+         if (T.houses) {
+           const btn = await waitFor(() => {
+             if (document.querySelector('.jEnd')) return 'end';
+             if (!JR || JR.kind !== 'task' || JR.lock || JR.want == null) return null;
+             return [...document.querySelectorAll('.jScene .jT')].find(b => { const n = b.querySelector('.jNum'); return n && n.textContent == JR.want; }) || null;
+           });
+           if (!btn || btn === 'end') break; btn.click();
+         } else if (T.letters) {
+           const btn = await waitFor(() => {
+             if (document.querySelector('.jEnd')) return 'end';
+             const board = document.querySelector('.jBoard'); if (!board) return null;
+             const w = (LETTERWORD[lang][board.textContent.toLowerCase()] || [])[0]; if (!w) return null;
+             return [...document.querySelectorAll('.jScene .jT')].find(b => !b.classList.contains('ok') && b.textContent === w) || null;
+           });
+           if (!btn || btn === 'end') break; btn.click();
+         } else {
+           const btn = await waitFor(() => document.querySelector('.jEnd') ? 'end' : ([...document.querySelectorAll('.jScene .jT')].find(b => !b.classList.contains('done')) || null));
+           if (!btn || btn === 'end') break; btn.click();
+         }
+       }
+       if (await waitFor(() => document.querySelector('.jEnd'))) ends.push(j.k);
+     }
+     showTab('home'); return { ok, ends: ends.length };
+   });
    check(r.ok && r.ends === 10, `jobs: a "who helps?" answer, and all ${r.ends}/10 job games finished`);}
+
+  console.log('Parent gate');
+  await page.evaluate(() => document.getElementById('gearBtn').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true })));
+  await page.waitForTimeout(1200);
+  const sum = await page.evaluate(() => { const q = document.querySelector('#grown.on .grownQ'); return q ? q.textContent : ''; });
+  const parts = sum.match(/(\d+)\s*×\s*(\d+)/);
+  check(!!parts, 'holding the gear asks a grown-up sum before parent settings');
+  await page.evaluate(() => { const b = [...document.querySelectorAll('#grown .grownKeys button')].find(x => x.textContent === '1'); b.click();
+    [...document.querySelectorAll('#grown .grownKeys button')].find(x => x.textContent === '✓').click(); });
+  check(await page.evaluate(() => !!document.querySelector('#grown.on') && activeTab !== 'parent'), 'a wrong sum does not open parent settings');
+  if (parts) {
+    const digits = String(Number(parts[1]) * Number(parts[2]));
+    for (const d of digits) await page.evaluate(d => [...document.querySelectorAll('#grown .grownKeys button')].find(x => x.textContent === d).click(), d);
+    await page.evaluate(() => [...document.querySelectorAll('#grown .grownKeys button')].find(x => x.textContent === '✓').click());
+  }
+  check(await page.evaluate(() => activeTab === 'parent' && !document.querySelector('#grown.on')), 'the right sum opens parent settings');
 
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();

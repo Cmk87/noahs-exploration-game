@@ -319,15 +319,6 @@
   .gcard.locked::after{content:"🔒";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:42px}
   .gcard:active{transform:translate(5px,5px);box-shadow:none}
   .gcard.wrong{animation:shake .4s}
-  #museumTitle{margin-top:22px;font-size:min(6vw,24px);color:var(--bolt);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill}
-  #museum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:460px;margin-top:8px}
-  .mcard{background:rgba(255,255,255,.1);border:3px solid var(--ink);border-radius:8px;box-shadow:3px 3px 0 var(--ink);
-    padding:4px;cursor:pointer;font-size:11px;font-weight:bold;line-height:1.15;min-height:20px}
-  .mcard canvas{width:100%;aspect-ratio:4/3;display:block}
-  .mcard.got{background:linear-gradient(#FFF6D8,#E9D49B);color:var(--ink)}
-  .mcard:active{transform:translate(3px,3px);box-shadow:none}
-  #treasures{margin-top:12px;font-size:16px}
-  #treasures span{display:inline-block;margin:0 4px}
   #digTop{display:flex;align-items:center;justify-content:center;gap:4px;width:100%}
   #digTop .prompt{margin:10px 6px 12px 14px;font-size:min(5vw,22px)}
   #boneCount{background:#fff;color:var(--ink);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);border-radius:999px;
@@ -426,6 +417,17 @@
     border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);border-radius:8px;padding:6px 12px;font-weight:bold;font-size:15px;
     display:none;white-space:nowrap}
   #gearTip.on{display:block;animation:tipIn .35s cubic-bezier(.2,1.7,.4,1)}
+  #grown{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(10,14,40,.55);padding:16px}
+  #grown.on{display:flex}
+  #grown .qsBox{background:#fff;border-radius:26px;padding:20px 18px;width:min(88vw,380px);display:flex;flex-direction:column;gap:12px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35);color:var(--ink)}
+  #grown .qsTitle{font-size:min(6vw,26px);color:var(--ink)}
+  .grownQ{font-size:min(7vw,32px);color:var(--ink)}
+  .grownAns{font:800 40px 'Baloo 2',system-ui;min-height:56px;border:3px solid var(--ink);border-radius:14px;line-height:56px}
+  .grownAns.wrong{animation:shake .4s;color:var(--blaze)}
+  .grownKeys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .grownKeys button{font:800 22px 'Baloo 2',system-ui;padding:12px 0;border:3px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink);cursor:pointer}
+  .grownKeys button:active{transform:translate(2px,2px);box-shadow:none}
+  #grownNo{background:#EEF1F8;color:var(--ink)}
   @keyframes tipIn{from{transform:translateX(-50%) scale(.5);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
   #backBtn{background:var(--beam);width:100%}
   @media (prefers-reduced-motion:reduce){*{animation:none!important}}
@@ -635,6 +637,13 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .stkBtns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .stkBtns button{border:none;border-radius:16px;background:var(--bolt);color:var(--ink);font:800 17px 'Baloo 2',system-ui;padding:8px 14px;box-shadow:0 4px 0 #C99600;cursor:pointer}
 .stkBtns button#stkX{background:#EEF1F8;box-shadow:0 4px 0 #C9D0DB}
+.stkDinos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stkDino{border:none;border-radius:16px;padding:4px 4px 6px;background:#EEF1F8;cursor:pointer;color:#9AA4B8}
+.stkDino.got{background:linear-gradient(#FFF6D8,#E9D49B);color:var(--ink)}
+.stkDino canvas{width:100%;aspect-ratio:4/3;display:block}
+.stkDino:active{transform:translateY(2px) scale(.98)}
+.stkTreasures{margin:10px 4px 0;font-size:15px;color:var(--ink);text-align:center}
+.stkTreasures span{margin:0 4px}
 #bag{touch-action:none;background:#5BC0F8}
 #quitSheet{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;background:rgba(10,14,40,.55)}
 #quitSheet.on{display:flex}

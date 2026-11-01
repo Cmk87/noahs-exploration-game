@@ -72,7 +72,7 @@ ANI('crab','🦀',['die Krabbe','the crab','el cangrejo'],['Die Krabbe! Sie läu
 ANI('gull','🐦',['die Möwe','the seagull','la gaviota'],['Die Möwe! Kreisch!','The seagull! Squawk!','¡La gaviota! ¡Cuac!']);
 ANI('starfish','⭐',['der Seestern','the starfish','la estrella de mar'],['Der Seestern! Er hat fünf Arme.','The starfish! It has five arms.','¡La estrella de mar! Tiene cinco brazos.']);
 ANI('seal','🦭',['die Robbe','the seal','la foca'],['Die Robbe! Sie klatscht mit den Flossen.','The seal! It claps its flippers.','¡La foca! Aplaude con las aletas.']);
-ANI('octopus','🐙',['der Tintenfisch','the octopus','el pulpo'],['Der Tintenfisch! Er hat acht Arme.','The octopus! It has eight arms.','¡El pulpo! Tiene ocho brazos.']);
+ANI('octopus','🐙',['der Oktopus','the octopus','el pulpo'],['Der Oktopus! Er hat acht Arme.','The octopus! It has eight arms.','¡El pulpo! Tiene ocho brazos.']);
 ANI('turtle','🐢',['die Schildkröte','the turtle','la tortuga'],['Die Meeresschildkröte! Sie schwimmt ganz ruhig.','The sea turtle! It swims very calmly.','¡La tortuga marina! Nada muy tranquila.']);
 ANI('dolphin','🐬',['der Delfin','the dolphin','el delfín'],['Der Delfin! Er springt aus dem Wasser.','The dolphin! It jumps out of the water.','¡El delfín! Salta fuera del agua.']);
 ANI('whale','🐳',['der Wal','the whale','la ballena'],['Der Wal! Er ist das größte Tier der Welt.','The whale! It is the biggest animal in the world.','¡La ballena! Es el animal más grande del mundo.']);
