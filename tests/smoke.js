@@ -479,6 +479,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      document.querySelector('#v-ride .phChoice[data-ok="0"]').click();
      const held = power === p0;
      document.querySelector('#v-ride .phChoice[data-ok="1"]').click();
+     document.querySelector('#v-ride .phChoice[data-ok="1"]').click();
      const hideUp = power === p0 + 1;
      showTab('baby');
      const pairs = document.querySelectorAll('#v-baby .phAn').length;
@@ -493,6 +494,17 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const dog = PHOTO_PACK.pairs.find(p => p.id === 'dog');
      const saidGrow = await waitFor(() => PHOTO_SAID.some(t => t === dog.facts[0].de));
      const slid = document.querySelector('#v-baby .phMorphTop') && document.querySelector('#v-baby .phMorphTop').classList.contains('gone');
+     document.querySelector('#v-baby .phReplay').click();
+     const replayReset = !!(document.querySelector('#v-baby .phMorphTop') && !document.querySelector('#v-baby .phMorphTop').classList.contains('gone') && document.querySelector('#v-baby .phName').textContent === 'der Welpe');
+     showTab('king');
+     document.querySelector('#v-king [data-id="polar"]').click();
+     const polarIds = [...document.querySelectorAll('#v-king .phAn')].map(b => b.dataset.id);
+     document.querySelector('#v-king .phAn').click();
+     document.querySelector('#v-king [data-act="prev"]').click();
+     const wrapped = document.querySelector('#v-king .phName').textContent === PHOTO_PACK.animals.find(a => a.id === polarIds[polarIds.length - 1]).names.de.full;
+     document.querySelector('#v-king [data-act="next"]').click();
+     document.querySelector('#v-king [data-act="next"]').click();
+     const stillCard = !!(document.querySelector('#v-king .phHero') && !/undefined|null/.test(document.querySelector('#v-king .phName').textContent));
      showTab('baby');
      document.querySelector('#v-baby .phGrow').click();
      const gChoices = document.querySelectorAll('#v-baby .phChoice').length;
@@ -504,14 +516,15 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const pass = JSON.parse(localStorage.getItem('sl_passport') || '{}');
      showTab('home');
      return { ids, lazy, n, opened, saidName, saidSound, saidFact, esName, amb, choices, blurred, held, up: power >= p0 + 1,
-       pairs, pairLazy, morph, saidBaby, saidAdult, saidGrow, slid, gChoices, babyShown, gHeld, hideUp, gUp: power === gp0 + 1,
+       pairs, pairLazy, morph, saidBaby, saidAdult, saidGrow, slid, replayReset, wrapped, stillCard, gChoices, babyShown, gHeld, hideUp, gUp: power === gp0 + 1,
        stamped: pass.v && pass.v.includes('fire-truck') && pass.b && pass.b.includes('dog') };
    });
    check(more.ids.join() === 'helpers,buildingSite,road,rails,air,water' && more.lazy, 'vehicles shows the six groups, photos loaded lazily');
    check(more.n >= 5 && more.opened && more.saidName && more.saidSound && more.saidFact, 'a vehicle card says the name, the sound, and a fact');
    check(more.esName === 'el camión de bomberos' && more.amb === 'la ambulancia', 'vehicle cards use the Spanish article from the photo pack');
    check(more.choices === 3 && more.blurred && more.held && more.hideUp, "who's hiding works for vehicles");
-   check(more.pairs === 16 && more.pairLazy && more.morph && more.saidBaby && more.saidAdult && more.saidGrow && more.slid, 'a baby photo slides to the grown-up and both names are spoken');
+   check(more.pairs === 16 && more.pairLazy && more.morph && more.saidBaby && more.saidAdult && more.saidGrow && more.slid && more.replayReset, 'a baby photo slides to the grown-up, and replay starts from the baby again');
+   check(more.wrapped && more.stillCard, 'previous at the start of a list wraps around, and rapid next keeps a real card');
    check(more.gChoices === 3 && more.babyShown && more.gHeld && more.gUp, 'matching a baby to its grown-up: a wrong tap keeps the point');
    check(more.stamped, 'the first vehicle and the first baby earn a passport stamp');
   }
