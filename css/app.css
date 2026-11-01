@@ -936,3 +936,14 @@ header{gap:6px;padding-left:10px;padding-right:10px}
   .phNav,.phChoices{max-width:640px;margin-left:auto;margin-right:auto}
   .phHero,.phMorph{width:min(70vw,560px,calc(100vh - 330px));width:min(70vw,560px,calc(100dvh - 330px))}
 }
+/* the other languages on a photo card: small flags, only spoken when tapped */
+.phLangs{display:flex;justify-content:center;gap:10px;margin:0 0 4px}
+.phLang{border:none;background:rgba(255,255,255,.16);border-radius:16px;font-size:30px;line-height:1;padding:6px 12px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.phLang:active{transform:translateY(3px);box-shadow:none}
+/* listen and find: four big photos */
+.phFindTop{display:flex;align-items:center;justify-content:center;gap:14px;margin:2px 0 10px}
+.phFindSay{width:84px;height:72px;border:none;border-radius:22px;background:var(--bolt);font-size:38px;cursor:pointer;box-shadow:var(--lift),var(--soft)}
+.phFindSay:active{transform:translateY(4px)}
+.phFindDots{color:#FFD23F;font-size:22px;letter-spacing:4px}
+.phChoices.phFind{grid-template-columns:repeat(2,1fr);max-width:min(100%,calc((100vh - 250px)*1.0));max-width:min(100%,calc((100dvh - 250px)*1.0));margin:0 auto}
+.phChoice.phDim{opacity:.35;transition:opacity .4s}

@@ -419,14 +419,14 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      showTab('king');
      document.querySelector('#v-king .phHide').click();
      const choices = document.querySelectorAll('#v-king .phChoice').length;
-     const blurred = !!document.querySelector('#v-king .phBlur');
+     const blurred = !!(PUZ && PUZ.item) && document.querySelectorAll('#v-king .phFindSay').length === 1;   // a name to find, said aloud, with a replay button
      const p0 = power;
-     document.querySelector('#v-king .phChoice[data-ok="0"]').click();
+     document.querySelector(`#v-king .phChoice:not([data-id="${PUZ.item.id}"])`).click();
      const held = power === p0;
-     document.querySelector('#v-king .phChoice[data-ok="1"]').click();
+     document.querySelector(`#v-king .phChoice[data-id="${PUZ.item.id}"]`).click();
      return { choices, blurred, held, up: power === p0 + 1 };
    });
-   check(hide.choices === 3 && hide.blurred && hide.held && hide.up, "who's hiding: 3 photos, a wrong tap keeps the point, the right one earns it");
+   check(hide.choices === 4 && hide.blurred && hide.held && hide.up, "listen and find: 4 photos, a wrong tap keeps the point, the right one earns it");
   }
   {await page.evaluate(() => { showTab('king'); document.querySelector('#v-king .phLive').click(); });
    const drag = await page.locator('#v-king .phDrag').boundingBox();
@@ -474,12 +474,12 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      showTab('ride');
      document.querySelector('#v-ride .phHide').click();
      const choices = document.querySelectorAll('#v-ride .phChoice').length;
-     const blurred = !!document.querySelector('#v-ride .phBlur');
+     const blurred = !!(PUZ && PUZ.item) && document.querySelectorAll('#v-ride .phFindSay').length === 1;   // a name to find, said aloud, with a replay button
      const p0 = power;
-     document.querySelector('#v-ride .phChoice[data-ok="0"]').click();
+     document.querySelector(`#v-ride .phChoice:not([data-id="${PUZ.item.id}"])`).click();
      const held = power === p0;
-     document.querySelector('#v-ride .phChoice[data-ok="1"]').click();
-     document.querySelector('#v-ride .phChoice[data-ok="1"]').click();
+     document.querySelector(`#v-ride .phChoice[data-id="${PUZ.item.id}"]`).click();
+     document.querySelector(`#v-ride .phChoice[data-id="${PUZ.item.id}"]`).click();
      const hideUp = power === p0 + 1;
      showTab('baby');
      const pairs = document.querySelectorAll('#v-baby .phAn').length;
@@ -522,7 +522,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    check(more.ids.join() === 'helpers,buildingSite,road,rails,air,water' && more.lazy, 'vehicles shows the six groups, photos loaded lazily');
    check(more.n >= 5 && more.opened && more.saidName && more.saidSound && more.saidFact, 'a vehicle card says the name, the sound, and a fact');
    check(more.esName === 'el camión de bomberos' && more.amb === 'la ambulancia', 'vehicle cards use the Spanish article from the photo pack');
-   check(more.choices === 3 && more.blurred && more.held && more.hideUp, "who's hiding works for vehicles");
+   check(more.choices === 4 && more.blurred && more.held && more.hideUp, "listen and find works for vehicles");
    check(more.pairs === 16 && more.pairLazy && more.morph && more.saidBaby && more.saidAdult && more.saidGrow && more.slid && more.replayReset, 'a baby photo slides to the grown-up, and replay starts from the baby again');
    check(more.wrapped && more.stillCard, 'previous at the start of a list wraps around, and rapid next keeps a real card');
    check(more.gChoices === 3 && more.babyShown && more.gHeld && more.gUp, 'matching a baby to its grown-up: a wrong tap keeps the point');
@@ -582,6 +582,26 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      found = DINOS.map(d => d.k); power = 99; savePower(); showTab('dig'); showDigLock(); startGame('dig');
      const dig = found.length === 0 && dinoRound >= 2; showDigLock(); showTab('home'); return ok && dig; });
    check(r, 'a full sticker book and a full dino museum both start a new round from zero');}
+  // photo books: back returns to the same place in a long list; a card speaks only the app language,
+  // the other languages only when their flag is tapped
+  {const r = await page.evaluate(async () => {
+     const sleep = ms => new Promise(res => setTimeout(res, ms));
+     const keepB = BRIDGE; BRIDGE = ['de', 'en', 'es'];
+     showTab('folk'); photoRoot().querySelectorAll('[data-act="grp"]')[1].click(); await sleep(50);
+     const root = photoRoot(); root.scrollTop = 400; const top = root.scrollTop;
+     const said = []; const o = speechSynthesis.speak.bind(speechSynthesis);
+     speechSynthesis.speak = u => { said.push(u.lang); try { o(u); } catch (e) {} };
+     [...root.querySelectorAll('[data-act="open"]')].find(t => t.getBoundingClientRect().top > root.getBoundingClientRect().top).click();
+     await sleep(1500);
+     const flags = document.querySelectorAll('#v-folk .phLang').length;
+     const oneLang = said.length > 0 && said.every(l => /^de/i.test(l));
+     document.querySelector('#v-folk [data-act="back"]').click(); await sleep(50);
+     const kept = Math.abs(photoRoot().scrollTop - top) < 2;
+     speechSynthesis.speak = o; BRIDGE = keepB; showTab('home');
+     return { flags, oneLang, kept, top, said };
+   });
+   check(r.kept && r.top > 0, 'photo books: back from a card returns to the same place in the list' + (r.kept ? '' : ' ' + JSON.stringify(r)));
+   check(r.flags === 2 && (r.oneLang || r.said.length === 0), 'photo cards speak the app language only, with flags for the other two' + (r.flags === 2 && (r.oneLang || r.said.length === 0) ? '' : ' ' + JSON.stringify(r)));}
   {const bad = await page.evaluate(() => JSON.parse(sessionStorage.getItem('ALLSAID') || '[]').filter(t => /\[object|undefined|null/.test(t)));
    check(bad.length === 0, 'the voice never reads out "[object Object]", "undefined" or "null"' + (bad.length ? ': ' + bad.slice(0, 3).join(' | ') : ''));}
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));

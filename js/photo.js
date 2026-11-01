@@ -1,9 +1,10 @@
 /* =============================================================
-   ANIMAL KINGDOM + PEOPLE OF THE WORLD
-   Big photo tiles. The voice says the name in each ticked word-bridge
-   language (the articles come from the photo pack, e.g. "el águila"),
-   then a sound and one fact. No reading needed. First look at a card
-   earns a passport stamp, kept on this device only.
+   ANIMAL KINGDOM + PEOPLE OF THE WORLD (and vehicles, babies, body)
+   Big photo tiles. The voice says the name in the app language (the
+   articles come from the photo pack, e.g. "el águila"), then a sound or
+   where they live, and one fact. Small flags on the card say the same
+   name, sound and fact in the other languages, only when tapped.
+   First look at a card earns a passport stamp, kept on this device only.
 ============================================================= */
 const PASS={a:[],p:[],v:[],b:[],y:[]};
 try{
@@ -24,7 +25,7 @@ function photoCount(kind){return (PASS[kind]||[]).length;}
 const HAB_COL={farm:'#E7A23A',pets:'#E07A6A',forest:'#2F9A45',jungle:'#1B7A48',savanna:'#D4922A',ocean:'#1E86C4',polar:'#6AAED4',birds:'#4AA0D8',bugs:'#7CB342',world:'#C47B3A'};
 const VEH_ORDER=['helpers','buildingSite','road','rails','air','water'];
 const PHOTO_VIEW={a:'v-king',p:'v-folk',v:'v-ride',b:'v-baby',y:'v-body'};
-const PH={kind:'a',screen:'pick',hab:null,grp:null,idx:0};
+const PH={kind:'a',screen:'pick',hab:null,grp:null,idx:0,fact:null,pickTop:0,listTop:0};
 let PUZ=null,photoGen=0,photoBound=false,photoDrag=null,photoSwallow=false;
 const factN={};
 
@@ -76,25 +77,32 @@ function photoYay(){
 function photoLook(){return {es:'Mira otra vez',en:'Look again',de:'Schau noch mal'}[lang];}
 function photoDoneLine(){return {es:'¡Lo has conseguido!',en:'You did it!',de:'Geschafft!'}[lang];}
 
-/* Name in every ticked language, then (animals) the sound, then ONE fact
-   in the learning language. The next tap of the same card says the other fact. */
-function photoSpeak(item){
-  const gen=++photoGen;
-  sayWordBridge(photoNames(item),{then(){
+/* Lines one after the other in one language: the first stops whatever was talking,
+   the rest wait their turn. */
+function photoSeq(lines,L,done){
+  const gen=++photoGen,list=lines.filter(Boolean);
+  const go=i=>{
     if(gen!==photoGen)return;
-    const fact=()=>{
-      if(gen!==photoGen)return;
-      const f=photoFact(item);
-      if(f&&f[lang])photoAfter(f[lang],lang);
-    };
-    if(PH.kind==='a'||PH.kind==='v'||PH.kind==='y'){
-      const snd=item.sound&&item.sound[lang];
-      if(snd)photoAfter(snd,lang,fact);else fact();
-    }else{
-      const w=item.where&&item.where[lang];
-      if(w)photoAfter(w,lang,fact);else fact();
-    }
-  }});
+    if(i>=list.length){if(done)done();return;}
+    if(i===0)speakFresh(list[0],L,0.8,()=>go(1));
+    else photoAfter(list[i],L,()=>go(i+1));
+  };
+  go(0);
+}
+/* Name, then the sound (animals, vehicles) or where they live (people), then ONE fact.
+   In the app language the next tap says the other fact; a flag says the same fact in its language. */
+function photoSpeak(item,L){
+  const own=!L||L===lang;L=L||lang;
+  if(own||!PH.fact)PH.fact=photoFact(item);
+  const f=PH.fact;
+  const mid=(PH.kind==='a'||PH.kind==='v'||PH.kind==='y')?(item.sound&&item.sound[L]):(item.where&&item.where[L]);
+  photoSeq([item.names[L].full,mid,f&&f[L]],L);
+}
+/* the other languages, as small flags on a card: tap one to hear it all in that language */
+function otherLangs(){return ['de','en','es'].filter(c=>c!==lang&&(typeof LANGS_ON==='undefined'||!LANGS_ON.length||LANGS_ON.includes(c)));}
+function langsHTML(){
+  const ls=otherLangs();if(!ls.length)return '';
+  return `<div class="phLangs">${ls.map(c=>`<button type="button" class="phLang" data-act="lang" data-l="${c}" aria-label="${c}">${BRIDGE_MARK[c]}</button>`).join('')}</div>`;
 }
 
 function photoBind(){
@@ -132,6 +140,7 @@ function photoRelang(){
     const h=PHOTO_PACK.habitats.find(x=>x.id===id)||PHOTO_PACK.groups.find(x=>x.id===id)||vehicleGroups().find(x=>x.id===id)||bodyGroups().find(x=>x.id===id);
     if(h)el.textContent=h[lang];
   });
+  const lg=root.querySelector('.phLangs');if(lg)lg.outerHTML=langsHTML()||'<div class="phLangs"></div>';
   const hero=root.querySelector('.phHero');
   if(hero&&item&&item.names)hero.alt=item.names[lang].full;
 }
@@ -142,6 +151,9 @@ function photoClick(e){
   const act=b.dataset.act,id=b.dataset.id;
   if(act==='drag')return;
   if(typeof ac==='function')ac();
+  if((act==='hab'||act==='grp')&&PH.screen==='pick')PH.pickTop=photoRoot().scrollTop;
+  if(act==='open'&&PH.screen==='list')PH.listTop=photoRoot().scrollTop;
+  if(act==='open'&&PH.screen==='pick'&&PH.kind==='b')PH.pickTop=photoRoot().scrollTop;
   if(act==='hab'){PH.hab=id;PH.screen='list';renderPhoto();const h=PHOTO_PACK.habitats.find(x=>x.id===id);if(h)photoSay(h[lang]);}
   else if(act==='grp'){PH.grp=id;PH.screen='list';renderPhoto();const g=(PH.kind==='y'?bodyGroups():PH.kind==='v'?vehicleGroups():PHOTO_PACK.groups).find(x=>x.id===id);if(g)photoSay(g[lang]);}
   else if(act==='open')openCard(id);
@@ -149,18 +161,20 @@ function photoClick(e){
   else if(act==='prev')stepCard(-1);
   else if(act==='next')stepCard(1);
   else if(act==='replay'){const it=photoList()[PH.idx];if(it){if(PH.kind==='b')photoSpeakBaby(it);else photoSpeak(it);}}
+  else if(act==='lang'){const it=photoList()[PH.idx],L=b.dataset.l;if(it&&L){if(PH.kind==='b')photoSpeakBaby(it,L);else photoSpeak(it,L);}}
+  else if(act==='find')findAnswer(id,b);
+  else if(act==='findSay'){if(PUZ&&PUZ.item)photoSay(findQ(PUZ.item));}
   else if(act==='hide')startHide();
   else if(act==='live')startLive();
   else if(act==='grow')startGrow();
   else if(act==='touch')startTouch();
   else if(act==='touched')touchYes();
   else if(act==='pass'){photoStop();PH.screen='pass';renderPhoto();}
-  else if(act==='pick')hideAnswer(b.dataset.ok==='1',b);
   else if(act==='drop')liveAnswer(b.dataset.ok==='1',b);
   else if(act==='growPick')growAnswer(b.dataset.ok==='1',b);
   else if(act==='stamp'){
     const it=stampItem(b.dataset.kind,id);
-    if(it)sayWordBridge(photoNames(b.dataset.kind==='b'?it.baby:it));
+    if(it)photoSay((b.dataset.kind==='b'?it.baby:it).names[lang].full);
   }
 }
 function stampItem(kind,id){
@@ -170,11 +184,18 @@ function stampItem(kind,id){
   if(kind==='y')return (PHOTO_PACK.body||[]).find(x=>x.id===id);
   return PHOTO_PACK.animals.find(x=>x.id===id);
 }
+/* back goes to where he was in the list, not to the top; if he paged on with the
+   arrows, the picture he last looked at is brought into view */
 function photoBack(){
   photoStop();PUZ=null;
-  if(PH.screen==='card'&&PH.kind!=='b')PH.screen='list';
-  else PH.screen='pick';
+  const from=PH.screen,root=photoRoot();
+  let top=0;
+  if(from==='card'&&PH.kind!=='b'){PH.screen='list';top=PH.listTop;}
+  else{PH.screen='pick';top=from==='card'||from==='list'?PH.pickTop:0;}
   renderPhoto();
+  root.scrollTop=top;
+  if(from==='card'){const it=photoList()[PH.idx],t=it&&root.querySelector(`[data-act="open"][data-id="${it.id}"]`);
+    if(t){const r=t.getBoundingClientRect(),v=root.getBoundingClientRect();if(r.top<v.top||r.bottom>v.bottom)t.scrollIntoView({block:'center'});}}
 }
 function openCard(id){
   const list=photoList();
@@ -194,30 +215,32 @@ function stepCard(d){
   else{renderCard(item,fresh);photoSpeak(item);}
 }
 /* Baby photo slides aside, then the grown-up name, then one growing-up fact. */
-function photoSpeakBaby(pair){
+function photoSpeakBaby(pair,L){
+  const own=!L||L===lang;L=L||lang;
+  if(own||!PH.fact)PH.fact=photoFact(pair);
+  const f=PH.fact;
   const gen=++photoGen;
   const root=photoRoot();
   const top=root.querySelector('.phMorphTop');
   const nm=root.querySelector('.phName');
   if(top)top.classList.remove('gone');
   if(nm)nm.textContent=pair.baby.names[lang].full;
-  sayWordBridge(photoNames(pair.baby),{then(){
+  speakFresh(pair.baby.names[L].full,L,0.8,()=>{
     if(gen!==photoGen)return;
     if(top)top.classList.add('gone');
     if(nm)nm.textContent=pair.adult.names[lang].full;
     setTimeout(()=>{
       if(gen!==photoGen)return;
-      sayWordBridge(photoNames(pair.adult),{then(){
+      photoAfter(pair.adult.names[L].full,L,()=>{
         if(gen!==photoGen)return;
-        const f=photoFact(pair);
-        if(f&&f[lang])photoAfter(f[lang],lang);
-      }});
+        if(f&&f[L])photoAfter(f[L],L);
+      });
     },700);
-  }});
+  });
 }
 
 function toolsHTML(){
-  const hide=PH.kind==='b'?'':'<button type="button" class="phTool phHide" data-act="hide" aria-label="hide">🙈</button>';
+  const hide=PH.kind==='b'?'':'<button type="button" class="phTool phHide" data-act="hide" aria-label="find">👂</button>';
   const live=PH.kind==='a'?'<button type="button" class="phTool phLive" data-act="live" aria-label="habitat">🏡</button>':'';
   const grow=PH.kind==='b'?'<button type="button" class="phTool phGrow" data-act="grow" aria-label="match">🐣</button>':'';
   const touch=PH.kind==='y'?'<button type="button" class="phTool phTouch" data-act="touch" aria-label="touch">👆</button>':'';
@@ -231,7 +254,7 @@ function renderPhoto(){
   else if(PH.screen==='list')renderList();
   else if(PH.screen==='card'){const it=photoList()[PH.idx];if(it){if(PH.kind==='b')renderBabyCard(it,false);else renderCard(it,false);}}
   else if(PH.screen==='pass')renderPass();
-  else if(PH.screen==='hide')renderHide();
+  else if(PH.screen==='hide')renderFind();
   else if(PH.screen==='live')renderLive();
   const root=photoRoot();if(root)root.scrollTop=0;
 }
@@ -261,7 +284,7 @@ function renderBabyCard(pair,fresh){
       <img class="phHero phAdult" src="${pair.adult.image}" alt="${photoEsc(pair.adult.names[lang].full)}" draggable="false">
       <img class="phHero phMorphTop" src="${pair.baby.image}" alt="${photoEsc(pair.baby.names[lang].full)}" draggable="false">
     </div>
-    <div class="phName">${photoEsc(pair.baby.names[lang].full)}</div>
+    <div class="phName">${photoEsc(pair.baby.names[lang].full)}</div>${langsHTML()}
     <div class="phNav">
       <button type="button" class="phArrow" data-act="prev" aria-label="previous">◀</button>
       <button type="button" class="phReplay" data-act="replay" aria-label="again">🔊</button>
@@ -276,7 +299,7 @@ function renderList(){
 function renderCard(item,fresh){
   photoRoot().innerHTML=`${barHTML(fresh?'🛂':'')}
     <img class="phHero${fresh?' fresh':''}" src="${item.image}" alt="${photoEsc(item.names[lang].full)}" draggable="false">
-    <div class="phName">${photoEsc(item.names[lang].full)}</div>
+    <div class="phName">${photoEsc(item.names[lang].full)}</div>${langsHTML()}
     <div class="phNav">
       <button type="button" class="phArrow" data-act="prev" aria-label="previous">◀</button>
       <button type="button" class="phReplay" data-act="replay" aria-label="again">🔊</button>
@@ -313,48 +336,67 @@ function bodyPass(){
   }).join('');
 }
 
-/* ---- Who's hiding? The photo sharpens on its own. Three pictures, no losing. ---- */
+/* ---- Listen and find: the voice says a name, he taps the right photo out of four.
+   A wrong tap says what that one is (so even a miss teaches a word); after two
+   misses the right one glows. A right answer: the name again and one fact. ---- */
+function findPool(){return PH.kind==='v'?PHOTO_PACK.vehicles:PH.kind==='y'?(PHOTO_PACK.body||[]):PH.kind==='a'?PHOTO_PACK.animals:PHOTO_PACK.people;}
+function findPlural(item){return Object.values(item.names).some(n=>n&&(n.number==='pl'||n.gender==='pl'));}
+function findQ(item){
+  const n=item.names[lang].full,pl=findPlural(item);
+  if(lang==='de')return (pl?'Wo sind ':'Wo ist ')+n+'?';
+  if(lang==='es')return (pl?'¿Dónde están ':'¿Dónde está ')+n+'?';
+  return 'Where '+(pl?'are ':'is ')+n+'?';
+}
+function findThat(item){
+  const n=item.names[lang].full,pl=findPlural(item);
+  if(lang==='de')return (pl?'Das sind ':'Das ist ')+n+'.';
+  if(lang==='es')return (pl?'Esos son ':'Eso es ')+n+'.';
+  return (pl?'Those are ':'That is ')+n+'.';
+}
 function startHide(){
   photoStop();PH.screen='hide';
-  PUZ={got:0,miss:0,locked:false,item:null,opts:[]};
-  hideRound();
+  PUZ={got:0,miss:0,locked:false,item:null,opts:[],seen:[]};
+  findRound();
 }
-function hideRound(){
-  const all=PH.kind==='v'?PHOTO_PACK.vehicles:PH.kind==='y'?(PHOTO_PACK.body||[]):PH.kind==='a'?PHOTO_PACK.animals:PHOTO_PACK.people;
-  const item=all[Math.floor(Math.random()*all.length)];
+function findRound(){
+  const all=findPool();
+  const fresh=all.filter(x=>!PUZ.seen.includes(x.id));
+  const src=fresh.length?fresh:all;
+  const item=src[Math.floor(Math.random()*src.length)];PUZ.seen.push(item.id);
   const pool=all.filter(x=>x.id!==item.id);
   const opts=[item];
-  while(opts.length<3&&pool.length)opts.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  while(opts.length<4&&pool.length)opts.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
   for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=opts[i];opts[i]=opts[j];opts[j]=t;}
   PUZ.item=item;PUZ.opts=opts;PUZ.locked=false;PUZ.miss=0;
-  PH.screen='hide';renderHide();
+  PH.screen='hide';renderFind();
+  photoSay(findQ(item));
 }
-function renderHide(){
-  const opts=PUZ.opts.map(it=>`<button type="button" class="phChoice" data-act="pick" data-ok="${it.id===PUZ.item.id?'1':'0'}"><img src="${it.image}" alt="" draggable="false"></button>`).join('');
-  photoRoot().innerHTML=`${barHTML('🙈')}<div class="phReveal"><img class="phBlur" src="${PUZ.item.image}" alt="" draggable="false"></div><div class="phChoices">${opts}</div>`;
+function renderFind(){
+  const opts=PUZ.opts.map(it=>`<button type="button" class="phChoice" data-act="find" data-id="${it.id}"><img src="${it.image}" alt="" draggable="false"></button>`).join('');
+  photoRoot().innerHTML=`${barHTML('👂')}<div class="phFindTop"><button type="button" class="phFindSay" data-act="findSay" aria-label="again">🔊</button><span class="phFindDots">${'●'.repeat(PUZ.got)}${'○'.repeat(Math.max(0,5-PUZ.got))}</span></div><div class="phChoices phFind">${opts}</div>`;
 }
-function hideAnswer(ok,btn){
+function findAnswer(id,btn){
   if(!PUZ||PUZ.locked||PH.screen!=='hide')return;
-  if(!ok){
+  const it=PUZ.opts.find(x=>x.id===id);if(!it)return;
+  if(it!==PUZ.item){
     PUZ.miss++;
     btn.classList.remove('phBad');void btn.offsetWidth;btn.classList.add('phBad');
-    photoSay(photoLook());
-    if(PUZ.miss>=2){const c=photoRoot().querySelector('.phChoice[data-ok="1"]');if(c)c.classList.add('phHint');}
+    if(typeof nope==='function')nope();
+    photoSeq([findThat(it),findQ(PUZ.item)],lang);
+    if(PUZ.miss>=2){const c=photoRoot().querySelector(`.phChoice[data-id="${PUZ.item.id}"]`);if(c)c.classList.add('phHint');}
     return;
   }
   PUZ.locked=true;btn.classList.add('phGood');
-  if(typeof award==='function')award(0);
+  photoRoot().querySelectorAll('.phChoice').forEach(c=>{if(c!==btn)c.classList.add('phDim');});
+  if(typeof award==='function')award(PUZ.miss?1:0);
   [523,659,784].forEach((f,i)=>beep(f,i*0.07,0.15,'triangle',0.15));
-  const gen=++photoGen,item=PUZ.item,got=PUZ.got;
-  sayWordBridge(photoNames(item),{then(){
-    if(gen!==photoGen||!PUZ)return;
-    photoAfter(photoYay(),lang,()=>{
-      if(gen!==photoGen||!PUZ)return;
-      PUZ.got=got+1;
-      if(PUZ.got>=4)photoCheer('🙈');
-      else hideRound();
-    });
-  }});
+  const item=PUZ.item,got=PUZ.got,f=photoFact(item);
+  photoSeq([photoYay()+' '+item.names[lang].full+'!',f&&f[lang]],lang,()=>{
+    if(!PUZ)return;
+    PUZ.got=got+1;
+    if(PUZ.got>=5)photoCheer('🙈');
+    else findRound();
+  });
 }
 
 /* ---- Where do I live? Drag or tap the animal onto its habitat. ---- */
@@ -393,15 +435,12 @@ function liveAnswer(ok,btn){
   if(typeof award==='function')award(0);
   [523,659,784].forEach((f,i)=>beep(f,i*0.07,0.15,'triangle',0.15));
   const gen=++photoGen,item=PUZ.item,got=PUZ.got;
-  sayWordBridge(photoNames(item),{then(){
-    if(gen!==photoGen||!PUZ)return;
-    photoAfter(photoYay(),lang,()=>{
-      if(gen!==photoGen||!PUZ)return;
-      PUZ.got=got+1;
-      if(PUZ.got>=4)photoCheer('🏡');
-      else liveRound();
-    });
-  }});
+  photoSeq([item.names[lang].full,photoYay()],lang,()=>{
+    if(!PUZ)return;
+    PUZ.got=got+1;
+    if(PUZ.got>=4)photoCheer('🏡');
+    else liveRound();
+  });
 }
 /* ---- Baby and grown-up: the baby is showing, tap its grown-up photo. ---- */
 function startGrow(){
@@ -438,15 +477,12 @@ function growAnswer(ok,btn){
   if(typeof award==='function')award(0);
   [523,659,784].forEach((f,i)=>beep(f,i*0.07,0.15,'triangle',0.15));
   const gen=++photoGen,pair=PUZ.pair,got=PUZ.got;
-  sayWordBridge(photoNames(pair.adult),{then(){
-    if(gen!==photoGen||!PUZ)return;
-    photoAfter(photoYay(),lang,()=>{
-      if(gen!==photoGen||!PUZ)return;
-      PUZ.got=got+1;
-      if(PUZ.got>=4)photoCheer('🐣');
-      else growRound();
-    });
-  }});
+  photoSeq([pair.adult.names[lang].full,photoYay()],lang,()=>{
+    if(!PUZ)return;
+    PUZ.got=got+1;
+    if(PUZ.got>=4)photoCheer('🐣');
+    else growRound();
+  });
 }
 /* ---- Touch your ___! He touches it on himself, then taps the picture. No missing. ---- */
 function touchPrompt(item){
@@ -468,11 +504,7 @@ function touchRound(){
   if(PUZ.item&&all.length>1)while(item.id===PUZ.item.id&&guard++<8)item=all[Math.floor(Math.random()*all.length)];
   PUZ.item=item;PUZ.locked=false;PH.screen='touch';
   renderTouch();
-  const gen=photoGen;
-  sayWordBridge(photoNames(item),{then(){
-    if(gen!==photoGen||!PUZ||PUZ.locked)return;
-    photoAfter(touchPrompt(item),lang);
-  }});
+  photoSay(touchPrompt(item));
 }
 function renderTouch(){
   const it=PUZ.item;
