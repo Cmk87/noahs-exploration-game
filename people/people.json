@@ -1,0 +1,1528 @@
+{
+  "version": 1,
+  "imageSize": 512,
+  "format": "webp",
+  "groups": [
+    {
+      "id": "longAgo",
+      "en": "Long ago",
+      "es": "Hace mucho tiempo",
+      "de": "Vor langer Zeit",
+      "emoji": "🏺"
+    },
+    {
+      "id": "today",
+      "en": "Today",
+      "es": "Hoy",
+      "de": "Heute",
+      "emoji": "🌍"
+    }
+  ],
+  "people": [
+    {
+      "id": "egyptians",
+      "group": "longAgo",
+      "era": "c. 1300 BC, Egypt",
+      "image": "people/egyptians.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Ancient Egyptians",
+          "full": "the Ancient Egyptians"
+        },
+        "es": {
+          "article": "los",
+          "noun": "antiguos egipcios",
+          "full": "los antiguos egipcios",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "alten Ägypter",
+          "full": "die alten Ägypter",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "By the river Nile in Egypt, more than 3,000 years ago.",
+        "es": "Junto al río Nilo, en Egipto, hace más de 3000 años.",
+        "de": "Am Fluss Nil in Ägypten, vor mehr als 3000 Jahren."
+      },
+      "facts": [
+        {
+          "en": "Egyptians loved their cats so much that cats were part of the family, and some were even made into mummies!",
+          "es": "¡A los egipcios les encantaban tanto los gatos que eran parte de la familia, y a algunos hasta los convertían en momias!",
+          "de": "Die Ägypter liebten ihre Katzen so sehr, dass sie zur Familie gehörten – manche wurden sogar zu Mumien gemacht!"
+        },
+        {
+          "en": "Egyptian kids and grown-ups played a board game called Senet, one of the oldest board games in the world!",
+          "es": "¡Los niños y los mayores de Egipto jugaban a un juego de mesa llamado senet, uno de los más antiguos del mundo!",
+          "de": "Kinder und Erwachsene in Ägypten spielten ein Brettspiel namens Senet – eines der ältesten Brettspiele der Welt!"
+        }
+      ],
+      "note": "Family with a cat; Senet is in the facts but not pictured (generator kept drawing chess/checker boards)."
+    },
+    {
+      "id": "aztecs",
+      "group": "longAgo",
+      "era": "c. 1500 AD, Tenochtitlan (Mexico City)",
+      "image": "people/aztecs.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Aztecs",
+          "full": "the Aztecs"
+        },
+        "es": {
+          "article": "los",
+          "noun": "aztecas",
+          "full": "los aztecas",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Azteken",
+          "full": "die Azteken",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In the great city of Tenochtitlan, where Mexico City is today, about 500 years ago.",
+        "es": "En la gran ciudad de Tenochtitlan, donde hoy está la Ciudad de México, hace unos 500 años.",
+        "de": "In der großen Stadt Tenochtitlan, wo heute Mexiko-Stadt liegt, vor etwa 500 Jahren."
+      },
+      "facts": [
+        {
+          "en": "The Aztec city was built on an island in a lake, and people paddled canoes along canals instead of streets!",
+          "es": "¡La ciudad azteca estaba en una isla en medio de un lago, y la gente iba en canoa por canales en vez de calles!",
+          "de": "Die Stadt der Azteken lag auf einer Insel in einem See – statt auf Straßen fuhren die Leute mit Kanus durch Kanäle!"
+        },
+        {
+          "en": "The Aztecs made a chocolate drink from cacao beans, and they even used cacao beans as money!",
+          "es": "¡Los aztecas preparaban una bebida de chocolate con granos de cacao, y hasta usaban el cacao como dinero!",
+          "de": "Die Azteken machten aus Kakaobohnen ein Schokoladengetränk – und bezahlten sogar mit Kakaobohnen!"
+        }
+      ]
+    },
+    {
+      "id": "maya",
+      "group": "longAgo",
+      "era": "c. 700 AD, Central America (Tikal)",
+      "image": "people/maya.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Maya",
+          "full": "the Maya"
+        },
+        "es": {
+          "article": "los",
+          "noun": "mayas",
+          "full": "los mayas",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Maya",
+          "full": "die Maya",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In pyramid cities in the rainforests of Mexico and Guatemala, about 1,300 years ago.",
+        "es": "En ciudades con pirámides en las selvas de México y Guatemala, hace unos 1300 años.",
+        "de": "In Pyramidenstädten im Regenwald von Mexiko und Guatemala, vor etwa 1300 Jahren."
+      },
+      "facts": [
+        {
+          "en": "The Maya had a special sign for the number zero, shaped like a little shell!",
+          "es": "¡Los mayas tenían un símbolo para el número cero con forma de conchita!",
+          "de": "Die Maya hatten ein eigenes Zeichen für die Zahl Null – es sah aus wie eine kleine Muschel!"
+        },
+        {
+          "en": "The Maya played a ball game where you could not touch the rubber ball with your hands, you bounced it with your hips!",
+          "es": "¡Los mayas jugaban a un juego de pelota en el que no se podía tocar la pelota con las manos: la golpeaban con la cadera!",
+          "de": "Die Maya spielten ein Ballspiel, bei dem man den Gummiball nicht mit den Händen berühren durfte – man stieß ihn mit der Hüfte!"
+        }
+      ]
+    },
+    {
+      "id": "inca",
+      "group": "longAgo",
+      "era": "c. 1450 AD, Andes (Machu Picchu, Peru)",
+      "image": "people/inca.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Inca",
+          "full": "the Inca"
+        },
+        "es": {
+          "article": "los",
+          "noun": "incas",
+          "full": "los incas",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Inka",
+          "full": "die Inka",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "High in the Andes mountains of Peru, at Machu Picchu, about 550 years ago.",
+        "es": "En lo alto de los Andes, en Machu Picchu (Perú), hace unos 550 años.",
+        "de": "Hoch oben in den Anden in Peru, in Machu Picchu, vor etwa 550 Jahren."
+      },
+      "facts": [
+        {
+          "en": "The Inca kept track of numbers with knots on colorful strings called quipus!",
+          "es": "¡Los incas guardaban sus cuentas haciendo nudos en cuerdas de colores llamadas quipus!",
+          "de": "Die Inka merkten sich Zahlen mit Knoten in bunten Schnüren – die hießen Quipus!"
+        },
+        {
+          "en": "Inca builders fitted stones together so tightly that you can't even slip a sheet of paper between them!",
+          "es": "¡Los incas encajaban las piedras tan bien que ni siquiera cabe una hoja de papel entre ellas!",
+          "de": "Die Inka setzten Steine so genau aufeinander, dass nicht einmal ein Blatt Papier dazwischen passt!"
+        }
+      ]
+    },
+    {
+      "id": "vikings",
+      "group": "longAgo",
+      "era": "c. 900 AD, Scandinavia",
+      "image": "people/vikings.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Vikings",
+          "full": "the Vikings"
+        },
+        "es": {
+          "article": "los",
+          "noun": "vikingos",
+          "full": "los vikingos",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Wikinger",
+          "full": "die Wikinger",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "By the fjords of Norway, Denmark and Sweden, more than 1,000 years ago.",
+        "es": "En los fiordos de Noruega, Dinamarca y Suecia, hace más de 1000 años.",
+        "de": "An den Fjorden von Norwegen, Dänemark und Schweden, vor mehr als 1000 Jahren."
+      },
+      "facts": [
+        {
+          "en": "Real Vikings did not wear helmets with horns! That idea came from costumes in operas, hundreds of years later.",
+          "es": "¡Los vikingos de verdad no llevaban cascos con cuernos! Eso se inventó para los disfraces de la ópera, cientos de años después.",
+          "de": "Echte Wikinger trugen keine Helme mit Hörnern! Das hat man sich viele hundert Jahre später für Opern-Kostüme ausgedacht."
+        },
+        {
+          "en": "Vikings sailed their longships all the way to North America, about 500 years before Columbus!",
+          "es": "¡Los vikingos navegaron en sus barcos hasta América del Norte, unos 500 años antes que Colón!",
+          "de": "Die Wikinger segelten mit ihren Langschiffen bis nach Nordamerika – etwa 500 Jahre vor Kolumbus!"
+        }
+      ]
+    },
+    {
+      "id": "knights",
+      "group": "longAgo",
+      "era": "c. 1350 AD, Europe",
+      "image": "people/knights.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "knights",
+          "full": "the knights"
+        },
+        "es": {
+          "article": "los",
+          "noun": "caballeros",
+          "full": "los caballeros",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Ritter",
+          "full": "die Ritter",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In castles all over Europe in the Middle Ages, about 700 years ago.",
+        "es": "En los castillos de Europa, en la Edad Media, hace unos 700 años.",
+        "de": "In Burgen überall in Europa, im Mittelalter vor etwa 700 Jahren."
+      },
+      "facts": [
+        {
+          "en": "A boy started learning to be a knight when he was only about seven years old, as a helper called a page!",
+          "es": "¡Un niño empezaba a aprender a ser caballero con unos siete años, como ayudante llamado paje!",
+          "de": "Ein Junge fing schon mit etwa sieben Jahren an, Ritter zu lernen – zuerst als Helfer, als Page!"
+        },
+        {
+          "en": "When a helmet covered his face, a knight was recognized by the colorful pictures on his shield and clothes, called a coat of arms!",
+          "es": "¡Cuando el casco le tapaba la cara, al caballero se le reconocía por los dibujos de colores de su escudo, llamados blasón!",
+          "de": "Wenn der Helm sein Gesicht verdeckte, erkannte man den Ritter an den bunten Bildern auf Schild und Umhang – seinem Wappen!"
+        }
+      ]
+    },
+    {
+      "id": "samurai",
+      "group": "longAgo",
+      "era": "c. 1700 AD, Japan (Edo period)",
+      "image": "people/samurai.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "samurai",
+          "full": "the samurai"
+        },
+        "es": {
+          "article": "los",
+          "noun": "samuráis",
+          "full": "los samuráis",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Samurai",
+          "full": "die Samurai",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In Japan, near castles with curved roofs, about 300 years ago.",
+        "es": "En Japón, junto a castillos de tejados curvos, hace unos 300 años.",
+        "de": "In Japan, bei Burgen mit geschwungenen Dächern, vor etwa 300 Jahren."
+      },
+      "facts": [
+        {
+          "en": "Samurai armor was made of many small plates tied together with colorful silk cords, so they could move easily!",
+          "es": "¡La armadura samurái estaba hecha de muchas placas pequeñas atadas con cordones de seda de colores, para moverse con facilidad!",
+          "de": "Die Rüstung der Samurai bestand aus vielen kleinen Plättchen, die mit bunten Seidenschnüren verbunden waren – so konnten sie sich gut bewegen!"
+        },
+        {
+          "en": "Samurai also learned to write beautiful letters with a brush, write poems and make tea in a special ceremony!",
+          "es": "¡Los samuráis también aprendían a escribir bonito con pincel, a hacer poemas y a preparar el té en una ceremonia especial!",
+          "de": "Samurai lernten auch, mit dem Pinsel schön zu schreiben, Gedichte zu dichten und Tee in einer besonderen Zeremonie zuzubereiten!"
+        }
+      ]
+    },
+    {
+      "id": "romans",
+      "group": "longAgo",
+      "era": "c. 100 AD, Rome",
+      "image": "people/romans.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Romans",
+          "full": "the Romans"
+        },
+        "es": {
+          "article": "los",
+          "noun": "romanos",
+          "full": "los romanos",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Römer",
+          "full": "die Römer",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In the city of Rome and all over the Roman Empire, about 1,900 years ago.",
+        "es": "En la ciudad de Roma y en todo el Imperio romano, hace unos 1900 años.",
+        "de": "In der Stadt Rom und im ganzen Römischen Reich, vor etwa 1900 Jahren."
+      },
+      "facts": [
+        {
+          "en": "The Romans built roads so well that people still walk on some of them today!",
+          "es": "¡Los romanos construían calzadas tan bien que todavía hoy se camina por algunas de ellas!",
+          "de": "Die Römer bauten ihre Straßen so gut, dass man auf manchen heute noch laufen kann!"
+        },
+        {
+          "en": "The big Colosseum in Rome had room for about 50,000 people, like a giant stadium!",
+          "es": "¡El Coliseo de Roma tenía sitio para unas 50 000 personas, como un estadio gigante!",
+          "de": "Ins große Kolosseum in Rom passten etwa 50.000 Menschen – wie in ein riesiges Stadion!"
+        }
+      ]
+    },
+    {
+      "id": "greeks",
+      "group": "longAgo",
+      "era": "c. 430 BC, Athens",
+      "image": "people/greeks.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Ancient Greeks",
+          "full": "the Ancient Greeks"
+        },
+        "es": {
+          "article": "los",
+          "noun": "antiguos griegos",
+          "full": "los antiguos griegos",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "alten Griechen",
+          "full": "die alten Griechen",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In Athens, Greece, below the Parthenon temple, about 2,500 years ago.",
+        "es": "En Atenas (Grecia), junto al templo del Partenón, hace unos 2500 años.",
+        "de": "In Athen in Griechenland, unter dem Parthenon-Tempel, vor etwa 2500 Jahren."
+      },
+      "facts": [
+        {
+          "en": "The Olympic Games started in ancient Greece, almost 2,800 years ago!",
+          "es": "¡Los Juegos Olímpicos empezaron en la antigua Grecia, hace casi 2800 años!",
+          "de": "Die Olympischen Spiele haben im alten Griechenland angefangen – vor fast 2800 Jahren!"
+        },
+        {
+          "en": "Greek temples and statues look white today, but long ago they were painted in bright colors!",
+          "es": "¡Hoy los templos y estatuas griegos se ven blancos, pero antes estaban pintados de colores vivos!",
+          "de": "Griechische Tempel und Statuen sehen heute weiß aus – früher waren sie aber knallbunt bemalt!"
+        }
+      ]
+    },
+    {
+      "id": "great-wall",
+      "group": "longAgo",
+      "era": "c. 1570 AD, China (Ming dynasty)",
+      "image": "people/great-wall.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Great Wall builders",
+          "full": "the Great Wall builders"
+        },
+        "es": {
+          "article": "los",
+          "noun": "constructores de la Gran Muralla",
+          "full": "los constructores de la Gran Muralla",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Erbauer der Chinesischen Mauer",
+          "full": "die Erbauer der Chinesischen Mauer",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "On the mountains of northern China, about 450 years ago, in the time of the Ming emperors.",
+        "es": "En las montañas del norte de China, hace unos 450 años, en tiempos de los emperadores Ming.",
+        "de": "Auf den Bergen im Norden Chinas, vor etwa 450 Jahren, zur Zeit der Ming-Kaiser."
+      },
+      "facts": [
+        {
+          "en": "Builders mixed sticky rice into the mortar to glue the bricks of the Great Wall together!",
+          "es": "¡Los constructores mezclaban arroz pegajoso en la argamasa para pegar los ladrillos de la Gran Muralla!",
+          "de": "Die Bauleute mischten Klebreis in den Mörtel, damit die Steine der Chinesischen Mauer gut zusammenhalten!"
+        },
+        {
+          "en": "The Great Wall is really many walls, and all together they are more than 20,000 kilometers long!",
+          "es": "¡La Gran Muralla son en realidad muchas murallas, y juntas miden más de 20 000 kilómetros!",
+          "de": "Die Chinesische Mauer besteht eigentlich aus vielen Mauern – zusammen sind sie über 20.000 Kilometer lang!"
+        }
+      ],
+      "note": "Ming-dynasty builders (c. 1570); most of the brick Great Wall seen today is Ming, so Tang era was not used."
+    },
+    {
+      "id": "mongol-riders",
+      "group": "longAgo",
+      "era": "c. 1220 AD, Mongolian steppe",
+      "image": "people/mongol-riders.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Mongol riders",
+          "full": "the Mongol riders"
+        },
+        "es": {
+          "article": "los",
+          "noun": "jinetes mongoles",
+          "full": "los jinetes mongoles",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "mongolischen Reiter",
+          "full": "die mongolischen Reiter",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "On the wide grassy steppe of Mongolia, about 800 years ago.",
+        "es": "En la gran estepa de hierba de Mongolia, hace unos 800 años.",
+        "de": "In der weiten Graslandschaft der Mongolei, vor etwa 800 Jahren."
+      },
+      "facts": [
+        {
+          "en": "Mongol children learned to ride a horse when they were only three or four years old!",
+          "es": "¡Los niños mongoles aprendían a montar a caballo con solo tres o cuatro años!",
+          "de": "Mongolische Kinder lernten schon mit drei oder vier Jahren reiten!"
+        },
+        {
+          "en": "The Mongols made the biggest empire of connected lands the world has ever seen!",
+          "es": "¡Los mongoles formaron el imperio de tierras unidas más grande que ha existido!",
+          "de": "Die Mongolen hatten das größte zusammenhängende Reich, das es je auf der Welt gab!"
+        }
+      ]
+    },
+    {
+      "id": "polynesian-voyagers",
+      "group": "longAgo",
+      "era": "c. 1000 AD, Pacific Ocean",
+      "image": "people/polynesian-voyagers.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Polynesian voyagers",
+          "full": "the Polynesian voyagers"
+        },
+        "es": {
+          "article": "los",
+          "noun": "navegantes polinesios",
+          "full": "los navegantes polinesios",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "polynesischen Seefahrer",
+          "full": "die polynesischen Seefahrer",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "On islands across the huge Pacific Ocean, about 1,000 years ago.",
+        "es": "En las islas del enorme océano Pacífico, hace unos 1000 años.",
+        "de": "Auf den Inseln im riesigen Pazifik, vor etwa 1000 Jahren."
+      },
+      "facts": [
+        {
+          "en": "Polynesian navigators crossed the ocean without maps or compasses, reading the stars, the waves and the birds!",
+          "es": "¡Los navegantes polinesios cruzaban el océano sin mapas ni brújulas, guiándose por las estrellas, las olas y los pájaros!",
+          "de": "Polynesische Seefahrer überquerten das Meer ohne Karte und Kompass – sie lasen die Sterne, die Wellen und die Vögel!"
+        },
+        {
+          "en": "They brought pigs, chickens, coconuts and plants in their canoes to start a new home on a new island!",
+          "es": "¡Llevaban cerdos, gallinas, cocos y plantas en sus canoas para empezar una nueva vida en otra isla!",
+          "de": "In ihren Kanus nahmen sie Schweine, Hühner, Kokosnüsse und Pflanzen mit, um auf einer neuen Insel ein Zuhause zu gründen!"
+        }
+      ]
+    },
+    {
+      "id": "lakota",
+      "group": "longAgo",
+      "era": "1850s, Great Plains (North America)",
+      "image": "people/lakota.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Lakota",
+          "full": "the Lakota"
+        },
+        "es": {
+          "article": "los",
+          "noun": "lakota",
+          "full": "los lakota",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Lakota",
+          "full": "die Lakota",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "On the Great Plains of North America, in the 1800s. The Lakota still live there today.",
+        "es": "En las Grandes Llanuras de América del Norte, en el siglo XIX. Los lakota siguen viviendo allí hoy.",
+        "de": "In den Great Plains in Nordamerika, im 19. Jahrhundert. Die Lakota leben auch heute noch dort."
+      },
+      "facts": [
+        {
+          "en": "In the Lakota language the buffalo is called 'tatanka', and almost every part of it was used for food, clothes, tools and tipi covers!",
+          "es": "¡En lengua lakota el búfalo se llama «tatanka», y usaban casi todo de él: para comer, vestirse, hacer herramientas y cubrir los tipis!",
+          "de": "Auf Lakota heißt der Bison »Tatanka« – fast alles von ihm wurde genutzt: für Essen, Kleidung, Werkzeug und Tipi-Planen!"
+        },
+        {
+          "en": "The Lakota kept a 'winter count': a buffalo hide with one picture painted for every year, like a picture calendar!",
+          "es": "¡Los lakota tenían un «conteo de inviernos»: una piel de búfalo con un dibujo por cada año, como un calendario de imágenes!",
+          "de": "Die Lakota führten eine »Winterzählung«: eine Bisonhaut mit einem gemalten Bild für jedes Jahr – wie ein Bilderkalender!"
+        }
+      ],
+      "note": "No war bonnets; father wears a single feather."
+    },
+    {
+      "id": "haudenosaunee",
+      "group": "longAgo",
+      "era": "c. 1600 AD, Northeastern Woodlands (New York State)",
+      "image": "people/haudenosaunee.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Haudenosaunee",
+          "full": "the Haudenosaunee"
+        },
+        "es": {
+          "article": "los",
+          "noun": "haudenosaunee",
+          "full": "los haudenosaunee",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Haudenosaunee",
+          "full": "die Haudenosaunee",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In the forests of what is now New York State and Canada, about 400 years ago. The Haudenosaunee still live there today.",
+        "es": "En los bosques de lo que hoy es Nueva York y Canadá, hace unos 400 años. Los haudenosaunee siguen viviendo allí.",
+        "de": "In den Wäldern, wo heute der Staat New York und Kanada liegen, vor etwa 400 Jahren. Die Haudenosaunee leben auch heute noch dort."
+      },
+      "facts": [
+        {
+          "en": "Haudenosaunee means 'people of the longhouse', and one longhouse could be home to many families of the same clan!",
+          "es": "¡Haudenosaunee significa «gente de la casa larga», y en una casa larga podían vivir muchas familias del mismo clan!",
+          "de": "Haudenosaunee bedeutet »Volk des Langhauses« – in einem Langhaus wohnten viele Familien aus demselben Clan!"
+        },
+        {
+          "en": "They planted the 'Three Sisters' together: corn, beans and squash, which help each other grow!",
+          "es": "¡Sembraban juntas a las «tres hermanas»: maíz, frijoles y calabaza, que se ayudan a crecer!",
+          "de": "Sie pflanzten die »Drei Schwestern« zusammen: Mais, Bohnen und Kürbis – die helfen sich gegenseitig beim Wachsen!"
+        }
+      ],
+      "note": "Longhouse with elm-bark covering and Three Sisters garden; no headdresses."
+    },
+    {
+      "id": "cowboys",
+      "group": "longAgo",
+      "era": "1880s, American West & northern Mexico",
+      "image": "people/cowboys.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "cowboys and vaqueros",
+          "full": "the cowboys and vaqueros"
+        },
+        "es": {
+          "article": "los",
+          "noun": "vaqueros",
+          "full": "los vaqueros",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Cowboys",
+          "full": "die Cowboys",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "On cattle ranches in the American West and Mexico, in the 1800s.",
+        "es": "En los ranchos de ganado del Oeste americano y de México, en el siglo XIX.",
+        "de": "Auf den Rinderfarmen im Wilden Westen Amerikas und in Mexiko, im 19. Jahrhundert."
+      },
+      "facts": [
+        {
+          "en": "Many cowboy words come from Spanish-speaking vaqueros, like 'lasso', 'rodeo' and 'ranch'!",
+          "es": "¡Muchas palabras de los cowboys vienen del español de los vaqueros, como «lazo», «rodeo» y «rancho»!",
+          "de": "Viele Cowboy-Wörter kommen aus dem Spanischen der Vaqueros, zum Beispiel »Lasso«, »Rodeo« und »Ranch«!"
+        },
+        {
+          "en": "Mexican vaqueros were riding and roping cattle long before there were American cowboys!",
+          "es": "¡Los vaqueros mexicanos ya montaban y lazaban ganado mucho antes de que existieran los cowboys americanos!",
+          "de": "Mexikanische Vaqueros ritten und fingen Rinder mit dem Lasso, lange bevor es amerikanische Cowboys gab!"
+        }
+      ],
+      "note": "American cowboy and Mexican vaquero together, plus a child on the fence."
+    },
+    {
+      "id": "pirates",
+      "group": "longAgo",
+      "era": "c. 1715 AD, Caribbean Sea",
+      "image": "people/pirates.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "pirates",
+          "full": "the pirates"
+        },
+        "es": {
+          "article": "los",
+          "noun": "piratas",
+          "full": "los piratas",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Piraten",
+          "full": "die Piraten",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "On the islands and seas of the Caribbean, about 300 years ago.",
+        "es": "En las islas y mares del Caribe, hace unos 300 años.",
+        "de": "Auf den Inseln und Meeren der Karibik, vor etwa 300 Jahren."
+      },
+      "facts": [
+        {
+          "en": "Some famous pirates were women, like Anne Bonny and Mary Read!",
+          "es": "¡Algunas piratas famosas eran mujeres, como Anne Bonny y Mary Read!",
+          "de": "Manche berühmten Piraten waren Frauen, zum Beispiel Anne Bonny und Mary Read!"
+        },
+        {
+          "en": "Real pirates almost never buried their treasure, they usually spent it right away!",
+          "es": "¡Los piratas de verdad casi nunca enterraban sus tesoros: normalmente se los gastaban enseguida!",
+          "de": "Echte Piraten haben ihren Schatz fast nie vergraben – meistens gaben sie ihn gleich aus!"
+        }
+      ]
+    },
+    {
+      "id": "stone-age",
+      "group": "longAgo",
+      "era": "c. 15,000 BC, Europe (Upper Paleolithic)",
+      "image": "people/stone-age.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Stone Age people",
+          "full": "the Stone Age people"
+        },
+        "es": {
+          "article": "la",
+          "noun": "gente de la Edad de Piedra",
+          "full": "la gente de la Edad de Piedra",
+          "gender": "f",
+          "number": "sg"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Steinzeitmenschen",
+          "full": "die Steinzeitmenschen",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In caves in Europe, like Lascaux in France, about 17,000 years ago.",
+        "es": "En cuevas de Europa, como Lascaux en Francia, hace unos 17 000 años.",
+        "de": "In Höhlen in Europa, zum Beispiel Lascaux in Frankreich, vor etwa 17.000 Jahren."
+      },
+      "facts": [
+        {
+          "en": "Stone Age people painted horses and bison on cave walls with colors made from earth and charcoal, and we can still see them today!",
+          "es": "¡La gente de la Edad de Piedra pintaba caballos y bisontes en las cuevas con colores de tierra y carbón, y todavía podemos verlos!",
+          "de": "Die Steinzeitmenschen malten Pferde und Bisons mit Farben aus Erde und Holzkohle an Höhlenwände – die kann man heute noch sehen!"
+        },
+        {
+          "en": "They made handprints by blowing paint around their hand on the wall, like a stencil!",
+          "es": "¡Hacían huellas de manos soplando pintura alrededor de la mano sobre la pared, como una plantilla!",
+          "de": "Sie machten Handabdrücke, indem sie Farbe um ihre Hand herum an die Wand pusteten – wie mit einer Schablone!"
+        }
+      ]
+    },
+    {
+      "id": "inuit",
+      "group": "today",
+      "region": "Arctic: Canada, Alaska, Greenland",
+      "image": "people/inuit.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Inuit",
+          "full": "the Inuit"
+        },
+        "es": {
+          "article": "los",
+          "noun": "inuit",
+          "full": "los inuit",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Inuit",
+          "full": "die Inuit",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In the snowy Arctic of Canada, Alaska and Greenland, today.",
+        "es": "En el Ártico nevado de Canadá, Alaska y Groenlandia, hoy.",
+        "de": "In der verschneiten Arktis in Kanada, Alaska und Grönland, heute."
+      },
+      "facts": [
+        {
+          "en": "A skilled Inuit hunter can build a small igloo out of snow blocks in about an hour!",
+          "es": "¡Un cazador inuit con experiencia puede construir un iglú pequeño con bloques de nieve en más o menos una hora!",
+          "de": "Ein geübter Inuit-Jäger kann ein kleines Iglu aus Schneeblöcken in etwa einer Stunde bauen!"
+        },
+        {
+          "en": "An Inuit mom's parka, called an amauti, has a cozy pouch in the back to carry her baby!",
+          "es": "¡El abrigo de una mamá inuit, llamado amauti, tiene una bolsa calentita en la espalda para llevar al bebé!",
+          "de": "Der Parka einer Inuit-Mama heißt Amauti und hat hinten eine warme Tasche für ihr Baby!"
+        }
+      ]
+    },
+    {
+      "id": "sami",
+      "group": "today",
+      "region": "Sápmi: northern Norway, Sweden, Finland, Russia",
+      "image": "people/sami.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Sámi",
+          "full": "the Sámi"
+        },
+        "es": {
+          "article": "los",
+          "noun": "sami",
+          "full": "los sami",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Sami",
+          "full": "die Sami",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In the far north of Norway, Sweden, Finland and Russia, today.",
+        "es": "En el extremo norte de Noruega, Suecia, Finlandia y Rusia, hoy.",
+        "de": "Im hohen Norden von Norwegen, Schweden, Finnland und Russland, heute."
+      },
+      "facts": [
+        {
+          "en": "Sámi reindeer herders mark each reindeer's ear with a special pattern, so everyone knows whose reindeer it is!",
+          "es": "¡Los pastores sami marcan la oreja de cada reno con un dibujo especial, para saber de quién es!",
+          "de": "Sami-Rentierhirten markieren das Ohr jedes Rentiers mit einem besonderen Muster – so weiß jeder, wem es gehört!"
+        },
+        {
+          "en": "The Sámi sing a special kind of song called a joik, to sing about a person, an animal or a place!",
+          "es": "¡Los sami cantan un tipo de canción especial llamada joik, dedicada a una persona, un animal o un lugar!",
+          "de": "Die Sami singen eine besondere Art von Lied, den Joik – damit besingen sie einen Menschen, ein Tier oder einen Ort!"
+        }
+      ]
+    },
+    {
+      "id": "maasai",
+      "group": "today",
+      "region": "Kenya & Tanzania",
+      "image": "people/maasai.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Maasai",
+          "full": "the Maasai"
+        },
+        "es": {
+          "article": "los",
+          "noun": "masáis",
+          "full": "los masáis",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Massai",
+          "full": "die Massai",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "On the savanna of Kenya and Tanzania, near Mount Kilimanjaro, today.",
+        "es": "En la sabana de Kenia y Tanzania, cerca del monte Kilimanjaro, hoy.",
+        "de": "In der Savanne von Kenia und Tansania, nahe dem Kilimandscharo, heute."
+      },
+      "facts": [
+        {
+          "en": "Young Maasai men do a jumping dance called adumu, leaping straight up as high as they can!",
+          "es": "¡Los jóvenes masáis hacen un baile de saltos llamado adumu, en el que saltan rectos lo más alto que pueden!",
+          "de": "Junge Massai-Männer tanzen den Sprungtanz Adumu und springen dabei kerzengerade so hoch sie können!"
+        },
+        {
+          "en": "Maasai women build the houses themselves, out of sticks, mud and cow dung!",
+          "es": "¡Las mujeres masáis construyen ellas mismas las casas, con palos, barro y estiércol de vaca!",
+          "de": "Bei den Massai bauen die Frauen die Häuser – aus Stöcken, Lehm und Kuhmist!"
+        }
+      ]
+    },
+    {
+      "id": "mongolian-nomads",
+      "group": "today",
+      "region": "Mongolia",
+      "image": "people/mongolian-nomads.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Mongolian nomads",
+          "full": "the Mongolian nomads"
+        },
+        "es": {
+          "article": "los",
+          "noun": "nómadas mongoles",
+          "full": "los nómadas mongoles",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "mongolischen Nomaden",
+          "full": "die mongolischen Nomaden",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "On the green steppe of Mongolia, moving with their animals, today.",
+        "es": "En la estepa verde de Mongolia, viajando con sus animales, hoy.",
+        "de": "In der grünen Steppe der Mongolei, mit ihren Tieren unterwegs, heute."
+      },
+      "facts": [
+        {
+          "en": "A Mongolian family can take down their round ger home and build it up again somewhere else in just a few hours!",
+          "es": "¡Una familia mongola puede desmontar su casa redonda, el ger, y montarla en otro sitio en solo unas horas!",
+          "de": "Eine mongolische Familie kann ihr rundes Zelt, die Jurte, in wenigen Stunden abbauen und woanders wieder aufbauen!"
+        },
+        {
+          "en": "In Mongolia there are more horses than people!",
+          "es": "¡En Mongolia hay más caballos que personas!",
+          "de": "In der Mongolei gibt es mehr Pferde als Menschen!"
+        }
+      ]
+    },
+    {
+      "id": "quechua",
+      "group": "today",
+      "region": "Andes: Peru, Bolivia, Ecuador",
+      "image": "people/quechua.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Quechua people",
+          "full": "the Quechua people"
+        },
+        "es": {
+          "article": "los",
+          "noun": "quechuas",
+          "full": "los quechuas",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Quechua",
+          "full": "die Quechua",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In villages high in the Andes mountains of Peru, today.",
+        "es": "En pueblos en lo alto de los Andes del Perú, hoy.",
+        "de": "In Dörfern hoch oben in den Anden in Peru, heute."
+      },
+      "facts": [
+        {
+          "en": "Quechua weavers color their alpaca wool with plants, flowers, and even tiny bugs that make red!",
+          "es": "¡Las tejedoras quechuas tiñen la lana de alpaca con plantas, flores y hasta unos bichitos diminutos que dan color rojo!",
+          "de": "Quechua-Weberinnen färben ihre Alpakawolle mit Pflanzen, Blüten und sogar mit winzigen Läusen, die Rot machen!"
+        },
+        {
+          "en": "Quechua was the language of the Inca, and millions of people still speak it today!",
+          "es": "¡El quechua era la lengua de los incas, y millones de personas lo siguen hablando hoy!",
+          "de": "Quechua war die Sprache der Inka – und Millionen Menschen sprechen sie heute noch!"
+        }
+      ]
+    },
+    {
+      "id": "bedouin",
+      "group": "today",
+      "region": "Arabian & Sahara deserts (Wadi Rum, Jordan)",
+      "image": "people/bedouin.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Bedouin",
+          "full": "the Bedouin"
+        },
+        "es": {
+          "article": "los",
+          "noun": "beduinos",
+          "full": "los beduinos",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Beduinen",
+          "full": "die Beduinen",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In the deserts of Jordan and the Middle East, today.",
+        "es": "En los desiertos de Jordania y Oriente Medio, hoy.",
+        "de": "In den Wüsten von Jordanien und im Nahen Osten, heute."
+      },
+      "facts": [
+        {
+          "en": "Bedouin tents are woven from goat hair, which swells up in the rain so the water stays out!",
+          "es": "¡Las tiendas beduinas están tejidas con pelo de cabra, que se hincha con la lluvia y no deja pasar el agua!",
+          "de": "Beduinenzelte sind aus Ziegenhaar gewebt – das quillt bei Regen auf, und das Wasser bleibt draußen!"
+        },
+        {
+          "en": "Bedouin welcome guests with coffee in tiny cups, and you wiggle your cup to say 'no more, thank you'!",
+          "es": "¡Los beduinos reciben a los invitados con café en tacitas, y si mueves la taza quiere decir «no más, gracias»!",
+          "de": "Beduinen begrüßen Gäste mit Kaffee in winzigen Tassen – wackelt man mit der Tasse, heißt das »Nein danke, genug«!"
+        }
+      ]
+    },
+    {
+      "id": "tuareg",
+      "group": "today",
+      "region": "Sahara: Niger, Mali, Algeria",
+      "image": "people/tuareg.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Tuareg",
+          "full": "the Tuareg"
+        },
+        "es": {
+          "article": "los",
+          "noun": "tuaregs",
+          "full": "los tuaregs",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Tuareg",
+          "full": "die Tuareg",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In the Sahara desert of Niger, Mali and Algeria, today.",
+        "es": "En el desierto del Sáhara, en Níger, Malí y Argelia, hoy.",
+        "de": "In der Sahara in Niger, Mali und Algerien, heute."
+      },
+      "facts": [
+        {
+          "en": "Among the Tuareg, it's the men who cover their faces with a veil, and its indigo color can even turn their skin a little blue!",
+          "es": "¡Entre los tuaregs son los hombres los que se tapan la cara con un velo, y su color añil puede teñirles la piel de azul!",
+          "de": "Bei den Tuareg verhüllen die Männer ihr Gesicht mit einem Schleier – und die indigoblaue Farbe färbt ihre Haut manchmal ein bisschen blau!"
+        },
+        {
+          "en": "The Tuareg have their own very old alphabet, called Tifinagh!",
+          "es": "¡Los tuaregs tienen su propio alfabeto, muy antiguo, llamado tifinag!",
+          "de": "Die Tuareg haben ihr eigenes, sehr altes Alphabet – es heißt Tifinagh!"
+        }
+      ]
+    },
+    {
+      "id": "japan-festival",
+      "group": "today",
+      "region": "Japan",
+      "image": "people/japan-festival.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Japanese family",
+          "full": "the Japanese family"
+        },
+        "es": {
+          "article": "la",
+          "noun": "familia japonesa",
+          "full": "la familia japonesa",
+          "gender": "f",
+          "number": "sg"
+        },
+        "de": {
+          "article": "die",
+          "noun": "japanische Familie",
+          "full": "die japanische Familie",
+          "gender": "f",
+          "number": "sg"
+        }
+      },
+      "where": {
+        "en": "At a summer festival by a shrine in Japan, today.",
+        "es": "En una fiesta de verano junto a un santuario en Japón, hoy.",
+        "de": "Bei einem Sommerfest an einem Schrein in Japan, heute."
+      },
+      "facts": [
+        {
+          "en": "At summer festivals, kids try to catch goldfish with a paper scoop that breaks if they're too slow!",
+          "es": "¡En las fiestas de verano, los niños intentan pescar peces de colores con una redecilla de papel que se rompe si tardan mucho!",
+          "de": "Auf Sommerfesten versuchen Kinder, Goldfische mit einem Papierkescher zu fangen – der reißt, wenn man zu langsam ist!"
+        },
+        {
+          "en": "A yukata is a light cotton kimono that people in Japan love to wear on hot summer nights!",
+          "es": "¡El yukata es un kimono ligero de algodón que en Japón se ponen en las noches calurosas de verano!",
+          "de": "Ein Yukata ist ein leichter Baumwoll-Kimono, den man in Japan gern an warmen Sommerabenden trägt!"
+        }
+      ],
+      "note": "Summer yukata (light cotton kimono) at a natsu matsuri."
+    },
+    {
+      "id": "holi",
+      "group": "today",
+      "region": "India",
+      "image": "people/holi.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Indian family at Holi",
+          "full": "the Indian family at Holi"
+        },
+        "es": {
+          "article": "la",
+          "noun": "familia india en Holi",
+          "full": "la familia india en Holi",
+          "gender": "f",
+          "number": "sg"
+        },
+        "de": {
+          "article": "die",
+          "noun": "indische Familie beim Holi-Fest",
+          "full": "die indische Familie beim Holi-Fest",
+          "gender": "f",
+          "number": "sg"
+        }
+      },
+      "where": {
+        "en": "At the Holi festival of colors in India, every spring.",
+        "es": "En la fiesta de los colores, Holi, en la India, cada primavera.",
+        "de": "Beim Holi-Farbenfest in Indien, jeden Frühling."
+      },
+      "facts": [
+        {
+          "en": "Holi is the festival of colors: people throw colored powder to welcome spring and celebrate good winning over bad!",
+          "es": "¡Holi es la fiesta de los colores: la gente se lanza polvos de colores para dar la bienvenida a la primavera y celebrar que el bien gana al mal!",
+          "de": "Holi ist das Fest der Farben: Man wirft buntes Pulver, um den Frühling zu begrüßen und zu feiern, dass das Gute gewinnt!"
+        },
+        {
+          "en": "Long ago, Holi colors were made from flowers, like the bright orange flowers of the flame of the forest tree!",
+          "es": "¡Antiguamente los colores de Holi se hacían con flores, como las flores naranjas del árbol «llama del bosque»!",
+          "de": "Früher machte man die Holi-Farben aus Blüten – zum Beispiel aus den leuchtend orangen Blüten des »Flamme-des-Waldes«-Baums!"
+        }
+      ]
+    },
+    {
+      "id": "flamenco",
+      "group": "today",
+      "region": "Andalusia, Spain",
+      "image": "people/flamenco.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "flamenco dancers",
+          "full": "the flamenco dancers"
+        },
+        "es": {
+          "article": "los",
+          "noun": "bailaores de flamenco",
+          "full": "los bailaores de flamenco",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Flamenco-Tänzer",
+          "full": "die Flamenco-Tänzer",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In a sunny patio in Seville, in southern Spain, today.",
+        "es": "En un patio soleado de Sevilla, en el sur de España, hoy.",
+        "de": "In einem sonnigen Innenhof in Sevilla, im Süden Spaniens, heute."
+      },
+      "facts": [
+        {
+          "en": "In flamenco, the clapping hands and stamping feet are part of the music!",
+          "es": "¡En el flamenco, las palmas y el taconeo también son parte de la música!",
+          "de": "Beim Flamenco gehören das Klatschen und das Stampfen mit den Füßen mit zur Musik!"
+        },
+        {
+          "en": "Flamenco is so special that it is protected as a treasure for the whole world!",
+          "es": "¡El flamenco es tan especial que está protegido como un tesoro de todo el mundo!",
+          "de": "Flamenco ist so besonders, dass er als Schatz für die ganze Welt geschützt wird!"
+        }
+      ]
+    },
+    {
+      "id": "bavarian",
+      "group": "today",
+      "region": "Bavaria & the Alps, Germany",
+      "image": "people/bavarian.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Bavarians",
+          "full": "the Bavarians"
+        },
+        "es": {
+          "article": "los",
+          "noun": "bávaros",
+          "full": "los bávaros",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Bayern",
+          "full": "die Bayern",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In the mountains of Bavaria, in the south of Germany, today.",
+        "es": "En las montañas de Baviera, en el sur de Alemania, hoy.",
+        "de": "In den Bergen von Bayern, im Süden Deutschlands, heute."
+      },
+      "facts": [
+        {
+          "en": "Cows in the Alps wear big bells, so the farmers can hear where they are on the mountain!",
+          "es": "¡Las vacas de los Alpes llevan grandes cencerros para que los granjeros sepan dónde están en la montaña!",
+          "de": "Kühe in den Alpen tragen große Glocken, damit die Bauern hören, wo sie auf dem Berg sind!"
+        },
+        {
+          "en": "In autumn the cows come down from the mountain meadows wearing crowns of flowers, and the whole village celebrates!",
+          "es": "¡En otoño las vacas bajan de los prados de montaña con coronas de flores, y todo el pueblo lo celebra!",
+          "de": "Im Herbst kommen die Kühe mit Blumenkränzen geschmückt von der Alm herunter, und das ganze Dorf feiert den Almabtrieb!"
+        }
+      ]
+    },
+    {
+      "id": "aboriginal",
+      "group": "today",
+      "region": "Central Australia",
+      "image": "people/aboriginal.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Aboriginal Australians",
+          "full": "the Aboriginal Australians"
+        },
+        "es": {
+          "article": "los",
+          "noun": "aborígenes australianos",
+          "full": "los aborígenes australianos",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "australischen Ureinwohner",
+          "full": "die australischen Ureinwohner",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In the red desert of Central Australia, today.",
+        "es": "En el desierto rojo del centro de Australia, hoy.",
+        "de": "In der roten Wüste in der Mitte Australiens, heute."
+      },
+      "facts": [
+        {
+          "en": "Aboriginal Australians have the oldest living culture in the world, more than 50,000 years old!",
+          "es": "¡Los aborígenes australianos tienen la cultura viva más antigua del mundo, de más de 50 000 años!",
+          "de": "Die Ureinwohner Australiens haben die älteste lebendige Kultur der Welt – über 50.000 Jahre alt!"
+        },
+        {
+          "en": "Stories are told by drawing symbols in the sand: circles can mean a waterhole or a campsite!",
+          "es": "¡Cuentan historias dibujando símbolos en la arena: un círculo puede ser una charca o un campamento!",
+          "de": "Geschichten werden mit Zeichen im Sand erzählt: Kreise können ein Wasserloch oder einen Lagerplatz bedeuten!"
+        }
+      ]
+    },
+    {
+      "id": "maori",
+      "group": "today",
+      "region": "Aotearoa New Zealand",
+      "image": "people/maori.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Māori",
+          "full": "the Māori"
+        },
+        "es": {
+          "article": "los",
+          "noun": "maoríes",
+          "full": "los maoríes",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Māori",
+          "full": "die Māori",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "At a marae meeting place in Aotearoa New Zealand, today.",
+        "es": "En un marae, lugar de encuentro, en Aotearoa Nueva Zelanda, hoy.",
+        "de": "Auf einem Marae-Versammlungsplatz in Aotearoa Neuseeland, heute."
+      },
+      "facts": [
+        {
+          "en": "Māori people greet each other with a hongi: they press their noses and foreheads together and share a breath!",
+          "es": "¡Los maoríes se saludan con el hongi: juntan la nariz y la frente y comparten el aliento!",
+          "de": "Māori begrüßen sich mit dem Hongi: Sie drücken Nase und Stirn aneinander und teilen den Atem!"
+        },
+        {
+          "en": "The haka is a powerful Māori dance with stamping, chanting and big wide eyes, and New Zealand's rugby team performs it before games!",
+          "es": "¡El haka es un baile maorí muy fuerte, con pisotones, cantos y ojos muy abiertos, y el equipo de rugby de Nueva Zelanda lo baila antes de jugar!",
+          "de": "Der Haka ist ein kraftvoller Māori-Tanz mit Stampfen, Rufen und weit aufgerissenen Augen – Neuseelands Rugbyteam tanzt ihn vor seinen Spielen!"
+        }
+      ],
+      "note": "Hongi greeting at a marae; korowai cloaks; no moko added."
+    },
+    {
+      "id": "ashaninka",
+      "group": "today",
+      "region": "Amazon rainforest, Peru",
+      "image": "people/ashaninka.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Asháninka",
+          "full": "the Asháninka"
+        },
+        "es": {
+          "article": "los",
+          "noun": "asháninka",
+          "full": "los asháninka",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Asháninka",
+          "full": "die Asháninka",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "By the rivers of the Amazon rainforest in Peru, today.",
+        "es": "A orillas de los ríos de la selva amazónica del Perú, hoy.",
+        "de": "An den Flüssen im Amazonas-Regenwald in Peru, heute."
+      },
+      "facts": [
+        {
+          "en": "Asháninka women weave long robes called cushmas from cotton they grow themselves, and a man's has a V-shaped neck!",
+          "es": "¡Las mujeres asháninka tejen túnicas largas llamadas cushmas con algodón que cultivan ellas mismas, y la de los hombres tiene el cuello en V!",
+          "de": "Asháninka-Frauen weben lange Gewänder, die Cushmas, aus selbst angebauter Baumwolle – die der Männer haben einen V-Ausschnitt!"
+        },
+        {
+          "en": "They paint fine red lines on their faces with paste from the seeds of the achiote plant!",
+          "es": "¡Se pintan finas líneas rojas en la cara con la pasta de las semillas de achiote!",
+          "de": "Sie malen sich feine rote Linien ins Gesicht – mit Farbe aus den Samen der Achiote-Pflanze!"
+        }
+      ]
+    },
+    {
+      "id": "scottish-piper",
+      "group": "today",
+      "region": "Scottish Highlands",
+      "image": "people/scottish-piper.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Scottish piper",
+          "full": "the Scottish piper"
+        },
+        "es": {
+          "article": "el",
+          "noun": "gaitero escocés",
+          "full": "el gaitero escocés",
+          "gender": "m",
+          "number": "sg"
+        },
+        "de": {
+          "article": "der",
+          "noun": "schottische Dudelsackspieler",
+          "full": "der schottische Dudelsackspieler",
+          "gender": "m",
+          "number": "sg"
+        }
+      },
+      "where": {
+        "en": "In the Highlands of Scotland, with heather and castles, today.",
+        "es": "En las Tierras Altas de Escocia, entre brezos y castillos, hoy.",
+        "de": "Im schottischen Hochland, zwischen Heidekraut und Burgen, heute."
+      },
+      "facts": [
+        {
+          "en": "Bagpipes have a bag full of air, so the piper can keep playing even while taking a breath!",
+          "es": "¡La gaita tiene una bolsa llena de aire, así que el gaitero puede seguir tocando mientras respira!",
+          "de": "Der Dudelsack hat einen Sack voller Luft – so kann der Spieler weiterspielen, während er Luft holt!"
+        },
+        {
+          "en": "Each tartan pattern on a kilt often belongs to a family, called a clan!",
+          "es": "¡Cada dibujo de cuadros de la falda escocesa, el tartán, suele pertenecer a una familia, llamada clan!",
+          "de": "Jedes Karomuster auf einem Kilt, der Tartan, gehört oft zu einer Familie – die heißt Clan!"
+        }
+      ]
+    },
+    {
+      "id": "dine",
+      "group": "today",
+      "region": "Diné Bikéyah (Navajo Nation): Arizona, New Mexico, Utah",
+      "image": "people/dine.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Diné (Navajo)",
+          "full": "the Diné (Navajo)"
+        },
+        "es": {
+          "article": "los",
+          "noun": "diné (navajos)",
+          "full": "los diné (navajos)",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Diné (Navajo)",
+          "full": "die Diné (Navajo)",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "In the Navajo Nation, among the red rocks of Arizona, New Mexico and Utah, today.",
+        "es": "En la Nación Navajo, entre las rocas rojas de Arizona, Nuevo México y Utah, hoy.",
+        "de": "In der Navajo Nation, zwischen den roten Felsen von Arizona, New Mexico und Utah, heute."
+      },
+      "facts": [
+        {
+          "en": "The door of a traditional Diné hogan always faces east, to greet the rising sun!",
+          "es": "¡La puerta de un hogan diné tradicional siempre mira al este, para saludar al sol cuando sale!",
+          "de": "Die Tür eines traditionellen Diné-Hogans zeigt immer nach Osten – zur aufgehenden Sonne!"
+        },
+        {
+          "en": "Diné weavers make rugs on tall upright looms, and one big rug can take many months to finish!",
+          "es": "¡Las tejedoras diné hacen alfombras en telares altos y verticales, y una alfombra grande puede tardar muchos meses!",
+          "de": "Diné-Weberinnen weben Teppiche an hohen, aufrechten Webstühlen – ein großer Teppich kann viele Monate dauern!"
+        }
+      ],
+      "note": "Hogan (octagonal log, earth roof) and upright loom."
+    },
+    {
+      "id": "astronauts",
+      "group": "today",
+      "region": "International Space Station, above the Earth",
+      "image": "people/astronauts.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "astronauts",
+          "full": "the astronauts"
+        },
+        "es": {
+          "article": "los",
+          "noun": "astronautas",
+          "full": "los astronautas",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Astronauten",
+          "full": "die Astronauten",
+          "gender": "pl",
+          "number": "pl"
+        }
+      },
+      "where": {
+        "en": "On the International Space Station, high above the Earth, today.",
+        "es": "En la Estación Espacial Internacional, muy por encima de la Tierra, hoy.",
+        "de": "Auf der Internationalen Raumstation, hoch über der Erde, heute."
+      },
+      "facts": [
+        {
+          "en": "In space everything floats, so astronauts sleep in sleeping bags tied to the wall!",
+          "es": "¡En el espacio todo flota, así que los astronautas duermen en sacos de dormir atados a la pared!",
+          "de": "Im Weltraum schwebt alles – darum schlafen Astronauten in Schlafsäcken, die an der Wand festgemacht sind!"
+        },
+        {
+          "en": "The space station zooms around the Earth about 16 times a day, so astronauts see 16 sunrises every day!",
+          "es": "¡La estación espacial da la vuelta a la Tierra unas 16 veces al día, así que los astronautas ven 16 amaneceres cada día!",
+          "de": "Die Raumstation saust etwa 16-mal am Tag um die Erde – die Astronauten sehen also jeden Tag 16 Sonnenaufgänge!"
+        }
+      ],
+      "note": "Crew in everyday clothes inside the ISS; the window is stylised (the real Cupola has seven smaller windows)."
+    }
+  ]
+}
