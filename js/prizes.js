@@ -308,7 +308,24 @@ const SKULLS={
    jaw:[[-0.16,0.014],[-0.01,0.026],[-0.03,0.046],[-0.14,0.034]],holes:[[-0.07,-0.04,0.014]],
    knobs:[[0.035,-0.06],[0.03,-0.03],[0.02,-0.085],[-0.13,-0.08],[-0.15,-0.055]]},
  ptera:{up:[[0,-0.012],[-0.03,-0.03],[-0.31,-0.004],[-0.02,0.014]],jaw:[[-0.29,0.002],[-0.02,0.016],[-0.03,0.028]],
-   holes:[[-0.035,-0.012,0.01]],extra:[pP([[0,-0.022],[0.04,-0.04],[0.21,-0.105],[0.19,-0.075],[0.02,-0.002]])]}
+   holes:[[-0.035,-0.012,0.01]],extra:[pP([[0,-0.022],[0.04,-0.04],[0.21,-0.105],[0.19,-0.075],[0.02,-0.002]])]},
+ carno:{up:[[0.01,-0.02],[-0.03,-0.08],[-0.1,-0.085],[-0.18,-0.06],[-0.215,-0.02],[-0.215,0.005],[-0.02,0.02]],
+   jaw:[[-0.205,0.01],[-0.02,0.025],[0.012,0],[-0.02,0.06],[-0.09,0.065],[-0.19,0.035]],
+   holes:[[-0.05,-0.045,0.016],[-0.12,-0.04,0.02]],teeth:[-0.2,-0.07,0.005,0.024,6],
+   extra:[pT([-0.035,-0.07],[0.01,-0.135],0.036),pT([-0.065,-0.078],[-0.035,-0.14],0.032)]},
+ dilo:{up:[[0.01,-0.015],[-0.04,-0.05],[-0.16,-0.045],[-0.27,-0.02],[-0.29,0.002],[-0.02,0.016]],
+   jaw:[[-0.275,0.008],[-0.02,0.022],[0.01,0],[-0.02,0.045],[-0.24,0.028]],
+   holes:[[-0.05,-0.027,0.015],[-0.14,-0.026,0.016]],teeth:[-0.28,-0.08,0.003,0.018,8],
+   extra:[pP([[0.0,-0.04],[-0.026,-0.097],[-0.052,-0.146],[-0.079,-0.179],[-0.105,-0.19],[-0.131,-0.179],[-0.158,-0.146],[-0.184,-0.097],[-0.21,-0.04],[-0.184,-0.086],[-0.158,-0.125],[-0.131,-0.151],[-0.105,-0.16],[-0.079,-0.151],[-0.052,-0.125],[-0.026,-0.086]]),pP([[-0.03,-0.035],[-0.056,-0.081],[-0.082,-0.12],[-0.109,-0.146],[-0.135,-0.155],[-0.161,-0.146],[-0.188,-0.12],[-0.214,-0.081],[-0.24,-0.035],[-0.214,-0.069],[-0.188,-0.099],[-0.161,-0.118],[-0.135,-0.125],[-0.109,-0.118],[-0.082,-0.099],[-0.056,-0.069]])]},
+ styraco:{back:[pP([[0.02,0.04],[-0.02,-0.05],[0.02,-0.15],[0.09,-0.2],[0.17,-0.17],[0.2,-0.08],[0.12,0.04]],[[0.08,-0.09,0.025]]),
+     pT([0.03,-0.16],[-0.02,-0.3],0.036),pT([0.09,-0.19],[0.08,-0.35],0.036),pT([0.15,-0.18],[0.21,-0.31],0.036),pT([0.19,-0.12],[0.29,-0.2],0.034),pT([0.2,-0.05],[0.3,-0.07],0.03)],
+   up:[[0.03,-0.02],[-0.06,-0.065],[-0.17,-0.06],[-0.27,-0.02],[-0.31,0.03],[-0.25,0.055],[-0.02,0.06]],
+   jaw:[[-0.25,0.058],[-0.03,0.062],[-0.01,0.1],[-0.19,0.1]],holes:[[-0.085,-0.025,0.016]],
+   extra:[pT([-0.2,-0.04],[-0.23,-0.22],0.042),pT([-0.07,-0.055],[-0.09,-0.09],0.02)]},
+ iguano:{up:[[0,-0.02],[-0.04,-0.06],[-0.12,-0.06],[-0.21,-0.035],[-0.25,-0.005],[-0.24,0.015],[-0.02,0.025]],
+   jaw:[[-0.23,0.018],[-0.02,0.028],[-0.03,0.055],[-0.2,0.045]],holes:[[-0.055,-0.032,0.015],[-0.19,-0.018,0.01]]},
+ theriz:{up:[[0,-0.012],[-0.03,-0.035],[-0.09,-0.03],[-0.13,-0.005],[-0.12,0.012],[-0.01,0.015]],
+   jaw:[[-0.12,0.008],[-0.01,0.015],[-0.02,0.03],[-0.1,0.022]],holes:[[-0.035,-0.015,0.01]]}
 };
 function mkSkull(key,o,s,ang){
   const d=SKULLS[key],c=Math.cos(ang||0),sn=Math.sin(ang||0);
@@ -354,7 +371,9 @@ function biped(o){
   P.push({n:'skull',k:'head',pr:sk.skull,pv:nE,an:'head',par:'neck'});
   const ar=[];[[0.035,-0.012],[0,0]].forEach(([ox,oy])=>{
     const s=[-0.16+ox,0.03+oy],e=[s[0]+0.03*A,s[1]+0.11*A],h=[e[0]-0.065*A,e[1]+0.05*A],w=Math.max(A,0.6);
-    ar.push(pB(s,e,0.018*w),pB(e,h,0.014*w),pT(h,[h[0]-0.035*A,h[1]+0.025*A],0.011),pT(h,[h[0]-0.02*A,h[1]+0.04*A],0.01));});
+    ar.push(pB(s,e,0.018*w),pB(e,h,0.014*w),pT(h,[h[0]-0.035*A,h[1]+0.025*A],0.011),pT(h,[h[0]-0.02*A,h[1]+0.04*A],0.01));
+    if(o.thumb)ar.push(pT([h[0]+0.006,h[1]+0.004],[h[0]-0.07,h[1]-0.045],0.028));                       // Iguanodon's thumb spike
+    if(o.claws)ar.push(pR(h,[h[0]-0.075,h[1]+0.06],[h[0]-0.045,h[1]+0.17],0.013),pR(h,[h[0]-0.045,h[1]+0.07],[h[0]-0.01,h[1]+0.17],0.013),pR(h,[h[0]-0.015,h[1]+0.07],[h[0]+0.02,h[1]+0.15],0.012));});
   P.push({n:'arms',k:'arm',pr:ar,pv:[-0.16,0.03],an:'arm'});
   P.push(leg(0,0,'legA','legNear'));
   return P;
@@ -464,8 +483,30 @@ const DINOS=[
  {k:'ptera',b:ptera,
   es:['el Pteranodon','No era un dinosaurio: era un reptil volador con alas enormes.'],
   en:['the Pteranodon','It was not a dinosaur: it was a flying reptile with huge wings.'],
-  de:['der Pteranodon','Er war kein Dinosaurier, sondern ein Flugsaurier mit riesigen Flügeln.']}
+  de:['der Pteranodon','Er war kein Dinosaurier, sondern ein Flugsaurier mit riesigen Flügeln.']},
+ {k:'carno',big:1,b:()=>biped({skull:'carno',skullS:1.05,neckEnd:[-0.32,-0.15],tail:0.6,tailDrop:0.08,arm:0.25,leg:1.05}),
+  es:['el Carnotauro','Su nombre significa «toro carnívoro». Tenía dos cuernos y brazos aún más pequeños que el T-Rex.'],
+  en:['the Carnotaurus','Its name means "meat-eating bull". It had two horns and even tinier arms than the T-Rex.'],
+  de:['der Carnotaurus','Sein Name heißt „Fleisch-Stier“. Er hatte zwei Hörner und noch kleinere Ärmchen als der T-Rex.']},
+ {k:'dilo',big:1,b:()=>biped({skull:'dilo',skullS:0.9,neckEnd:[-0.33,-0.19],neckC:[-0.28,-0.08],tail:0.62,tailDrop:0.05,arm:0.8,leg:1}),
+  es:['el Dilofosaurio','Tenía dos crestas finas en la cabeza, como dos abanicos.'],
+  en:['the Dilophosaurus','It had two thin crests on its head, like two fans.'],
+  de:['der Dilophosaurus','Er hatte zwei dünne Kämme auf dem Kopf, wie zwei Fächer.']},
+ {k:'styraco',big:1,b:()=>quad({skull:'styraco',neckEnd:[-0.27,0],neckC:[-0.24,0],neckN:3,fl:0.82,bl:1,tail:0.38,tailDrop:0.13,arch:-0.06,belly:1.05,thick:1.1}),
+  es:['el Estiracosaurio','Tenía un cuerno largo en la nariz y un escudo con muchos pinchos.'],
+  en:['the Styracosaurus','It had a long horn on its nose and a shield with lots of spikes.'],
+  de:['der Styracosaurus','Er hatte ein langes Horn auf der Nase und einen Schild mit vielen Stacheln.']},
+ {k:'iguano',big:1,b:()=>biped({skull:'iguano',neckEnd:[-0.33,-0.17],neckC:[-0.29,-0.06],tail:0.6,tailDrop:0.08,arm:1.3,leg:1.05,belly:1.05,thumb:1}),
+  es:['el Iguanodonte','Tenía un pincho en cada pulgar. Fue uno de los primeros dinosaurios descubiertos.'],
+  en:['the Iguanodon','It had a spike on each thumb. It was one of the very first dinosaurs ever found.'],
+  de:['der Iguanodon','Er hatte einen Stachel an jedem Daumen. Er war einer der allerersten Dinos, die man gefunden hat.']},
+ {k:'theriz',big:1,b:()=>biped({skull:'theriz',neckEnd:[-0.36,-0.33],neckC:[-0.3,-0.13],neckN:6,tail:0.4,tailDrop:0.1,arm:1.15,leg:1.05,belly:1.35,claws:1}),
+  es:['el Terizinosaurio','Tenía garras enormes, más largas que tu brazo. ¡Y aun así comía plantas!'],
+  en:['the Therizinosaurus','It had giant claws, longer than your arm. And still it ate plants!'],
+  de:['der Therizinosaurus','Er hatte riesige Krallen, länger als dein Arm. Und trotzdem fraß er Pflanzen!']}
 ];
+/* from round 2 on, the bones come out of the ground in gold */
+const GOLD_BONES={fill:'#FFD95A',line:'#8A5A00',hole:'#A86E00',mem:'rgba(255,200,60,.45)'};
 /* every bone found gets named — body vocabulary for free */
 const BONEWORD={
  head:{es:'¡La cabeza!',en:'The head!',de:'Der Kopf!'},   jaw:{es:'¡La mandíbula!',en:'The jaw!',de:'Der Kiefer!'},
@@ -553,7 +594,7 @@ function drawThumb(cn,d,silh){
   const K=Math.min(r.width*0.92/(box[2]-box[0]),r.height*0.9/(box[3]-box[1]));
   const ox=r.width/2-(box[0]+box[2])/2*K,oy=r.height/2-(box[1]+box[3])/2*K;
   drawBones(g,parts,gg=>{gg.translate(ox,oy);gg.scale(K,K);return K;},
-    silh?{fill:'#2A3170',line:'#151A40',hole:'#2A3170',mem:'rgba(42,49,112,.6)',out:1.2}:{out:1.2});
+    silh?{fill:'#2A3170',line:'#151A40',hole:'#2A3170',mem:'rgba(42,49,112,.6)',out:1.2}:dinoRound>1?Object.assign({out:1.2},GOLD_BONES):{out:1.2});
 }
 
 /* ---------- the dig site ---------- */
@@ -836,7 +877,7 @@ function digLoop(now){
   D.parts.forEach(pt=>{pt.glow=pt.foundAt&&now-pt.foundAt<1400?22*(1-(now-pt.foundAt)/1400)+4:0;});
   const xf=D.phase==='alive'?aliveXf(D,now,W):(g,pt)=>{const L=pt.L;
     g.translate(L.x*W,L.y*W);g.rotate(L.r);g.scale(L.sx*W,L.sy*W);g.translate(-pt.c[0],-pt.c[1]);return Math.abs(L.sy*W);};
-  drawBones(dx,D.parts,xf);
+  drawBones(dx,D.parts,xf,dinoRound>1?GOLD_BONES:undefined);
   const ca=D.phase==='dig'?1:D.phase==='reveal'?1-(now-D.revealT)/700:0;
   if(ca>0){dx.globalAlpha=Math.max(0,ca);dx.drawImage(D.cov,0,0,W,W);dx.globalAlpha=1;}
   if(D.phase==='dig'){
