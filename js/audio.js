@@ -48,6 +48,7 @@ function utter(text,isRetry,rate,L){
 let rewardOpen=false;                 // while the prize pop-up is up, nothing else talks over it
 let appStarted=false;                 // nothing is spoken before the "tap to start" (no letters chattering behind the start screen)
 function sayAt(text,rate,force){
+  bridgeStop();
   if(!appStarted) return;
   if(rewardOpen&&!force) return;
   if(!('speechSynthesis' in window)){showWarn();return;}
@@ -59,6 +60,49 @@ function sayAt(text,rate,force){
   }catch(e){showWarn();}
 }
 function say(text){ sayAt(text,0.72); }
+/* Word bridge: the same word in each ticked language, current language first,
+   each with its own voice. Lessons stay monolingual; this is only for
+   collecting and celebrating. sl_bridge is separate from sl_langs. */
+var BRIDGE=['de','en','es'];
+const BRIDGE_MARK={es:'🇪🇸',en:'🇬🇧',de:'🇩🇪'};
+let bridgeGen=0,bridgeTimer=0;
+function bridgeStop(){bridgeGen++;clearTimeout(bridgeTimer);const el=document.getElementById('bridgeTag');if(el)el.classList.remove('on');}
+function bridgeOrder(prefer){
+  prefer=prefer||lang;
+  const on=(BRIDGE||[]).filter(c=>c==='es'||c==='en'||c==='de');
+  const rest=['es','en','de'].filter(c=>on.includes(c)&&c!==prefer);
+  if(on.includes(prefer))return [prefer,...rest];
+  const list=['es','en','de'].filter(c=>on.includes(c));
+  return list.length?list:[prefer];
+}
+function sayWordBridge(words,opt){
+  opt=opt||{};
+  if(!appStarted)return;
+  if(rewardOpen&&!opt.force)return;
+  bridgeStop();
+  const prefer=opt.prefer||lang,gen=bridgeGen;
+  const tidy=s=>(s||'').replace(/^[¡¿\s]+/,'').replace(/[!?¡¿.\s]+$/,'').trim();
+  const seq=[];
+  bridgeOrder(prefer).forEach(L=>{
+    const name=tidy(words&&words[L]);
+    if(!name&&!(opt.lead&&L===prefer))return;
+    seq.push({L,speak:(opt.lead&&L===prefer)?opt.lead:name,label:name||opt.lead});
+  });
+  if(opt.lead&&!seq.some(s=>s.L===prefer))seq.unshift({L:prefer,speak:opt.lead,label:tidy(words&&words[prefer])||opt.lead});
+  if(!seq.length)return;
+  const tag=document.getElementById('bridgeTag');
+  const step=i=>{
+    if(gen!==bridgeGen)return;
+    if(i>=seq.length){if(tag)tag.classList.remove('on');return;}
+    const s=seq[i];
+    if(tag){tag.textContent=BRIDGE_MARK[s.L]+' '+s.label;tag.classList.add('on');}
+    try{if('speechSynthesis' in window)speechSynthesis.cancel();}catch(e){}
+    utter(s.speak,true,0.72,s.L);
+    const wait=Math.min(4200,Math.max(800,420+s.speak.length*70));
+    bridgeTimer=setTimeout(()=>step(i+1),wait);
+  };
+  step(0);
+}
 /* "Hund… perro": the word in the current language, then the Spanish word read by a Spanish voice */
 function sayBridge(own,es,rate){
   sayAt(own,rate||0.72);

@@ -79,8 +79,9 @@ function stkOpen(id,center,ic,area){
     :`<div class="stkBig miss">${stkIcon(id)}</div><div class="stkBigName">?</div><div class="stkLine">${{es:'Todavía no lo has encontrado. Busca aquí: ',en:'Not found yet. Look here: ',de:'Noch nicht gefunden. Suche hier: '}[lang]}${ic} ${area[lang]}</div>
       <div class="stkBtns"><button id="stkGo">🔍 ${{es:'¡Vamos a buscar!',en:"Let's go and look!",de:'Los, suchen!'}[lang]}</button><button id="stkX">✕</button></div>`;
   c.classList.add('on');
-  say(got?(e.l?e.l[L]:name):{es:'Todavía no lo has encontrado. Búscalo en: ',en:'You have not found this one yet. Look in: ',de:'Den hast du noch nicht gefunden. Suche hier: '}[lang]+area[lang]);
-  const s=$('stkSay');if(s)s.onclick=()=>{ac();say(e.l?e.l[L]:name);};
+  if(got)sayWordBridge({de:e.n[0],en:e.n[1],es:e.n[2]});
+  else say({es:'Todavía no lo has encontrado. Búscalo en: ',en:'You have not found this one yet. Look in: ',de:'Den hast du noch nicht gefunden. Suche hier: '}[lang]+area[lang]);
+  const s=$('stkSay');if(s)s.onclick=()=>{ac();sayWordBridge({de:e.n[0],en:e.n[1],es:e.n[2]});};
   $('stkX').onclick=()=>{ac();c.classList.remove('on');};
   $('stkGo').onclick=()=>{ac();c.classList.remove('on');CITY.showAt(id,center,(STK_AREAS.find(A=>A[4].includes(id))||[])[4]);showTab('city');};
 }
@@ -103,7 +104,7 @@ function stkMuseum(book){
     lb.textContent=got?d[lang][0].replace(/^(el|la|the|der|die|das)\s+/i,''):'?';
     b.appendChild(lb);
     b.onclick=()=>{ac();
-      if(got)say(d[lang][0]+'. '+d[lang][1]);
+      if(got)sayWordBridge({de:d.de[0],en:d.en[0],es:d.es[0]});
       else say({es:'¿Quién será? ¡Sigue excavando!',en:'Who could it be? Keep digging!',de:'Wer das wohl ist? Grab weiter!'}[lang]);};
     grid.appendChild(b);
     requestAnimationFrame(()=>drawThumb(cn,d,!got));
@@ -112,7 +113,10 @@ function stkMuseum(book){
   const tr=TREASURES.filter(t=>treasure[t.k]);
   if(tr.length){
     const line=document.createElement('div');line.className='stkTreasures';
-    line.innerHTML=`<b>${{es:'Tesoros',en:'Treasures',de:'Schätze'}[lang]}:</b> `+tr.map(t=>`<span>${t.ic}×${treasure[t.k]}</span>`).join(' ');
+    line.innerHTML=`<b>${{es:'Tesoros',en:'Treasures',de:'Schätze'}[lang]}:</b> `;
+    tr.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='stkTre';
+      b.textContent=t.ic+(treasure[t.k]>1?'×'+treasure[t.k]:'');
+      b.onclick=()=>{ac();sayWordBridge({es:t.es,en:t.en,de:t.de});};line.appendChild(b);});
     sec.appendChild(line);
   }
   book.appendChild(sec);

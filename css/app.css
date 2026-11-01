@@ -435,6 +435,10 @@
     border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);border-radius:8px;padding:6px 12px;font-weight:bold;font-size:15px;
     display:none;white-space:nowrap}
   #gearTip.on{display:block;animation:tipIn .35s cubic-bezier(.2,1.7,.4,1)}
+  #bridgeTag{position:fixed;z-index:42;top:68px;left:50%;transform:translateX(-50%);background:#fff;color:var(--ink);
+    border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);border-radius:999px;padding:6px 14px;font-weight:800;
+    font-size:min(4.6vw,18px);display:none;max-width:92vw;text-align:center;line-height:1.25}
+  #bridgeTag.on{display:block;animation:tipIn .35s cubic-bezier(.2,1.7,.4,1)}
   #grown{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(10,14,40,.55);padding:16px}
   #grown.on{display:flex}
   #grown .qsBox{background:#fff;border-radius:26px;padding:20px 18px;width:min(88vw,380px);display:flex;flex-direction:column;gap:12px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35);color:var(--ink)}
@@ -661,7 +665,8 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .stkDino canvas{width:100%;aspect-ratio:4/3;display:block}
 .stkDino:active{transform:translateY(2px) scale(.98)}
 .stkTreasures{margin:10px 4px 0;font-size:15px;color:var(--ink);text-align:center}
-.stkTreasures span{margin:0 4px}
+.stkTreasures span,.stkTre{margin:0 4px}
+.stkTre{border:3px solid var(--ink);background:#FFF6D8;border-radius:999px;padding:2px 8px;font-size:18px;cursor:pointer;font-weight:800}
 #bag{touch-action:none;background:#5BC0F8}
 #quitSheet{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;background:rgba(10,14,40,.55)}
 #quitSheet.on{display:flex}

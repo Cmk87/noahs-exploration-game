@@ -803,8 +803,10 @@ function checkFinds(){
   D.tre.forEach(t=>{if(t.found)return;let o=0;
     [[0,0],[0.02,0],[-0.02,0],[0,0.02],[0,-0.02]].forEach(d=>{if(isOpen([t.x+d[0],t.y+d[1]]))o++;});
     if(o>=3){t.found=true;t.at=now;sparkle(t.x,t.y,22,'#7DF9FF');
-      beep(1568,0,0.12,'triangle',0.18);beep(2093,0.1,0.25,'triangle',0.18);say(t.t[lang]);
+      beep(1568,0,0.12,'triangle',0.18);beep(2093,0.1,0.25,'triangle',0.18);
+      const first=!treasure[t.t.k];
       treasure[t.t.k]=(treasure[t.t.k]||0)+1;try{localStorage.setItem('sl_treasure',JSON.stringify(treasure));}catch(e){}
+      if(first)sayWordBridge({es:t.t.es,en:t.t.en,de:t.t.de});else say(t.t[lang]);
       boneCount(true);}});
   if(newly){D.lastFound=now;D.hint=null;chime();boneCount(true);
     if(D.parts.some(p=>!p.found))say(BONEWORD[newly.k][lang]);}
@@ -835,7 +837,9 @@ function goAlive(){
     :left===1?{es:'¡Nuevo en el museo! Solo falta un dinosaurio.',en:'New in the museum! Only one dinosaur left to find.',de:'Neu im Museum! Nur noch ein Dino fehlt.'}[lang]
     :{es:`¡Nuevo en el museo! Faltan ${left} dinosaurios.`,en:`New in the museum! ${left} dinosaurs still to find.`,de:`Neu im Museum! Noch ${left} Dinos fehlen.`}[lang];
   $('dinoMus').textContent='🏛️ '+have+' / '+DINOS.length+(isNew?' · '+{es:'¡nuevo!',en:'new!',de:'neu!'}[lang]:'')+(left===0?' 🏆':'');
-  setTimeout(()=>say(nm[0]+'. '+nm[1]+(mus?' '+mus:'')),1500);
+  setTimeout(()=>{const line=nm[0]+'. '+nm[1]+(mus?' '+mus:'');
+    if(isNew)sayWordBridge({es:D.sp.es[0],en:D.sp.en[0],de:D.sp.de[0]},{lead:line});
+    else say(line);},1500);
   if(isNew&&left===0)setTimeout(()=>{fanfare();rainEmoji(['🏆','🦖','🦕','🦴','⭐'],34);},5200);
 }
 const easeOut=t=>1-Math.pow(1-clamp01(t),3);

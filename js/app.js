@@ -87,6 +87,23 @@ function setLang(code,btn){
    disappear from the header; with only one language left the switch is hidden. */
 let LANGS_ON=['de','en','es'];
 try{const v=(localStorage.getItem('sl_langs')||'').split(',').filter(c=>['de','en','es'].includes(c));if(v.length)LANGS_ON=v;}catch(e){}
+/* Word bridge is its own list. A brand-new install starts from the learning
+   languages plus the phone's language. A phone that already has saved
+   progress, but no bridge choice yet, starts with all three on. */
+function deviceLang(){const t=((navigator.language||'')+'').toLowerCase();return t.startsWith('de')?'de':t.startsWith('es')?'es':t.startsWith('en')?'en':'';}
+function loadBridge(){
+  const all=['de','en','es'];
+  try{
+    const raw=localStorage.getItem('sl_bridge');
+    if(raw!==null){BRIDGE=raw.split(',').filter(c=>all.includes(c));return;}
+    let existing=false;
+    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('sl_')){existing=true;break;}}
+    if(existing)BRIDGE=all.slice();
+    else{const s=new Set(LANGS_ON);const b=deviceLang();if(b)s.add(b);if(all.includes(lang))s.add(lang);BRIDGE=all.filter(c=>s.has(c));}
+    localStorage.setItem('sl_bridge',BRIDGE.join(','));
+  }catch(e){BRIDGE=all.slice();}
+}
+loadBridge();
 function applyLangs(){
   ['es','en','de'].forEach(c=>{$(c).style.display=LANGS_ON.includes(c)?'':'none';});
   document.querySelector('header .lang').style.display=LANGS_ON.length>1?'':'none';
@@ -126,6 +143,16 @@ function renderParent(){
       try{localStorage.setItem('sl_langs',LANGS_ON.join(','));}catch(e){}applyLangs();renderParent();};
     lgb.appendChild(b);});
   $('langInfo').textContent={es:'Los idiomas apagados desaparecen de arriba.',en:'Languages switched off disappear from the top bar.',de:'Ausgeschaltete Sprachen verschwinden oben aus der Leiste.'}[lang];
+  $('pBridgeTitle').textContent={es:'🌉 Puente de palabras',en:'🌉 Word bridge',de:'🌉 Wortbrücke'}[lang];
+  const bgb=$('bridgeBtns');bgb.innerHTML='';
+  [['de','🇩🇪',{es:'Alemán',en:'German',de:'Deutsch'}],['en','🇬🇧',{es:'Inglés',en:'English',de:'Englisch'}],['es','🇪🇸',{es:'Español',en:'Spanish',de:'Spanisch'}]].forEach(([c,f,n])=>{
+    const b=document.createElement('button'),on=BRIDGE.includes(c);b.className='seg'+(on?' on':'');b.dataset.l=c;b.textContent=(on?'✅ ':'⛔ ')+f+' '+n[lang];
+    b.onclick=()=>{ac();
+      if(on&&BRIDGE.length===1){$('bridgeInfo').textContent={es:'Al menos un idioma tiene que quedar en el puente.',en:'At least one language has to stay in the bridge.',de:'Mindestens eine Sprache muss in der Brücke bleiben.'}[lang];return;}
+      const next=on?BRIDGE.filter(x=>x!==c):['de','en','es'].filter(x=>x===c||BRIDGE.includes(x));
+      BRIDGE=next;try{localStorage.setItem('sl_bridge',BRIDGE.join(','));}catch(e){}renderParent();};
+    bgb.appendChild(b);});
+  $('bridgeInfo').textContent={es:'Al tocar una pegatina, dice la palabra en los idiomas marcados, uno tras otro. Es independiente de los idiomas de arriba: el español puede estar aquí aunque no esté en la barra.',en:'When he taps a sticker, the word is said in the ticked languages, one after another. This is separate from the languages above: Spanish can be included here even if it is not on the top bar.',de:'Beim Tippen auf einen Sticker wird das Wort in den angehakten Sprachen gesagt, eine nach der anderen. Das ist unabhängig von den Sprachen oben: Spanisch kann hier dabei sein, auch wenn es oben nicht in der Leiste ist.'}[lang];
   $('pLimitTitle').textContent={es:'⏰ Tiempo de juego al día',en:'⏰ Play time per day',de:'⏰ Spielzeit pro Tag'}[lang];
   const lb=$('limitBtns');lb.innerHTML='';
   [0,15,20,30,45].forEach(m=>{const b=document.createElement('button');b.className='seg'+(timeLimit===m?' on':'');

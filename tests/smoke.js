@@ -195,6 +195,48 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   check(await page.evaluate(() => !document.getElementById('museum') && document.querySelectorAll('#stkBook .stkDino').length === DINOS.length), 'dinosaur museum lives in the sticker book, not on the prize screen');
   await page.evaluate(() => { if (!found.includes('trex')) found.push('trex'); try { localStorage.setItem('sl_dinos', JSON.stringify(found)); } catch (e) {} showStickers(); });
   check(await page.evaluate(() => [...document.querySelectorAll('#stkBook .stkDino.got')].some(b => /Tyrannosaurus|Tiranosaurio/i.test(b.textContent))), 'a dinosaur saved earlier still shows as found');
+  check(await page.evaluate(() => {
+    const ids = STK_AREAS.flatMap(A => A[4]);
+    const bad = ids.filter(id => { const e = CITY.ENT[id]; return !e || !e.n || e.n.length < 3 || e.n.some(s => !String(s).trim()); });
+    const dinoBad = DINOS.filter(d => !(d.es && d.es[0]) || !(d.en && d.en[0]) || !(d.de && d.de[0])).map(d => d.k);
+    const treBad = TREASURES.filter(t => !t.es || !t.en || !t.de).map(t => t.k);
+    window._missingBridge = { bad, dinoBad, treBad };
+    return !bad.length && !dinoBad.length && !treBad.length;
+  }), 'every sticker, dinosaur and treasure has a word in es, en and de');
+  await page.evaluate(() => {
+    window.BRIDGE_LOG = [];
+    if (!window._speak0) {
+      window._speak0 = speechSynthesis.speak.bind(speechSynthesis);
+      speechSynthesis.speak = function (u) { window.BRIDGE_LOG.push({ text: u.text, lang: u.lang, voice: (u.voice && u.voice.lang) || '' }); try { return window._speak0(u); } catch (e) {} };
+    }
+  });
+  const bridgeOf = () => page.evaluate(() => {
+    const e = CITY.ENT.cat, L = { de: 0, en: 1, es: 2 };
+    const order = bridgeOrder();
+    const btn = [...document.querySelectorAll('#stkBook .stk.got')].find(b => b.textContent.includes(e.n[L[lang]]));
+    window.BRIDGE_LOG = [];
+    btn.click();
+    return order.map(c => ({ lang: { es: 'es-ES', en: 'en-US', de: 'de-DE' }[c], bit: e.n[L[c]] }));
+  });
+  await page.waitForTimeout(700);
+  let expect = await bridgeOf();
+  await page.waitForFunction(n => window.BRIDGE_LOG.length >= n, expect.length, { timeout: 8000 });
+  check(await page.evaluate(exp => {
+    const got = window.BRIDGE_LOG.slice(0, exp.length);
+    const tag = document.getElementById('bridgeTag');
+    return got.length === exp.length && got.every((g, i) => g.lang === exp[i].lang && g.text.includes(exp[i].bit) && (!g.voice || g.voice.toLowerCase().startsWith(exp[i].lang.slice(0, 2))))
+      && tag && tag.classList.contains('on') && /🇪🇸|🇬🇧|🇩🇪/.test(tag.textContent);
+  }, expect), 'tapping a collected sticker says the word in each bridge language, current one first');
+  check(await page.evaluate(() => BRIDGE.includes('de') && $('de').style.display === 'none'), 'the word bridge can include a language that is switched off for learning');
+  await page.evaluate(() => { showTab('parent'); document.querySelector('#bridgeBtns button[data-l="en"]').click(); });
+  check(await page.evaluate(() => !BRIDGE.includes('en') && localStorage.getItem('sl_bridge').split(',').indexOf('en') < 0), 'a parent can turn one bridge language off');
+  await page.evaluate(() => showTab('stickers'));
+  await page.waitForTimeout(700);
+  expect = await bridgeOf();
+  await page.waitForFunction(n => window.BRIDGE_LOG.length >= n, expect.length, { timeout: 8000 });
+  await page.waitForTimeout(1500);
+  check(await page.evaluate(exp => window.BRIDGE_LOG.length === exp.length && window.BRIDGE_LOG.every((g, i) => g.lang === exp[i].lang) && !window.BRIDGE_LOG.some(g => g.lang === 'en-US'), expect), 'with English off the bridge, the sticker no longer says the English word');
+  await page.evaluate(() => { showTab('parent'); document.querySelector('#bridgeBtns button[data-l="en"]').click(); });
   await page.evaluate(() => { document.querySelector('#stkBook .stk.got').click(); $('stkGo').click(); });
   await page.waitForTimeout(300);
   check(await page.evaluate(() => activeTab === 'city'), 'a sticker can show its animal in the town');

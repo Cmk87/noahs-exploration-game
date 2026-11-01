@@ -1110,12 +1110,14 @@ function trigger(id,b,x,y,ref){
   const e=ENT[id];if(!e)return;
   if(FIND){findTap(e,b,x,y,ref);return;}
   const r=TAP[id]&&TAP[id](ref,x,y),quiet=r===true;      // a TAP may also return its own line (a reindeer's name)
-  let line=quiet?'':typeof r==='string'?r:lineFor(e);
-  if(e.animal&&!FOUND.has(id)){FOUND.add(id);store();paws();line+=' '+W.found[li()];burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();
+  let line=quiet?'':typeof r==='string'?r:lineFor(e),fresh=false;
+  if(e.animal&&!FOUND.has(id)){FOUND.add(id);store();paws();fresh=true;line+=' '+W.found[li()];burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();
     if(typeof addPower==='function')addPower(2);
     if(FOUND.size===ANIMALS.length)later(2.5,()=>{burst(x,y,'star',40,'#FFD23F',1.5);if(typeof fanfare==='function')fanfare();say(['Du hast alle Tiere gefunden! Dein Stickerbuch ist voll! Schau es dir an!','You found all the animals! Your sticker book is full! Go and have a look!','¡Encontraste todos los animales! ¡Tu álbum está completo! ¡Míralo!'][li()]);});
     else line+=leftLine();}
-  if(line)say(line);bubble(e,b,ref&&ref.label);
+  if(fresh&&e.n)sayWordBridge({de:e.n[0],en:e.n[1],es:e.n[2]},{lead:line});
+  else if(line)say(line);
+  bubble(e,b,ref&&ref.label);
   if(CAM.k<kFit()*1.8){const cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,k=kFit()*2.8;flyTo({k,x:cx-VW/2/k,y:cy-VH/2/k});}}
 
 /* name bubble that follows its object */
@@ -1156,9 +1158,12 @@ function findTap(e,b,x,y,ref){
   if(e.id===FIND.id){FIND.done=true;SAVE.stars++;store();showQ();if(typeof award==='function')award(Math.min(FIND.miss,2),1);TAP[e.id]&&TAP[e.id](ref,x,y);
     burst((b[0]+b[2])/2,(b[1]+b[3])/2,'star',22,'#FFD23F');SND.yay();bubble(e,b,ref&&ref.label);say(W.yes[li()]+' '+cap(e.n[li()])+'!');later(3,()=>{if(FIND)findNext();});}
   else{bubble(e,b,ref&&ref.label);let got='';
-    if(e.animal&&!FOUND.has(e.id)){FOUND.add(e.id);store();paws();got=' '+W.found[li()]+(FOUND.size===ANIMALS.length?' '+['Dein Stickerbuch ist voll!','Your sticker book is full!','¡Tu álbum está completo!'][li()]:leftLine());if(FOUND.size===ANIMALS.length){burst(x,y,'star',40,'#FFD23F',1.5);if(typeof fanfare==='function')fanfare();}burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();if(typeof addPower==='function')addPower(2);}
+    let fresh=false;
+    if(e.animal&&!FOUND.has(e.id)){FOUND.add(e.id);store();paws();fresh=true;got=' '+W.found[li()]+(FOUND.size===ANIMALS.length?' '+['Dein Stickerbuch ist voll!','Your sticker book is full!','¡Tu álbum está completo!'][li()]:leftLine());if(FOUND.size===ANIMALS.length){burst(x,y,'star',40,'#FFD23F',1.5);if(typeof fanfare==='function')fanfare();}burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();if(typeof addPower==='function')addPower(2);}
     else{FIND.miss++;nope();}
-    say(W.that(e.n[li()])+got+' '+W.where(ENT[FIND.id].n[li()]));}}
+    const sentence=W.that(e.n[li()])+got+' '+W.where(ENT[FIND.id].n[li()]);
+    if(fresh&&e.n)sayWordBridge({de:e.n[0],en:e.n[1],es:e.n[2]},{lead:sentence});
+    else say(sentence);}}
 $('cFind').onclick=()=>{ac();if(FIND){FIND=null;$('cFind').classList.remove('on');showQ();return;}$('cFind').classList.add('on');findNext();};
 function drawHint(){if(!FIND||FIND.miss<2||FIND.done)return;const b=ENT[FIND.id].at;if(!b)return;
   const cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,r=Math.max(b[2]-b[0],b[3]-b[1])/2+14+Math.sin(T*6)*5;
