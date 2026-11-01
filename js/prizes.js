@@ -1145,13 +1145,13 @@ const aqC=$('aq'),aqX=aqC.getContext('2d');let AQ=null;
 function startAq(){
   AQ={fish:[],bub:[],pops:0,goal:10,done:false,last:0,next:0,pool:prizePool(['🐟','🦈','🐬','🐳','🐙','🐢','🦀','🦭','🐡','🐚'])};
   showPane('aqPlay');aqText();
-  say({es:'¡Toca los animalitos del agua!',en:'Tap the animals in the water!',de:'Tipp die Tiere im Wasser an!'});
+  say({es:'¡Toca los animalitos del agua!',en:'Tap the animals in the water!',de:'Tipp die Tiere im Wasser an!'}[lang]);
   requestAnimationFrame(aqLoop);
 }
 function aqText(){$('aqPrompt').textContent=AQ.done?'🏆 '+{es:'¡Todos!',en:'All of them!',de:'Alle!'}[lang]:'🐠 '+AQ.pops+' / '+AQ.goal;}
 function aqWin(){if(!AQ||AQ.done||pane!=='aqPlay')return;AQ.done=true;pgClear();aqText();
   setTimeout(()=>{if(!AQ||pane!=='aqPlay')return;bigWin();rainEmoji(['🐟','🫧','⭐','🐬'],24);
-    say({es:'¡Todos los animalitos!',en:'All the animals!',de:'Alle Tiere!'});},500);}
+    say({es:'¡Todos los animalitos!',en:'All the animals!',de:'Alle Tiere!'}[lang]);},500);}
 function aqLoop(now){
   if(!AQ||pane!=='aqPlay'||activeTab!=='dig')return;
   const s=fitCv(aqC,aqX);if(!s){requestAnimationFrame(aqLoop);return;}
@@ -1239,7 +1239,7 @@ function startCake(){
   const tray=$('cakeTray');tray.innerHTML='';
   CAKE.tops.forEach(it=>{const b=document.createElement('button');b.type='button';b.className='cakeBit';b.textContent=it.e;
     b.onclick=()=>cakeAdd(it);tray.appendChild(b);});
-  cakeText();say({es:'¡Decora la tarta!',en:'Decorate the cake!',de:'Schmücke den Kuchen!'});
+  cakeText();say({es:'¡Decora la tarta!',en:'Decorate the cake!',de:'Schmücke den Kuchen!'}[lang]);
 }
 function cakeText(){$('cakePrompt').textContent=CAKE.done?'🏆 '+{es:'¡Qué rica!',en:'Yummy!',de:'Lecker!'}[lang]:'🎂 '+CAKE.n+' / '+CAKE.goal;}
 function cakeAdd(it){
@@ -1249,6 +1249,6 @@ function cakeAdd(it){
   say(it[lang][1]);beep(620+CAKE.n*35,0,0.08,'triangle',0.12);
   if(CAKE.n>=CAKE.goal){CAKE.done=true;pgClear();cakeText();
     setTimeout(()=>{if(!CAKE||pane!=='cakePlay')return;bigWin();rainEmoji(['🎂','🍓','⭐','🎉'],26);
-      say({es:'¡Qué rica!',en:'Yummy!',de:'Lecker!'});},450);}
+      say({es:'¡Qué rica!',en:'Yummy!',de:'Lecker!'}[lang]);},450);}
   else cakeText();
 }

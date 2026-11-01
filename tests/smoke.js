@@ -18,6 +18,9 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.goto(URL);
   await page.evaluate(() => { localStorage.clear(); localStorage.setItem('sl_advsize', 'short'); });
   await page.reload();
+  // every line handed to the voice is kept, to catch a message object passed instead of its text
+  const hookSay = () => page.evaluate(() => { const o = sayAt; sayAt = (t, r, f) => { const a = JSON.parse(sessionStorage.getItem('ALLSAID') || '[]'); a.push(String(t)); sessionStorage.setItem('ALLSAID', JSON.stringify(a)); return o(t, r, f); }; });
+  await hookSay();
   await page.mouse.click(180, 320);
   await page.waitForTimeout(300);
   check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 12), 'opens on the home screen with 12 sections');
@@ -157,7 +160,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.evaluate(() => { [...$('langBtns').children].find(b => b.textContent.includes('🇩🇪')).click(); });
   check(await page.evaluate(() => localStorage.getItem('sl_langs') === 'de'), 'the last language cannot be switched off');
   await page.evaluate(() => { localStorage.setItem('sl_langs', 'en,es'); });
-  await page.reload(); await page.mouse.click(180, 320); await page.waitForTimeout(300);
+  await page.reload(); await page.mouse.click(180, 320); await page.waitForTimeout(300); await hookSay();
   check(await page.evaluate(() => lang === 'en' && $('de').style.display === 'none'), 'with German off the app starts in an allowed language');
   await page.evaluate(() => { localStorage.removeItem('sl_langs'); });
 
@@ -315,6 +318,8 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   }
   check(await page.evaluate(() => activeTab === 'parent' && !document.querySelector('#grown.on')), 'the right sum opens parent settings');
 
+  {const bad = await page.evaluate(() => JSON.parse(sessionStorage.getItem('ALLSAID') || '[]').filter(t => /\[object|undefined|null/.test(t)));
+   check(bad.length === 0, 'the voice never reads out "[object Object]", "undefined" or "null"' + (bad.length ? ': ' + bad.slice(0, 3).join(' | ') : ''));}
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close();
   console.log(failures ? `\n${failures} check(s) failed` : '\nAll checks passed');
