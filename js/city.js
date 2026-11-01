@@ -146,7 +146,21 @@ const W={found:['Gefunden!','Found it!','¡Lo encontraste!'],yes:['Ja, richtig!'
 let SAVE={found:[],stars:0};try{SAVE=Object.assign(SAVE,JSON.parse(localStorage.getItem('sl_city')||'{}'));}catch(e){}
 const FOUND=new Set(SAVE.found);
 const store=()=>{SAVE.found=[...FOUND];try{localStorage.setItem('sl_city',JSON.stringify(SAVE));}catch(e){}};
-const paws=()=>{$('cPaws').textContent=`🐾 ${FOUND.size}/${ANIMALS.length}`;};
+const paws=()=>{const left=ANIMALS.length-FOUND.size;$('cPaws').textContent=`🐾 ${FOUND.size}/${ANIMALS.length}`;$('cPaws').classList.toggle('close',left>0&&left<=10);};
+/* a newly found animal: how many are still missing — said at round numbers, and every one from 5 down;
+   from 3 down with a hint where one of them hides */
+function leftLine(){
+  const left=ANIMALS.length-FOUND.size,L=li();if(!left)return '';
+  if(left<=5||[10,15,20,30,40,50].includes(left)){
+    let t=left===1?['Nur noch ein Tier fehlt!','Only one animal left!','¡Solo falta un animal!'][L]
+      :left<=5?[`Nur noch ${left} Tiere fehlen!`,`Only ${left} animals left!`,`¡Solo faltan ${left} animales!`][L]
+      :[`Noch ${left} Tiere fehlen im Stickerbuch.`,`${left} animals still missing from the sticker book.`,`Aún faltan ${left} animales en el álbum.`][L];
+    if(left<=3&&typeof STK_AREAS!=='undefined'){const miss=ANIMALS.map(a=>a[0]).filter(id=>!FOUND.has(id)),A=STK_AREAS.find(A=>A[4].includes(miss[0]));
+      if(A)t+=' '+['Tipp:','Hint:','Pista:'][L]+' '+A[2][lang]+'!';}
+    return ' '+t;}
+  return '';}
+/* the whole book found: start again from zero; the rounds already done are kept as trophies */
+function newRound(){SAVE.round=(SAVE.round||1)+1;SAVE.done=(SAVE.done||0)+1;FOUND.clear();store();paws();}
 
 /* ---------- sounds ---------- */
 function swp(f0,f1,dur,type,vol,when){const a=ac();if(!a)return;const t=a.currentTime+(when||0);
@@ -1099,7 +1113,8 @@ function trigger(id,b,x,y,ref){
   let line=quiet?'':typeof r==='string'?r:lineFor(e);
   if(e.animal&&!FOUND.has(id)){FOUND.add(id);store();paws();line+=' '+W.found[li()];burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();
     if(typeof addPower==='function')addPower(2);
-    if(FOUND.size===ANIMALS.length)later(2.5,()=>{burst(x,y,'star',40,'#FFD23F',1.5);say(['Du hast alle Tiere gefunden! Super!','You found all the animals! Amazing!','¡Encontraste todos los animales! ¡Genial!'][li()]);});}
+    if(FOUND.size===ANIMALS.length)later(2.5,()=>{burst(x,y,'star',40,'#FFD23F',1.5);if(typeof fanfare==='function')fanfare();say(['Du hast alle Tiere gefunden! Dein Stickerbuch ist voll! Schau es dir an!','You found all the animals! Your sticker book is full! Go and have a look!','¡Encontraste todos los animales! ¡Tu álbum está completo! ¡Míralo!'][li()]);});
+    else line+=leftLine();}
   if(line)say(line);bubble(e,b,ref&&ref.label);
   if(CAM.k<kFit()*1.8){const cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,k=kFit()*2.8;flyTo({k,x:cx-VW/2/k,y:cy-VH/2/k});}}
 
@@ -1141,7 +1156,7 @@ function findTap(e,b,x,y,ref){
   if(e.id===FIND.id){FIND.done=true;SAVE.stars++;store();showQ();if(typeof award==='function')award(Math.min(FIND.miss,2),1);TAP[e.id]&&TAP[e.id](ref,x,y);
     burst((b[0]+b[2])/2,(b[1]+b[3])/2,'star',22,'#FFD23F');SND.yay();bubble(e,b,ref&&ref.label);say(W.yes[li()]+' '+cap(e.n[li()])+'!');later(3,()=>{if(FIND)findNext();});}
   else{bubble(e,b,ref&&ref.label);let got='';
-    if(e.animal&&!FOUND.has(e.id)){FOUND.add(e.id);store();paws();got=' '+W.found[li()];burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();if(typeof addPower==='function')addPower(2);}
+    if(e.animal&&!FOUND.has(e.id)){FOUND.add(e.id);store();paws();got=' '+W.found[li()]+(FOUND.size===ANIMALS.length?' '+['Dein Stickerbuch ist voll!','Your sticker book is full!','¡Tu álbum está completo!'][li()]:leftLine());if(FOUND.size===ANIMALS.length){burst(x,y,'star',40,'#FFD23F',1.5);if(typeof fanfare==='function')fanfare();}burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();if(typeof addPower==='function')addPower(2);}
     else{FIND.miss++;nope();}
     say(W.that(e.n[li()])+got+' '+W.where(ENT[FIND.id].n[li()]));}}
 $('cFind').onclick=()=>{ac();if(FIND){FIND=null;$('cFind').classList.remove('on');showQ();return;}$('cFind').classList.add('on');findNext();};
@@ -1251,6 +1266,6 @@ if(typeof cityEdge==='function')cityEdge(K);
 paws();
 if(document.fonts)document.fonts.load(FONT(20)).catch(()=>{});
 requestAnimationFrame(frame);
-window.CITY={total:()=>ANIMALS.length,animals:()=>ANIMALS.map(a=>a[0]),showAt,worldView,homeView,show,onLang,ENT,FOUND,HITS:()=>HITS,trigger,tapAt,toScreen:(x,y)=>[(x-CAM.x)*CAM.k,(y-CAM.y)*CAM.k],flyTo,viewOf,CAM,TRAIN,VEH,
+window.CITY={newRound,round:()=>SAVE.round||1,done:()=>SAVE.done||0,total:()=>ANIMALS.length,animals:()=>ANIMALS.map(a=>a[0]),showAt,worldView,homeView,show,onLang,ENT,FOUND,HITS:()=>HITS,trigger,tapAt,toScreen:(x,y)=>[(x-CAM.x)*CAM.k,(y-CAM.y)*CAM.k],flyTo,viewOf,CAM,TRAIN,VEH,
   setNight:v=>{nightOn=v;NIGHT=v?1:0;},act,FIND:()=>FIND,findNext,callTrain};
 })();

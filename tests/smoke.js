@@ -318,6 +318,13 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   }
   check(await page.evaluate(() => activeTab === 'parent' && !document.querySelector('#grown.on')), 'the right sum opens parent settings');
 
+  // collecting again: a full sticker book starts round 2 from zero; a full museum starts a new round at the next dig
+  {const r = await page.evaluate(() => { const keep = [...CITY.FOUND]; CITY.animals().forEach(id => CITY.FOUND.add(id)); showTab('stickers');
+     const full = !!document.getElementById('stkAgain'); document.getElementById('stkAgain').click();
+     const ok = full && CITY.FOUND.size === 0 && CITY.round() >= 2; keep.forEach(id => CITY.FOUND.add(id));
+     found = DINOS.map(d => d.k); power = 99; savePower(); showTab('dig'); showDigLock(); startGame('dig');
+     const dig = found.length === 0 && dinoRound >= 2; showDigLock(); showTab('home'); return ok && dig; });
+   check(r, 'a full sticker book and a full dino museum both start a new round from zero');}
   {const bad = await page.evaluate(() => JSON.parse(sessionStorage.getItem('ALLSAID') || '[]').filter(t => /\[object|undefined|null/.test(t)));
    check(bad.length === 0, 'the voice never reads out "[object Object]", "undefined" or "null"' + (bad.length ? ': ' + bad.slice(0, 3).join(' | ') : ''));}
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));

@@ -27,15 +27,37 @@ function stkIcon(id){const e=CITY.ENT[id];if(stkOK[e.ic]===undefined)stkOK[e.ic]
   return stkOK[e.ic]?e.ic:(STK_FALLBACK[id]||'🐾');}
 function showStickers(){
   const F=CITY.FOUND,tot=CITY.total(),L={de:0,en:1,es:2}[lang];
-  $('stkHead').textContent={es:`Mi álbum: ${F.size} de ${tot}`,en:`My stickers: ${F.size} of ${tot}`,de:`Mein Stickerbuch: ${F.size} von ${tot}`}[lang];
+  const round=CITY.round(),done=CITY.done(),left=tot-F.size;
+  $('stkHead').innerHTML={es:`Mi álbum: ${F.size} de ${tot}`,en:`My stickers: ${F.size} of ${tot}`,de:`Mein Stickerbuch: ${F.size} von ${tot}`}[lang]
+    +(round>1?`<div class="stkRound">${'🏆'.repeat(Math.min(done,5))}${done>5?'×'+done:''} ${{es:'Ronda',en:'Round',de:'Runde'}[lang]} ${round}</div>`:'');
   $('stkFill').style.width=(F.size/tot*100)+'%';
   const book=$('stkBook');book.innerHTML='';$('stkCard').classList.remove('on');
+  if(left===0){   // the whole book: a big trophy, and the choice to start again from zero
+    const top=document.createElement('div');top.className='stkFull';
+    top.innerHTML=`<div class="stkFullCup">🏆</div><div class="stkFullT display">${{es:'¡Álbum completo!',en:'Sticker book complete!',de:'Stickerbuch voll!'}[lang]}</div>
+      <button id="stkAgain" class="btn">🔄 ${{es:'¡Otra vez desde cero!',en:'Find them all again!',de:'Nochmal alle suchen!'}[lang]}</button>`;
+    book.appendChild(top);
+    top.querySelector('#stkAgain').onclick=()=>{ac();CITY.newRound();STK_SEEN=new Set();try{localStorage.setItem('sl_stkseen','[]');}catch(e){}
+      if(typeof fanfare==='function')fanfare();if(typeof rainEmoji==='function')rainEmoji(['🐾','⭐','🦊','🐻','🦉'],26);
+      showStickers();
+      say({es:`¡Ronda ${CITY.round()}! El álbum está vacío otra vez. Esta vez las pegatinas son de oro. ¡A buscar!`,
+           en:`Round ${CITY.round()}! The book is empty again. This time the stickers are gold. Off you go!`,
+           de:`Runde ${CITY.round()}! Das Stickerbuch ist wieder leer. Diesmal gibt es goldene Sticker. Los geht's!`}[lang]);};
+  }
+  else if(left<=10){   // close to the end: say how many, and show where they still hide
+    const areas=STK_AREAS.filter(A=>A[4].some(id=>CITY.ENT[id]&&!F.has(id)));
+    const tip=document.createElement('div');tip.className='stkLeft';
+    tip.innerHTML=`<b>${left===1?{es:'¡Solo falta uno!',en:'Only one left!',de:'Nur noch einer fehlt!'}[lang]:{es:`¡Solo faltan ${left}!`,en:`Only ${left} left!`,de:`Nur noch ${left} fehlen!`}[lang]}</b> `
+      +areas.map(A=>`<button class="stkJump">${A[1]}</button>`).join('');
+    book.appendChild(tip);
+    [...tip.querySelectorAll('.stkJump')].forEach((b,i)=>b.onclick=()=>{ac();const A=areas[i],sec=book.querySelector(`[data-area="${A[0]}"]`);if(sec)sec.scrollIntoView({behavior:'smooth',block:'center'});say(A[2][lang]);});
+  }
   for(const [k,ic,name,center,ids] of STK_AREAS){
-    const have=ids.filter(id=>F.has(id)).length,sec=document.createElement('div');sec.className='stkArea'+(have===ids.length?' full':'');
+    const have=ids.filter(id=>F.has(id)).length,sec=document.createElement('div');sec.className='stkArea'+(have===ids.length?' full':'');sec.dataset.area=k;
     sec.innerHTML=`<div class="stkTitle"><span>${ic} ${name[lang]}</span><span class="stkCount">${have===ids.length?'🏆 ':''}${have}/${ids.length}</span></div>`;
     const grid=document.createElement('div');grid.className='stkGrid';
     for(const id of ids){const e=CITY.ENT[id];if(!e)continue;const got=F.has(id),fresh=got&&!STK_SEEN.has(id);
-      const b=document.createElement('button');b.className='stk'+(got?' got':' miss')+(fresh?' fresh':'');
+      const b=document.createElement('button');b.className='stk'+(got?' got':' miss')+(got&&round>1?' gold':'')+(fresh?' fresh':'');
       b.innerHTML=`<span class="stkPic">${stkIcon(id)}</span><span class="stkName">${got?e.n[L]:'?'}</span>${fresh?`<span class="stkNew">${{es:'nuevo',en:'new',de:'neu'}[lang]}</span>`:''}`;
       b.onclick=()=>{ac();stkOpen(id,center,ic,name);};grid.appendChild(b);}
     sec.appendChild(grid);book.appendChild(sec);}
@@ -43,7 +65,9 @@ function showStickers(){
   // what was new is now seen (the badges stay visible until the book is opened again)
   for(const id of F)STK_SEEN.add(id);try{localStorage.setItem('sl_stkseen',JSON.stringify([...STK_SEEN]));}catch(e){}
   const nw=stickersNew();
-  say(F.size?{es:`¡Tienes ${F.size} pegatinas!`,en:`You have ${F.size} stickers!`,de:`Du hast schon ${F.size} Sticker!`}[lang]
+  say(left===0?{es:'¡Tu álbum está completo! ¿Quieres buscarlos todos otra vez?',en:'Your sticker book is complete! Do you want to find them all again?',de:'Dein Stickerbuch ist voll! Willst du alle nochmal suchen?'}[lang]
+    :F.size&&left<=10?{es:`¡Tienes ${F.size} pegatinas! Solo faltan ${left}.`,en:`You have ${F.size} stickers! Only ${left} left.`,de:`Du hast schon ${F.size} Sticker! Nur noch ${left} fehlen.`}[lang]
+    :F.size?{es:`¡Tienes ${F.size} pegatinas!`,en:`You have ${F.size} stickers!`,de:`Du hast schon ${F.size} Sticker!`}[lang]
     :{es:'Tu álbum está vacío. ¡Busca animales en la ciudad!',en:'Your book is empty. Look for animals in the town!',de:'Dein Stickerbuch ist noch leer. Suche Tiere in der Stadt!'}[lang]);
 }
 function stkOpen(id,center,ic,area){
@@ -66,11 +90,14 @@ function stkMuseum(book){
   const have=DINOS.filter(d=>found.includes(d.k)).length;
   const sec=document.createElement('div');sec.className='stkArea'+(have===DINOS.length?' full':'');
   const title={es:'Museo de dinosaurios',en:'Dinosaur museum',de:'Dino-Museum'}[lang];
-  sec.innerHTML=`<div class="stkTitle"><span>🏛️ ${title}</span><span class="stkCount">${have===DINOS.length?'🏆 ':''}${have}/${DINOS.length}</span></div>`;
+  const rd=typeof dinoRound!=='undefined'?dinoRound:1;
+  sec.innerHTML=`<div class="stkTitle"><span>🏛️ ${title}${rd>1?` · ${{es:'Ronda',en:'Round',de:'Runde'}[lang]} ${rd}`:''}</span><span class="stkCount">${have===DINOS.length?'🏆 ':''}${have}/${DINOS.length}</span></div>`
+    +(have===DINOS.length?`<div class="stkLine2">${{es:'¡Museo completo! La próxima excavación empieza una nueva ronda.',en:'Museum complete! The next dig starts a new round.',de:'Museum voll! Beim nächsten Graben beginnt eine neue Runde.'}[lang]}</div>`
+      :DINOS.length-have<=5&&have?`<div class="stkLine2">${{es:`¡Solo faltan ${DINOS.length-have} dinosaurios!`,en:`Only ${DINOS.length-have} dinosaurs left!`,de:`Nur noch ${DINOS.length-have} Dinos fehlen!`}[lang]}</div>`:'');
   const grid=document.createElement('div');grid.className='stkDinos';
   DINOS.forEach(d=>{
     const got=found.includes(d.k);
-    const b=document.createElement('button');b.type='button';b.className='stkDino'+(got?' got':'');
+    const b=document.createElement('button');b.type='button';b.className='stkDino'+(got?' got':'')+(got&&rd>1?' gold':'');
     const cn=document.createElement('canvas');b.appendChild(cn);
     const lb=document.createElement('span');lb.className='stkName';
     lb.textContent=got?d[lang][0].replace(/^(el|la|the|der|die|das)\s+/i,''):'?';

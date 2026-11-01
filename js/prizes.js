@@ -161,6 +161,9 @@ function showPane(id){pane=id;PANES.forEach(p=>$(p).classList.toggle('on',p===id
 let found=[];try{found=JSON.parse(localStorage.getItem('sl_dinos')||'[]');}catch(e){}
 let treasure={};try{treasure=JSON.parse(localStorage.getItem('sl_treasure')||'{}');}catch(e){}
 let lastDino='';
+/* the museum is filled round after round: once all dinosaurs are in, the next dig starts round 2 with an empty museum */
+let dinoRound=1;try{dinoRound=Math.max(1,+(localStorage.getItem('sl_dinoround')||1));}catch(e){}
+const dinoHave=()=>DINOS.filter(d=>found.includes(d.k)).length;
 function showDigLock(){
   DIG=null;MEM=null;BAL=null;FW=null;BAG=null;AQ=null;FED=null;CAKE=null;$('quitSheet').classList.remove('on');
   showPane('digLock');
@@ -682,6 +685,7 @@ function chooseDino(){
   return pick(pool);
 }
 function startDig(){
+  let fresh=false;if(dinoHave()>=DINOS.length){dinoRound++;found=[];fresh=true;try{localStorage.setItem('sl_dinoround',dinoRound);localStorage.setItem('sl_dinos','[]');}catch(e){}}
   digPtr=false;digLast=null;const sp=chooseDino();lastDino=sp.k;
   const {parts,box}=prepParts(sp);
   const K=Math.min(0.88/(box[2]-box[0]),0.7/(box[3]-box[1]));
@@ -700,7 +704,8 @@ function startDig(){
   $('dinoCard').classList.remove('on');
   $('digPrompt').textContent={es:'Frota para excavar',en:'Rub to dig',de:'Reibe zum Graben'}[lang];
   boneCount(false);
-  say({es:'¡A excavar! ¿Qué dinosaurio habrá?',en:'Let us dig! Which dinosaur is hiding?',de:'Lass uns graben! Welcher Dino versteckt sich?'}[lang]);
+  say(fresh?{es:`¡Ronda ${dinoRound}! El museo está vacío otra vez. ¡Vamos a desenterrar todos los dinosaurios de nuevo!`,en:`Round ${dinoRound}! The museum is empty again. Let us dig up all the dinosaurs once more!`,de:`Runde ${dinoRound}! Das Museum ist wieder leer. Wir graben alle Dinos nochmal aus!`}[lang]
+    :{es:'¡A excavar! ¿Qué dinosaurio habrá?',en:'Let us dig! Which dinosaur is hiding?',de:'Lass uns graben! Welcher Dino versteckt sich?'}[lang]);
   requestAnimationFrame(digLoop);
 }
 function boneCount(pop){
@@ -782,8 +787,15 @@ function goAlive(){
   $('digPrompt').textContent=D.sp.k==='ptera'
     ?{es:'¡Tócalo para que chille!',en:'Tap it to make it screech!',de:'Tippe, damit er kreischt!'}[lang]
     :{es:'¡Tócalo para que ruja!',en:'Tap it to make it roar!',de:'Tippe, damit er brüllt!'}[lang];
-  if(!found.includes(D.sp.k)){found.push(D.sp.k);try{localStorage.setItem('sl_dinos',JSON.stringify(found));}catch(e){}}
-  setTimeout(()=>say(nm[0]+'. '+nm[1]),1500);
+  const isNew=!found.includes(D.sp.k);
+  if(isNew){found.push(D.sp.k);try{localStorage.setItem('sl_dinos',JSON.stringify(found));}catch(e){}}
+  const have=dinoHave(),left=DINOS.length-have;
+  const mus=!isNew?'':left===0?{es:`¡Los ${DINOS.length} dinosaurios están en el museo! ¡Museo completo!`,en:`All ${DINOS.length} dinosaurs are in the museum! The museum is full!`,de:`Alle ${DINOS.length} Dinos sind im Museum! Das Museum ist voll!`}[lang]
+    :left===1?{es:'¡Nuevo en el museo! Solo falta un dinosaurio.',en:'New in the museum! Only one dinosaur left to find.',de:'Neu im Museum! Nur noch ein Dino fehlt.'}[lang]
+    :{es:`¡Nuevo en el museo! Faltan ${left} dinosaurios.`,en:`New in the museum! ${left} dinosaurs still to find.`,de:`Neu im Museum! Noch ${left} Dinos fehlen.`}[lang];
+  $('dinoMus').textContent='🏛️ '+have+' / '+DINOS.length+(isNew?' · '+{es:'¡nuevo!',en:'new!',de:'neu!'}[lang]:'')+(left===0?' 🏆':'');
+  setTimeout(()=>say(nm[0]+'. '+nm[1]+(mus?' '+mus:'')),1500);
+  if(isNew&&left===0)setTimeout(()=>{fanfare();rainEmoji(['🏆','🦖','🦕','🦴','⭐'],34);},5200);
 }
 const easeOut=t=>1-Math.pow(1-clamp01(t),3);
 const easeBack=t=>{t=clamp01(t);const c=1.4,u=t-1;return 1+(c+1)*u*u*u+c*u*u;};
