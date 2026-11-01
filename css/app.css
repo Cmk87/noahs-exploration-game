@@ -791,7 +791,7 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .jLetter{left:50%;top:20%;font-size:min(10vw,52px)}.jLetter b{font:800 min(6vw,28px)/1 'Baloo 2',sans-serif;color:#C0473A;margin-left:4px}
 .jBoard{position:absolute;left:50%;top:22%;transform:translate(-50%,-50%);background:#1E3D2E;border:6px solid #9A6440;border-radius:8px;color:#fff;font:800 min(14vw,72px)/1 'Baloo 2',sans-serif;padding:6px 26px}
 .jEnd{display:flex;gap:12px;justify-content:center}
-/* sixteen sections: three columns upright (Abenteuer across the top, Preise two wide at the end), five on a landscape screen */
+/* seventeen sections: three columns upright (Abenteuer across the top, Preise two wide at the end), five on a landscape screen */
 #homeGrid{grid-template-columns:repeat(3,1fr);gap:8px}
 #v-home{padding-bottom:2px}
 .hcard{min-height:min(30vw,128px,calc((100vh - 220px)/7 - 8px));min-height:min(30vw,128px,calc((100dvh - 220px)/7 - 8px));padding:6px 4px;border-radius:22px}
@@ -924,3 +924,6 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .phCup{font-size:120px;line-height:1;animation:phPop .6s ease}
 .phAgain{width:140px;height:96px;border:none;border-radius:28px;background:var(--bolt);font-size:52px;cursor:pointer;box-shadow:var(--lift),var(--soft)}
 .phAgain:active{transform:translateY(4px)}
+.phTouchCard{border:none;padding:0;background:none;display:block;margin:0 auto;cursor:pointer}
+.phTouchGo{display:block;width:min(72vw,280px);height:96px;margin:12px auto 0;border:none;border-radius:28px;background:var(--bolt);font-size:56px;line-height:1;cursor:pointer;box-shadow:var(--lift),var(--soft)}
+.phTouchGo:active,.phTouchCard:active{transform:translateY(4px)}
