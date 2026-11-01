@@ -19,7 +19,7 @@ const LETTERWORD={
       f:['🔥','fuego'],g:['🐱','gato'],h:['🐹','hámster'],i:['🏝️','isla'],j:['🦒','jirafa'],k:['🐨','koala'],
       l:['🦁','león'],m:['🏍️','moto'],n:['🚀','nave'],'ñ':['🍠','ñame'],o:['🐻','oso'],p:['🏴‍☠️','pirata'],
       q:['🧀','queso'],r:['🤖','robot'],s:['☀️','sol'],t:['🚂','tren'],u:['🍇','uvas'],v:['🌋','volcán'],
-      w:['📶','wifi'],x:['🩻','x-ray'],y:['🛥️','yate'],z:['🦊','zorro']},
+      w:['📶','wifi'],x:['🎼','xilófono'],y:['🛥️','yate'],z:['🦊','zorro']},
   en:{a:['🍎','apple'],b:['⚽','ball'],c:['🚗','car'],d:['🦕','dinosaur'],e:['🐘','elephant'],f:['🔥','fire'],
       g:['🎸','guitar'],h:['⛑️','helmet'],i:['🍦','ice cream'],j:['✈️','jet'],k:['🪁','kite'],l:['🦁','lion'],
       m:['🌙','moon'],n:['🥷','ninja'],o:['🐙','octopus'],p:['🏴‍☠️','pirate'],q:['👑','queen'],
