@@ -150,16 +150,19 @@ const GAMES=[
  {k:'mem',icon:'🃏',bg:'linear-gradient(160deg,#7DF0FF,#1FA8FF)',es:'Parejas',en:'Pairs',   de:'Paare'},
  {k:'bal',icon:'🎈',bg:'linear-gradient(160deg,#FFA3D1,#FF4F9A)',es:'Globos', en:'Balloons',de:'Ballons'},
  {k:'fw', icon:'🎆',bg:'linear-gradient(160deg,#A68BFF,#5B3DF5)',es:'Fuegos', en:'Fireworks',de:'Feuerwerk'},
- {k:'bag',icon:'🚜',bg:'linear-gradient(160deg,#FFE066,#E0A21A)',es:'Excavadora',en:'Digger',de:'Bagger'}
+ {k:'bag',icon:'🚜',bg:'linear-gradient(160deg,#FFE066,#E0A21A)',es:'Excavadora',en:'Digger',de:'Bagger'},
+ {k:'aq', icon:'🐠',bg:'linear-gradient(160deg,#5AD7FF,#1F7FE0)',es:'Acuario',en:'Aquarium',de:'Aquarium'},
+ {k:'fed',icon:'🥕',bg:'linear-gradient(160deg,#9BE56A,#2EA84F)',es:'Comer',  en:'Feed',    de:'Füttern'},
+ {k:'cake',icon:'🎂',bg:'linear-gradient(160deg,#FFB7D5,#FF6FA0)',es:'Tarta',en:'Cake',    de:'Kuchen'}
 ];
-const PANES=['digLock','digPlay','memPlay','balPlay','fwPlay','bagPlay'];
+const PANES=['digLock','digPlay','memPlay','balPlay','fwPlay','bagPlay','aqPlay','fedPlay','cakePlay'];
 let pane='digLock';
 function showPane(id){pane=id;PANES.forEach(p=>$(p).classList.toggle('on',p===id));$('v-dig').scrollTop=0;}
 let found=[];try{found=JSON.parse(localStorage.getItem('sl_dinos')||'[]');}catch(e){}
 let treasure={};try{treasure=JSON.parse(localStorage.getItem('sl_treasure')||'{}');}catch(e){}
 let lastDino='';
 function showDigLock(){
-  DIG=null;MEM=null;BAL=null;FW=null;BAG=null;$('quitSheet').classList.remove('on');
+  DIG=null;MEM=null;BAL=null;FW=null;BAG=null;AQ=null;FED=null;CAKE=null;$('quitSheet').classList.remove('on');
   showPane('digLock');
   const T={es:['¡Juegos de premio!','Te faltan','¡Elige tu premio!'],
            en:['Prize games!','You still need','Pick your prize!'],
@@ -185,17 +188,21 @@ function startGame(k,card){
     return;
   }
   spendPower(DIG_COST);pgMark(k);
-  if(k==='dig')startDig();else if(k==='mem')startMem();else if(k==='bal')startBal();else if(k==='bag')startBag();else startFw();
+  if(k==='dig')startDig();else if(k==='mem')startMem();else if(k==='bal')startBal();else if(k==='bag')startBag();
+  else if(k==='fw')startFw();else if(k==='aq')startAq();else if(k==='fed')startFed();else if(k==='cake')startCake();
 }
 function resumeGame(){
   digPtr=false;digLast=null;if(BAG)BAG.touch=null;          // a finger lifted while away never sent its pointerup
   const over=(pane==='digPlay'&&(!DIG||DIG.done))||(pane==='memPlay'&&(!MEM||MEM.done))||
-             (pane==='balPlay'&&(!BAL||BAL.done))||(pane==='fwPlay'&&(!FW||FW.done))||(pane==='bagPlay'&&(!BAG||BAG.done));
+             (pane==='balPlay'&&(!BAL||BAL.done))||(pane==='fwPlay'&&(!FW||FW.done))||(pane==='bagPlay'&&(!BAG||BAG.done))||
+             (pane==='aqPlay'&&(!AQ||AQ.done))||(pane==='fedPlay'&&(!FED||FED.done))||(pane==='cakePlay'&&(!CAKE||CAKE.done));
   if(over){showDigLock();return;}            // a finished game is never resumed — back to the prize menu
   if(pane==='digPlay'&&DIG)requestAnimationFrame(digLoop);
   else if(pane==='balPlay'&&BAL){BAL.last=0;requestAnimationFrame(balLoop);}
   else if(pane==='fwPlay'&&FW){FW.last=0;FW.clear=true;requestAnimationFrame(fwLoop);}
   else if(pane==='bagPlay'&&BAG){BAG.last=0;requestAnimationFrame(bagLoop);}
+  else if(pane==='aqPlay'&&AQ){AQ.last=0;requestAnimationFrame(aqLoop);}
+  else if((pane==='fedPlay'&&FED)||(pane==='cakePlay'&&CAKE)){}
   else if(pane!=='memPlay'||!MEM)showDigLock();
 }
 /* 🏠 in a running game asks: back to the prize games, or keep playing? Leaving a
@@ -207,9 +214,13 @@ function gameProgress(){
   if(pane==='balPlay'&&BAL)return BAL.pops/BAL.goal;
   if(pane==='fwPlay'&&FW)return FW.shots/FW.goal;
   if(pane==='bagPlay'&&BAG)return BAG.items.filter(i=>i.found).length/BAG.items.length;
+  if(pane==='aqPlay'&&AQ)return AQ.pops/AQ.goal;
+  if(pane==='fedPlay'&&FED)return FED.n/FED.goal;
+  if(pane==='cakePlay'&&CAKE)return CAKE.n/CAKE.goal;
   return 1;}
 function gameLive(){return (pane==='digPlay'&&DIG&&!DIG.done)||(pane==='memPlay'&&MEM&&!MEM.done)||
-  (pane==='balPlay'&&BAL&&!BAL.done)||(pane==='fwPlay'&&FW&&!FW.done)||(pane==='bagPlay'&&BAG&&!BAG.done);}
+  (pane==='balPlay'&&BAL&&!BAL.done)||(pane==='fwPlay'&&FW&&!FW.done)||(pane==='bagPlay'&&BAG&&!BAG.done)||
+  (pane==='aqPlay'&&AQ&&!AQ.done)||(pane==='fedPlay'&&FED&&!FED.done)||(pane==='cakePlay'&&CAKE&&!CAKE.done);}
 function quitGuard(btn){
   btn.onclick=()=>{ac();
     if(!gameLive()){showDigLock();return;}
@@ -1121,3 +1132,123 @@ bgc.addEventListener('pointermove',e=>{if(!BAG||!BAG.touch||e.pointerId!==BAG.pi
 ['pointerup','pointercancel'].forEach(ev=>bgc.addEventListener(ev,e=>{if(!BAG||!BAG.touch||e.pointerId!==BAG.pid)return;const pt=BAG.touch;BAG.touch=null;
   if(BAG.dug>0.15&&BAG.dumpT<0){BAG.dumpT=performance.now();BAG.dumped=false;beep(110,0,0.4,'square',0.05);}
   else if(BAG.dug<0.05&&pt[1]>BAG.H*BG_G)BAG.pend=pt;BAG.dug=0;}));
+
+/* a picture from the word list, so the spoken word follows the language */
+function prizeWord(e){const v=VOCAB.find(x=>x.e===e);return v||{e,es:['el',e],en:['the',e],de:['das',e]};}
+function prizePool(es){const p=es.filter(e=>typeof emojiOK!=='function'||emojiOK(e)).map(prizeWord);return p.length?p:[prizeWord('⭐')];}
+
+/* =============================================================
+   AQUARIUM — fish swim past; tap one and it says its name.
+   They loop around, so a missed tap is never a miss.
+============================================================= */
+const aqC=$('aq'),aqX=aqC.getContext('2d');let AQ=null;
+function startAq(){
+  AQ={fish:[],bub:[],pops:0,goal:10,done:false,last:0,next:0,pool:prizePool(['🐟','🦈','🐬','🐳','🐙','🐢','🦀','🦭','🐡','🐚'])};
+  showPane('aqPlay');aqText();
+  say({es:'¡Toca los animalitos del agua!',en:'Tap the animals in the water!',de:'Tipp die Tiere im Wasser an!'});
+  requestAnimationFrame(aqLoop);
+}
+function aqText(){$('aqPrompt').textContent=AQ.done?'🏆 '+{es:'¡Todos!',en:'All of them!',de:'Alle!'}[lang]:'🐠 '+AQ.pops+' / '+AQ.goal;}
+function aqWin(){if(!AQ||AQ.done||pane!=='aqPlay')return;AQ.done=true;pgClear();aqText();
+  setTimeout(()=>{if(!AQ||pane!=='aqPlay')return;bigWin();rainEmoji(['🐟','🫧','⭐','🐬'],24);
+    say({es:'¡Todos los animalitos!',en:'All the animals!',de:'Alle Tiere!'});},500);}
+function aqLoop(now){
+  if(!AQ||pane!=='aqPlay'||activeTab!=='dig')return;
+  const s=fitCv(aqC,aqX);if(!s){requestAnimationFrame(aqLoop);return;}
+  const {W,H}=s,g=aqX,dt=AQ.last?Math.min(0.05,(now-AQ.last)/1000):0;AQ.last=now;
+  const sea=g.createLinearGradient(0,0,0,H);sea.addColorStop(0,'#8FE7FF');sea.addColorStop(1,'#1C6FD0');
+  g.fillStyle=sea;g.fillRect(0,0,W,H);
+  if(Math.random()<0.2)AQ.bub.push({x:Math.random()*W,y:H+8,r:rnd(3,9),v:rnd(28,70),ph:rnd(0,6)});
+  AQ.bub.forEach(b=>{b.y-=b.v*dt;b.x+=Math.sin(now/380+b.ph)*0.4;});AQ.bub=AQ.bub.filter(b=>b.y>-16);
+  g.strokeStyle='rgba(255,255,255,.6)';g.lineWidth=2;AQ.bub.forEach(b=>{g.beginPath();g.arc(b.x,b.y,b.r,0,7);g.stroke();});
+  g.fillStyle='#1E9A5A';[[0.1,0.55],[0.24,0.42],[0.84,0.6]].forEach(([x,h],i)=>{
+    const sway=Math.sin(now/480+i)*12;
+    g.beginPath();g.moveTo(x*W-10,H);g.quadraticCurveTo(x*W+sway-18,H*(1-h*0.5),x*W+sway,H*(1-h));
+    g.quadraticCurveTo(x*W+sway+22,H*(1-h*0.45),x*W+12,H);g.closePath();g.fill();});
+  g.fillStyle='#D7B07A';g.fillRect(0,H*0.9,W,H*0.12);
+  if(!AQ.done&&now>AQ.next&&AQ.fish.length<4){AQ.next=now+rnd(650,1100);
+    const r=W*rnd(0.09,0.12),dir=Math.random()<0.5?1:-1;
+    AQ.fish.push({x:dir>0?r*0.8:W-r*0.8,y:H*pick([0.28,0.46,0.64,0.78]),vx:dir*W*rnd(0.07,0.13),r,it:pick(AQ.pool),ph:rnd(0,6),dy:0});}
+  AQ.fish.forEach(f=>{f.x+=f.vx*dt;f.ph+=dt*2;f.dy=Math.sin(f.ph)*f.r*0.3;
+    if(f.vx>0&&f.x>W+f.r*2)f.x=-f.r;if(f.vx<0&&f.x<-f.r*2)f.x=W+f.r;});
+  g.textAlign='center';g.textBaseline='middle';
+  AQ.fish.forEach(f=>{g.save();g.translate(f.x,f.y+f.dy);if(f.vx>0)g.scale(-1,1);
+    g.font=`${f.r*2.2}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",serif`;g.fillText(f.it.e,0,0);g.restore();});
+  requestAnimationFrame(aqLoop);
+}
+aqC.addEventListener('pointerdown',e=>{
+  e.preventDefault();ac();if(!AQ||AQ.done)return;
+  const r=aqC.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+  for(let i=AQ.fish.length-1;i>=0;i--){const f=AQ.fish[i];
+    if(Math.hypot(x-f.x,y-(f.y+f.dy))<=f.r*1.25){AQ.fish.splice(i,1);AQ.pops++;say(f.it[lang][1]);popFx();
+      for(let k=0;k<8;k++)AQ.bub.push({x:f.x,y:f.y,r:rnd(4,10),v:rnd(40,90),ph:k});
+      if(AQ.pops>=AQ.goal)aqWin();else aqText();return;}}
+});
+
+/* =============================================================
+   FEED — three big animals, one name spoken. Tap that animal,
+   or drag the food onto it. A wrong animal just says its own name.
+============================================================= */
+let FED=null;
+function startFed(){FED={n:0,goal:8,done:false,lock:false,opts:[],want:null,food:'🥕'};showPane('fedPlay');fedRound();}
+function fedRound(){
+  if(!FED||FED.done)return;FED.lock=false;
+  const pool=prizePool(['🐶','🐱','🐰','🐴','🐮','🐷','🐑','🐔','🐻','🐸']);
+  FED.opts=shuffle(pool).slice(0,3);if(FED.opts.length<3)FED.opts=pool.slice(0,3);
+  FED.want=pick(FED.opts);FED.food=pick(['🥕','🍎','🍞','🧀','🍪']);
+  const box=$('fedAnimals');box.innerHTML='';
+  FED.opts.forEach(it=>{const b=document.createElement('button');b.type='button';b.className='fedAn';b.textContent=it.e;
+    b.onclick=()=>fedGive(it,b);box.appendChild(b);});
+  const f=$('fedFood');f.textContent=FED.food;f.style.transform='';
+  $('fedPrompt').textContent=(FED.done?'🏆 ':'🥕 ')+FED.n+' / '+FED.goal;
+  say(FED.want[lang][1]);
+}
+function fedGive(it,el){
+  ac();if(!FED||FED.done||FED.lock)return;
+  if(it!==FED.want){say(it[lang][1]);el.classList.remove('wiggle');void el.offsetWidth;el.classList.add('wiggle');
+    setTimeout(()=>{if(FED&&!FED.done&&!FED.lock)say(FED.want[lang][1]);},650);return;}
+  FED.lock=true;FED.n++;el.classList.add('yum');chime();say(it[lang].join(' '));
+  $('fedPrompt').textContent='🥕 '+FED.n+' / '+FED.goal;
+  if(FED.n>=FED.goal){FED.done=true;pgClear();
+    setTimeout(()=>{if(!FED||pane!=='fedPlay')return;bigWin();rainEmoji(['🥕','🐶','⭐','🎉'],24);
+      const w={es:'¡Todos han comido!',en:'Everybody has eaten!',de:'Alle haben gegessen!'}[lang];
+      $('fedPrompt').textContent='🏆 '+w;say(w);},600);}
+  else setTimeout(()=>{if(FED&&!FED.done)fedRound();},850);
+}
+(function(){
+  const f=$('fedFood');let pid=null,sx=0,sy=0,moved=false;
+  f.addEventListener('pointerdown',e=>{if(!FED||FED.done||FED.lock)return;e.preventDefault();pid=e.pointerId;moved=false;sx=e.clientX;sy=e.clientY;
+    try{f.setPointerCapture(e.pointerId);}catch(_){}f.style.zIndex='5';});
+  f.addEventListener('pointermove',e=>{if(e.pointerId!==pid)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.hypot(dx,dy)>10)moved=true;
+    f.style.transform=`translate(${dx}px,${dy}px)`;});
+  const up=e=>{if(e.pointerId!==pid)return;pid=null;
+    if(moved&&FED&&!FED.done){f.style.visibility='hidden';const hit=document.elementFromPoint(e.clientX,e.clientY);f.style.visibility='';
+      const btn=hit&&hit.closest&&hit.closest('.fedAn');if(btn){const i=[...$('fedAnimals').children].indexOf(btn);if(i>=0)fedGive(FED.opts[i],btn);}}
+    f.style.transform='';f.style.zIndex='';};
+  f.addEventListener('pointerup',up);f.addEventListener('pointercancel',up);
+})();
+
+/* =============================================================
+   CAKE — tap a topping and it lands on the cake, saying its name.
+   Eight toppings, then a yummy ending. Nothing can go wrong.
+============================================================= */
+let CAKE=null;
+function startCake(){
+  CAKE={n:0,goal:8,done:false,tops:prizePool(['🍓','🍒','🍫','🍬','🍪','🍌','⭐','🍊'])};
+  showPane('cakePlay');$('cakePile').innerHTML='';
+  const tray=$('cakeTray');tray.innerHTML='';
+  CAKE.tops.forEach(it=>{const b=document.createElement('button');b.type='button';b.className='cakeBit';b.textContent=it.e;
+    b.onclick=()=>cakeAdd(it);tray.appendChild(b);});
+  cakeText();say({es:'¡Decora la tarta!',en:'Decorate the cake!',de:'Schmücke den Kuchen!'});
+}
+function cakeText(){$('cakePrompt').textContent=CAKE.done?'🏆 '+{es:'¡Qué rica!',en:'Yummy!',de:'Lecker!'}[lang]:'🎂 '+CAKE.n+' / '+CAKE.goal;}
+function cakeAdd(it){
+  ac();if(!CAKE||CAKE.done)return;
+  CAKE.n++;const s=document.createElement('span');s.textContent=it.e;
+  s.style.left=rnd(12,88)+'%';s.style.top=rnd(8,78)+'%';$('cakePile').appendChild(s);
+  say(it[lang][1]);beep(620+CAKE.n*35,0,0.08,'triangle',0.12);
+  if(CAKE.n>=CAKE.goal){CAKE.done=true;pgClear();cakeText();
+    setTimeout(()=>{if(!CAKE||pane!=='cakePlay')return;bigWin();rainEmoji(['🎂','🍓','⭐','🎉'],26);
+      say({es:'¡Qué rica!',en:'Yummy!',de:'Lecker!'});},450);}
+  else cakeText();
+}
