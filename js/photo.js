@@ -49,21 +49,17 @@ function photoStop(){
   if(typeof bridgeStop==='function')bridgeStop();
   try{if('speechSynthesis' in window)speechSynthesis.cancel();}catch(e){}
 }
-/* A line that belongs to the card on screen. A tap on the next card bumps
-   photoGen, so a line that was still waiting (the sound, the fact) is dropped
-   instead of talking over the new card. isRetry skips the voice's second try,
-   which would otherwise speak the old line again a moment later. */
+/* A fresh line (a habitat, "look again"). The chain helper waits out an
+   iPhone cancel() before speaking. A follow-on line (the sound, the fact,
+   the little bit of praise) must NOT cancel: the names are already finished
+   and the next line simply waits its turn. */
 function photoSay(text,L){
   if(!text)return;
-  const gen=photoGen;
-  const go=()=>{
-    if(gen!==photoGen)return;
-    try{if('speechSynthesis' in window)speechSynthesis.cancel();}catch(e){}
-    utter(text,true,0.8,L||lang);
-  };
-  let busy=false;
-  try{busy=speechSynthesis.speaking||speechSynthesis.pending;}catch(e){}
-  if(busy)setTimeout(go,140);else go();
+  speakFresh(text,L||lang,0.8);
+}
+function photoAfter(text,L,done){
+  if(!text){if(done)done();return;}
+  speakChained(text,L||lang,0.82,done||function(){},bridgeGen);
 }
 function photoYay(){
   const a={es:['¡Muy bien!','¡Genial!','¡Sí!','¡Bravo!'],en:['Well done!','Great!','Yes!','Bravo!'],de:['Sehr gut!','Super!','Ja!','Bravo!']}[lang];
@@ -76,21 +72,19 @@ function photoDoneLine(){return {es:'¡Lo has conseguido!',en:'You did it!',de:'
    in the learning language. The next tap of the same card says the other fact. */
 function photoSpeak(item){
   const gen=++photoGen;
-  const facts=()=>{
-    if(gen!==photoGen)return;
-    const f=photoFact(item);
-    if(f&&f[lang])photoSay(f[lang]);
-  };
   sayWordBridge(photoNames(item),{then(){
     if(gen!==photoGen)return;
+    const fact=()=>{
+      if(gen!==photoGen)return;
+      const f=photoFact(item);
+      if(f&&f[lang])photoAfter(f[lang],lang);
+    };
     if(PH.kind==='a'||PH.kind==='v'){
       const snd=item.sound&&item.sound[lang];
-      if(snd){photoSay(snd);setTimeout(facts,Math.min(1800,Math.max(650,360+String(snd).length*80)));}
-      else facts();
+      if(snd)photoAfter(snd,lang,fact);else fact();
     }else{
       const w=item.where&&item.where[lang];
-      if(w){photoSay(w);setTimeout(facts,Math.min(5200,Math.max(1200,520+String(w).length*46)));}
-      else facts();
+      if(w)photoAfter(w,lang,fact);else fact();
     }
   }});
 }
@@ -203,7 +197,7 @@ function photoSpeakBaby(pair){
       sayWordBridge(photoNames(pair.adult),{then(){
         if(gen!==photoGen)return;
         const f=photoFact(pair);
-        if(f&&f[lang])photoSay(f[lang]);
+        if(f&&f[lang])photoAfter(f[lang],lang);
       }});
     },700);
   }});
@@ -324,13 +318,12 @@ function hideAnswer(ok,btn){
   const gen=++photoGen,item=PUZ.item,got=PUZ.got;
   sayWordBridge(photoNames(item),{then(){
     if(gen!==photoGen||!PUZ)return;
-    photoSay(photoYay());
-    setTimeout(()=>{
+    photoAfter(photoYay(),lang,()=>{
       if(gen!==photoGen||!PUZ)return;
       PUZ.got=got+1;
       if(PUZ.got>=4)photoCheer('🙈');
       else hideRound();
-    },900);
+    });
   }});
 }
 
@@ -372,13 +365,12 @@ function liveAnswer(ok,btn){
   const gen=++photoGen,item=PUZ.item,got=PUZ.got;
   sayWordBridge(photoNames(item),{then(){
     if(gen!==photoGen||!PUZ)return;
-    photoSay(photoYay());
-    setTimeout(()=>{
+    photoAfter(photoYay(),lang,()=>{
       if(gen!==photoGen||!PUZ)return;
       PUZ.got=got+1;
       if(PUZ.got>=4)photoCheer('🏡');
       else liveRound();
-    },900);
+    });
   }});
 }
 /* ---- Baby and grown-up: the baby is showing, tap its grown-up photo. ---- */
@@ -418,13 +410,12 @@ function growAnswer(ok,btn){
   const gen=++photoGen,pair=PUZ.pair,got=PUZ.got;
   sayWordBridge(photoNames(pair.adult),{then(){
     if(gen!==photoGen||!PUZ)return;
-    photoSay(photoYay());
-    setTimeout(()=>{
+    photoAfter(photoYay(),lang,()=>{
       if(gen!==photoGen||!PUZ)return;
       PUZ.got=got+1;
       if(PUZ.got>=4)photoCheer('🐣');
       else growRound();
-    },900);
+    });
   }});
 }
 function photoCheer(emoji){
