@@ -15,14 +15,16 @@ const TABS=[
   {id:'stickers',icon:'📒',es:'Álbum',  en:'Stickers',de:'Stickerbuch'},
   {id:'king',  icon:'🦁', es:'Animales',en:'Animals', de:'Tiere'},
   {id:'folk',  icon:'👥', es:'Gente',   en:'People',  de:'Menschen'},
+  {id:'ride',  icon:'🚗', es:'Vehículos',en:'Vehicles',de:'Fahrzeuge'},
+  {id:'baby',  icon:'🐣', es:'Bebés',   en:'Babies',  de:'Babys'},
   {id:'dig',   icon:'🎁', es:'Premios', en:'Prizes',  de:'Preise'}
 ];
-const ALLVIEWS=['home','adv','trace','read','jobs','words','ear','act','city','space','geo','stickers','king','folk','dig','parent'];
+const ALLVIEWS=['home','adv','trace','read','jobs','words','ear','act','city','space','geo','stickers','king','folk','ride','baby','dig','parent'];
 activeTab='home';                  // declared in core.js; the app always starts on the home screen
 /* The home screen: one big card per section. 🏠 in the header always comes back here. */
 const CARD_COL={adv:['#FFB938','#FF8A3D'],trace:['#FF7A7A','#E8445A'],read:['#FFD54F','#F29A16'],jobs:['#8FA8D6','#4A6AA8'],words:['#4FC3F7','#2F7FE0'],ear:['#B58CFF','#7A5AE0'],
   act:['#6FD86A','#2EA84F'],city:['#3DD6C0','#1C9E9A'],stickers:['#FFB347','#E07B1A'],geo:['#4FD1F5','#2A8BD0'],space:['#7A7FF0','#4A3FB8'],
-  king:['#8FD46A','#2E8B57'],folk:['#F0B07A','#C46B3A'],dig:['#FF8FC8','#E0559A']};
+  king:['#8FD46A','#2E8B57'],folk:['#F0B07A','#C46B3A'],ride:['#5EB0FF','#2A6FD0'],baby:['#F7A8C8','#E06A9A'],dig:['#FF8FC8','#E0559A']};
 function buildHome(){
   const box=$('homeGrid');box.innerHTML='';
   $('homeHello').textContent=kidName?{es:'¡Hola, ',en:'Hi, ',de:'Hallo, '}[lang]+kidName+'!':{es:'¿Qué jugamos?',en:'What shall we play?',de:'Was spielen wir?'}[lang];
@@ -37,6 +39,8 @@ function buildHome(){
     if(t.id==='stickers'&&window.CITY){const nw=stickersNew();extra=nw?`✨ ${nw} NEU`.replace('NEU',{es:'nuevos',en:'new',de:'neu'}[lang]):CITY.FOUND.size+' / '+CITY.total();}
     if(t.id==='king'&&typeof photoCount==='function'&&photoCount('a'))extra='🛂 '+photoCount('a');
     if(t.id==='folk'&&typeof photoCount==='function'&&photoCount('p'))extra='🛂 '+photoCount('p');
+    if(t.id==='ride'&&typeof photoCount==='function'&&photoCount('v'))extra='🛂 '+photoCount('v');
+    if(t.id==='baby'&&typeof photoCount==='function'&&photoCount('b'))extra='🛂 '+photoCount('b');
     b.innerHTML=`<span class="hi">${t.icon}</span><span class="hl">${t[lang]}</span>${extra?`<span class="hx">${extra}</span>`:''}`;
     b.setAttribute('aria-label',t[lang]);
     b.onclick=()=>{ac();say(t[lang]);showTab(t.id);};
@@ -46,7 +50,7 @@ function buildHome(){
 $('homeBtn').onclick=()=>{ac();if(activeTab!=='home')showTab('home');};
 function showTab(id){
   if(activeTab==='act'&&id!=='act'&&typeof stopRec==='function'){stopRec(true);unCall();}   // no microphone left open behind another screen
-  if((activeTab==='king'||activeTab==='folk')&&id!==activeTab&&typeof photoStop==='function')photoStop();
+  if((activeTab==='king'||activeTab==='folk'||activeTab==='ride'||activeTab==='baby')&&id!==activeTab&&typeof photoStop==='function')photoStop();
   activeTab=id;$('homeBtn').classList.toggle('on',id==='home');if(id==='home')buildHome();window.scrollTo(0,0);if(typeof renderAdvBar==='function')renderAdvBar();
   const vEl=document.getElementById('v-'+id);if(vEl)vEl.scrollTop=0;
   ALLVIEWS.forEach(v=>document.getElementById('v-'+v).classList.toggle('on',v===id));
@@ -63,6 +67,8 @@ function showTab(id){
   if(id==='stickers'){showStickers();}
   if(id==='king'){showKing();}
   if(id==='folk'){showFolk();}
+  if(id==='ride'){showRide();}
+  if(id==='baby'){showBaby();}
   if(id==='dig'){if(pane==='digLock')showDigLock();else resumeGame();}
   if(id==='parent'){renderParent();}
 }
@@ -85,7 +91,7 @@ function setLang(code,btn){
   else if(activeTab==='geo'){if(GEO.mode!=='explore')setGeoMode(GEO.mode);else showGeo();}
   else if(activeTab==='city')CITY.onLang();
   else if(activeTab==='stickers')showStickers();
-  else if(activeTab==='king'||activeTab==='folk')photoRelang();
+  else if(activeTab==='king'||activeTab==='folk'||activeTab==='ride'||activeTab==='baby')photoRelang();
   else if(activeTab==='home'){}
   else if(activeTab==='dig'){if(pane==='digLock')showDigLock();}
   else if(activeTab==='adv')renderAdv();
@@ -390,7 +396,7 @@ const RESUME_SAY={trace:'sayBtn',read:'readHear',words:'repeatBtn',ear:'earAgain
 function resumeSay(){
   if(activeTab==='act'){const b={parrot:'parrotHear',story:'storyHear'}[actMode]||'actAgain';$(b).click();return;}
   if(activeTab==='city'){CITY.onLang();return;}
-  if(activeTab==='king'||activeTab==='folk'){const b=document.querySelector('.view.on .phReplay');if(b)b.click();return;}
+  if(activeTab==='king'||activeTab==='folk'||activeTab==='ride'||activeTab==='baby'){const b=document.querySelector('.view.on .phReplay');if(b)b.click();return;}
   const id=RESUME_SAY[activeTab];if(id&&$(id))$(id).click();
 }
 function cameBack(away){
