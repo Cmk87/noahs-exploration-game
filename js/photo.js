@@ -36,6 +36,8 @@ function bodyItems(gid){
   const list=(PHOTO_PACK.body||[]).filter(x=>x.group===gid);
   return list.slice().sort((a,b)=>(b.overview?1:0)-(a.overview?1:0));
 }
+/* a sense card ("smelling") is shown and spoken as the sense; games that point at the body use the part ("the nose") */
+function partNames(item){return item.part||item.names;}
 function photoNames(item){return {en:item.names.en.full,es:item.names.es.full,de:item.names.de.full};}
 function photoEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function photoFact(item){
@@ -130,7 +132,7 @@ function photoRelang(){
   const root=document.querySelector('.view.on');if(!root)return;
   const item=PH.screen==='card'?photoList()[PH.idx]:null;
   const nm=root.querySelector('.phName');
-  if(nm&&PH.screen==='touch'&&PUZ&&PUZ.item)nm.textContent=PUZ.item.names[lang].full;
+  if(nm&&PH.screen==='touch'&&PUZ&&PUZ.item)nm.textContent=partNames(PUZ.item)[lang].full;
   else if(nm&&item&&PH.kind==='b'){
     const who=root.querySelector('.phMorphTop.gone')?item.adult:item.baby;
     nm.textContent=who.names[lang].full;
@@ -235,7 +237,7 @@ function photoSpeakBaby(pair,L){
         if(gen!==photoGen)return;
         if(f&&f[L])photoAfter(f[L],L);
       });
-    },700);
+    },450);
   });
 }
 
@@ -340,15 +342,15 @@ function bodyPass(){
    A wrong tap says what that one is (so even a miss teaches a word); after two
    misses the right one glows. A right answer: the name again and one fact. ---- */
 function findPool(){return PH.kind==='v'?PHOTO_PACK.vehicles:PH.kind==='y'?(PHOTO_PACK.body||[]):PH.kind==='a'?PHOTO_PACK.animals:PHOTO_PACK.people;}
-function findPlural(item){return Object.values(item.names).some(n=>n&&(n.number==='pl'||n.gender==='pl'));}
+function findPlural(item){return Object.values(partNames(item)).some(n=>n&&(n.number==='pl'||n.gender==='pl'));}
 function findQ(item){
-  const n=item.names[lang].full,pl=findPlural(item);
+  const n=partNames(item)[lang].full,pl=findPlural(item);
   if(lang==='de')return (pl?'Wo sind ':'Wo ist ')+n+'?';
   if(lang==='es')return (pl?'¿Dónde están ':'¿Dónde está ')+n+'?';
   return 'Where '+(pl?'are ':'is ')+n+'?';
 }
 function findThat(item){
-  const n=item.names[lang].full,pl=findPlural(item);
+  const n=partNames(item)[lang].full,pl=findPlural(item);
   if(lang==='de')return (pl?'Das sind ':'Das ist ')+n+'.';
   if(lang==='es')return (pl?'Esos son ':'Eso es ')+n+'.';
   return (pl?'Those are ':'That is ')+n+'.';
@@ -391,7 +393,7 @@ function findAnswer(id,btn){
   if(typeof award==='function')award(PUZ.miss?1:0);
   [523,659,784].forEach((f,i)=>beep(f,i*0.07,0.15,'triangle',0.15));
   const item=PUZ.item,got=PUZ.got,f=photoFact(item);
-  photoSeq([photoYay()+' '+item.names[lang].full+'!',f&&f[lang]],lang,()=>{
+  photoSeq([photoYay()+' '+partNames(item)[lang].full+'!',f&&f[lang]],lang,()=>{
     if(!PUZ)return;
     PUZ.got=got+1;
     if(PUZ.got>=5)photoCheer('🙈');
@@ -486,7 +488,7 @@ function growAnswer(ok,btn){
 }
 /* ---- Touch your ___! He touches it on himself, then taps the picture. No missing. ---- */
 function touchPrompt(item){
-  const full=item.names[lang].full,noun=item.names.en.noun;
+  const full=partNames(item)[lang].full,noun=partNames(item).en.noun;
   if(lang==='es')return '¡Toca '+full+'!';
   if(lang==='de')return 'Fass '+full+' an!';
   return 'Touch your '+noun+'!';
@@ -509,8 +511,8 @@ function touchRound(){
 function renderTouch(){
   const it=PUZ.item;
   photoRoot().innerHTML=`${barHTML('👆')}
-    <button type="button" class="phTouchCard" data-act="touched"><img class="phHero" src="${it.image}" alt="${photoEsc(it.names[lang].full)}" draggable="false"></button>
-    <div class="phName">${photoEsc(it.names[lang].full)}</div>
+    <button type="button" class="phTouchCard" data-act="touched"><img class="phHero" src="${it.image}" alt="${photoEsc(partNames(it)[lang].full)}" draggable="false"></button>
+    <div class="phName">${photoEsc(partNames(it)[lang].full)}</div>
     <button type="button" class="phTouchGo" data-act="touched" aria-label="done">👆</button>`;
 }
 function touchYes(){

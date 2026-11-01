@@ -217,6 +217,32 @@ def name_de(t):
     if pl: d["number"] = "pl"
     return d
 
+# The five senses: the pictures show a child seeing, listening, smelling, tasting and touching,
+# so the card is named after the SENSE; the body part moves to "part" (used by "Touch your ___"
+# and "Where is ___?") and to the line in the middle ("We smell with our nose").
+SENSES = {
+ "eye":       ({"article":"","noun":"seeing","full":"seeing"},{"article":"la","noun":"vista","full":"la vista","gender":"f"},{"article":"das","noun":"Sehen","full":"das Sehen","gender":"n"},
+               ("We see with our eyes.","Vemos con los ojos.","Wir sehen mit den Augen."),None),
+ "ear":       ({"article":"","noun":"hearing","full":"hearing"},{"article":"el","noun":"oído","full":"el oído","gender":"m"},{"article":"das","noun":"Hören","full":"das Hören","gender":"n"},
+               ("We hear with our ears.","Oímos con los oídos.","Wir hören mit den Ohren."),None),
+ "nose":      ({"article":"","noun":"smelling","full":"smelling"},{"article":"el","noun":"olfato","full":"el olfato","gender":"m"},{"article":"das","noun":"Riechen","full":"das Riechen","gender":"n"},
+               ("We smell with our nose.","Olemos con la nariz.","Wir riechen mit der Nase."),
+               ("When your nose is blocked, food tastes of less – smelling and tasting work together!","Cuando tienes la nariz tapada, la comida sabe a menos: ¡el olfato y el gusto trabajan juntos!","Wenn deine Nase zu ist, schmeckt das Essen nach weniger – Riechen und Schmecken arbeiten zusammen!")),
+ "tongue":    ({"article":"","noun":"tasting","full":"tasting"},{"article":"el","noun":"gusto","full":"el gusto","gender":"m"},{"article":"das","noun":"Schmecken","full":"das Schmecken","gender":"n"},
+               ("We taste with our tongue.","Saboreamos con la lengua.","Wir schmecken mit der Zunge."),None),
+ "fingertips":({"article":"","noun":"touching","full":"touching"},{"article":"el","noun":"tacto","full":"el tacto","gender":"m"},{"article":"das","noun":"Fühlen","full":"das Fühlen","gender":"n"},
+               ("We feel with our skin – best of all with our fingertips.","Sentimos con la piel, sobre todo con las yemas de los dedos.","Wir fühlen mit der Haut – am besten mit den Fingerspitzen."),None),
+}
+def apply_senses(items):
+    for it in items:
+        o = SENSES.get(it["id"])
+        if not o or it.get("part"): continue
+        en, es, de, line, fact2 = o
+        it["part"] = it["names"]; it["names"] = {"en": en, "es": es, "de": de}; it["sense"] = True
+        it["sound"] = dict(zip(("en","es","de"), line)); it.pop("soundKey", None)
+        if fact2: it["facts"][1] = dict(zip(("en","es","de"), fact2))
+    return items
+
 def build():
     os.makedirs(OUT, exist_ok=True)
     items = []
@@ -233,6 +259,7 @@ def build():
         if "t" in flags: it["touchable"] = True
         it["facts"] = [dict(zip(("en","es","de"), f)) for f in facts]
         items.append(it)
+    apply_senses(items)
     data = {"version": 1, "imageSize": 512, "format": "webp",
             "groups": [dict(id=g, en=a, es=b, de=c, emoji=e) for g, a, b, c, e in GROUPS],
             "body": items}
@@ -247,7 +274,7 @@ def validate(data):
         assert it["group"] in gids
         assert os.path.exists(os.path.join(HERE, it["image"])), it["image"]
         assert len(it["facts"]) == 2 and all(set(f) == {"en","es","de"} and all(f.values()) for f in it["facts"]), it["id"]
-        es, de = it["names"]["es"], it["names"]["de"]
+        es, de = (it.get("part") or it["names"])["es"], (it.get("part") or it["names"])["de"]
         pl = es.get("number") == "pl"
         exp = {("m",False):{"el"},("f",False):{"la","el"},("m",True):{"los"},("f",True):{"las"}}[(es["gender"],pl)]
         assert es["article"] in exp, it["id"]

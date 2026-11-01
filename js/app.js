@@ -16,7 +16,7 @@ const TABS=[
   {id:'king',  icon:'🦁', es:'Animales',en:'Animals', de:'Tiere'},
   {id:'folk',  icon:'👥', es:'Gente',   en:'People',  de:'Menschen'},
   {id:'ride',  icon:'🚗', es:'Vehículos',en:'Vehicles',de:'Fahrzeuge'},
-  {id:'baby',  icon:'🐣', es:'Bebés',   en:'Babies',  de:'Babys'},
+  {id:'baby',  icon:'🐣', es:'Grande y pequeño',en:'Big and little',de:'Groß und klein'},
   {id:'body',  icon:'🧒', es:'Mi cuerpo',en:'My body', de:'Mein Körper'},
   {id:'dig',   icon:'🎁', es:'Premios', en:'Prizes',  de:'Preise'}
 ];

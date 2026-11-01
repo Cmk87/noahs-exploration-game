@@ -1291,6 +1291,37 @@
    "image": "body/eye.webp",
    "names": {
     "en": {
+     "article": "",
+     "noun": "seeing",
+     "full": "seeing"
+    },
+    "es": {
+     "article": "la",
+     "noun": "vista",
+     "full": "la vista",
+     "gender": "f"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Sehen",
+     "full": "das Sehen",
+     "gender": "n"
+    }
+   },
+   "facts": [
+    {
+     "en": "Your eyes help you see colours, shapes and things that move.",
+     "es": "Tus ojos te ayudan a ver colores, formas y cosas que se mueven.",
+     "de": "Deine Augen helfen dir, Farben, Formen und Bewegungen zu sehen."
+    },
+    {
+     "en": "You blink many times every minute to keep your eyes clean and wet.",
+     "es": "Parpadeas muchas veces cada minuto para mantener tus ojos limpios y húmedos.",
+     "de": "Du blinzelst jede Minute viele Male, damit deine Augen sauber und feucht bleiben."
+    }
+   ],
+   "part": {
+    "en": {
      "article": "the",
      "noun": "eye",
      "full": "the eye"
@@ -1308,24 +1339,50 @@
      "gender": "n"
     }
    },
-   "facts": [
-    {
-     "en": "Your eyes help you see colours, shapes and things that move.",
-     "es": "Tus ojos te ayudan a ver colores, formas y cosas que se mueven.",
-     "de": "Deine Augen helfen dir, Farben, Formen und Bewegungen zu sehen."
-    },
-    {
-     "en": "You blink many times every minute to keep your eyes clean and wet.",
-     "es": "Parpadeas muchas veces cada minuto para mantener tus ojos limpios y húmedos.",
-     "de": "Du blinzelst jede Minute viele Male, damit deine Augen sauber und feucht bleiben."
-    }
-   ]
+   "sense": true,
+   "sound": {
+    "en": "We see with our eyes.",
+    "es": "Vemos con los ojos.",
+    "de": "Wir sehen mit den Augen."
+   }
   },
   {
    "id": "ear",
    "group": "senses",
    "image": "body/ear.webp",
    "names": {
+    "en": {
+     "article": "",
+     "noun": "hearing",
+     "full": "hearing"
+    },
+    "es": {
+     "article": "el",
+     "noun": "oído",
+     "full": "el oído",
+     "gender": "m"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Hören",
+     "full": "das Hören",
+     "gender": "n"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "The smallest bone in your body is inside your ear – it is smaller than a grain of rice!",
+     "es": "El hueso más pequeño de tu cuerpo está dentro del oído: ¡es más pequeño que un grano de arroz!",
+     "de": "Der kleinste Knochen deines Körpers sitzt in deinem Ohr – er ist kleiner als ein Reiskorn!"
+    },
+    {
+     "en": "Your ears also help you keep your balance.",
+     "es": "Tus oídos también te ayudan a mantener el equilibrio.",
+     "de": "Deine Ohren helfen dir auch, das Gleichgewicht zu halten."
+    }
+   ],
+   "part": {
     "en": {
      "article": "the",
      "noun": "ear",
@@ -1344,25 +1401,55 @@
      "gender": "n"
     }
    },
-   "touchable": true,
-   "facts": [
-    {
-     "en": "The smallest bone in your body is inside your ear – it is smaller than a grain of rice!",
-     "es": "El hueso más pequeño de tu cuerpo está dentro del oído: ¡es más pequeño que un grano de arroz!",
-     "de": "Der kleinste Knochen deines Körpers sitzt in deinem Ohr – er ist kleiner als ein Reiskorn!"
-    },
-    {
-     "en": "Your ears also help you keep your balance.",
-     "es": "Tus oídos también te ayudan a mantener el equilibrio.",
-     "de": "Deine Ohren helfen dir auch, das Gleichgewicht zu halten."
-    }
-   ]
+   "sense": true,
+   "sound": {
+    "en": "We hear with our ears.",
+    "es": "Oímos con los oídos.",
+    "de": "Wir hören mit den Ohren."
+   }
   },
   {
    "id": "nose",
    "group": "senses",
    "image": "body/nose.webp",
    "names": {
+    "en": {
+     "article": "",
+     "noun": "smelling",
+     "full": "smelling"
+    },
+    "es": {
+     "article": "el",
+     "noun": "olfato",
+     "full": "el olfato",
+     "gender": "m"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Riechen",
+     "full": "das Riechen",
+     "gender": "n"
+    }
+   },
+   "sound": {
+    "en": "We smell with our nose.",
+    "es": "Olemos con la nariz.",
+    "de": "Wir riechen mit der Nase."
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your nose can tell apart thousands of different smells.",
+     "es": "Tu nariz puede distinguir miles de olores diferentes.",
+     "de": "Deine Nase kann tausende verschiedene Gerüche unterscheiden."
+    },
+    {
+     "en": "When your nose is blocked, food tastes of less – smelling and tasting work together!",
+     "es": "Cuando tienes la nariz tapada, la comida sabe a menos: ¡el olfato y el gusto trabajan juntos!",
+     "de": "Wenn deine Nase zu ist, schmeckt das Essen nach weniger – Riechen und Schmecken arbeiten zusammen!"
+    }
+   ],
+   "part": {
     "en": {
      "article": "the",
      "noun": "nose",
@@ -1381,31 +1468,44 @@
      "gender": "f"
     }
    },
-   "sound": {
-    "en": "achoo",
-    "es": "achís",
-    "de": "hatschi"
-   },
-   "soundKey": "sneeze",
-   "touchable": true,
-   "facts": [
-    {
-     "en": "Your nose can tell apart thousands of different smells.",
-     "es": "Tu nariz puede distinguir miles de olores diferentes.",
-     "de": "Deine Nase kann tausende verschiedene Gerüche unterscheiden."
-    },
-    {
-     "en": "A sneeze blows tickly dust out of your nose – achoo!",
-     "es": "Un estornudo saca el polvo que te hace cosquillas en la nariz: ¡achís!",
-     "de": "Ein Niesen pustet kitzeligen Staub aus deiner Nase – hatschi!"
-    }
-   ]
+   "sense": true
   },
   {
    "id": "tongue",
    "group": "senses",
    "image": "body/tongue.webp",
    "names": {
+    "en": {
+     "article": "",
+     "noun": "tasting",
+     "full": "tasting"
+    },
+    "es": {
+     "article": "el",
+     "noun": "gusto",
+     "full": "el gusto",
+     "gender": "m"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Schmecken",
+     "full": "das Schmecken",
+     "gender": "n"
+    }
+   },
+   "facts": [
+    {
+     "en": "Your tongue has thousands of tiny taste buds for sweet, salty, sour and bitter.",
+     "es": "Tu lengua tiene miles de papilas gustativas para lo dulce, lo salado, lo ácido y lo amargo.",
+     "de": "Deine Zunge hat tausende winzige Geschmacksknospen für süß, salzig, sauer und bitter."
+    },
+    {
+     "en": "Your tongue helps you talk and moves food around when you chew.",
+     "es": "Tu lengua te ayuda a hablar y mueve la comida cuando masticas.",
+     "de": "Deine Zunge hilft dir beim Sprechen und schiebt beim Kauen das Essen herum."
+    }
+   ],
+   "part": {
     "en": {
      "article": "the",
      "noun": "tongue",
@@ -1424,24 +1524,50 @@
      "gender": "f"
     }
    },
-   "facts": [
-    {
-     "en": "Your tongue has thousands of tiny taste buds for sweet, salty, sour and bitter.",
-     "es": "Tu lengua tiene miles de papilas gustativas para lo dulce, lo salado, lo ácido y lo amargo.",
-     "de": "Deine Zunge hat tausende winzige Geschmacksknospen für süß, salzig, sauer und bitter."
-    },
-    {
-     "en": "Your tongue helps you talk and moves food around when you chew.",
-     "es": "Tu lengua te ayuda a hablar y mueve la comida cuando masticas.",
-     "de": "Deine Zunge hilft dir beim Sprechen und schiebt beim Kauen das Essen herum."
-    }
-   ]
+   "sense": true,
+   "sound": {
+    "en": "We taste with our tongue.",
+    "es": "Saboreamos con la lengua.",
+    "de": "Wir schmecken mit der Zunge."
+   }
   },
   {
    "id": "fingertips",
    "group": "senses",
    "image": "body/fingertips.webp",
    "names": {
+    "en": {
+     "article": "",
+     "noun": "touching",
+     "full": "touching"
+    },
+    "es": {
+     "article": "el",
+     "noun": "tacto",
+     "full": "el tacto",
+     "gender": "m"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Fühlen",
+     "full": "das Fühlen",
+     "gender": "n"
+    }
+   },
+   "touchable": true,
+   "facts": [
+    {
+     "en": "Your fingertips are extra good at feeling soft, rough, hot and cold.",
+     "es": "Las yemas de tus dedos sienten muy bien lo suave, lo áspero, lo caliente y lo frío.",
+     "de": "Deine Fingerspitzen können besonders gut fühlen: weich, rau, warm und kalt."
+    },
+    {
+     "en": "People who cannot see can read with their fingertips, using bumpy dots called Braille.",
+     "es": "Las personas ciegas pueden leer con las yemas de los dedos, con puntitos en relieve llamados braille.",
+     "de": "Blinde Menschen können mit den Fingerspitzen lesen – mit kleinen erhabenen Punkten, der Brailleschrift."
+    }
+   ],
+   "part": {
     "en": {
      "article": "the",
      "noun": "fingertips",
@@ -1462,19 +1588,12 @@
      "number": "pl"
     }
    },
-   "touchable": true,
-   "facts": [
-    {
-     "en": "Your fingertips are extra good at feeling soft, rough, hot and cold.",
-     "es": "Las yemas de tus dedos sienten muy bien lo suave, lo áspero, lo caliente y lo frío.",
-     "de": "Deine Fingerspitzen können besonders gut fühlen: weich, rau, warm und kalt."
-    },
-    {
-     "en": "People who cannot see can read with their fingertips, using bumpy dots called Braille.",
-     "es": "Las personas ciegas pueden leer con las yemas de los dedos, con puntitos en relieve llamados braille.",
-     "de": "Blinde Menschen können mit den Fingerspitzen lesen – mit kleinen erhabenen Punkten, der Brailleschrift."
-    }
-   ]
+   "sense": true,
+   "sound": {
+    "en": "We feel with our skin – best of all with our fingertips.",
+    "es": "Sentimos con la piel, sobre todo con las yemas de los dedos.",
+    "de": "Wir fühlen mit der Haut – am besten mit den Fingerspitzen."
+   }
   },
   {
    "id": "skin",
