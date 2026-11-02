@@ -241,15 +241,16 @@ const SPACE_Q=[
  {L:4,a:5,es:'¿Qué planeta está entre Marte y Saturno?',en:'Which planet is between Mars and Saturn?',de:'Welcher Planet ist zwischen Mars und Saturn?'},
  {L:4,a:7,es:'¿Qué planeta viene después de Saturno?',en:'Which planet comes after Saturn?',de:'Welcher Planet kommt nach dem Saturn?'}
 ];
-let spaceQText='',spaceMiss=0;
+let spaceQText='',spaceMiss=0,spacePlanetQ=false;
 function spaceAsk(){
-  spaceQuiz=true;spaceMiss=0;
+  spaceQuiz=true;spaceMiss=0;spacePlanetQ=false;
   const L=level('space',4);
   if(L>=3&&Math.random()<0.75){
     const q=pick(SPACE_Q.filter(x=>x.L<=L&&x.a!==spaceTargetIdx));spaceTargetIdx=q.a;spaceQText=q[lang];
   }else{
     const pool=L===1?[0,3,4,5,6]:PLANETS.map((p,i)=>i).filter(i=>!PLANETS[i].sun);
-    spaceTargetIdx=pick(pool.filter(i=>i!==spaceTargetIdx));
+    const cb=comeBack('space',k=>pool.includes(+k)&&+k!==spaceTargetIdx);   // a planet he missed comes back soon
+    spaceTargetIdx=cb!=null?+cb:pick(pool.filter(i=>i!==spaceTargetIdx));spacePlanetQ=true;
     const name=PLANETS[spaceTargetIdx][lang][0];
     spaceQText=lang==='es'?`¿Dónde está ${name}?`:lang==='de'?`Wo ist ${name}?`:`Where is ${name}?`;
   }
@@ -259,7 +260,7 @@ function spaceAsk(){
 }
 function spaceAnswer(i){
   if(i===spaceTargetIdx){
-    spaceQuiz=false;bigWin();award(spaceMiss);adapt('space',4,spaceMiss===0);
+    spaceQuiz=false;bigWin();award(spaceMiss);adapt('space',4,spaceMiss===0);if(spacePlanetQ)practice('space',i,PLANETS[i][lang][0],spaceMiss===0);
     selected=i;const p=PLANETS[i];
     document.getElementById('factName').textContent=p[lang][0];
     document.getElementById('factText').textContent=p[lang][1];

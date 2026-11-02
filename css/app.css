@@ -953,3 +953,11 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 #cityBub .cbFlag:active{transform:translateY(2px)}
 .stkBtns button.stkFlag{background:#EEF1F8;box-shadow:0 4px 0 #C9D0DB;font-size:22px;padding:6px 12px}
 .stkBig.stkPicCv canvas{width:min(70vw,280px);aspect-ratio:4/3;display:block;margin:0 auto}
+.phChoices.phFind.six{grid-template-columns:repeat(3,1fr);max-width:min(100%,calc((100vh - 250px)*1.5));max-width:min(100%,calc((100dvh - 250px)*1.5))}
+/* the weekly note in the parent section */
+#repNote{margin-top:14px;padding-top:10px;border-top:2px dashed rgba(0,0,0,.15);font-size:14px;line-height:1.45}
+#repNote h4{margin:0 0 6px;font-size:16px}
+#repNote .nSec{margin-top:10px}
+#repNote .nSec small,#repNote .nHead small{opacity:.7}
+#repNote .nChip{display:inline-block;background:#F1F3FA;border-radius:10px;padding:2px 8px;margin:4px 4px 0 0;font-size:13px}
+#repNote .nNone{opacity:.7;margin-top:6px}

@@ -58,7 +58,8 @@ function readRound(){
   else kind=r<0.4?'build':'read';
   const pool=L>=4&&Math.random()<0.6?rlist('long'):rlist('two');
   const fresh=pool.filter(w=>!readRecent.includes(w.text)),src=fresh.length>2?fresh:pool;
-  const w=pick(src);
+  const cb=(kind==='read'||kind==='hearWord')?comeBack('read',k=>pool.some(x=>x.text===k)):null;   // a word he missed comes back soon
+  const w=cb?pool.find(x=>x.text===cb):pick(src);
   RD={kind,miss:0,done:false};
   if(kind==='buildSyl'){const c=pick(RSYL[lang].c),v=pick(RSYL[lang].v);RD.word={pic:null,parts:[{t:c,say:c,cons:1},{t:v,say:v}],text:c+v,syl:1};}
   else if(kind==='hearSyl'){const S=RSYL[lang],c=pick(S.c),v=pick(S.v),sameC=Math.random()<0.6;
@@ -155,7 +156,8 @@ function readBuilt(){
   // centre the finished word, then read it slowly piece by piece and once more as a whole
   readLayout();
   if(w.syl)T.forEach(t=>{t.el.style.color=RCOL[0];});
-  award(0);adapt('read',4,true);                              // the points belong to the moment it was built, here
+  award(0);if(!RD.hand)adapt('read',4,true);                  // the points belong to the moment it was built, here; it only counts towards
+                                                              // the level if he built it on his own, before the ghost hand showed how
   const whole=w.syl?w.text:w.parts.map(p=>p.t).join(''),rd=RD;
   readBuiltT=setTimeout(()=>{if(!readLive(rd))return;readSaySlow(w.syl?[{say:w.text}]:w.parts,whole,k=>{T.forEach((t,i)=>t.el.classList.toggle('lit',i===k||(w.syl&&k===0)));},()=>{
     T.forEach(t=>t.el.classList.remove('lit'));$('readPic').classList.add('show');bigWin();
@@ -164,12 +166,13 @@ function readBuilt(){
 /* a ghost hand that shows the sliding until the child has tried */
 function readHint(on){const h=$('readHand');if(!h)return;if(!on){h.classList.remove('on');clearTimeout(RD&&RD.hintT);return;}
   const rd=RD;RD.hintT=setTimeout(()=>{if(RD!==rd||!RD.tiles||RD.done||activeTab!=='read')return;const T=RD.tiles,k=T.findIndex((t,i)=>i&&t.g!==T[i-1].g);if(k<1)return;
-    h.style.setProperty('--x0',(T[k].x+T[k].w/2)+'px');h.style.setProperty('--x1',(T[k-1].x+T[k-1].w)+'px');h.classList.add('on');},3500);}
+    RD.hand=true;h.style.setProperty('--x0',(T[k].x+T[k].w/2)+'px');h.style.setProperty('--x1',(T[k-1].x+T[k-1].w)+'px');h.classList.add('on');},3500);}
 
 /* ---------- HEAR and READ answers ---------- */
 function readPick(ok,el,o){
   ac();if(RD.done)return;
   if(ok){RD.done=true;el.classList.add('right');bigWin();award(RD.miss);levelFx($('readPrompt'),adapt('read',4,RD.miss===0));
+    practice('read',RD.word.text,RD.word.text,RD.miss===0);
     const w=RD.word;
     if(RD.kind==='read')readSaySlow(w.parts,w.text,k=>$('readWord').querySelectorAll('span').forEach((s,i)=>s.classList.toggle('lit',i===k)));
     else sayAt(w.text,0.7);

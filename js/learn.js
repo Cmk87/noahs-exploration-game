@@ -44,6 +44,8 @@ function buildChips(){
 const SKILL_START={words:{es:4,en:2,de:2},ear:{es:2,en:1,de:1},act:{es:2,en:1,de:1},space:{es:1,en:1,de:1},geo:{es:1,en:1,de:1},
   geoC:{es:1,en:1,de:1},geoK:{es:1,en:1,de:1},geoF:{es:1,en:1,de:1},geoO:{es:1,en:1,de:1}};
 const SKILL_MAX={words:8,ear:6,act:6,space:4,geo:3,geoC:2,geoK:5,geoF:5,geoO:2};
+SKILL_START.art={es:1,en:1,de:1};SKILL_START.plural={es:1,en:1,de:1};SKILL_START.find={es:2,en:2,de:2};
+SKILL_MAX.art=3;SKILL_MAX.plural=3;SKILL_MAX.find=3;
 let SKILL={};try{SKILL=JSON.parse(localStorage.getItem('sl_skill')||'{}');}catch(e){}
 function skillRec(mode,lg){const k=mode+'|'+(lg||lang);
   return SKILL[k]||(SKILL[k]={s:SKILL_START[mode][lg||lang],n:0,h:[]});}
@@ -91,6 +93,69 @@ function srsPick(pool){
   return pick(seen.length?seen:pool);
 }
 const srsMastered=lg=>Object.values(SRS[lg]||{}).filter(r=>r.b>=4).length;
+
+/* =============================================================
+   PRACTICE JOURNAL + COME-BACK QUEUE — shared by every quiz.
+   Each answered round reports practice(mode, key, label, ok), with ok =
+   right on the first try. Two things follow:
+   · A miss comes back soon: after 2–3 other rounds of the same game, and
+     if he gets it right then, once more about 6 rounds later. Only when
+     it has been right on the first try twice since the miss, the second
+     time in a later session, is it fixed.
+     Unfixed misses of the last two weeks are asked early in the next
+     session too. (Words and Listening also keep their Leitner boxes,
+     which space the word out over days.)
+   · The parent's weekly note: what he still mixes up, what he has
+     learned since missing it, what is new — per language.
+============================================================= */
+let PJ={};try{PJ=JSON.parse(localStorage.getItem('sl_journal')||'{}')||{};}catch(e){}
+const PJ_DAY=864e5;
+function pjSave(){
+  try{const now=Date.now(),keys=Object.keys(PJ);
+    if(keys.length>1500)keys.sort((a,b)=>(PJ[a].at||0)-(PJ[b].at||0)).slice(0,keys.length-1500).forEach(k=>delete PJ[k]);
+    keys.forEach(k=>{const r=PJ[k];if(r&&r.ms)r.ms=r.ms.filter(t=>now-t<60*PJ_DAY);});
+    localStorage.setItem('sl_journal',JSON.stringify(PJ));}catch(e){}
+}
+const CB={},CB_TAKEN={},CB_SEEDED={};
+function practice(mode,key,label,ok){
+  if(key==null)return;
+  const id=mode+'|'+lang+'|'+key,now=Date.now();
+  const r=PJ[id]||(PJ[id]={m:mode,l:lang,k:String(key),first:now,seen:0,miss:0,ok1:0,ms:[],fix:2,fixAt:0});
+  r.t=label||r.t||String(key);r.seen++;r.at=now;
+  // fixed = right on the first try twice after the miss, the second time in a later session (4 h on),
+  // so "he knows it now" is not just two answers in the same five minutes
+  if(ok){r.ok1++;if(r.fix===0){r.fix=1;r.fix1=now;}else if(r.fix===1&&now-(r.fix1||0)>=4*36e5){r.fix=2;r.fixAt=now;}}
+  else{r.miss++;r.ms.push(now);r.fix=0;r.fixAt=0;}
+  pjSave();
+  // the come-back queue (this session)
+  const q=CB[mode]||(CB[mode]=[]),k=String(key),i=q.findIndex(x=>x.key===k&&x.l===lang);if(i>=0)q.splice(i,1);
+  const taken=CB_TAKEN[mode];CB_TAKEN[mode]=null;
+  if(!ok)q.push({key:k,l:lang,wait:2+Math.floor(Math.random()*2),stage:1});
+  else if(taken&&taken.key===k&&taken.stage===1)q.push({key:k,l:lang,wait:5+Math.floor(Math.random()*3),stage:2});
+}
+/* At the start of a round: something missed that is due again (and allowed in this round), or null. */
+function comeBack(mode,allowed){
+  const q=CB[mode]||(CB[mode]=[]);
+  if(!CB_SEEDED[mode+'|'+lang]){CB_SEEDED[mode+'|'+lang]=true;           // a new session: unfixed misses of the last 2 weeks first
+    const now=Date.now();let w=1;
+    Object.values(PJ).filter(r=>r.m===mode&&r.l===lang&&r.fix<2&&r.ms.length&&now-r.ms[r.ms.length-1]<14*PJ_DAY)
+      .sort((a,b)=>b.ms.length-a.ms.length).slice(0,6)
+      .forEach(r=>{if(!q.some(x=>x.key===r.k&&x.l===lang))q.push({key:r.k,l:lang,wait:w++,stage:1});});}
+  const left=CB_TAKEN[mode];CB_TAKEN[mode]=null;                       // picked last round but never answered (skipped, left): keep it
+  if(left&&!q.some(x=>x.key===left.key&&x.l===left.l))q.push({key:left.key,l:left.l,wait:2,stage:left.stage});
+  q.forEach(x=>{if(x.l===lang)x.wait--;});
+  const i=q.findIndex(x=>x.l===lang&&x.wait<=0&&(!allowed||allowed(x.key)));
+  if(i<0)return null;
+  const x=q.splice(i,1)[0];CB_TAKEN[mode]={key:x.key,l:x.l,stage:x.stage};return x.key;
+}
+/* the weekly note: last 7 days */
+function pjWeek(){
+  const now=Date.now(),wk=7*PJ_DAY,R=Object.values(PJ);
+  const tricky=R.filter(r=>r.fix<2&&r.ms.some(t=>now-t<wk)).map(r=>({...r,n:r.ms.filter(t=>now-t<wk).length})).sort((a,b)=>b.n-a.n||b.at-a.at);
+  const learned=R.filter(r=>r.fix>=2&&r.fixAt&&now-r.fixAt<wk).sort((a,b)=>b.fixAt-a.fixAt);
+  const fresh=R.filter(r=>now-r.first<wk);
+  return {tricky,learned,fresh};
+}
 
 /* words quiz levels: how many pictures, how many from the same
    category, then sound-alike distractors, then two things at once */
@@ -151,8 +216,8 @@ function newRound(){
   if(activeCat==='*'&&L>=4&&Math.random()<0.15){pluralRound(L);return;}
   if(lang==='de'&&L>=3&&Math.random()<0.2&&artRound(SET,L))return;
   let pool=SET.filter(v=>!recent.includes(v.e));
-  if(pool.length<Math.min(8,SET.length)){recent=[];pool=SET.slice();}
-  target=srsPick(pool);recent.push(target.e);if(recent.length>12)recent.shift();
+  if(pool.length<Math.min(8,SET.length)){const last=recent[recent.length-1];recent=[];pool=SET.filter(v=>v.e!==last);if(!pool.length)pool=SET.slice();}   // never the same picture twice in a row
+  {const cb=comeBack('words',k=>SET.some(v=>v.e===k));target=cb?SET.find(v=>v.e===cb):srsPick(pool);}   // a missed word may come back although it was shown just nowrecent.push(target.e);if(recent.length>12)recent.shift();
   targets=[target];
   if(cfg.two)targets.push(srsPick(pool.filter(v=>v.e!==target.e)));
   const rest=SET.filter(v=>!targets.includes(v)),need=Math.min(cfg.n,SET.length)-targets.length;
@@ -229,7 +294,7 @@ function plChoose(k,el){
   ac();if(roundDone)return;
   if(k===plMode.n){
     roundDone=true;el.classList.add('right');bigWin();award(misses);
-    levelFx(document.getElementById('levelPill'),adapt('words',8,misses===0));
+    adapt('plural',3,misses===0);            // its own record: a hard plural round must not pull the picture level down
     showWin(Array(k).fill(plMode.it.e).join(''),plPhrase(plMode.it,k,x=>`<b>${x}</b>`),plPhrase(plMode.it,k),true);
     nextRound(2600);
   }else{misses++;nope();el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),450);
@@ -254,7 +319,7 @@ function artChoose(a,el){
   ac();if(roundDone)return;
   if(a===target.de[0]){
     roundDone=true;el.classList.add('right');bigWin();award(misses);
-    levelFx(document.getElementById('levelPill'),adapt('words',8,misses===0));
+    adapt('art',3,misses===0);practice('art',target.e,target.de.join(' '),misses===0);   // der/die/das has its own record
     showWin(target.e,nounHTML(target),target.de.join(' '),true);
     nextRound(2600);
   }else{
@@ -268,7 +333,7 @@ function choose(o,el){
   if(targets.includes(o)){
     el.classList.add('right');gotT.push(o);
     if(gotT.length<targets.length){beep(880,0,0.12,'triangle',0.16);say(o[lang][1]);return;}
-    roundDone=true;bigWin();award(misses);targets.forEach(t=>srsRecord(t,misses===0));
+    roundDone=true;bigWin();award(misses);targets.forEach(t=>{srsRecord(t,misses===0);practice('words',t.e,t[lang].join(' '),misses===0);});
     levelFx(document.getElementById('levelPill'),adapt('words',8,misses===0));
     const label=targets.map(nounHTML).join(' '+AND[lang]+' ');
     showWin(targets.map(t=>t.e).join(''),label,targets.map(t=>t[lang][1]).join(' '+AND[lang]+' '),true);
@@ -380,7 +445,7 @@ function newEarRound(){
   if(L>=3&&Math.random()<0.25&&firstRound(L))return;
   let pool=VOCAB.filter(v=>!earRecent.includes(v.e));
   if(pool.length<10){earRecent=[];pool=VOCAB.slice();}
-  earTarget=srsPick(pool);
+  {const cb=comeBack('ear',k=>VOCAB.some(v=>v.e===k));earTarget=cb?VOCAB.find(v=>v.e===cb):srsPick(pool);}
   earRecent.push(earTarget.e); if(earRecent.length>14) earRecent.shift();
   const w=earTarget[lang][1],rest=VOCAB.filter(v=>v.e!==earTarget.e),k=cfg.n-1;
   let others;
@@ -404,7 +469,7 @@ function newEarRound(){
 function earPick(o,el){
   ac();if(earDone)return;
   if(o.e===earTarget.e){
-    earDone=true;el.classList.add('right');bigWin();award(earMiss);if(!earFirst)srsRecord(earTarget,earMiss===0);
+    earDone=true;el.classList.add('right');bigWin();award(earMiss);if(!earFirst){srsRecord(earTarget,earMiss===0);practice('ear',earTarget.e,earTarget[lang].join(' '),earMiss===0);}
     levelFx(document.getElementById('earLevelPill'),adapt('ear',6,earMiss===0));
     if(earFirst){const w=earTarget[lang][1],Lt=earFirst.toUpperCase(),ph=lang==='es'?`${letterSpokenAny(earFirst)} de ${w}`:lang==='de'?`${Lt} wie ${w}`:`${Lt} for ${w}`;
       showWin(earTarget.e,`<b>${w[0]}</b>${w.slice(1)}`,ph,true);}

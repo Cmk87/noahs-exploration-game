@@ -128,6 +128,38 @@ function applyLangs(){
   if(!LANGS_ON.includes(lang)){const c=LANGS_ON.includes('de')?'de':LANGS_ON[0];setLang(c,$(c));}
 }
 
+/* the weekly note: plain words for a parent, from the practice journal (learn.js) and the day log */
+const PJ_ICON={words:'🖼️',ear:'👂',art:'der/die/das',read:'📚',geoK:'🌍',geoF:'🏳️',geoC:'🗺️',geoO:'🌊',space:'🪐','jobs:need':'👷','jobs:thing':'👷','find:a':'🦁','find:p':'👥','find:v':'🚗','find:y':'🧒'};
+function renderNote(recs){
+  let box=$('repNote');if(!box){box=document.createElement('div');box.id='repNote';$('repWords').after(box);}
+  const T={es:{title:'📝 Nota de la semana',none:'Todavía nada: la nota se llena mientras juega.',tricky:'🔁 Todavía le cuesta',trickyI:'falladas estos 7 días y aún no acertadas dos veces seguidas; vuelven a salir enseguida',
+        learned:'🌟 Ya lo sabe',learnedI:'antes las fallaba, ahora las acierta a la primera',fresh:'🆕 Cosas nuevas',coll:'🐾 Pegatinas nuevas',dino:'🦴 Dinosaurios nuevos',
+        acc:'acertadas a la primera',prev:'semana anterior',time:'min jugados'},
+     en:{title:'📝 This week\'s note',none:'Nothing yet: the note fills up as he plays.',tricky:'🔁 Still tricky',trickyI:'missed in the last 7 days and not yet right twice in a row; they come back again soon',
+        learned:'🌟 Got it now',learnedI:'missed before, now right on the first try',fresh:'🆕 New things met',coll:'🐾 New stickers',dino:'🦴 New dinosaurs',
+        acc:'right on the first try',prev:'week before',time:'min played'},
+     de:{title:'📝 Notiz der Woche',none:'Noch nichts: Die Notiz füllt sich, während er spielt.',tricky:'🔁 Fällt ihm noch schwer',trickyI:'in den letzten 7 Tagen verfehlt und noch nicht zweimal hintereinander richtig; kommt bald wieder dran',
+        learned:'🌟 Kann er jetzt',learnedI:'vorher verfehlt, jetzt beim ersten Versuch richtig',fresh:'🆕 Neu kennengelernt',coll:'🐾 Neue Sticker',dino:'🦴 Neue Dinos',
+        acc:'beim ersten Versuch richtig',prev:'Vorwoche',time:'Min. gespielt'}}[lang];
+  const F={es:'🇪🇸',en:'🇬🇧',de:'🇩🇪'},esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const chip=(r,n)=>`<span class="nChip">${PJ_ICON[r.m]||''} ${F[r.l]||''} ${esc(r.t)}${n?` <b>${n}×</b>`:''}</span>`;
+  const W=typeof pjWeek==='function'?pjWeek():{tricky:[],learned:[],fresh:[]};
+  // this week and the one before, from the day log
+  const key=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(),sum=(a,b)=>{let o={sec:0,ok:0,miss:0,stk:0,dino:0};
+    for(let i=a;i<b;i++){const d=new Date();d.setDate(d.getDate()-i);const r=LOG[key(d)];if(r)for(const k in o)o[k]+=r[k]||0;}return o;};
+  const now=sum(0,7),pre=sum(7,14),pct=o=>o.ok+o.miss?Math.round(o.ok/(o.ok+o.miss)*100):null;
+  const head=[];   // minutes are in the bars just above
+  if(pct(now)!=null)head.push(`✅ <b>${pct(now)}%</b> ${T.acc}${pct(pre)!=null?` <small>(${T.prev}: ${pct(pre)}%)</small>`:''}`);
+  if(now.stk)head.push(`${T.coll}: <b>${now.stk}</b>`);
+  if(now.dino)head.push(`${T.dino}: <b>${now.dino}</b>`);
+  let h=`<h4>${T.title}</h4>`+(head.length?`<div class="nHead">${head.join('<br>')}</div>`:'');
+  if(!W.tricky.length&&!W.learned.length&&!W.fresh.length)h+=`<div class="nNone">${T.none}</div>`;
+  if(W.tricky.length)h+=`<div class="nSec"><b>${T.tricky}</b> <small>(${T.trickyI})</small><div>${W.tricky.slice(0,12).map(r=>chip(r,r.n)).join('')}</div></div>`;
+  if(W.learned.length)h+=`<div class="nSec"><b>${T.learned}</b> <small>(${T.learnedI})</small><div>${W.learned.slice(0,12).map(r=>chip(r)).join('')}</div></div>`;
+  if(W.fresh.length){const by={};W.fresh.forEach(r=>{const i=PJ_ICON[r.m]||'·';by[i]=(by[i]||0)+1;});
+    h+=`<div class="nSec"><b>${T.fresh}: ${W.fresh.length}</b> <small>(${Object.entries(by).map(([i,n])=>i+' '+n).join(' · ')})</small></div>`;}
+  box.innerHTML=h;
+}
 function renderParent(){
   const L={es:['Nombre para la pestaña 🦸','Niveles','Palabras que más falla','Borrar'],
            en:['Name for the 🦸 tab','Levels','Most-missed words','Reset'],
@@ -152,6 +184,7 @@ function renderParent(){
     [['🇩🇪','de'],['🇬🇧','en'],['🇪🇸','es']].map(([f,c])=>{const R=Object.values(SRS[c]||{});
       return `${f} ${W[0]}: <b>${R.filter(r=>r.b>=4).length}</b> · ${W[1]}: <b>${R.filter(r=>r.b>0&&r.b<=2).length}</b>`;}).join('<br>')+
     `<br><small>${{es:'% = acertadas a la primera',en:'% = right on the first try',de:'% = beim ersten Versuch richtig'}[lang]}</small>`;
+  renderNote(recs);
   $('pLangTitle').textContent={es:'🗣️ Idiomas disponibles',en:'🗣️ Languages to choose from',de:'🗣️ Sprachen zur Auswahl'}[lang];
   const lgb=$('langBtns');lgb.innerHTML='';
   [['de','🇩🇪',{es:'Alemán',en:'German',de:'Deutsch'}],['en','🇬🇧',{es:'Inglés',en:'English',de:'Englisch'}],['es','🇪🇸',{es:'Español',en:'Spanish',de:'Spanisch'}]].forEach(([c,f,n])=>{
@@ -197,7 +230,7 @@ function renderParent(){
   $('pPowerTitle').textContent={es:'Puntos de premio (40 ⚡ = 1 premio)',en:'Prize points (40 ⚡ = 1 prize)',de:'Preispunkte (40 ⚡ = 1 Preis)'}[lang];
   $('pPowerVal').textContent='⚡ '+power;
   const lr=document.getElementById('levelRows');lr.innerHTML='';
-  const MN={read:'📚',words:'🖼️',ear:'👂',act:'🦖',space:'🪐',geoK:'🌍',geoF:'🏳️'};
+  const MN={read:'📚',words:'🖼️',ear:'👂',act:'🦖',space:'🪐',geoK:'🌍',geoF:'🏳️',jobs:'👷',find:'👂📷'};
   [['🇪🇸','es'],['🇬🇧','en'],['🇩🇪','de']].forEach(([f,c])=>{
     const cells=Object.keys(MN).map(m=>{const r=skillRec(m,c),acc=r.h.length?Math.round(r.h.reduce((a,b)=>a+b,0)/r.h.length*100)+'%':'–';
       return `${MN[m]} ${level(m,SKILL_MAX[m],c)}/${SKILL_MAX[m]} <small>(${acc})</small>`;}).join(' &nbsp;');
@@ -297,7 +330,7 @@ $('backupFile').onchange=e=>{
 };
 $('resetLevels').onclick=()=>{SKILL={};try{localStorage.removeItem('sl_skill');}catch(e){}renderParent();};
 document.getElementById('resetStats').onclick=()=>{
-  stats={};saveStats();renderParent();
+  stats={};saveStats();PJ={};pjSave();renderParent();
 };
 try{kidName=localStorage.getItem('sl_name')||'';}catch(e){}
 

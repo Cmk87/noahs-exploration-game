@@ -422,7 +422,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      document.querySelector(`#v-king .phChoice[data-id="${PUZ.item.id}"]`).click();
      return { choices, blurred, held, up: power === p0 + 1 };
    });
-   check(hide.choices === 4 && hide.blurred && hide.held && hide.up, "listen and find: 4 photos, a wrong tap keeps the point, the right one earns it");
+   check(hide.choices >= 3 && hide.blurred && hide.held && hide.up, "listen and find: 3–6 photos (by level), a wrong tap keeps the point, the right one earns it");
   }
   {await page.evaluate(() => { showTab('king'); document.querySelector('#v-king .phLive').click(); });
    const drag = await page.locator('#v-king .phDrag').boundingBox();
@@ -518,7 +518,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    check(more.ids.join() === 'helpers,buildingSite,road,rails,air,water' && more.lazy, 'vehicles shows the six groups, photos loaded lazily');
    check(more.n >= 5 && more.opened && more.saidName && more.saidSound && more.saidFact, 'a vehicle card says the name, the sound, and a fact');
    check(more.esName === 'el camión de bomberos' && more.amb === 'la ambulancia', 'vehicle cards use the Spanish article from the photo pack');
-   check(more.choices === 4 && more.blurred && more.held && more.hideUp, "listen and find works for vehicles");
+   check(more.choices >= 3 && more.blurred && more.held && more.hideUp, "listen and find works for vehicles");
    check(more.pairs === 16 && more.pairLazy && more.morph && more.saidBaby && more.saidAdult && more.saidGrow && more.slid && more.replayReset, 'a baby photo slides to the grown-up, and replay starts from the baby again');
    check(more.wrapped && more.stillCard, 'previous at the start of a list wraps around, and rapid next keeps a real card');
    check(more.gChoices === 3 && more.babyShown && more.gHeld && more.gUp, 'matching a baby to its grown-up: a wrong tap keeps the point');
@@ -598,6 +598,22 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    });
    check(r.kept && r.top > 0, 'photo books: back from a card returns to the same place in the list' + (r.kept ? '' : ' ' + JSON.stringify(r)));
    check(r.flags === 2 && (r.oneLang || r.said.length === 0), 'photo cards speak the app language only, with flags for the other two' + (r.flags === 2 && (r.oneLang || r.said.length === 0) ? '' : ' ' + JSON.stringify(r)));}
+  // something missed comes back 2–3 rounds later in the same game; the parent's weekly note lists it
+  {const r = await page.evaluate(() => {
+     showTab('words'); const order = [], cards = () => [...document.querySelectorAll('#grid .card')]; let missed = null;
+     for (let i = 0; i < 9; i++) {
+       newRound(); if (!target || artMode || plMode) { i--; continue; }
+       const t = target; order.push(t.e);
+       if (i === 1) { missed = t.e; cards().find(c => !c.textContent.includes(t.e)).click(); }
+       cards().find(c => c.textContent.includes(t.e)).click(); clearTimeout(roundT);
+     }
+     const back = order.indexOf(missed, 2);
+     showTab('parent'); const note = document.getElementById('repNote').textContent; showTab('home');
+     const w = VOCAB.find(v => v.e === missed);
+     return { back, inNote: note.includes(w[lang].join(' ')), order: order.join(' ') };
+   });
+   check(r.back >= 3 && r.back <= 4, 'a missed word comes back 2–3 rounds later' + (r.back >= 3 && r.back <= 4 ? '' : ' ' + JSON.stringify(r)));
+   check(r.inNote, 'the weekly note in the parent section lists what he still finds hard');}
   {const bad = await page.evaluate(() => JSON.parse(sessionStorage.getItem('ALLSAID') || '[]').filter(t => /\[object|undefined|null/.test(t)));
    check(bad.length === 0, 'the voice never reads out "[object Object]", "undefined" or "null"' + (bad.length ? ': ' + bad.slice(0, 3).join(' | ') : ''));}
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));

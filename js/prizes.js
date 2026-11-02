@@ -831,7 +831,7 @@ function goAlive(){
     ?{es:'¡Tócalo para que chille!',en:'Tap it to make it screech!',de:'Tippe, damit er kreischt!'}[lang]
     :{es:'¡Tócalo para que ruja!',en:'Tap it to make it roar!',de:'Tippe, damit er brüllt!'}[lang];
   const isNew=!found.includes(D.sp.k);
-  if(isNew){found.push(D.sp.k);try{localStorage.setItem('sl_dinos',JSON.stringify(found));}catch(e){}}
+  if(isNew){found.push(D.sp.k);{const d=logDay();d.dino=(d.dino||0)+1;logSave();}try{localStorage.setItem('sl_dinos',JSON.stringify(found));}catch(e){}}
   const have=dinoHave(),left=DINOS.length-have;
   const mus=!isNew?'':left===0?{es:`¡Los ${DINOS.length} dinosaurios están en el museo! ¡Museo completo!`,en:`All ${DINOS.length} dinosaurs are in the museum! The museum is full!`,de:`Alle ${DINOS.length} Dinos sind im Museum! Das Museum ist voll!`}[lang]
     :left===1?{es:'¡Nuevo en el museo! Solo falta un dinosaurio.',en:'New in the museum! Only one dinosaur left to find.',de:'Neu im Museum! Nur noch ein Dino fehlt.'}[lang]

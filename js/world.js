@@ -279,14 +279,15 @@ function pickCountry(L,avoid){const all=countryPool(L).filter(a=>a!==avoid),fres
   return Math.random()<0.6&&fresh.length?pick(fresh):pick(all);}
 const GEO_KEY={continents:'geoC',countries:'geoK',flags:'geoF',oceans:'geoO'};
 function geoAsk(){
-  const key=GEO_KEY[GEO.mode]||'geoK',L=level(key,SKILL_MAX[key]);GEO.miss=0;GEO.sel=null;GEO.glow=null;GEO.hint=null;GEO.selCont=null;$('geoLevel').textContent='🎯 '+L;
+  const key=GEO_KEY[GEO.mode]||'geoK',L=level(key,SKILL_MAX[key]);GEO.miss=0;GEO.sel=null;GEO.glow=null;GEO.hint=null;GEO.selCont=null;$('geoLevel').textContent='🎯 '+L;GEO.pj=null;
   const W=(n,de)=>lang==='es'?`¿Dónde está ${n}?`:lang==='de'?`Wo ist ${n}?`:`Where is ${n}?`;
   if(GEO.mode==='continents'){
     if(L>=2&&Math.random()<0.5){const q=pick(GEO_Q.filter(q=>q.a!==GEO.target));GEO.target=q.a;flyTo(worldView());geoInfo(null);geoQSet(q[lang]);return;}
-    const ct=pick(CONTINENTS.filter(c=>c.k!==GEO.target));GEO.target=ct.k;flyTo(worldView());geoInfo(null);geoQSet(W(ct[lang][0]));return;
+    const cb=comeBack('geoC',k=>CONTINENTS.some(c=>c.k===k)),ct=cb?CONTINENTS.find(c=>c.k===cb):pick(CONTINENTS.filter(c=>c.k!==GEO.target));GEO.target=ct.k;GEO.pj=[ct.k,ct[lang][0]];flyTo(worldView());geoInfo(null);geoQSet(W(ct[lang][0]));return;
   }
-  if(GEO.mode==='oceans'){const o=pick(OCEANS.filter(o=>o.k!==GEO.target));GEO.target=o.k;flyTo(worldView());geoInfo(null);geoQSet(W(o[lang][0]));return;}
-  const c=C_BY[pickCountry(L,GEO.target)];GEO.target=c.a2;
+  if(GEO.mode==='oceans'){const cb=comeBack('geoO',k=>OCEANS.some(o=>o.k===k)),o=cb?OCEANS.find(o=>o.k===cb):pick(OCEANS.filter(o=>o.k!==GEO.target));GEO.target=o.k;GEO.pj=[o.k,o[lang][0]];flyTo(worldView());geoInfo(null);geoQSet(W(o[lang][0]));return;}
+  const cb=comeBack(key,a=>a!==GEO.target&&countryPool(L).includes(a));   // a country he missed comes back soon
+  const c=C_BY[cb||pickCountry(L,GEO.target)];GEO.target=c.a2;GEO.pj=[c.a2,cNP(c).np];
   const ct=contOf(c.cont);flyTo(viewLL(...ct.view));
   if(GEO.mode==='countries'){geoInfo(null);$('geoName').innerHTML=L===1&&FLAGS_OK?`<span class="geoFlag">${flagOf(c.a2)}</span>`:'📍';
     $('geoText').textContent=ct[lang][0].replace(/^(la|die|the)\s+/i,'');const n=cNP(c);
@@ -303,7 +304,7 @@ function geoAsk(){
 }
 const isNow=(lg,pl)=>pl?{es:'Estos son ',en:'These are ',de:'Das sind '}[lg]:{es:'Esto es ',en:'This is ',de:'Das ist '}[lg];
 let geoT=null;
-function geoRight(){const key=GEO_KEY[GEO.mode]||'geoK',m=GEO.mode;GEO.hint=null;bigWin();award(GEO.miss);levelFx($('geoLevel'),adapt(key,SKILL_MAX[key],GEO.miss===0));
+function geoRight(){const key=GEO_KEY[GEO.mode]||'geoK',m=GEO.mode;GEO.hint=null;bigWin();award(GEO.miss);if(GEO.pj)practice(key,GEO.pj[0],GEO.pj[1],GEO.miss===0);levelFx($('geoLevel'),adapt(key,SKILL_MAX[key],GEO.miss===0));
   clearTimeout(geoT);geoT=setTimeout(()=>{if(activeTab==='geo'&&GEO.mode===m&&m!=='explore')geoAsk();},2600);}
 function geoWrong(what,pl){GEO.miss++;nope();if(what)say(isNow(lang,pl)+what+'. '+GEO.q);else if(GEO.miss>=2)say(GEO.q);
   if(GEO.miss>=2&&(GEO.mode==='continents'||GEO.mode==='oceans')){GEO.hint=GEO.target;redraw();}}

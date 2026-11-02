@@ -140,7 +140,9 @@ function buildJobModes(){const box=$('jobModes');box.innerHTML='';
 function jobRound(){
   clearTimeout(jobT);buildJobModes();const st=$('jobStage');st.innerHTML='';st.className='';$('jobPlay').style.display='none';
   if(JM==='play'){jobPicker();return;}
-  const L=level('jobs',3),n=L>=2?4:3,pool=shuffle(JOBS),j=pool[0],opts=shuffle(pool.slice(0,n));
+  const L=level('jobs',3),n=L>=2?4:3,pool=shuffle(JOBS),cb=comeBack('jobs:'+JM,k=>JOBS.some(x=>x.k===k));   // a job he missed comes back soon
+  if(cb){const i=pool.findIndex(x=>x.k===cb);pool.unshift(pool.splice(i,1)[0]);}
+  const j=pool[0],opts=shuffle(pool.slice(0,n));
   JR={kind:JM,j,miss:0,done:false,fem:Math.random()<0.5,opts:opts.map(o=>({j:o,fem:o===j?null:Math.random()<0.5,skin:Math.floor(Math.random()*4)}))};
   JR.opts.forEach(o=>{if(o.fem===null)o.fem=JR.fem;});
   const top=document.createElement('div');top.className='jTop';top.textContent=JM==='need'?j.scene:jThing(j);st.appendChild(top);
@@ -151,6 +153,7 @@ function jobRound(){
 function jobPick(o,el){
   ac();const r=JR;if(!r||r.done)return;
   if(o.j===r.j){r.done=true;el.classList.add('right');bigWin();award(r.miss);levelFx($('jobPrompt'),adapt('jobs',3,r.miss===0));
+    if(r.kind==='need'||r.kind==='thing')practice('jobs:'+r.kind,r.j.k,jcap(jName(r.j,r.fem)),r.miss===0);
     el.querySelector('.jLab').textContent=jcap(jName(o.j,o.fem));
     if(r.kind==='need'){const top=$('jobStage').querySelector('.jTop');top.textContent=r.j.fixed;top.classList.add('fixed');}
     const line=jSay(r.kind==='need'?r.j.help:r.j.use,r.j,o.fem);$('jobPrompt').textContent=line;say(line);

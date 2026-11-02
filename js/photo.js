@@ -361,13 +361,14 @@ function startHide(){
   findRound();
 }
 function findRound(){
-  const all=findPool();
+  const all=findPool(),mode='find:'+PH.kind;
   const fresh=all.filter(x=>!PUZ.seen.includes(x.id));
   const src=fresh.length?fresh:all;
-  const item=src[Math.floor(Math.random()*src.length)];PUZ.seen.push(item.id);
+  const cb=comeBack(mode,k=>all.some(x=>x.id===k)&&(!PUZ.item||PUZ.item.id!==k));   // something he missed comes back soon
+  const item=cb?all.find(x=>x.id===cb):src[Math.floor(Math.random()*src.length)];PUZ.seen.push(item.id);
   const pool=all.filter(x=>x.id!==item.id);
-  const opts=[item];
-  while(opts.length<4&&pool.length)opts.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  const opts=[item],n=[0,3,4,6][level('find',3)];   // the level sets how many photos: 3, 4 or 6
+  while(opts.length<n&&pool.length)opts.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
   for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=opts[i];opts[i]=opts[j];opts[j]=t;}
   PUZ.item=item;PUZ.opts=opts;PUZ.locked=false;PUZ.miss=0;
   PH.screen='hide';renderFind();
@@ -375,7 +376,7 @@ function findRound(){
 }
 function renderFind(){
   const opts=PUZ.opts.map(it=>`<button type="button" class="phChoice" data-act="find" data-id="${it.id}"><img src="${it.image}" alt="" draggable="false"></button>`).join('');
-  photoRoot().innerHTML=`${barHTML('👂')}<div class="phFindTop"><button type="button" class="phFindSay" data-act="findSay" aria-label="again">🔊</button><span class="phFindDots">${'●'.repeat(PUZ.got)}${'○'.repeat(Math.max(0,5-PUZ.got))}</span></div><div class="phChoices phFind">${opts}</div>`;
+  photoRoot().innerHTML=`${barHTML('👂')}<div class="phFindTop"><button type="button" class="phFindSay" data-act="findSay" aria-label="again">🔊</button><span class="phFindDots">${'●'.repeat(PUZ.got)}${'○'.repeat(Math.max(0,5-PUZ.got))}</span></div><div class="phChoices phFind${PUZ.opts.length>4?' six':''}">${opts}</div>`;
 }
 function findAnswer(id,btn){
   if(!PUZ||PUZ.locked||PH.screen!=='hide')return;
@@ -391,6 +392,7 @@ function findAnswer(id,btn){
   PUZ.locked=true;btn.classList.add('phGood');
   photoRoot().querySelectorAll('.phChoice').forEach(c=>{if(c!==btn)c.classList.add('phDim');});
   if(typeof award==='function')award(PUZ.miss?1:0);
+  adapt('find',3,PUZ.miss===0);practice('find:'+PH.kind,PUZ.item.id,partNames(PUZ.item)[lang].full,PUZ.miss===0);
   [523,659,784].forEach((f,i)=>beep(f,i*0.07,0.15,'triangle',0.15));
   const item=PUZ.item,got=PUZ.got,f=photoFact(item);
   photoSeq([photoYay()+' '+partNames(item)[lang].full+'!',f&&f[lang]],lang,()=>{
