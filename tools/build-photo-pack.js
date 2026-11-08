@@ -36,7 +36,7 @@ function webps(dir) {
     .map(f => './' + dir + '/' + f);
 }
 let sw = fs.readFileSync(path.join(root, 'sw.js'), 'utf8');
-sw = sw.replace(/const CACHE='explorer-v\d+';/, "const CACHE='explorer-v55';");
+sw = sw.replace(/const CACHE='explorer-v\d+';/, "const CACHE='explorer-v59';");
 for (const dir of ['animals', 'people', 'vehicles', 'babies', 'body']) {
   const re = new RegExp('\\.\\.\\.\\["\\./' + dir + '/[^\\]]+\\]');
   if (!re.test(sw)) throw new Error('missing picture list for ' + dir);

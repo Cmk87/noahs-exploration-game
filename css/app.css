@@ -871,6 +871,16 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .phNow .phName{flex:1;margin:0;text-align:left;color:#132048;text-shadow:none;font-size:min(5.4vw,26px)}
 .phNow .phLangs{margin:0;flex:0 0 auto}
 .phNow .phLang{min-width:48px;min-height:48px;background:#F4F1EA;box-shadow:0 3px 0 rgba(10,14,55,.18)}
+#v-body{align-items:stretch}
+#v-body.on>.phZoom{flex:1 1 auto;min-height:240px;align-self:stretch}
+.phZoom{position:relative;flex:1 1 auto;min-height:240px;width:100%;overflow:hidden;touch-action:none;background:#E5F3FC;user-select:none}
+.phMap{position:absolute;left:0;top:0;width:100%;transform-origin:0 0;touch-action:none}
+.phMap svg{width:100%;height:auto;display:block;pointer-events:none;aspect-ratio:600/1120}
+.phHot{position:absolute;border:none;padding:0;margin:0;border-radius:18px;background:transparent;cursor:pointer;touch-action:none}
+.phHot.on{background:rgba(255,225,74,.38);box-shadow:inset 0 0 0 4px #FFE14A}
+.phZoomBtns{display:flex;gap:10px;justify-content:center;width:100%;padding:8px 12px 10px;flex:0 0 auto}
+.phZoomBtns button{width:76px;height:64px;border:none;border-radius:18px;background:#fff;font-size:30px;line-height:1;cursor:pointer;box-shadow:var(--lift),var(--soft)}
+.phZoomBtns button:active{transform:translateY(3px)}
 .phAn.on{box-shadow:0 0 0 6px #FFE14A,0 8px 16px rgba(0,0,0,.35)}
 .phTools{display:flex;gap:10px;width:100%;padding:2px 12px 10px;justify-content:center}
 .phTool{flex:1;max-width:140px;height:76px;border:none;border-radius:22px;background:#fff;font-size:40px;line-height:1;
