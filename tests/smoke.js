@@ -375,20 +375,14 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    check(r.ok && r.ends === 10, `jobs: a "who helps?" answer, and all ${r.ends}/10 job games finished`);}
 
   console.log('Parent gate');
-  await page.evaluate(() => document.getElementById('gearBtn').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true })));
-  await page.waitForTimeout(1200);
-  const sum = await page.evaluate(() => { const q = document.querySelector('#grown.on .grownQ'); return q ? q.textContent : ''; });
-  const parts = sum.match(/(\d+)\s*×\s*(\d+)/);
-  check(!!parts, 'holding the gear asks a grown-up sum before parent settings');
-  await page.evaluate(() => { const b = [...document.querySelectorAll('#grown .grownKeys button')].find(x => x.textContent === '1'); b.click();
-    [...document.querySelectorAll('#grown .grownKeys button')].find(x => x.textContent === '✓').click(); });
-  check(await page.evaluate(() => !!document.querySelector('#grown.on') && activeTab !== 'parent'), 'a wrong sum does not open parent settings');
-  if (parts) {
-    const digits = String(Number(parts[1]) * Number(parts[2]));
-    for (const d of digits) await page.evaluate(d => [...document.querySelectorAll('#grown .grownKeys button')].find(x => x.textContent === d).click(), d);
-    await page.evaluate(() => [...document.querySelectorAll('#grown .grownKeys button')].find(x => x.textContent === '✓').click());
-  }
-  check(await page.evaluate(() => activeTab === 'parent' && !document.querySelector('#grown.on')), 'the right sum opens parent settings');
+  // a short press only shows the tip; holding the gear for 4 seconds opens the parent section
+  const gear = (ev) => page.evaluate(ev => document.getElementById('gearBtn').dispatchEvent(new PointerEvent(ev, { bubbles: true, cancelable: true })), ev);
+  await page.evaluate(() => showTab('home'));
+  await gear('pointerdown'); await page.waitForTimeout(1500); await gear('pointerup');
+  check(await page.evaluate(() => activeTab !== 'parent' && $('gearTip').classList.contains('on')), 'a short press on the gear only shows "hold for 4 seconds"');
+  await gear('pointerdown'); await page.waitForTimeout(4300);
+  check(await page.evaluate(() => activeTab === 'parent'), 'holding the gear for 4 seconds opens parent settings');
+  await gear('pointerup');
 
   // photo books: habitats, a full-screen animal, people, both mini-games, passport stamps
   {const photo = await page.evaluate(async () => {

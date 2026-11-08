@@ -376,13 +376,14 @@ function grownAsk(){
 }
 (function(){
   const g=document.getElementById('gearBtn');
-  // a parent HOLDS it for one second (the ring fills); a quick tap from a child just shows "hold"
+  // a parent HOLDS it for four seconds (the ring fills) to open the parent section; a shorter press just shows "hold".
+  // (No sum to solve any more: four seconds of holding still is enough to keep a four-year-old out.)
   let timer=null,raf=null,t0=0;
-  const fill=()=>{const p=Math.min(100,(performance.now()-t0)/10);g.style.setProperty('--hold',p+'%');if(p<100)raf=requestAnimationFrame(fill);};
-  const start=()=>{t0=performance.now();fill();timer=setTimeout(()=>{stop();ac();grownAsk();},1000);};
+  const fill=()=>{const p=Math.min(100,(performance.now()-t0)/40);g.style.setProperty('--hold',p+'%');if(p<100)raf=requestAnimationFrame(fill);};
+  const start=()=>{t0=performance.now();fill();timer=setTimeout(()=>{stop();ac();showTab('parent');},4000);};
   const stop=()=>{clearTimeout(timer);cancelAnimationFrame(raf);
-    if(performance.now()-t0<900&&activeTab!=='parent'){const tip=$('gearTip');
-      tip.textContent={es:'⚙ Mantén pulsado (padres)',en:'⚙ Press and hold (parents)',de:'⚙ Gedrückt halten (Eltern)'}[lang];
+    if(performance.now()-t0<3900&&activeTab!=='parent'){const tip=$('gearTip');
+      tip.textContent={es:'⚙ Mantén pulsado 4 segundos (padres)',en:'⚙ Press and hold for 4 seconds (parents)',de:'⚙ 4 Sekunden gedrückt halten (Eltern)'}[lang];
       tip.classList.add('on');clearTimeout(tip._t);tip._t=setTimeout(()=>tip.classList.remove('on'),1600);}
     g.style.setProperty('--hold','0%');};
   g.addEventListener('pointerdown',e=>{e.preventDefault();start();});
