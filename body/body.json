@@ -2132,6 +2132,491 @@
      "de": "Deine Zehen helfen dir, das Gleichgewicht zu halten und dich beim Gehen abzustoßen."
     }
    ]
+  },
+  {
+   "id": "jaw",
+   "group": "bones",
+   "image": "body/skeleton.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "jaw",
+     "full": "the jaw"
+    },
+    "es": {
+     "article": "la",
+     "noun": "mandíbula",
+     "full": "la mandíbula",
+     "gender": "f"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Kiefer",
+     "full": "der Kiefer",
+     "gender": "m"
+    }
+   },
+   "diagram": true,
+   "facts": [
+    {
+     "en": "Your jaw is the bone that opens and closes when you talk and chew.",
+     "es": "Tu mandíbula es el hueso que se abre y se cierra cuando hablas y masticas.",
+     "de": "Dein Kiefer ist der Knochen, der sich öffnet und schließt, wenn du sprichst und kaust."
+    },
+    {
+     "en": "It holds your bottom teeth.",
+     "es": "Sujeta tus dientes de abajo.",
+     "de": "Er hält deine unteren Zähne."
+    }
+   ]
+  },
+  {
+   "id": "collarbone",
+   "group": "bones",
+   "image": "body/skeleton.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "collarbone",
+     "full": "the collarbone"
+    },
+    "es": {
+     "article": "la",
+     "noun": "clavícula",
+     "full": "la clavícula",
+     "gender": "f"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Schlüsselbein",
+     "full": "das Schlüsselbein",
+     "gender": "n"
+    }
+   },
+   "diagram": true,
+   "facts": [
+    {
+     "en": "Your collarbone runs along the top of your chest, from your neck to your shoulder.",
+     "es": "Tu clavícula va por arriba del pecho, desde el cuello hasta el hombro.",
+     "de": "Dein Schlüsselbein verläuft oben an der Brust, vom Hals bis zur Schulter."
+    },
+    {
+     "en": "You can feel it just under your skin.",
+     "es": "Puedes notarla justo debajo de la piel.",
+     "de": "Du kannst es direkt unter der Haut fühlen."
+    }
+   ]
+  },
+  {
+   "id": "pelvis",
+   "group": "bones",
+   "image": "body/skeleton.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "pelvis",
+     "full": "the pelvis"
+    },
+    "es": {
+     "article": "la",
+     "noun": "pelvis",
+     "full": "la pelvis",
+     "gender": "f"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Becken",
+     "full": "das Becken",
+     "gender": "n"
+    }
+   },
+   "diagram": true,
+   "facts": [
+    {
+     "en": "Your pelvis is the bowl of bone at your hips.",
+     "es": "Tu pelvis es el cuenco de hueso de las caderas.",
+     "de": "Dein Becken ist die Knochenschale an deinen Hüften."
+    },
+    {
+     "en": "Your thigh bones join onto it, and it holds you when you sit.",
+     "es": "Tus fémures se unen a ella, y te sostiene cuando te sientas.",
+     "de": "Deine Oberschenkelknochen setzen dort an, und es trägt dich beim Sitzen."
+    }
+   ]
+  },
+  {
+   "id": "humerus",
+   "group": "bones",
+   "image": "body/skeleton.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "upper arm bone",
+     "full": "the upper arm bone"
+    },
+    "es": {
+     "article": "el",
+     "noun": "húmero",
+     "full": "el húmero",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Oberarmknochen",
+     "full": "der Oberarmknochen",
+     "gender": "m"
+    }
+   },
+   "diagram": true,
+   "facts": [
+    {
+     "en": "The upper arm bone is the long bone between your shoulder and your elbow.",
+     "es": "El húmero es el hueso largo entre el hombro y el codo.",
+     "de": "Der Oberarmknochen ist der lange Knochen zwischen Schulter und Ellbogen."
+    },
+    {
+     "en": "Your arm muscles pull on it when you lift something up.",
+     "es": "Los músculos del brazo tiran de él cuando levantas algo.",
+     "de": "Deine Armmuskeln ziehen an ihm, wenn du etwas hochhebst."
+    }
+   ]
+  },
+  {
+   "id": "shin",
+   "group": "bones",
+   "image": "body/skeleton.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "shin",
+     "full": "the shin"
+    },
+    "es": {
+     "article": "la",
+     "noun": "espinilla",
+     "full": "la espinilla",
+     "gender": "f"
+    },
+    "de": {
+     "article": "das",
+     "noun": "Schienbein",
+     "full": "das Schienbein",
+     "gender": "n"
+    }
+   },
+   "diagram": true,
+   "facts": [
+    {
+     "en": "Your shin is the bone at the front of your lower leg.",
+     "es": "La espinilla es el hueso de delante de la pierna, debajo de la rodilla.",
+     "de": "Das Schienbein ist der Knochen vorn am Unterschenkel."
+    },
+    {
+     "en": "It runs from your knee down to your ankle.",
+     "es": "Va desde la rodilla hasta el tobillo.",
+     "de": "Es reicht vom Knie bis zum Knöchel."
+    }
+   ]
+  },
+  {
+   "id": "neck-muscle",
+   "group": "muscles",
+   "image": "body/muscles.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "neck muscle",
+     "full": "the neck muscle"
+    },
+    "es": {
+     "article": "el",
+     "noun": "músculo del cuello",
+     "full": "el músculo del cuello",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Halsmuskel",
+     "full": "der Halsmuskel",
+     "gender": "m"
+    }
+   },
+   "diagram": true,
+   "facts": [
+    {
+     "en": "The muscles in your neck hold your head up.",
+     "es": "Los músculos del cuello sostienen tu cabeza.",
+     "de": "Die Halsmuskeln halten deinen Kopf oben."
+    },
+    {
+     "en": "They let you nod, shake your head and look around.",
+     "es": "Te dejan asentir, negar con la cabeza y mirar alrededor.",
+     "de": "Mit ihnen nickst du, schüttelst den Kopf und schaust dich um."
+    }
+   ]
+  },
+  {
+   "id": "chest-muscles",
+   "group": "muscles",
+   "image": "body/muscles.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "chest muscles",
+     "full": "the chest muscles"
+    },
+    "es": {
+     "article": "los",
+     "noun": "pectorales",
+     "full": "los pectorales",
+     "gender": "m",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Brustmuskeln",
+     "full": "die Brustmuskeln",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "diagram": true,
+   "facts": [
+    {
+     "en": "Your chest muscles sit across the top of your chest.",
+     "es": "Los pectorales están en la parte de arriba del pecho.",
+     "de": "Deine Brustmuskeln liegen oben auf der Brust."
+    },
+    {
+     "en": "They help you hug, push and bring your arms forward.",
+     "es": "Te ayudan a abrazar, empujar y llevar los brazos hacia delante.",
+     "de": "Sie helfen dir beim Umarmen, Schieben und wenn du die Arme nach vorn nimmst."
+    }
+   ]
+  },
+  {
+   "id": "shoulder-muscle",
+   "group": "muscles",
+   "image": "body/muscles.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "shoulder muscle",
+     "full": "the shoulder muscle"
+    },
+    "es": {
+     "article": "el",
+     "noun": "músculo del hombro",
+     "full": "el músculo del hombro",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Schultermuskel",
+     "full": "der Schultermuskel",
+     "gender": "m"
+    }
+   },
+   "diagram": true,
+   "facts": [
+    {
+     "en": "Your shoulder muscle sits over the top of your shoulder.",
+     "es": "El músculo del hombro está encima del hombro.",
+     "de": "Dein Schultermuskel liegt oben auf der Schulter."
+    },
+    {
+     "en": "It helps you lift your arm up high.",
+     "es": "Te ayuda a levantar el brazo bien alto.",
+     "de": "Er hilft dir, den Arm hochzuheben."
+    }
+   ]
+  },
+  {
+   "id": "forearm-muscles",
+   "group": "muscles",
+   "image": "body/muscles.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "forearm muscles",
+     "full": "the forearm muscles"
+    },
+    "es": {
+     "article": "los",
+     "noun": "músculos del antebrazo",
+     "full": "los músculos del antebrazo",
+     "gender": "m",
+     "number": "pl"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Unterarmmuskeln",
+     "full": "die Unterarmmuskeln",
+     "gender": "pl",
+     "number": "pl"
+    }
+   },
+   "diagram": true,
+   "facts": [
+    {
+     "en": "The muscles in your forearm move your wrist and fingers.",
+     "es": "Los músculos del antebrazo mueven la muñeca y los dedos.",
+     "de": "Die Unterarmmuskeln bewegen dein Handgelenk und deine Finger."
+    },
+    {
+     "en": "You use them when you draw, wave and pick up a cup.",
+     "es": "Los usas cuando dibujas, saludas y coges un vaso.",
+     "de": "Du benutzt sie beim Malen, Winken und wenn du einen Becher nimmst."
+    }
+   ]
+  },
+  {
+   "id": "thigh-muscle",
+   "group": "muscles",
+   "image": "body/muscles.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "thigh muscle",
+     "full": "the thigh muscle"
+    },
+    "es": {
+     "article": "el",
+     "noun": "músculo del muslo",
+     "full": "el músculo del muslo",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Oberschenkelmuskel",
+     "full": "der Oberschenkelmuskel",
+     "gender": "m"
+    }
+   },
+   "diagram": true,
+   "facts": [
+    {
+     "en": "Your thigh muscle is the big muscle at the front of your upper leg.",
+     "es": "El músculo del muslo es el músculo grande de delante de la pierna.",
+     "de": "Dein Oberschenkelmuskel ist der große Muskel vorn am Oberschenkel."
+    },
+    {
+     "en": "It straightens your knee when you walk, run and kick.",
+     "es": "Estira la rodilla cuando caminas, corres y das una patada.",
+     "de": "Er streckt dein Knie beim Gehen, Rennen und Treten."
+    }
+   ]
+  },
+  {
+   "id": "food-pipe",
+   "group": "tummy",
+   "image": "body/tummy.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "food pipe",
+     "full": "the food pipe"
+    },
+    "es": {
+     "article": "el",
+     "noun": "esófago",
+     "full": "el esófago",
+     "gender": "m"
+    },
+    "de": {
+     "article": "die",
+     "noun": "Speiseröhre",
+     "full": "die Speiseröhre",
+     "gender": "f"
+    }
+   },
+   "diagram": true,
+   "facts": [
+    {
+     "en": "Your food pipe is the tube from your mouth down to your stomach.",
+     "es": "El esófago es el tubo que va de la boca al estómago.",
+     "de": "Die Speiseröhre ist der Schlauch vom Mund bis zum Magen."
+    },
+    {
+     "en": "Its muscles squeeze the food along.",
+     "es": "Sus músculos empujan la comida hacia abajo.",
+     "de": "Ihre Muskeln schieben das Essen weiter."
+    }
+   ]
+  },
+  {
+   "id": "neck",
+   "group": "touch",
+   "image": "body/head.webp",
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "neck",
+     "full": "the neck"
+    },
+    "es": {
+     "article": "el",
+     "noun": "cuello",
+     "full": "el cuello",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Hals",
+     "full": "der Hals",
+     "gender": "m"
+    }
+   },
+   "diagram": true,
+   "facts": [
+    {
+     "en": "Your neck joins your head to your body.",
+     "es": "El cuello une la cabeza con el cuerpo.",
+     "de": "Dein Hals verbindet den Kopf mit dem Körper."
+    },
+    {
+     "en": "You can touch it when you swallow or turn your head.",
+     "es": "Puedes tocarlo cuando tragas o giras la cabeza.",
+     "de": "Du kannst ihn anfassen, wenn du schluckst oder den Kopf drehst."
+    }
+   ]
+  },
+  {
+   "id": "forearm",
+   "group": "bones",
+   "image": "body/skeleton.webp",
+   "diagram": true,
+   "names": {
+    "en": {
+     "article": "the",
+     "noun": "forearm",
+     "full": "the forearm"
+    },
+    "es": {
+     "article": "el",
+     "noun": "antebrazo",
+     "full": "el antebrazo",
+     "gender": "m"
+    },
+    "de": {
+     "article": "der",
+     "noun": "Unterarm",
+     "full": "der Unterarm",
+     "gender": "m"
+    }
+   },
+   "facts": [
+    {
+     "en": "Your forearm is the part of your arm between the elbow and the hand.",
+     "es": "El antebrazo es la parte del brazo entre el codo y la mano.",
+     "de": "Dein Unterarm ist der Teil des Arms zwischen Ellbogen und Hand."
+    },
+    {
+     "en": "It lets you turn your hand over to wave or hold a cup.",
+     "es": "Te permite girar la mano para saludar o sujetar un vaso.",
+     "de": "Mit ihm drehst du die Hand, um zu winken oder einen Becher zu halten."
+    }
+   ]
   }
  ]
 }

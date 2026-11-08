@@ -563,7 +563,7 @@ function bodyPass(){
 /* ---- Listen and find: the voice says a name, he taps the right photo out of four.
    A wrong tap says what that one is (so even a miss teaches a word); after two
    misses the right one glows. A right answer: the name again and one fact. ---- */
-function findPool(){return PH.kind==='v'?PHOTO_PACK.vehicles:PH.kind==='t'?(PHOTO_PACK.things||[]):PH.kind==='y'?(PHOTO_PACK.body||[]):PH.kind==='a'?PHOTO_PACK.animals:PHOTO_PACK.people;}
+function findPool(){return PH.kind==='v'?PHOTO_PACK.vehicles:PH.kind==='t'?(PHOTO_PACK.things||[]):PH.kind==='y'?(PHOTO_PACK.body||[]).filter(x=>!x.diagram):PH.kind==='a'?PHOTO_PACK.animals:PHOTO_PACK.people;}
 function findPlural(item){
   const n=partNames(item)[lang];
   if(n&&n.number==='sg')return false;

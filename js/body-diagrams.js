@@ -1,27 +1,35 @@
-/* Circles on the original category picture. x and y are the centre of the
-   circle, as a percentage of that picture, so they stay on the part when
-   the picture is scaled or moved. Only parts that can be seen on the
-   picture are listed. The picture file is the group's own cover. */
+/* Circles on the original category picture. x and y are the centre, as a
+   percentage of that picture, so they stay on the part when it is zoomed
+   or moved. One circle per part, only where that part is actually visible.
+   The picture file is the group's own cover. */
 const BODY_DIAGRAMS = {
   bones: {
     image: 'body/skeleton.webp',
     spots: [
-      { id: 'skull', x: 50, y: 16 },
-      { id: 'ribs', x: 42, y: 37 },
+      { id: 'skull', x: 50, y: 11 },
+      { id: 'jaw', x: 50, y: 21 },
+      { id: 'collarbone', x: 45, y: 30 },
+      { id: 'humerus', x: 39, y: 42 },
+      { id: 'ribs', x: 56, y: 36 },
       { id: 'spine', x: 50, y: 45 },
-      { id: 'femur', x: 43, y: 66 },
-      { id: 'femur', x: 57, y: 66 }
+      { id: 'forearm', x: 36, y: 52 },
+      { id: 'pelvis', x: 46, y: 54 },
+      { id: 'femur', x: 45, y: 66 },
+      { id: 'shin', x: 43, y: 80 }
     ]
   },
   muscles: {
     image: 'body/muscles.webp',
     spots: [
-      { id: 'smile', x: 50, y: 25 },
-      { id: 'biceps', x: 39, y: 49 },
-      { id: 'biceps', x: 61, y: 49 },
-      { id: 'tummy-muscles', x: 50, y: 51 },
-      { id: 'calf', x: 43, y: 78 },
-      { id: 'calf', x: 57, y: 78 }
+      { id: 'smile', x: 50, y: 30 },
+      { id: 'neck-muscle', x: 50, y: 40 },
+      { id: 'shoulder-muscle', x: 33, y: 36 },
+      { id: 'chest-muscles', x: 60, y: 43 },
+      { id: 'biceps', x: 42, y: 46 },
+      { id: 'tummy-muscles', x: 50, y: 54 },
+      { id: 'forearm-muscles', x: 66, y: 54 },
+      { id: 'thigh-muscle', x: 46, y: 64 },
+      { id: 'calf', x: 44, y: 81 }
     ]
   },
   heart: {
@@ -35,24 +43,25 @@ const BODY_DIAGRAMS = {
     image: 'body/breathing.webp',
     spots: [
       { id: 'windpipe', x: 50, y: 38 },
-      { id: 'lungs', x: 43, y: 48 },
-      { id: 'lungs', x: 57, y: 48 }
+      { id: 'lungs', x: 43, y: 48 }
     ]
   },
   brain: {
     image: 'body/nerves.webp',
     spots: [
       { id: 'brain', x: 50, y: 14 },
-      { id: 'spinal-cord', x: 50, y: 42 }
+      { id: 'spinal-cord', x: 50, y: 42 },
+      { id: 'nerves', x: 36, y: 52 }
     ]
   },
   tummy: {
     image: 'body/tummy.webp',
     spots: [
       { id: 'mouth', x: 50, y: 27 },
-      { id: 'liver', x: 44, y: 50 },
-      { id: 'stomach', x: 55, y: 47 },
-      { id: 'intestines', x: 50, y: 56 }
+      { id: 'food-pipe', x: 50, y: 38 },
+      { id: 'liver', x: 42, y: 50 },
+      { id: 'stomach', x: 58, y: 48 },
+      { id: 'intestines', x: 50, y: 58 }
     ]
   },
   senses: {
@@ -75,14 +84,12 @@ const BODY_DIAGRAMS = {
   touch: {
     image: 'body/head.webp',
     spots: [
-      { id: 'hand', x: 46, y: 14 },
-      { id: 'hand', x: 55, y: 14 },
+      { id: 'hand', x: 50, y: 14 },
       { id: 'head', x: 50, y: 26 },
       { id: 'elbow', x: 22, y: 29 },
-      { id: 'elbow', x: 78, y: 29 },
-      { id: 'arm', x: 32, y: 24 },
-      { id: 'shoulders', x: 38, y: 37 },
-      { id: 'shoulders', x: 62, y: 37 }
+      { id: 'arm', x: 33, y: 25 },
+      { id: 'neck', x: 50, y: 36 },
+      { id: 'shoulders', x: 64, y: 37 }
     ]
   }
 };
