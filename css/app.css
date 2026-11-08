@@ -832,13 +832,14 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 /* prize menu with eight games: three per row (four on a sideways tablet), icons sized so the whole menu fits without scrolling */
 #gameGrid{grid-template-columns:repeat(6,1fr);gap:10px;max-width:520px;margin-top:10px}
 #gameGrid .gcard{grid-column:span 2;padding:8px 4px 10px}
-#gameGrid .gcard:nth-child(7){grid-column:2/span 2}
+#gameGrid .gcard:nth-child(7):nth-last-child(2){grid-column:2/span 2}   /* 8 games: the last two centred; 9 games fill three rows */
 #gameGrid .gi{font-size:min(14vw,64px,calc((100vh - 330px)/3*.5));font-size:min(14vw,64px,calc((100dvh - 330px)/3*.5))}
 #gameGrid .gl{font-size:min(4.6vw,22px)}
 #gameGrid .gc{font-size:10px;top:4px;right:4px;padding:0 5px}
 #lockIcon{font-size:min(24vw,110px,11vh);font-size:min(24vw,110px,11dvh)}
 @media (orientation:landscape) and (min-width:700px){
-  #gameGrid{grid-template-columns:repeat(4,1fr);max-width:760px}
+  #gameGrid{grid-template-columns:repeat(5,1fr);max-width:900px}
+  #gameGrid .gl{font-size:min(1.5vw,15px);letter-spacing:0}
   #gameGrid .gcard,#gameGrid .gcard:nth-child(7){grid-column:auto}
   #gameGrid .gi{font-size:min(8vw,72px,calc((100vh - 330px)/2*.5));font-size:min(8vw,72px,calc((100dvh - 330px)/2*.5))}
 }
@@ -971,3 +972,18 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 #repNote .nSec small,#repNote .nHead small{opacity:.7}
 #repNote .nChip{display:inline-block;background:#F1F3FA;border-radius:10px;padding:2px 8px;margin:4px 4px 0 0;font-size:13px}
 #repNote .nNone{opacity:.7;margin-top:6px}
+
+/* fireworks: colour buttons under the sky */
+#fwCols{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;width:min(calc(100% - 28px),470px)}
+.fwCol{width:min(12vw,50px);height:min(12vw,50px);border-radius:50%;border:4px solid var(--ink);box-shadow:3px 3px 0 var(--ink);cursor:pointer;padding:0;font-size:min(6vw,26px);line-height:1}
+.fwCol.fwRain{background:#fff}
+.fwCol.on{transform:scale(1.18);outline:4px solid #fff;outline-offset:2px}
+.fwCol.want{animation:fwWant .6s ease-in-out infinite alternate}
+@keyframes fwWant{from{box-shadow:3px 3px 0 var(--ink),0 0 0 0 rgba(255,255,255,.9)}to{box-shadow:3px 3px 0 var(--ink),0 0 0 9px rgba(255,255,255,.0)}}
+#fw.gameCv{width:min(calc(100% - 28px),calc((100vh - 300px)*.8),470px);width:min(calc(100% - 28px),calc((100dvh - 300px)*.8),470px)}
+/* cake: a square bakery counter, the tray below */
+#cakeCv.gameCv{aspect-ratio:1/1;width:min(calc(100% - 28px),calc(100vh - 340px),440px);width:min(calc(100% - 28px),calc(100dvh - 340px),440px);touch-action:none}
+.cakeBit.on{background:var(--bolt);transform:scale(1.08)}
+.cakeBit.want{animation:fwWant .6s ease-in-out infinite alternate}
+.cakeBit.cakeFlav{width:min(26vw,104px);height:min(26vw,104px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.cakeBit.cakeFlav small{font:800 min(3.4vw,15px) 'Baloo 2',system-ui,sans-serif;color:var(--ink)}

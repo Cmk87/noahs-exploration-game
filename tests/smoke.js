@@ -102,18 +102,38 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.waitForTimeout(900);
   check(await page.evaluate(p0 => power === p0, p0), 'guessing (3 misses) earns no points');
   await page.evaluate(() => { power = 400; savePower(); showTab('dig'); });
-  for (const g of ['dig', 'mem', 'bal', 'fw', 'bag', 'aq', 'fed', 'cake']) {
+  for (const g of ['dig', 'mem', 'bal', 'fw', 'bag', 'aq', 'fed', 'cake', 'rp']) {
     await page.evaluate(g => { showDigLock(); startGame(g); }, g);
     await page.waitForTimeout(300);
-    check(await page.evaluate(g => pane === { dig: 'digPlay', mem: 'memPlay', bal: 'balPlay', fw: 'fwPlay', bag: 'bagPlay', aq: 'aqPlay', fed: 'fedPlay', cake: 'cakePlay' }[g], g), `prize game starts: ${g}`);
+    check(await page.evaluate(g => pane === { dig: 'digPlay', mem: 'memPlay', bal: 'balPlay', fw: 'fwPlay', bag: 'bagPlay', aq: 'aqPlay', fed: 'fedPlay', cake: 'cakePlay', rp: 'rpPlay' }[g], g), `prize game starts: ${g}`);
   }
   await page.evaluate(() => { power = 160; savePower(); showDigLock(); startGame('fed');
     [...document.querySelectorAll('#fedAnimals .fedAn')].find((b, i) => FED.opts[i] !== FED.want).click(); });
   check(await page.evaluate(() => FED && FED.n === 0), 'feeding the wrong animal does not end the round');
   await page.evaluate(() => [...document.querySelectorAll('#fedAnimals .fedAn')].find((b, i) => FED.opts[i] === FED.want).click());
   check(await page.evaluate(() => FED && FED.n === 1), 'feeding the animal he heard counts');
-  await page.evaluate(() => { showDigLock(); startGame('cake'); document.querySelector('#cakeTray .cakeBit').click(); });
-  check(await page.evaluate(() => CAKE && CAKE.n === 1 && $('cakePile').children.length === 1), 'a cake topping lands on the cake');
+  // cake: pick a cake, rub the cream on, then a topping lands where he taps
+  {const r = await page.evaluate(() => {
+     const p0 = power; power = 999; savePower(); showDigLock(); startGame('cake'); document.querySelectorAll('#cakeTray .cakeBit')[0].click(); power = p0; savePower();
+     const picked = CAKE.st === 'ice';
+     for (let y = 0.34; y < 0.86; y += 0.03) for (let x = 0.16; x < 0.86; x += 0.03) cakeRub(x, y);
+     const creamed = CAKE.st === 'top';
+     cakePlace(0.5, 0.7);
+     return { picked, creamed, placed: CAKE.placed.length === 1 };
+   });
+   check(r.picked && r.creamed && r.placed, 'cake: pick a cake, cream it, and a topping lands on it ' + JSON.stringify(r));}
+  // fireworks: wild tapping only gets 5 rockets out at once (the launcher reloads)
+  {const n = await page.evaluate(() => { const p0 = power; power = 999; showDigLock(); startGame('fw'); power = p0; savePower(); const r = $('fw').getBoundingClientRect();
+     for (let i = 0; i < 20; i++) $('fw').dispatchEvent(new PointerEvent('pointerdown', { clientX: r.left + r.width / 2, clientY: r.top + r.height / 3, bubbles: true }));
+     return FW.shots; });
+   check(n === 5, 'fireworks: 20 quick taps launch the 5 rockets that are loaded, not 20 (' + n + ')');}
+  // caterpillar: it crawls to where he touches and eats the fruit there
+  {const r = await page.evaluate(async () => {
+     const p0 = power; power = 999; showDigLock(); startGame('rp'); power = p0; savePower(); const f = RP.fruits[0]; RP.tgt = [f.x, f.y]; const e0 = RP.eaten;
+     for (let i = 0; i < 60 && RP.eaten === e0; i++) { RP.tgt = [f.x, f.y]; await new Promise(res => setTimeout(res, 100)); }
+     return { ate: RP.eaten === e0 + 1, longer: RP.len === 5 };
+   });
+   check(r.ate && r.longer, 'caterpillar: crawls to the finger, eats the fruit and grows ' + JSON.stringify(r));}
   await page.evaluate(() => { showDigLock(); startGame('aq'); });
   await page.waitForTimeout(500);
   check(await page.evaluate(() => pane === 'aqPlay' && AQ && AQ.fish.length > 0), 'aquarium fish swim in');
