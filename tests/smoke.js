@@ -573,7 +573,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const ids = [...document.querySelectorAll('#v-body .phHab')].map(b => b.dataset.id);
      const lazy = [...document.querySelectorAll('#v-body .phHab img')].every(img => img.getAttribute('loading') === 'lazy');
      document.querySelector('#v-body .phHab[data-id="bones"]').click();
-     const diagram = !!document.querySelector('#v-body .phMap svg') && !document.querySelector('#v-body .phAn');
+     const diagram = !!document.querySelector('#v-body .phMap img[src="body/skeleton.webp"]') && !document.querySelector('#v-body .phAn') && !document.querySelector('#v-body .phMap svg');
      const skull = document.querySelector('#v-body .phHot[data-id="skull"]');
      if (skull) skull.click();
      const sk = PHOTO_PACK.body.find(x => x.id === 'skull');

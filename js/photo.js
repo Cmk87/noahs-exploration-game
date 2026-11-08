@@ -405,8 +405,8 @@ function bodyFocus(id){
   const hot=photoRoot()&&photoRoot().querySelector(`.phHot[data-id="${id}"]`);
   const m=bodyMetrics();if(!hot||!m)return;
   BV.k=Math.min(BV.fit*3.2,BV.fit*5);
-  const px=(parseFloat(hot.style.left)+parseFloat(hot.style.width)/2)/100*m.sw;
-  const py=(parseFloat(hot.style.top)+parseFloat(hot.style.height)/2)/100*m.sh;
+  const px=parseFloat(hot.style.left)/100*m.sw;
+  const py=parseFloat(hot.style.top)/100*m.sh;
   BV.x=m.bw/2-px*BV.k;BV.y=m.bh/2-py*BV.k;
   bodyClamp();bodyApply();
 }
@@ -481,13 +481,14 @@ function renderBodyMap(){
   const d=BODY_DIAGRAMS[PH.grp];
   const root=photoRoot();
   if(!d){root.innerHTML=barHTML(meta?meta.emoji:'');return;}
+  const hero=bodyItems(PH.grp).find(x=>x.overview)||bodyItems(PH.grp)[0];
   const spots=d.spots.map(s=>{
     const item=(PHOTO_PACK.body||[]).find(x=>x.id===s.id);
     const label=item?item.names[lang].full:s.id;
     const on=PH.playId===s.id;
-    return `<button type="button" class="phHot${on?' on':''}" data-act="part" data-id="${s.id}" style="left:${s.x}%;top:${s.y}%;width:${s.w}%;height:${s.h}%" aria-label="${photoEsc(label)}" aria-pressed="${on?'true':'false'}"></button>`;
+    return `<button type="button" class="phHot${on?' on':''}" data-act="part" data-id="${s.id}" style="left:${s.x}%;top:${s.y}%" aria-label="${photoEsc(label)}" aria-pressed="${on?'true':'false'}"></button>`;
   }).join('');
-  root.innerHTML=`<div class="phHead">${barHTML(meta?meta.emoji:'')}<div class="phNow" id="phNow"></div></div><div class="phZoom" id="phZoom"><div class="phMap" id="phMap">${d.svg}${spots}</div></div><div class="phZoomBtns"><button type="button" data-act="zout" aria-label="smaller">➖</button><button type="button" data-act="zfit" aria-label="whole">⤢</button><button type="button" data-act="zin" aria-label="bigger">➕</button></div>`;
+  root.innerHTML=`<div class="phHead">${barHTML(meta?meta.emoji:'')}<div class="phNow" id="phNow"></div></div><div class="phZoom" id="phZoom"><div class="phMap" id="phMap"><img src="${hero.image}" alt="" draggable="false">${spots}</div></div><div class="phZoomBtns"><button type="button" data-act="zout" aria-label="smaller">➖</button><button type="button" data-act="zfit" aria-label="whole">⤢</button><button type="button" data-act="zin" aria-label="bigger">➕</button></div>`;
   const item=PH.playId&&(PHOTO_PACK.body||[]).find(x=>x.id===PH.playId&&x.group===PH.grp);
   if(item)fillNow(item);else{PH.playId=null;fillGroupTitle();}
   const box=root.querySelector('#phZoom');

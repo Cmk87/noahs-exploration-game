@@ -21,7 +21,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     window.PHOTO_SAID = [];
     const prev = utter;
     utter = function () { PHOTO_SAID.push(String(arguments[0])); return prev.apply(null, arguments); };
-    const idsOk = Object.keys(BODY_DIAGRAMS).every(g => BODY_DIAGRAMS[g].spots.every(s => (PHOTO_PACK.body || []).some(b => b.id === s.id && b.group === g)));
+    const idsOk = Object.keys(BODY_DIAGRAMS).every(g => {
+      const items = (PHOTO_PACK.body || []).filter(b => b.group === g);
+      const hero = items.find(b => b.overview) || items[0];
+      return BODY_DIAGRAMS[g].image === hero.image && BODY_DIAGRAMS[g].spots.every(s => items.some(b => b.id === s.id));
+    });
     showTab('body');
     document.querySelector('#v-body .phHab[data-id="bones"]').click();
     await new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res)));
@@ -100,7 +104,8 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     document.querySelector('#v-body .phHot[data-id="skull"]').click();
     await new Promise(res => setTimeout(res, 40));
     const afterDrag = PHOTO_SAID.includes(skull.names.de.full);
-    const onePicture = !!document.querySelector('#v-body .phMap svg') && !document.querySelector('#v-body .phGrid');
+    const pic = document.querySelector('#v-body .phMap img');
+    const onePicture = !!(pic && pic.getAttribute('src') === 'body/skeleton.webp' && !document.querySelector('#v-body .phGrid') && !document.querySelector('#v-body svg'));
     const groups = document.querySelectorAll('#v-body .phHab').length;
     return { idsOk, aligned, before, after, quiet, dragClickSilent, said, saidNext, saidEn, btnAligned, saidMuscle, once, pinchQuiet, afterDrag, onePicture, groups };
   });
