@@ -635,6 +635,21 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    });
    check(r.back >= 3 && r.back <= 4, 'a missed word comes back 2–3 rounds later' + (r.back >= 3 && r.back <= 4 ? '' : ' ' + JSON.stringify(r)));
    check(r.inNote, 'the weekly note in the parent section lists what he still finds hard');}
+  // the map: the space station has its own name (not just "space"), and a tap only comes a little closer
+  {const r = await page.evaluate(async () => {
+     const fr = () => new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res)));
+     showTab('city'); await fr(); if (CITY.FIND()) document.getElementById('cFind').click();   // an earlier check left the find game on
+     Object.assign(CITY.CAM, CITY.viewOf(3150, -3600, 3450, -3300, 1)); await fr();
+     const hits = CITY.HITS(), at = (x, y) => { let best = null; for (const h of hits) { const b = h.b; if (x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3]) { const a = (b[2] - b[0]) * (b[3] - b[1]); if (!best || a < best.a) best = { id: h.id, a }; } } return best && best.id; };
+     const station = at(3300, -3450);
+     Object.assign(CITY.CAM, CITY.worldView()); await fr();   // zoomed right out
+     const k0 = CITY.CAM.k, b = CITY.ENT.bakery.at, [sx, sy] = CITY.toScreen((b[0] + b[2]) / 2, (b[1] + b[3]) / 2);
+     CITY.tapAt(sx, sy); await new Promise(res => setTimeout(res, 1300));
+     const ratio = CITY.CAM.k / k0; showTab('home');
+     return { station, ratio };
+   });
+   check(r.station === 'spacestation', 'tapping the space station names the space station' + (r.station === 'spacestation' ? '' : ' (got ' + r.station + ')'));
+   check(r.ratio > 1.05 && r.ratio <= 1.55, 'a tap on the map zooms in only a little (at most 1.5×)' + ' ' + r.ratio.toFixed(2));}
   {const bad = await page.evaluate(() => JSON.parse(sessionStorage.getItem('ALLSAID') || '[]').filter(t => /\[object|undefined|null/.test(t)));
    check(bad.length === 0, 'the voice never reads out "[object Object]", "undefined" or "null"' + (bad.length ? ': ' + bad.slice(0, 3).join(' | ') : ''));}
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));

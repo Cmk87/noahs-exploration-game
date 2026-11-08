@@ -111,7 +111,10 @@ ent('field','🌾',['das Feld','the field','el campo'],null,{find:1});
 ent('tractor','🚜',['der Traktor','the tractor','el tractor'],['Der Traktor! Brumm brumm!','The tractor! Brrm brrm!','¡El tractor! ¡Brum brum!'],{find:1});
 ent('road','🛣️',['die Straße','the road','la calle'],['Die Straße! Erst links und rechts schauen.','The road! Look left and right first.','¡La calle! Primero mira a los dos lados.']);
 ent('meadow','🌼',['die Wiese','the meadow','el prado'],null);
-ent('lamp','💡',['die Straßenlaterne','the street lamp','la farola'],null);
+ent('lamp','💡',['die Straßenlaterne','the street lamp','la farola'],['Die Straßenlaterne! Am Abend macht sie Licht.','The street lamp! It shines when it gets dark.','¡La farola! Da luz cuando se hace de noche.']);
+ent('bench','🪑',['die Parkbank','the park bench','el banco del parque'],['Die Parkbank! Hier kann man sich ausruhen.','The park bench! You can have a rest here.','¡El banco del parque! Aquí puedes descansar.']);
+ent('railbridge','🌉',['die Eisenbahnbrücke','the railway bridge','el puente del tren'],['Die Eisenbahnbrücke! Hier fährt der Zug über den Fluss.','The railway bridge! The train crosses the river here.','¡El puente del tren! Por aquí el tren cruza el río.']);
+ent('haybale','🌾',['der Heuballen','the hay bale','la paca de heno'],['Der Heuballen! Das ist Futter für die Kühe im Winter.','The hay bale! It is food for the cows in winter.','¡La paca de heno! Es comida para las vacas en invierno.']);
 ent('car','🚗',['das Auto','the car','el coche'],['Das Auto! Tut tut!','The car! Beep beep!','¡El coche! ¡Pi pi!']);
 ent('bus','🚌',['der Bus','the bus','el autobús'],['Der Bus! Alle einsteigen!','The bus! All aboard!','¡El autobús! ¡Todos arriba!']);
 ent('firetruck','🚒',['das Feuerwehrauto','the fire engine','el camión de bomberos'],['Das Feuerwehrauto! Tatütata!','The fire engine! Nee-naw!','¡El camión de bomberos! ¡Ninooo!']);
@@ -431,7 +434,7 @@ PIGEONS.forEach((p,i)=>S(p[1],[p[0]-30,p[1]-120,p[0]+30,p[1]+5],()=>{
     ln('#E8A33E',0.8,x-1,y-1,x-1,y+1);ln('#E8A33E',0.8,x+1,y-1,x+1,y+1);}
 }));
 [[296,732],[436,732]].forEach(([bx,by])=>S(by+6,[bx,by-16,bx+52,by+8],()=>{
-  rr(bx+2,by-2,4,8,1,'#6E4A33');rr(bx+44,by-2,4,8,1,'#6E4A33');rr(bx,by-6,52,5,2,'#B07A4E');rr(bx,by-14,52,4,2,'#C48A5A');rr(bx,by-20,52,4,2,'#C48A5A');}));
+  rr(bx+2,by-2,4,8,1,'#6E4A33');rr(bx+44,by-2,4,8,1,'#6E4A33');rr(bx,by-6,52,5,2,'#B07A4E');rr(bx,by-14,52,4,2,'#C48A5A');rr(bx,by-20,52,4,2,'#C48A5A');hit('bench',bx,by-20,bx+52,by+8,{small:1});}));
 /* post office + fire station */
 S(498,[556,380,742,512],()=>{
   const x=566,y=452,w=170,d=46,h=56,{Ye,Yr}=gableB(x,y,w,d,h,'#FFE27A','#3F6FD8'),base=y+d;
@@ -639,7 +642,7 @@ S(1412,[1050,1270,1160,1420],()=>{
 /* bridges: front railings sit in front of the traffic */
 S(829,[752,820,888,840],()=>{rr(756,824,128,5,2,'#FFFFFF');for(let px=760;px<=880;px+=12)rr(px,820,3,10,1,'#FFFFFF');hit('bridge',752,768,888,836);});
 S(1271,[760,1262,880,1278],()=>{rr(762,1266,116,6,2,'#C0473A');g.strokeStyle='#C0473A';g.lineWidth=1.6;g.beginPath();
-  for(let px=764;px<876;px+=14){g.moveTo(px,1266);g.lineTo(px+7,1272);g.lineTo(px+14,1266);}g.stroke();});
+  for(let px=764;px<876;px+=14){g.moveTo(px,1266);g.lineTo(px+7,1272);g.lineTo(px+14,1266);}g.stroke();hit('railbridge',760,1260,880,1280);});
 /* mountain with cave and sleeping bear */
 S(286,[870,-20,1240,300],()=>{
   const M=[[1000,48,880,1130],[1130,6,1000,1270]];
@@ -767,11 +770,11 @@ FARM.forEach((a,i)=>S(a.y,[a.x-26,a.y-34,a.x+26,a.y+4],()=>{
     poly('#F28E9A',-3,-4,-1,-8,1,-5);g.restore();}
   g.restore();hit(a.k,a.x-20,a.y-30,a.x+20,a.y+2,{small:1});
 }));
-S(1214,[1140,1196,1182,1216],()=>{rr(1146,1196,32,18,6,'#E8C25A');ln('#C9A040',1,1150,1200,1174,1200);ln('#C9A040',1,1150,1208,1174,1208);});
+S(1214,[1140,1196,1182,1216],()=>{rr(1146,1196,32,18,6,'#E8C25A');ln('#C9A040',1,1150,1200,1174,1200);ln('#C9A040',1,1150,1208,1174,1208);hit('haybale',1144,1194,1180,1216,{small:1});});
 S(1231,[886,1220,1200,1236],()=>{for(let px=890;px<=1196;px+=24)rr(px,1214,4,18,1,'#B07A4E');rr(888,1218,310,3,1,'#C48A5A');rr(888,1226,310,3,1,'#C48A5A');});
 /* street lamps */
 const LAMPS=[[205,850],[470,850],[700,850],[930,830],[1140,830],[300,428],[700,428],[200,330],[470,352],[300,770],[200,1120],[570,1185],[1000,830]];
-LAMPS.forEach(([x,y])=>S(y,[x-8,y-44,x+8,y+2],()=>{ell(x+2,y+1,5,2,'rgba(0,0,0,.18)');rr(x-1.5,y-38,3,38,1,'#4F5568');rr(x-5,y-44,10,8,[5,5,2,2],'#4F5568');
+LAMPS.forEach(([x,y])=>S(y,[x-8,y-44,x+8,y+2],()=>{ell(x+2,y+1,5,2,'rgba(0,0,0,.18)');rr(x-1.5,y-38,3,38,1,'#4F5568');rr(x-5,y-44,10,8,[5,5,2,2],'#4F5568');hit('lamp',x-8,y-44,x+8,y+2,{small:1});
   circ(x,y-38,3.2,NIGHT>0.3?'#FFF3B0':'#E9ECF2');LIGHTS.push(x,y-36,46,'#FFE9A0');}));
 
 /* =============================================================
@@ -1118,7 +1121,8 @@ function trigger(id,b,x,y,ref){
     else line+=leftLine();}
   if(line)say(line);
   bubble(e,b,ref&&ref.label);
-  if(CAM.k<kFit()*1.8){const cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,k=kFit()*2.8;flyTo({k,x:cx-VW/2/k,y:cy-VH/2/k});}}
+  // zoomed out: come a little closer (at most 1.5×), not so close that he wants to zoom out again
+  if(CAM.k<kFit()*1.5){const cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,k=Math.min(kFit()*1.6,CAM.k*1.5);flyTo({k,x:cx-VW/2/k,y:cy-VH/2/k});}}
 
 /* name bubble that follows its object */
 let BUB=null;
@@ -1280,6 +1284,6 @@ if(typeof cityEdge==='function')cityEdge(K);
 paws();
 if(document.fonts)document.fonts.load(FONT(20)).catch(()=>{});
 requestAnimationFrame(frame);
-window.CITY={newRound,round:()=>SAVE.round||1,done:()=>SAVE.done||0,total:()=>ANIMALS.length,animals:()=>ANIMALS.map(a=>a[0]),showAt,worldView,homeView,show,onLang,ENT,FOUND,HITS:()=>HITS,trigger,tapAt,toScreen:(x,y)=>[(x-CAM.x)*CAM.k,(y-CAM.y)*CAM.k],flyTo,viewOf,CAM,TRAIN,VEH,
+window.CITY={STATIC:()=>STATIC,newRound,round:()=>SAVE.round||1,done:()=>SAVE.done||0,total:()=>ANIMALS.length,animals:()=>ANIMALS.map(a=>a[0]),showAt,worldView,homeView,show,onLang,ENT,FOUND,HITS:()=>HITS,trigger,tapAt,toScreen:(x,y)=>[(x-CAM.x)*CAM.k,(y-CAM.y)*CAM.k],flyTo,viewOf,CAM,TRAIN,VEH,
   setNight:v=>{nightOn=v;NIGHT=v?1:0;},act,FIND:()=>FIND,findNext,callTrain};
 })();

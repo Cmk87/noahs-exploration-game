@@ -266,7 +266,8 @@ S(994,[3440,860,3640,1000],()=>{const x=3450,w=180,base=westFront(x,w,130,'#D9C2
 S(998,[3160,950,3200,1000],()=>{const T=TT();kid(3180,996,'#5A3A2A',SKIN[1],'#5A3A2A',1.4);rr(3170,966,20,4,2,'#3A2A20');rr(3174,958,12,9,3,'#3A2A20');star(3182,980,3,'#FFC928');});
 S(1030,[3070,990,3150,1032],()=>{rr(3080,1004,4,24,1,'#7A4E33');rr(3136,1004,4,24,1,'#7A4E33');rr(3078,1004,64,4,1,'#8A5A3B');
   const T=TT();flip(3112,1030,-1,()=>{[-11,-7,7,11].forEach(lx=>rr(lx-1.4,-13,2.8,13,1,'#5A3A2A'));ell(0,-16,15,7,'#8A5A3B');g.save();g.translate(11,-20);g.rotate(Math.sin(T*0.5)>0.3?1:-0.2);
-    rr(-3,-14,7,16,3,'#8A5A3B');ell(3,-16,7,4,'#8A5A3B');circ(1,-18,1,'#222');g.restore();rr(-6,-22,12,4,2,'#C0473A');});});
+    rr(-3,-14,7,16,3,'#8A5A3B');ell(3,-16,7,4,'#8A5A3B');circ(1,-18,1,'#222');g.restore();rr(-6,-22,12,4,2,'#C0473A');});hit('tiedhorse',3090,996,3134,1032,{small:1});});
+ent('tiedhorse','🐴',['das Pferd','the horse','el caballo'],['Das Pferd ist am Pfosten festgebunden und wartet auf seinen Cowboy.','The horse is tied to the post and waits for its cowboy.','El caballo está atado al poste y espera a su vaquero.']);
 S(1050,[3020,960,3120,1052],()=>{const T=TT(),t=fx('cowboy'),x=3060,y=1050,throwL=t<2;
   kid(x,y,'#3B7DE2',SKIN[2],'#5A3A2A',1.5);rr(x-11,y-34,22,4,2,'#8A5A3B');rr(x-6,y-42,12,9,3,'#8A5A3B');rr(x-7,y-8,6,8,1,'#2E4A7A');rr(x+1,y-8,6,8,1,'#2E4A7A');
   g.strokeStyle='#C9A060';g.lineWidth=1.6;
@@ -356,7 +357,8 @@ K.DYN.push(L=>{const T=TT();TUMB.forEach(tw=>{const b=Math.abs(Math.sin(T*3+tw.x
   L.push({y,f:()=>{ell(x,y,10*tw.s,3,'rgba(80,50,20,.18)');g.save();g.translate(x,y-12*tw.s-b);g.rotate(-x/12);g.strokeStyle='#A8844A';g.lineWidth=1.2;
     for(let k=0;k<7;k++){g.beginPath();g.ellipse(0,0,12*tw.s,8*tw.s,k/7*Math.PI,0,TAU);g.stroke();}g.restore();
     hit('tumbleweed',x-14,y-28,x+14,y+2,{moving:1,small:1});}});});});
-S(1580,[3600,1560,3650,1584],()=>{ell(3625,1576,12,6,'#F2EDE4');circ(3619,1574,2,'#5A4A3A');circ(3631,1574,2,'#5A4A3A');ln('#F2EDE4',2.4,3614,1572,3604,1564,3600,1568);ln('#F2EDE4',2.4,3636,1572,3646,1564,3650,1568);});
+S(1580,[3600,1560,3650,1584],()=>{ell(3625,1576,12,6,'#F2EDE4');circ(3619,1574,2,'#5A4A3A');circ(3631,1574,2,'#5A4A3A');ln('#F2EDE4',2.4,3614,1572,3604,1564,3600,1568);ln('#F2EDE4',2.4,3636,1572,3646,1564,3650,1568);hit('cowskull',3598,1558,3652,1586,{small:1});});
+ent('cowskull','🐄',['der Kuhschädel','the cow skull','el cráneo de vaca'],['Ein alter Kuhschädel in der Wüste. Hier ist es sehr heiß und trocken.','An old cow skull in the desert. It is very hot and dry here.','Un viejo cráneo de vaca en el desierto. Aquí hace mucho calor y está muy seco.']);
 
 /* =============================================================
    EGYPT where the mesas were: three pyramids (a mummy lives in the big one,

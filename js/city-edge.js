@@ -22,6 +22,7 @@ ent('sky','☁️',['der Himmel','the sky','el cielo'],['Der Himmel! Ganz hoch o
 ent('space','✨',['das Weltall','space','el espacio'],['Das Weltall! Hier sind die Sterne, der Mond und die Planeten.','Space! Here are the stars, the moon and the planets.','¡El espacio! Aquí están las estrellas, la luna y los planetas.']);
 ent('mars','🔴',['der Mars','Mars','Marte'],['Der Mars! Man nennt ihn den roten Planeten.','Mars! It is called the red planet.','¡Marte! Lo llaman el planeta rojo.'],{find:1});
 ent('saturn','🪐',['der Saturn','Saturn','Saturno'],['Der Saturn! Er hat wunderschöne Ringe aus Eis und Stein.','Saturn! It has beautiful rings made of ice and rock.','¡Saturno! Tiene unos anillos preciosos de hielo y roca.'],{find:1});
+ent('spacestation','🛰️',['die Raumstation','the space station','la estación espacial'],['Die Raumstation! Hier wohnen Astronauten, hoch über der Erde. Der Astronaut macht gerade einen Weltraumspaziergang.','The space station! Astronauts live up here, high above the Earth. The astronaut is out on a spacewalk.','¡La estación espacial! Aquí viven astronautas, muy por encima de la Tierra. El astronauta está dando un paseo espacial.']);
 ent('satellite','🛰️',['der Satellit','the satellite','el satélite'],['Ein Satellit! Er fliegt immer um die Erde herum.','A satellite! It flies round and round the Earth.','¡Un satélite! Da vueltas y vueltas alrededor de la Tierra.']);
 ent('comet','☄️',['der Komet','the comet','el cometa'],['Ein Komet! Er hat einen langen, leuchtenden Schweif.','A comet! It has a long, glowing tail.','¡Un cometa! Tiene una cola larga y brillante.']);
 ent('deepsea','🤿',['die Tiefsee','the deep sea','las profundidades del mar'],['Die Tiefsee! Je tiefer, desto dunkler und kälter wird das Wasser.','The deep sea! The deeper you go, the darker and colder the water gets.','¡Las profundidades! Cuanto más hondo, más oscura y fría está el agua.']);
@@ -83,7 +84,7 @@ K.DYN.push(L=>{if(VIEW[1]>SPACE0+200)return;const T=TT();
   // an astronaut on a spacewalk, on a safety line to a little space station
   {const ax=2600+Math.sin(T*0.4)*90,ay=-3250+Math.sin(T*0.6)*50,rot=Math.sin(T*0.3)*0.6+(fx('astronaut')<3?fx('astronaut')*4:0);
     if(inV(2350,-3700,3500,-3000))L.push({y:-3150,f:()=>{
-      g.save();g.translate(3100,-3450);g.scale(3,3);g.translate(-1730,3308);rr(1660,-3330,140,46,10,'#D9DEE8');rr(1600,-3322,60,30,4,'#3B7DE2');rr(1800,-3322,60,30,4,'#3B7DE2');circ(1730,-3308,9,'#8ED2F4');g.restore();
+      g.save();g.translate(3100,-3450);g.scale(3,3);g.translate(-1730,3308);rr(1660,-3330,140,46,10,'#D9DEE8');rr(1600,-3322,60,30,4,'#3B7DE2');rr(1800,-3322,60,30,4,'#3B7DE2');circ(1730,-3308,9,'#8ED2F4');g.restore();hit('spacestation',2700,-3530,3500,-3370);
       g.strokeStyle='#F4F7FB';g.lineWidth=5;g.beginPath();g.moveTo(2900,-3420);g.quadraticCurveTo(2760,-3300,ax+20,ay-18);g.stroke();
       g.save();g.translate(ax,ay);g.rotate(rot);g.scale(3,3);rr(-9,-14,18,24,6,'#F4F7FB');rr(-13,-12,6,16,3,'#F4F7FB');rr(7,-12,6,16,3,'#F4F7FB');rr(-7,8,6,12,3,'#E3E8F0');rr(1,8,6,12,3,'#E3E8F0');
       circ(0,-22,11,'#F4F7FB');ell(2,-22,8,6.5,'#F2B23A');ell(4,-24,3,2,'rgba(255,255,255,.7)');rr(-6,-8,12,7,2,'#3B7DE2');g.restore();

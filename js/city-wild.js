@@ -357,7 +357,8 @@ for(let i=0;i<900&&FOREST2.length<78;i++){const x=1215+sr()*480,y=-250+sr()*1015
   if(FOREST2.some(t=>Math.hypot(x-t[0],y-t[1])<36))continue;FOREST2.push([x,y,0.9+sr()*0.4,y<200||sr()<0.35?1:0,TCOL[sr()*4|0]]);}
 FOREST2.forEach(t=>S(t[1],[t[0]-25,t[1]-55,t[0]+25,t[1]+5],()=>tree(t[0],t[1],t[2],t[3],t[3]?'#2F8F5B':t[4])));
 const MUSH=[];for(let i=0;i<24;i++){const x=1220+sr()*470,y=-200+sr()*960;if(!near(x,y,SPOTS,0))MUSH.push([x,y]);}
-MUSH.forEach(([x,y])=>S(y,[x-6,y-10,x+6,y+2],()=>{if(ST.zoom<0.75)return;rr(x-1.6,y-6,3.2,6,1,'#F6EAD8');g.fillStyle='#E8443A';g.beginPath();g.arc(x,y-6,5,Math.PI,TAU);g.fill();circ(x-2,y-8,0.9,'#FFF');circ(x+2,y-9,0.8,'#FFF');}));
+ent('mushroom','🍄',['der Fliegenpilz','the toadstool','la seta'],['Der Fliegenpilz! Er ist hübsch, aber giftig – nicht essen!','The toadstool! It is pretty, but poisonous – never eat it!','¡La seta! Es bonita, pero venenosa: ¡no se come!']);
+MUSH.forEach(([x,y])=>S(y,[x-6,y-10,x+6,y+2],()=>{if(ST.zoom<0.75)return;rr(x-1.6,y-6,3.2,6,1,'#F6EAD8');g.fillStyle='#E8443A';g.beginPath();g.arc(x,y-6,5,Math.PI,TAU);g.fill();circ(x-2,y-8,0.9,'#FFF');circ(x+2,y-9,0.8,'#FFF');hit('mushroom',x-7,y-12,x+7,y+3,{small:1});}));
 /* pond with beaver dam */
 S(300,[1350,240,1550,330],()=>{const T=TT(),t=fx('beaver');
   ell(1450,292,92,40,'#EAD9A2');ell(1450,290,84,34,'#5BBDEE');ell(1440,286,50,16,'rgba(255,255,255,.18)');
@@ -444,7 +445,8 @@ S(1135,[1730,1080,1840,1140],()=>{const x=1740,y=1135;ell(x+48,y+1,50,5,'rgba(0,
   win(x+10,y-38,22,12);rr(x+56,y-38,16,30,3,'#C9CED8');circ(x+68,y-22,1.2,'#555');ln('#555',2,x+90,y-10,x+102,y-6);
   for(const wx of [x+26])wheel(wx,y-5,6,0);hit('caravan',x-2,y-48,x+104,y);});
 S(1180,[1300,1150,1390,1185],()=>{rr(1305,1160,70,8,2,'#B07A4E');rr(1305,1172,70,4,2,'#9A6440');rr(1310,1168,4,14,1,'#7A5235');rr(1366,1168,4,14,1,'#7A5235');
-  rr(1325,1154,20,5,1,'#FFFFFF');for(let k=0;k<4;k++)rr(1325+k*5,1154,2.5,5,0,'#E8443A');circ(1355,1157,3,'#E8443A');});
+  rr(1325,1154,20,5,1,'#FFFFFF');for(let k=0;k<4;k++)rr(1325+k*5,1154,2.5,5,0,'#E8443A');circ(1355,1157,3,'#E8443A');hit('picnic',1300,1150,1390,1185,{small:1});});
+ent('picnic','🧺',['der Picknicktisch','the picnic table','la mesa de pícnic'],['Der Picknicktisch! Hier kann man draußen essen.','The picnic table! You can eat outside here.','¡La mesa de pícnic! Aquí se puede comer al aire libre.']);
 S(855,[1530,820,1600,860],()=>{rr(1563,832,4,24,1,'#7A4E33');sign(1565,832,64,15,SIGN2.camp[li()],'#3DAA4A','#FFFFFF');hit('campsite',1250,840,1880,1225);});
 at('campsite',[1250,840,1880,1225]);
 /* airport: terminal, tower, hangar, a plane that takes off and flies a loop */
@@ -557,7 +559,8 @@ S(1770,[1520,1700,1590,1772],()=>{const x=1525,y=1770;rr(x,y-40,60,40,[0,0,3,3],
   rr(x+8,y-30,44,14,2,'#8ED2F4');ln('#7A4E33',1.4,x+30,y-46,x+30,y-60);poly('#E8B06A',x+24,y-68,x+36,y-68,x+30,y-56);circ(x+27,y-71,5,'#FFB6D9');circ(x+33,y-71,5,'#FFF1DA');circ(x+30,y-76,4.6,'#B5774A');
   hit('icecream',x-2,y-80,x+62,y);});
 S(1784,[2170,1700,2240,1786],()=>{const T=TT(),x=2200,y=1784;ln('#B07A4E',3,x-14,y,x-10,y-36);ln('#B07A4E',3,x+14,y,x+10,y-36);ln('#B07A4E',2,x-12,y-14,x+12,y-26);
-  rr(x-16,y-56,32,22,3,'#FF5A5F');rr(x-12,y-52,24,10,2,'#FFFFFF');ln('#555',1.2,x+16,y-56,x+16,y-74);poly('#FF5A5F',x+16,y-74,x+28+Math.sin(T*5)*2,y-70,x+16,y-66);});
+  rr(x-16,y-56,32,22,3,'#FF5A5F');rr(x-12,y-52,24,10,2,'#FFFFFF');ln('#555',1.2,x+16,y-56,x+16,y-74);poly('#FF5A5F',x+16,y-74,x+28+Math.sin(T*5)*2,y-70,x+16,y-66);hit('lifeguard',2170,1700,2240,1786,{small:1});});
+ent('lifeguard','🛟',['der Rettungsturm','the lifeguard chair','la silla del socorrista'],['Der Rettungsturm! Von hier oben passt der Rettungsschwimmer auf alle Schwimmer auf.','The lifeguard chair! From up here the lifeguard watches over everyone in the water.','¡La silla del socorrista! Desde aquí arriba el socorrista vigila a todos los que nadan.']);
 /* crab, gull, starfish */
 S(1858,[560,1830,700,1862],()=>{const T=TT(),t=fx('crab'),x=630+Math.sin(T*(t<3?2.5:0.6))*50,y=1856,sn=t<3?Math.abs(Math.sin(t*12)):0;
   ell(x,y,12,3,'rgba(0,0,0,.12)');for(let k=0;k<3;k++){const o=Math.sin(T*10+k)*1.5;ln('#C8301F',1.4,x-8,y-4,x-16,y-1+k*2+o);ln('#C8301F',1.4,x+8,y-4,x+16,y-1+k*2-o);}
