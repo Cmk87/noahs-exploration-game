@@ -1283,6 +1283,635 @@
           "de": "Ein Kajakpaddel hat an jedem Ende ein Blatt – man taucht erst die eine, dann die andere Seite ein."
         }
       ]
+    },
+    {
+      "id": "camper-van",
+      "group": "road",
+      "image": "vehicles/camper-van.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "camper van",
+          "full": "the camper van"
+        },
+        "es": {
+          "article": "la",
+          "noun": "autocaravana",
+          "full": "la autocaravana",
+          "gender": "f"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Wohnmobil",
+          "full": "das Wohnmobil",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A camper van is a little home on wheels, with a bed inside.",
+          "es": "La autocaravana es una casita con ruedas y una cama dentro.",
+          "de": "Ein Wohnmobil ist ein kleines Zuhause auf Rädern, mit einem Bett darin."
+        },
+        {
+          "en": "You can cook and sleep in it while you travel.",
+          "es": "Se puede cocinar y dormir dentro mientras se viaja.",
+          "de": "Man kann darin kochen und schlafen, während man unterwegs ist."
+        }
+      ]
+    },
+    {
+      "id": "racing-car",
+      "group": "road",
+      "image": "vehicles/racing-car.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "racing car",
+          "full": "the racing car"
+        },
+        "es": {
+          "article": "el",
+          "noun": "coche de carreras",
+          "full": "el coche de carreras",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Rennwagen",
+          "full": "der Rennwagen",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A racing car is built low and wide so it can go very fast.",
+          "es": "El coche de carreras es bajito y ancho para poder ir muy rápido.",
+          "de": "Ein Rennwagen ist niedrig und breit gebaut, damit er sehr schnell fahren kann."
+        },
+        {
+          "en": "The driver wears a helmet and a seatbelt.",
+          "es": "El piloto lleva casco y cinturón.",
+          "de": "Der Fahrer trägt einen Helm und einen Gurt."
+        }
+      ]
+    },
+    {
+      "id": "scooter",
+      "group": "road",
+      "image": "vehicles/scooter.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "scooter",
+          "full": "the scooter"
+        },
+        "es": {
+          "article": "el",
+          "noun": "patinete",
+          "full": "el patinete",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Roller",
+          "full": "der Roller",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A scooter has a board for your feet and a tall handle.",
+          "es": "El patinete tiene una tabla para los pies y un manillar alto.",
+          "de": "Ein Roller hat ein Brett für die Füße und einen hohen Lenker."
+        },
+        {
+          "en": "You push with one foot, and then you glide.",
+          "es": "Se impulsa con un pie y luego se desliza.",
+          "de": "Man stößt sich mit einem Fuß ab und rollt dann."
+        }
+      ]
+    },
+    {
+      "id": "quad-bike",
+      "group": "road",
+      "image": "vehicles/quad-bike.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "quad bike",
+          "full": "the quad bike"
+        },
+        "es": {
+          "article": "el",
+          "noun": "quad",
+          "full": "el quad",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Quad",
+          "full": "das Quad",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A quad bike has four wheels and big tyres for bumpy ground.",
+          "es": "El quad tiene cuatro ruedas y neumáticos grandes para el terreno irregular.",
+          "de": "Ein Quad hat vier Räder und große Reifen für holprigen Boden."
+        },
+        {
+          "en": "A grown-up drives it, and the rider wears a helmet.",
+          "es": "Lo conduce una persona mayor, y quien monta lleva casco.",
+          "de": "Ein Erwachsener fährt es, und der Fahrer trägt einen Helm."
+        }
+      ]
+    },
+    {
+      "id": "forklift",
+      "group": "buildingSite",
+      "image": "vehicles/forklift.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "forklift",
+          "full": "the forklift"
+        },
+        "es": {
+          "article": "la",
+          "noun": "carretilla elevadora",
+          "full": "la carretilla elevadora",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Gabelstapler",
+          "full": "der Gabelstapler",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A forklift picks up heavy loads with two metal forks.",
+          "es": "La carretilla elevadora levanta cargas pesadas con dos horquillas de metal.",
+          "de": "Ein Gabelstapler hebt schwere Lasten mit zwei Metallgabeln."
+        },
+        {
+          "en": "A trained driver uses it in a warehouse.",
+          "es": "La usa un conductor preparado, en un almacén.",
+          "de": "Ein ausgebildeter Fahrer benutzt ihn in einem Lager."
+        }
+      ]
+    },
+    {
+      "id": "road-roller",
+      "group": "buildingSite",
+      "image": "vehicles/road-roller.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "road roller",
+          "full": "the road roller"
+        },
+        "es": {
+          "article": "la",
+          "noun": "apisonadora",
+          "full": "la apisonadora",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Walze",
+          "full": "die Walze",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A road roller is very heavy and has a big smooth drum.",
+          "es": "La apisonadora es muy pesada y tiene un rodillo grande y liso.",
+          "de": "Eine Walze ist sehr schwer und hat eine große glatte Trommel."
+        },
+        {
+          "en": "It presses a new road flat.",
+          "es": "Aplana la carretera nueva.",
+          "de": "Sie drückt eine neue Straße glatt."
+        }
+      ]
+    },
+    {
+      "id": "cherry-picker",
+      "group": "buildingSite",
+      "image": "vehicles/cherry-picker.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "cherry picker",
+          "full": "the cherry picker"
+        },
+        "es": {
+          "article": "la",
+          "noun": "plataforma elevadora",
+          "full": "la plataforma elevadora",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Hebebühne",
+          "full": "die Hebebühne",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A cherry picker lifts a person up to a high window or a tree.",
+          "es": "La plataforma elevadora sube a una persona hasta una ventana alta o un árbol.",
+          "de": "Eine Hebebühne hebt einen Menschen zu einem hohen Fenster oder einem Baum."
+        },
+        {
+          "en": "The basket keeps the person safe while they work up high.",
+          "es": "La cesta mantiene a la persona segura mientras trabaja arriba.",
+          "de": "Der Korb hält die Person sicher, während sie oben arbeitet."
+        }
+      ]
+    },
+    {
+      "id": "metro",
+      "group": "rails",
+      "image": "vehicles/metro.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "underground train",
+          "full": "the underground train"
+        },
+        "es": {
+          "article": "el",
+          "noun": "metro",
+          "full": "el metro",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "U-Bahn",
+          "full": "die U-Bahn",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "An underground train travels through tunnels under the city.",
+          "es": "El metro viaja por túneles debajo de la ciudad.",
+          "de": "Eine U-Bahn fährt durch Tunnel unter der Stadt."
+        },
+        {
+          "en": "The doors open at each station so people can get on.",
+          "es": "Las puertas se abren en cada estación para que la gente pueda subir.",
+          "de": "An jeder Station gehen die Türen auf, damit die Leute einsteigen können."
+        }
+      ]
+    },
+    {
+      "id": "freight-train",
+      "group": "rails",
+      "image": "vehicles/freight-train.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "freight train",
+          "full": "the freight train"
+        },
+        "es": {
+          "article": "el",
+          "noun": "tren de mercancías",
+          "full": "el tren de mercancías",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Güterzug",
+          "full": "der Güterzug",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A freight train pulls many wagons full of goods.",
+          "es": "El tren de mercancías arrastra muchos vagones llenos de cosas.",
+          "de": "Ein Güterzug zieht viele Wagen voller Waren."
+        },
+        {
+          "en": "One train can carry as much as lots of trucks.",
+          "es": "Un solo tren puede llevar tanto como muchos camiones.",
+          "de": "Ein Zug kann so viel tragen wie viele Lastwagen."
+        }
+      ]
+    },
+    {
+      "id": "jet",
+      "group": "air",
+      "image": "vehicles/jet.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "jet",
+          "full": "the jet"
+        },
+        "es": {
+          "article": "el",
+          "noun": "jet",
+          "full": "el jet",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Jet",
+          "full": "der Jet",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A jet has swept-back wings and flies very fast.",
+          "es": "El jet tiene las alas inclinadas hacia atrás y vuela muy rápido.",
+          "de": "Ein Jet hat gepfeilte Flügel und fliegt sehr schnell."
+        },
+        {
+          "en": "Hot air rushes out of the engines and pushes it forward.",
+          "es": "El aire caliente sale de los motores y lo empuja hacia delante.",
+          "de": "Heiße Luft strömt aus den Triebwerken und schiebt ihn nach vorn."
+        }
+      ]
+    },
+    {
+      "id": "glider",
+      "group": "air",
+      "image": "vehicles/glider.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "glider",
+          "full": "the glider"
+        },
+        "es": {
+          "article": "el",
+          "noun": "planeador",
+          "full": "el planeador",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Segelflugzeug",
+          "full": "das Segelflugzeug",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A glider has long thin wings and no engine.",
+          "es": "El planeador tiene las alas largas y finas, y no tiene motor.",
+          "de": "Ein Segelflugzeug hat lange dünne Flügel und keinen Motor."
+        },
+        {
+          "en": "It stays up by riding air that is rising.",
+          "es": "Se mantiene en el aire montado en el aire que sube.",
+          "de": "Es bleibt oben, indem es auf steigender Luft reitet."
+        }
+      ]
+    },
+    {
+      "id": "airship",
+      "group": "air",
+      "image": "vehicles/airship.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "airship",
+          "full": "the airship"
+        },
+        "es": {
+          "article": "el",
+          "noun": "dirigible",
+          "full": "el dirigible",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Luftschiff",
+          "full": "das Luftschiff",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "An airship is a big balloon with a cabin underneath.",
+          "es": "El dirigible es un globo grande con una cabina debajo.",
+          "de": "Ein Luftschiff ist ein großer Ballon mit einer Kabine darunter."
+        },
+        {
+          "en": "It floats because the balloon is full of a gas lighter than air.",
+          "es": "Flota porque el globo está lleno de un gas más ligero que el aire.",
+          "de": "Es schwebt, weil der Ballon mit einem Gas gefüllt ist, das leichter ist als Luft."
+        }
+      ]
+    },
+    {
+      "id": "drone",
+      "group": "air",
+      "image": "vehicles/drone.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "drone",
+          "full": "the drone"
+        },
+        "es": {
+          "article": "el",
+          "noun": "dron",
+          "full": "el dron",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Drohne",
+          "full": "die Drohne",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A drone is a small flying machine with spinning propellers.",
+          "es": "El dron es una máquina pequeña que vuela con hélices que giran.",
+          "de": "Eine Drohne ist eine kleine Flugmaschine mit drehenden Propellern."
+        },
+        {
+          "en": "A grown-up flies it from the ground with a controller.",
+          "es": "Una persona mayor lo hace volar desde el suelo con un mando.",
+          "de": "Ein Erwachsener steuert sie vom Boden aus mit einer Fernbedienung."
+        }
+      ]
+    },
+    {
+      "id": "ferry",
+      "group": "water",
+      "image": "vehicles/ferry.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "ferry",
+          "full": "the ferry"
+        },
+        "es": {
+          "article": "el",
+          "noun": "ferry",
+          "full": "el ferry",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Fähre",
+          "full": "die Fähre",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A ferry carries people and cars across the water.",
+          "es": "El ferry lleva personas y coches al otro lado del agua.",
+          "de": "Eine Fähre bringt Menschen und Autos über das Wasser."
+        },
+        {
+          "en": "It has a big door so cars can drive on and off.",
+          "es": "Tiene una puerta grande para que los coches entren y salgan.",
+          "de": "Sie hat ein großes Tor, damit Autos hinein- und herausfahren können."
+        }
+      ]
+    },
+    {
+      "id": "fishing-boat",
+      "group": "water",
+      "image": "vehicles/fishing-boat.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "fishing boat",
+          "full": "the fishing boat"
+        },
+        "es": {
+          "article": "el",
+          "noun": "barco pesquero",
+          "full": "el barco pesquero",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Fischerboot",
+          "full": "das Fischerboot",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A fishing boat goes out to sea to catch fish.",
+          "es": "El barco pesquero sale al mar a pescar.",
+          "de": "Ein Fischerboot fährt aufs Meer, um Fische zu fangen."
+        },
+        {
+          "en": "Nets or lines bring the fish onto the boat.",
+          "es": "Las redes o los sedales suben los peces al barco.",
+          "de": "Netze oder Angeln holen die Fische an Bord."
+        }
+      ]
+    },
+    {
+      "id": "cruise-ship",
+      "group": "water",
+      "image": "vehicles/cruise-ship.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "cruise ship",
+          "full": "the cruise ship"
+        },
+        "es": {
+          "article": "el",
+          "noun": "crucero",
+          "full": "el crucero",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Kreuzfahrtschiff",
+          "full": "das Kreuzfahrtschiff",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A cruise ship is a huge ship with many windows and bedrooms.",
+          "es": "El crucero es un barco enorme, con muchas ventanas y dormitorios.",
+          "de": "Ein Kreuzfahrtschiff ist ein riesiges Schiff mit vielen Fenstern und Schlafzimmern."
+        },
+        {
+          "en": "People travel on it for a holiday and visit different ports.",
+          "es": "La gente viaja en él de vacaciones y visita puertos distintos.",
+          "de": "Menschen machen damit Urlaub und besuchen verschiedene Häfen."
+        }
+      ]
+    },
+    {
+      "id": "hovercraft",
+      "group": "water",
+      "image": "vehicles/hovercraft.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "hovercraft",
+          "full": "the hovercraft"
+        },
+        "es": {
+          "article": "el",
+          "noun": "aerodeslizador",
+          "full": "el aerodeslizador",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Luftkissenboot",
+          "full": "das Luftkissenboot",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A hovercraft floats on a cushion of air, over water or flat land.",
+          "es": "El aerodeslizador flota sobre un colchón de aire, por el agua o por tierra llana.",
+          "de": "Ein Luftkissenboot schwebt auf einem Luftkissen über Wasser oder flaches Land."
+        },
+        {
+          "en": "A big skirt around the bottom holds the air in.",
+          "es": "Una falda grande alrededor de la base mantiene el aire dentro.",
+          "de": "Eine große Schürze unten hält die Luft fest."
+        }
+      ]
     }
   ]
 }
