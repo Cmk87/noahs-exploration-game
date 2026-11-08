@@ -23,11 +23,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await hookSay();
   await page.mouse.click(180, 320);
   await page.waitForTimeout(300);
-  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 17), 'opens on the home screen with 17 sections');
+  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 19), 'opens on the home screen with 19 sections');
   check(await page.evaluate(() => lang === 'de'), 'starts in German');
 
   console.log('Layout');
-  for (const t of ['home', 'adv', 'city', 'stickers', 'king', 'folk', 'ride', 'baby', 'body', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
+  for (const t of ['home', 'adv', 'city', 'stickers', 'king', 'dinos', 'things', 'folk', 'ride', 'baby', 'body', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
     await page.evaluate(t => showTab(t), t);
     await page.waitForTimeout(150);
     await page.evaluate(() => { window.scrollTo(0, 500); const v = document.querySelector('.view.on'); v.lastElementChild && v.lastElementChild.scrollIntoView(); });
@@ -194,7 +194,21 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   check(await page.evaluate(() => document.querySelectorAll('#stkBook .stk').length === CITY.total() && document.querySelectorAll('#stkBook .stk.got').length === CITY.FOUND.size), 'sticker book shows every animal, found ones as stickers');
   check(await page.evaluate(() => !document.getElementById('museum') && document.querySelectorAll('#stkBook .stkDino').length === DINOS.length), 'dinosaur museum lives in the sticker book, not on the prize screen');
   await page.evaluate(() => { if (!found.includes('trex')) found.push('trex'); try { localStorage.setItem('sl_dinos', JSON.stringify(found)); } catch (e) {} showStickers(); });
-  check(await page.evaluate(() => [...document.querySelectorAll('#stkBook .stkDino.got')].some(b => /Tyrannosaurus|Tiranosaurio/i.test(b.textContent))), 'a dinosaur saved earlier still shows as found');
+  check(await page.evaluate(() => [...document.querySelectorAll('#stkBook .stkDino.got')].some(b => /Tyrannosaurus|Tiranosaurio/i.test(b.textContent) && b.querySelector('img') && /trex\.webp/.test(b.querySelector('img').getAttribute('src')))), 'a dinosaur saved earlier shows its living picture');
+  check(await page.evaluate(() => {
+    const locked = [...document.querySelectorAll('#stkBook .stkDino:not(.got)')];
+    return locked.length === DINOS.length - 1 && locked.every(b => b.querySelector('canvas') && !b.querySelector('img') && b.textContent.trim() === '?');
+  }), 'dinosaurs not yet dug stay as silhouettes without a picture');
+  check(await page.evaluate(() => {
+    const before = found.slice();
+    showTab('dinos');
+    const n = document.querySelectorAll('#v-dinos .phAn').length;
+    document.querySelector('#v-dinos .phAn[data-id="stego"]').click();
+    const on = document.querySelector('#v-dinos .phAn.on')?.dataset.id === 'stego';
+    const clean = found.length === before.length && !found.includes('stego') && !document.querySelector('#v-dinos .phHero');
+    showTab('stickers');
+    return n === 15 && on && clean && !document.querySelector('#stkBook .stkDino.got img[src*="stego"]');
+  }), 'browsing the dinosaur pictures does not unlock the museum');
   check(await page.evaluate(() => {
     const ids = STK_AREAS.flatMap(A => A[4]);
     const bad = ids.filter(id => { const e = CITY.ENT[id]; return !e || !e.n || e.n.length < 3 || e.n.some(s => !String(s).trim()); });
@@ -375,15 +389,17 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const farmN = document.querySelectorAll('#v-king .phAn').length;
      document.querySelector('#v-king .phAn[data-id="cow"]').click();
      const cow = PHOTO_PACK.animals.find(a => a.id === 'cow');
-     const card = document.querySelector('#v-king .phCard, #v-king .phHero');
-     const hero = document.querySelector('#v-king .phHero');
-     const opened = !!(hero && /\.webp/.test(hero.getAttribute('src')) && document.querySelector('#v-king .phReplay'));
+     const root = document.getElementById('v-king');
+     const opened = root.querySelectorAll('.phAn').length === farmN && root.querySelector('.phAn.on')?.dataset.id === 'cow' && !root.querySelector('.phHero') && !root.querySelector('[data-act="prev"]');
      const saidName = await waitFor(() => PHOTO_SAID.some(t => t === cow.names.de.full));
      const saidFact = await waitFor(() => PHOTO_SAID.some(t => t === cow.facts[0].de));
+     const noNoise = !PHOTO_SAID.some(t => t === 'muh');
      const firstSaid = PHOTO_SAID.slice(0, 6).map(t => String(t).slice(0, 48));
+     const y = root.scrollTop;
      PHOTO_SAID = [];
-     document.querySelector('#v-king .phReplay').click();
+     document.querySelector('#v-king .phAn[data-id="cow"]').click();
      const saidOther = await waitFor(() => PHOTO_SAID.some(t => t === cow.facts[1].de));
+     const held = root.scrollTop === y;
      $('es').click();
      showTab('king');
      document.querySelector('#v-king .phHab[data-id="birds"]').click();
@@ -400,13 +416,13 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const pass = JSON.parse(localStorage.getItem('sl_passport') || '{}');
      BRIDGE = keepBridge;
      showTab('home');
-     return { habs, lazy, farmN, opened, saidName, saidFact, saidOther, eagleName, groups, peopleN, personOk,
+     return { habs, lazy, farmN, opened, saidName, saidFact, saidOther, noNoise, held, eagleName, groups, peopleN, personOk,
        lang, reward: rewardOpen, firstSaid,
        stamped: pass.a && pass.a.includes('cow') && pass.a.includes('eagle') && pass.p && pass.p.length === 1 };
    });
    check(photo.habs === 10 && photo.lazy, 'animal kingdom shows 10 habitat photos, loaded lazily');
-   check(photo.farmN >= 5 && photo.opened, 'a habitat opens its animals, and an animal opens full screen');
-   check(photo.saidName && photo.saidFact && photo.saidOther, 'the animal card says the name, then one fact, and the other fact on replay'
+   check(photo.farmN === 10 && photo.opened && photo.held, 'a habitat stays on its picture grid, and a tap highlights that animal without scrolling away');
+   check(photo.saidName && photo.saidFact && photo.saidOther && photo.noNoise, 'the animal says the name, then one fact, the other fact on the next tap, and no animal noise'
      + (photo.saidName && photo.saidFact && photo.saidOther ? '' : ' ' + JSON.stringify({ n: photo.saidName, f: photo.saidFact, o: photo.saidOther, lang: photo.lang, reward: photo.reward, said: photo.firstSaid })));
    check(photo.eagleName === 'el águila', 'the card uses the Spanish article from the photo pack (el águila)');
    check(photo.groups === 2 && photo.peopleN >= 10 && photo.personOk, 'people of the world opens long ago and today, then a person');
@@ -458,8 +474,8 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const n = document.querySelectorAll('#v-ride .phAn').length;
      document.querySelector('#v-ride .phAn[data-id="fire-truck"]').click();
      const ft = PHOTO_PACK.vehicles.find(x => x.id === 'fire-truck');
-     const hero = document.querySelector('#v-ride .phHero');
-     const opened = !!(hero && /vehicles\/.+\.webp/.test(hero.getAttribute('src')) && document.querySelector('#v-ride .phReplay'));
+     const ride = document.getElementById('v-ride');
+     const opened = ride.querySelectorAll('.phAn').length === n && ride.querySelector('.phAn.on')?.dataset.id === 'fire-truck' && !ride.querySelector('.phHero') && !ride.querySelector('[data-act="next"]');
      const saidName = await waitFor(() => PHOTO_SAID.some(t => t === ft.names.de.full));
      const saidSound = await waitFor(() => PHOTO_SAID.some(t => t === ft.sound.de));
      const saidFact = await waitFor(() => PHOTO_SAID.some(t => t === ft.facts[0].de));
@@ -494,13 +510,18 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const replayReset = !!(document.querySelector('#v-baby .phMorphTop') && !document.querySelector('#v-baby .phMorphTop').classList.contains('gone') && document.querySelector('#v-baby .phName').textContent === 'der Welpe');
      showTab('king');
      document.querySelector('#v-king [data-id="polar"]').click();
-     const polarIds = [...document.querySelectorAll('#v-king .phAn')].map(b => b.dataset.id);
-     document.querySelector('#v-king .phAn').click();
-     document.querySelector('#v-king [data-act="prev"]').click();
-     const wrapped = document.querySelector('#v-king .phName').textContent === PHOTO_PACK.animals.find(a => a.id === polarIds[polarIds.length - 1]).names.de.full;
-     document.querySelector('#v-king [data-act="next"]').click();
-     document.querySelector('#v-king [data-act="next"]').click();
-     const stillCard = !!(document.querySelector('#v-king .phHero') && !/undefined|null/.test(document.querySelector('#v-king .phName').textContent));
+     const pk = document.getElementById('v-king');
+     const max = pk.scrollHeight - pk.clientHeight;
+     const before = max > 20 ? 20 : 0;
+     pk.scrollTop = before;
+     const buttons = [...pk.querySelectorAll('.phAn')];
+     buttons[0].click();
+     const firstName = pk.querySelector('.phName').textContent;
+     buttons[1].click();
+     const switched = firstName !== pk.querySelector('.phName').textContent && pk.querySelector('.phAn.on')?.dataset.id === buttons[1].dataset.id && pk.querySelectorAll('.phAn.on').length === 1;
+     const scrollHeld = pk.scrollTop === before && !pk.querySelector('[data-act="prev"]');
+     const wrapped = switched;
+     const stillCard = scrollHeld;
      showTab('baby');
      document.querySelector('#v-baby .phGrow').click();
      const gChoices = document.querySelectorAll('#v-baby .phChoice').length;
@@ -516,11 +537,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
        stamped: pass.v && pass.v.includes('fire-truck') && pass.b && pass.b.includes('dog') };
    });
    check(more.ids.join() === 'helpers,buildingSite,road,rails,air,water' && more.lazy, 'vehicles shows the six groups, photos loaded lazily');
-   check(more.n >= 5 && more.opened && more.saidName && more.saidSound && more.saidFact, 'a vehicle card says the name, the sound, and a fact');
+   check(more.n === 6 && more.opened && more.saidName && more.saidSound && more.saidFact, 'a vehicle stays on the grid and says the name, the sound, and a fact');
    check(more.esName === 'el camión de bomberos' && more.amb === 'la ambulancia', 'vehicle cards use the Spanish article from the photo pack');
    check(more.choices >= 3 && more.blurred && more.held && more.hideUp, "listen and find works for vehicles");
    check(more.pairs === 16 && more.pairLazy && more.morph && more.saidBaby && more.saidAdult && more.saidGrow && more.slid && more.replayReset, 'a baby photo slides to the grown-up, and replay starts from the baby again');
-   check(more.wrapped && more.stillCard, 'previous at the start of a list wraps around, and rapid next keeps a real card');
+   check(more.wrapped && more.stillCard, 'tapping another animal switches the explanation and leaves the grid where it was');
    check(more.gChoices === 3 && more.babyShown && more.gHeld && more.gUp, 'matching a baby to its grown-up: a wrong tap keeps the point');
    check(more.stamped, 'the first vehicle and the first baby earn a passport stamp');
   }

@@ -6,7 +6,7 @@
    name, sound and fact in the other languages, only when tapped.
    First look at a card earns a passport stamp, kept on this device only.
 ============================================================= */
-const PASS={a:[],p:[],v:[],b:[],y:[]};
+const PASS={a:[],p:[],v:[],b:[],y:[],t:[]};
 try{
   const s=JSON.parse(localStorage.getItem('sl_passport')||'{}');
   if(s&&Array.isArray(s.a))PASS.a=s.a.filter(id=>PHOTO_PACK.animals.some(a=>a.id===id));
@@ -14,6 +14,7 @@ try{
   if(s&&Array.isArray(s.v))PASS.v=s.v.filter(id=>PHOTO_PACK.vehicles.some(x=>x.id===id));
   if(s&&Array.isArray(s.b))PASS.b=s.b.filter(id=>PHOTO_PACK.pairs.some(x=>x.id===id));
   if(s&&Array.isArray(s.y))PASS.y=s.y.filter(id=>(PHOTO_PACK.body||[]).some(x=>x.id===id));
+  if(s&&Array.isArray(s.t))PASS.t=s.t.filter(id=>(PHOTO_PACK.things||[]).some(x=>x.id===id));
 }catch(e){}
 function photoSave(){try{localStorage.setItem('sl_passport',JSON.stringify(PASS));}catch(e){}}
 function photoStamp(kind,id){
@@ -24,14 +25,16 @@ function photoCount(kind){return (PASS[kind]||[]).length;}
 
 const HAB_COL={farm:'#E7A23A',pets:'#E07A6A',forest:'#2F9A45',jungle:'#1B7A48',savanna:'#D4922A',ocean:'#1E86C4',polar:'#6AAED4',birds:'#4AA0D8',bugs:'#7CB342',world:'#C47B3A'};
 const VEH_ORDER=['helpers','buildingSite','road','rails','air','water'];
-const PHOTO_VIEW={a:'v-king',p:'v-folk',v:'v-ride',b:'v-baby',y:'v-body'};
-const PH={kind:'a',screen:'pick',hab:null,grp:null,idx:0,fact:null,pickTop:0,listTop:0};
+const PHOTO_VIEW={a:'v-king',p:'v-folk',v:'v-ride',b:'v-baby',y:'v-body',t:'v-things',d:'v-dinos'};
+const PH={kind:'a',screen:'pick',hab:null,grp:null,idx:0,fact:null,playId:null,pickTop:0,listTop:0};
 let PUZ=null,photoGen=0,photoBound=false,photoDrag=null,photoSwallow=false;
 const factN={};
 
 function photoRoot(){return document.getElementById(PHOTO_VIEW[PH.kind]);}
 function vehicleGroups(){return VEH_ORDER.map(id=>(PHOTO_PACK.vehicleGroups||[]).find(g=>g.id===id)).filter(Boolean);}
+function thingGroups(){return PHOTO_PACK.thingGroups||[];}
 function bodyGroups(){return PHOTO_PACK.bodyGroups||[];}
+function isInline(){return PH.kind==='a'||PH.kind==='v'||PH.kind==='t'||PH.kind==='d';}
 function bodyItems(gid){
   const list=(PHOTO_PACK.body||[]).filter(x=>x.group===gid);
   return list.slice().sort((a,b)=>(b.overview?1:0)-(a.overview?1:0));
@@ -47,6 +50,8 @@ function photoFact(item){
 function photoList(){
   if(PH.kind==='a')return PHOTO_PACK.animals.filter(a=>a.habitat===PH.hab);
   if(PH.kind==='v')return PHOTO_PACK.vehicles.filter(x=>x.group===PH.grp);
+  if(PH.kind==='t')return (PHOTO_PACK.things||[]).filter(x=>x.group===PH.grp);
+  if(PH.kind==='d')return PHOTO_PACK.dinos||[];
   if(PH.kind==='y')return bodyItems(PH.grp);
   if(PH.kind==='b')return PHOTO_PACK.pairs;
   return PHOTO_PACK.people.filter(p=>p.group===PH.grp);
@@ -54,6 +59,7 @@ function photoList(){
 function photoCover(hab){const a=PHOTO_PACK.animals.find(x=>x.habitat===hab);return a?a.image:'';}
 function photoCoverG(grp){const p=PHOTO_PACK.people.find(x=>x.group===grp);return p?p.image:'';}
 function photoCoverV(grp){const x=PHOTO_PACK.vehicles.find(v=>v.group===grp);return x?x.image:'';}
+function photoCoverT(grp){const x=(PHOTO_PACK.things||[]).find(v=>v.group===grp);return x?x.image:'';}
 function photoCoverY(grp){const x=bodyItems(grp)[0];return x?x.image:'';}
 function photoStop(){
   photoGen++;
@@ -91,25 +97,42 @@ function photoSeq(lines,L,done){
   };
   go(0);
 }
-/* Name, then the sound (animals, vehicles) or where they live (people), then ONE fact.
-   In the app language the next tap says the other fact; a flag says the same fact in its language. */
+/* Name, then a vehicle or body sound, or where a person lived, then ONE fact.
+   Animals, things and dinosaurs skip straight to the fact: no animal noises.
+   In the app language the next tap says the other fact; a flag says the same fact. */
+function midLine(item,L){
+  if(PH.kind==='a'||PH.kind==='t'||PH.kind==='d')return null;
+  if(PH.kind==='v'||PH.kind==='y')return item.sound&&item.sound[L];
+  return item.where&&item.where[L];
+}
 function photoSpeak(item,L){
   const own=!L||L===lang;L=L||lang;
   if(own||!PH.fact)PH.fact=photoFact(item);
   const f=PH.fact;
-  const mid=(PH.kind==='a'||PH.kind==='v'||PH.kind==='y')?(item.sound&&item.sound[L]):(item.where&&item.where[L]);
-  photoSeq([item.names[L].full,mid,f&&f[L]],L);
+  photoSeq([item.names[L].full,midLine(item,L),f&&f[L]],L);
 }
-/* the other languages, as small flags on a card: tap one to hear it all in that language */
+/* say the fact already chosen, without moving on to the next one */
+function photoAgain(){
+  if(!isInline()||PH.screen!=='list'||!PH.playId)return false;
+  const item=photoList()[PH.idx];if(!item||item.id!==PH.playId)return false;
+  const f=PH.fact||photoFact(item);
+  photoSeq([item.names[lang].full,midLine(item,lang),f&&f[lang]],lang);
+  return true;
+}
+/* the other languages, as small flags: tap one to hear it all in that language */
 function otherLangs(){return flagLangs();}
-function langsHTML(){
+const LANG_NAME={es:'español',en:'English',de:'Deutsch'};
+function langsHTML(item){
   const ls=otherLangs();if(!ls.length)return '';
-  return `<div class="phLangs">${ls.map(c=>`<button type="button" class="phLang" data-act="lang" data-l="${c}" aria-label="${c}">${BRIDGE_MARK[c]}</button>`).join('')}</div>`;
+  return `<div class="phLangs">${ls.map(c=>{
+    const said=item&&item.names&&item.names[c]?item.names[c].full:c;
+    return `<button type="button" class="phLang" data-act="lang" data-l="${c}" aria-label="${photoEsc(LANG_NAME[c]+': '+said)}">${BRIDGE_MARK[c]}</button>`;
+  }).join('')}</div>`;
 }
 
 function photoBind(){
   if(photoBound)return;photoBound=true;
-  ['v-king','v-folk','v-ride','v-baby','v-body'].forEach(id=>{
+  ['v-king','v-folk','v-ride','v-baby','v-body','v-things','v-dinos'].forEach(id=>{
     const el=document.getElementById(id);
     el.addEventListener('click',photoClick);
     el.addEventListener('pointerdown',photoDown);
@@ -123,13 +146,24 @@ function showFolk(){photoEnter('p');}
 function showRide(){photoEnter('v');}
 function showBaby(){photoEnter('b');}
 function showBody(){photoEnter('y');}
+function showThings(){photoEnter('t');}
+function showDinos(){
+  photoBind();photoStop();
+  PH.kind='d';PH.screen='list';PH.hab=null;PH.grp=null;PH.idx=0;PH.playId=null;PUZ=null;
+  renderPhoto();
+}
 function photoEnter(kind){
   photoBind();photoStop();
-  PH.kind=kind;PH.screen='pick';PH.hab=null;PH.grp=null;PH.idx=0;PUZ=null;
+  PH.kind=kind;PH.screen='pick';PH.hab=null;PH.grp=null;PH.idx=0;PH.playId=null;PUZ=null;
   renderPhoto();
 }
 function photoRelang(){
   const root=document.querySelector('.view.on');if(!root)return;
+  if(isInline()&&PH.screen==='list'){
+    const item=PH.playId?photoList().find(x=>x.id===PH.playId):null;
+    const bar=root.querySelector('#phNow');
+    if(bar){if(item)fillNow(item);else fillGroupTitle();}
+  }
   const item=PH.screen==='card'?photoList()[PH.idx]:null;
   const nm=root.querySelector('.phName');
   if(nm&&PH.screen==='touch'&&PUZ&&PUZ.item)nm.textContent=partNames(PUZ.item)[lang].full;
@@ -139,7 +173,7 @@ function photoRelang(){
   }else if(nm&&item&&item.names)nm.textContent=item.names[lang].full;
   root.querySelectorAll('.phCap').forEach(el=>{
     const id=el.dataset.cap;if(!id)return;
-    const h=PHOTO_PACK.habitats.find(x=>x.id===id)||PHOTO_PACK.groups.find(x=>x.id===id)||vehicleGroups().find(x=>x.id===id)||bodyGroups().find(x=>x.id===id);
+    const h=PHOTO_PACK.habitats.find(x=>x.id===id)||PHOTO_PACK.groups.find(x=>x.id===id)||vehicleGroups().find(x=>x.id===id)||thingGroups().find(x=>x.id===id)||bodyGroups().find(x=>x.id===id);
     if(h)el.textContent=h[lang];
   });
   const lg=root.querySelector('.phLangs');if(lg)lg.outerHTML=langsHTML()||'<div class="phLangs"></div>';
@@ -156,8 +190,9 @@ function photoClick(e){
   if((act==='hab'||act==='grp')&&PH.screen==='pick')PH.pickTop=photoRoot().scrollTop;
   if(act==='open'&&PH.screen==='list')PH.listTop=photoRoot().scrollTop;
   if(act==='open'&&PH.screen==='pick'&&PH.kind==='b')PH.pickTop=photoRoot().scrollTop;
-  if(act==='hab'){PH.hab=id;PH.screen='list';renderPhoto();const h=PHOTO_PACK.habitats.find(x=>x.id===id);if(h)photoSay(h[lang]);}
-  else if(act==='grp'){PH.grp=id;PH.screen='list';renderPhoto();const g=(PH.kind==='y'?bodyGroups():PH.kind==='v'?vehicleGroups():PHOTO_PACK.groups).find(x=>x.id===id);if(g)photoSay(g[lang]);}
+  if(act==='hab'){PH.hab=id;PH.playId=null;PH.screen='list';renderPhoto();const h=PHOTO_PACK.habitats.find(x=>x.id===id);if(h)photoSay(h[lang]);}
+  else if(act==='grp'){PH.grp=id;PH.playId=null;PH.screen='list';renderPhoto();const g=(PH.kind==='y'?bodyGroups():PH.kind==='t'?thingGroups():PH.kind==='v'?vehicleGroups():PHOTO_PACK.groups).find(x=>x.id===id);if(g)photoSay(g[lang]);}
+  else if(act==='play')playItem(id);
   else if(act==='open')openCard(id);
   else if(act==='back')photoBack();
   else if(act==='prev')stepCard(-1);
@@ -184,12 +219,14 @@ function stampItem(kind,id){
   if(kind==='v')return PHOTO_PACK.vehicles.find(x=>x.id===id);
   if(kind==='b')return PHOTO_PACK.pairs.find(x=>x.id===id);
   if(kind==='y')return (PHOTO_PACK.body||[]).find(x=>x.id===id);
+  if(kind==='t')return (PHOTO_PACK.things||[]).find(x=>x.id===id);
   return PHOTO_PACK.animals.find(x=>x.id===id);
 }
 /* back goes to where he was in the list, not to the top; if he paged on with the
    arrows, the picture he last looked at is brought into view */
 function photoBack(){
   photoStop();PUZ=null;
+  if(PH.kind==='d'&&PH.screen==='list'){showTab('home');return;}
   const from=PH.screen,root=photoRoot();
   let top=0;
   if(from==='card'&&PH.kind!=='b'){PH.screen='list';top=PH.listTop;}
@@ -269,6 +306,9 @@ function renderPick(){
   }else if(PH.kind==='v'){
     tiles=vehicleGroups().map(g=>`<button type="button" class="phHab" data-act="grp" data-id="${g.id}" aria-label="${photoEsc(g[lang])}"><img src="${photoCoverV(g.id)}" alt="" loading="lazy" decoding="async" draggable="false"><span class="phEm">${g.emoji}</span><span class="phCap" data-cap="${g.id}">${photoEsc(g[lang])}</span></button>`).join('');
     root.innerHTML=toolsHTML()+`<div class="phGrid">${tiles}</div>`;
+  }else if(PH.kind==='t'){
+    tiles=thingGroups().map(g=>`<button type="button" class="phHab" data-act="grp" data-id="${g.id}" aria-label="${photoEsc(g[lang])}"><img src="${photoCoverT(g.id)}" alt="" loading="lazy" decoding="async" draggable="false"><span class="phEm">${g.emoji}</span><span class="phCap" data-cap="${g.id}">${photoEsc(g[lang])}</span></button>`).join('');
+    root.innerHTML=toolsHTML()+`<div class="phGrid">${tiles}</div>`;
   }else if(PH.kind==='y'){
     tiles=bodyGroups().map(g=>`<button type="button" class="phHab" data-act="grp" data-id="${g.id}" aria-label="${photoEsc(g[lang])}"><img src="${photoCoverY(g.id)}" alt="" loading="lazy" decoding="async" draggable="false"><span class="phEm">${g.emoji}</span><span class="phCap" data-cap="${g.id}">${photoEsc(g[lang])}</span></button>`).join('');
     root.innerHTML=toolsHTML()+`<div class="phGrid">${tiles}</div>`;
@@ -293,15 +333,58 @@ function renderBabyCard(pair,fresh){
       <button type="button" class="phArrow" data-act="next" aria-label="next">▶</button>
     </div>`;
 }
+function listMeta(){
+  if(PH.kind==='a')return PHOTO_PACK.habitats.find(h=>h.id===PH.hab);
+  if(PH.kind==='v')return vehicleGroups().find(g=>g.id===PH.grp);
+  if(PH.kind==='t')return thingGroups().find(g=>g.id===PH.grp);
+  if(PH.kind==='d')return {emoji:'🦕',en:'Dinosaurs',es:'Dinosaurios',de:'Dinosaurier'};
+  if(PH.kind==='y')return bodyGroups().find(g=>g.id===PH.grp);
+  return PHOTO_PACK.groups.find(g=>g.id===PH.grp);
+}
+function fillGroupTitle(){
+  const bar=photoRoot().querySelector('#phNow');if(!bar)return;
+  const meta=listMeta();
+  bar.hidden=false;bar.classList.remove('on');
+  bar.innerHTML=`<div class="phName">${photoEsc(meta?meta[lang]:'')}</div>`;
+}
+function fillNow(item){
+  const root=photoRoot(),bar=root.querySelector('#phNow');if(!bar||!item)return;
+  const y=root.scrollTop;
+  bar.hidden=false;bar.classList.add('on');
+  bar.innerHTML=`<div class="phName">${photoEsc(item.names[lang].full)}</div>${langsHTML(item)}`;
+  root.scrollTop=y;
+}
+function playItem(id){
+  const list=photoList();
+  const i=list.findIndex(x=>x.id===id);if(i<0)return;
+  const item=list[i];
+  PH.idx=i;PH.playId=id;
+  const root=photoRoot();
+  root.querySelectorAll('.phAn').forEach(b=>{
+    const on=b.dataset.id===id;
+    b.classList.toggle('on',on);
+    b.setAttribute('aria-pressed',on?'true':'false');
+  });
+  fillNow(item);
+  if(PH.kind!=='d')photoStamp(PH.kind,item.id);
+  photoSpeak(item);
+}
 function renderList(){
-  const meta=PH.kind==='a'?PHOTO_PACK.habitats.find(h=>h.id===PH.hab):PH.kind==='v'?vehicleGroups().find(g=>g.id===PH.grp):PH.kind==='y'?bodyGroups().find(g=>g.id===PH.grp):PHOTO_PACK.groups.find(g=>g.id===PH.grp);
-  const tiles=photoList().map(it=>`<button type="button" class="phAn" data-act="open" data-id="${it.id}" aria-label="${photoEsc(it.names[lang].full)}"><img src="${it.image}" alt="" loading="lazy" decoding="async" draggable="false"></button>`).join('');
-  photoRoot().innerHTML=barHTML(meta?meta.emoji:'')+`<div class="phGrid">${tiles}</div>`;
+  const meta=listMeta();
+  const inline=isInline();
+  const tiles=photoList().map(it=>{
+    const on=inline&&PH.playId===it.id;
+    return `<button type="button" class="phAn${on?' on':''}" data-act="${inline?'play':'open'}" data-id="${it.id}" aria-pressed="${on?'true':'false'}" aria-label="${photoEsc(it.names[lang].full)}"><img src="${it.image}" alt="" loading="lazy" decoding="async" draggable="false"></button>`;
+  }).join('');
+  const now=inline?'<div class="phNow" id="phNow"></div>':'';
+  const head=inline?`<div class="phHead">${barHTML(meta?meta.emoji:'')}${now}</div>`:barHTML(meta?meta.emoji:'');
+  photoRoot().innerHTML=head+`<div class="phGrid">${tiles}</div>`;
+  if(inline){const item=PH.playId&&photoList().find(x=>x.id===PH.playId);if(item)fillNow(item);else fillGroupTitle();}
 }
 function renderCard(item,fresh){
   photoRoot().innerHTML=`${barHTML(fresh?'🛂':'')}
     <img class="phHero${fresh?' fresh':''}" src="${item.image}" alt="${photoEsc(item.names[lang].full)}" draggable="false">
-    <div class="phName">${photoEsc(item.names[lang].full)}</div>${langsHTML()}
+    <div class="phName">${photoEsc(item.names[lang].full)}</div>${langsHTML(item)}
     <div class="phNav">
       <button type="button" class="phArrow" data-act="prev" aria-label="previous">◀</button>
       <button type="button" class="phReplay" data-act="replay" aria-label="again">🔊</button>
@@ -322,6 +405,7 @@ function renderPass(){
     +block('a','🦁',PHOTO_PACK.animals)
     +block('p','👥',PHOTO_PACK.people)
     +block('v','🚗',PHOTO_PACK.vehicles)
+    +block('t','🧰',PHOTO_PACK.things||[])
     +block('b','🐣',PHOTO_PACK.pairs,p=>p.baby.image,p=>p.baby.names[lang].full)
     +bodyPass();
 }
@@ -341,8 +425,13 @@ function bodyPass(){
 /* ---- Listen and find: the voice says a name, he taps the right photo out of four.
    A wrong tap says what that one is (so even a miss teaches a word); after two
    misses the right one glows. A right answer: the name again and one fact. ---- */
-function findPool(){return PH.kind==='v'?PHOTO_PACK.vehicles:PH.kind==='y'?(PHOTO_PACK.body||[]):PH.kind==='a'?PHOTO_PACK.animals:PHOTO_PACK.people;}
-function findPlural(item){return Object.values(partNames(item)).some(n=>n&&(n.number==='pl'||n.gender==='pl'));}
+function findPool(){return PH.kind==='v'?PHOTO_PACK.vehicles:PH.kind==='t'?(PHOTO_PACK.things||[]):PH.kind==='y'?(PHOTO_PACK.body||[]):PH.kind==='a'?PHOTO_PACK.animals:PHOTO_PACK.people;}
+function findPlural(item){
+  const n=partNames(item)[lang];
+  if(n&&n.number==='sg')return false;
+  if(n&&(n.number==='pl'||n.gender==='pl'))return true;
+  return Object.values(partNames(item)).some(x=>x&&(x.number==='pl'||x.gender==='pl'));
+}
 function findQ(item){
   const n=partNames(item)[lang].full,pl=findPlural(item);
   if(lang==='de')return (pl?'Wo sind ':'Wo ist ')+n+'?';

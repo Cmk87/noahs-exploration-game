@@ -1,0 +1,904 @@
+{
+  "version": 1,
+  "imageSize": 512,
+  "format": "webp",
+  "groups": [
+    {
+      "id": "building",
+      "en": "Building",
+      "es": "Construir",
+      "de": "Bauen",
+      "emoji": "🔨"
+    },
+    {
+      "id": "garden",
+      "en": "Garden",
+      "es": "El jardín",
+      "de": "Der Garten",
+      "emoji": "🌱"
+    },
+    {
+      "id": "kitchen",
+      "en": "Kitchen",
+      "es": "La cocina",
+      "de": "Die Küche",
+      "emoji": "🍳"
+    },
+    {
+      "id": "explore",
+      "en": "Exploring and making",
+      "es": "Mirar y crear",
+      "de": "Schauen und basteln",
+      "emoji": "🔎"
+    }
+  ],
+  "things": [
+    {
+      "id": "hammer",
+      "group": "building",
+      "image": "things/hammer.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "hammer",
+          "full": "the hammer"
+        },
+        "es": {
+          "article": "el",
+          "noun": "martillo",
+          "full": "el martillo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Hammer",
+          "full": "der Hammer",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "A hammer knocks nails into wood.",
+          "es": "El martillo clava los clavos en la madera.",
+          "de": "Ein Hammer schlägt Nägel ins Holz."
+        },
+        {
+          "en": "The heavy head does the hitting, and a grown-up holds the handle.",
+          "es": "La cabeza pesada es la que golpea, y una persona mayor sujeta el mango.",
+          "de": "Der schwere Kopf schlägt, und ein Erwachsener hält den Stiel."
+        }
+      ]
+    },
+    {
+      "id": "screwdriver",
+      "group": "building",
+      "image": "things/screwdriver.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "screwdriver",
+          "full": "the screwdriver"
+        },
+        "es": {
+          "article": "el",
+          "noun": "destornillador",
+          "full": "el destornillador",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Schraubendreher",
+          "full": "der Schraubendreher",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "A screwdriver turns screws.",
+          "es": "El destornillador gira los tornillos.",
+          "de": "Ein Schraubendreher dreht Schrauben."
+        },
+        {
+          "en": "The tip fits the top of the screw, and a grown-up uses it.",
+          "es": "La punta encaja en la cabeza del tornillo, y lo usa una persona mayor.",
+          "de": "Die Spitze passt auf den Schraubenkopf, und ein Erwachsener benutzt ihn."
+        }
+      ]
+    },
+    {
+      "id": "hand-saw",
+      "group": "building",
+      "image": "things/hand-saw.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "saw",
+          "full": "the saw"
+        },
+        "es": {
+          "article": "el",
+          "noun": "serrucho",
+          "full": "el serrucho",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Säge",
+          "full": "die Säge",
+          "gender": "f"
+        }
+      },
+      "facts": [
+        {
+          "en": "A saw has a row of sharp teeth for cutting wood.",
+          "es": "El serrucho tiene una fila de dientes afilados para cortar madera.",
+          "de": "Eine Säge hat eine Reihe scharfer Zähne zum Holzschneiden."
+        },
+        {
+          "en": "Only a grown-up uses a saw.",
+          "es": "El serrucho solo lo usa una persona mayor.",
+          "de": "Eine Säge benutzt nur ein Erwachsener."
+        }
+      ]
+    },
+    {
+      "id": "drill",
+      "group": "building",
+      "image": "things/drill.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "drill",
+          "full": "the drill"
+        },
+        "es": {
+          "article": "el",
+          "noun": "taladro",
+          "full": "el taladro",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Bohrmaschine",
+          "full": "die Bohrmaschine",
+          "gender": "f"
+        }
+      },
+      "facts": [
+        {
+          "en": "A drill makes holes by spinning a metal bit.",
+          "es": "El taladro hace agujeros girando una punta de metal.",
+          "de": "Eine Bohrmaschine macht Löcher, indem sich ein Metallbohrer dreht."
+        },
+        {
+          "en": "It is loud, and only a grown-up switches it on.",
+          "es": "Hace ruido, y solo una persona mayor lo enciende.",
+          "de": "Sie ist laut, und nur ein Erwachsener schaltet sie ein."
+        }
+      ]
+    },
+    {
+      "id": "wrench",
+      "group": "building",
+      "image": "things/wrench.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "wrench",
+          "full": "the wrench"
+        },
+        "es": {
+          "article": "la",
+          "noun": "llave inglesa",
+          "full": "la llave inglesa",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Schraubenschlüssel",
+          "full": "der Schraubenschlüssel",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "A wrench turns nuts and bolts.",
+          "es": "La llave inglesa gira las tuercas y los tornillos.",
+          "de": "Ein Schraubenschlüssel dreht Muttern und Bolzen."
+        },
+        {
+          "en": "The opening fits around the bolt, and a grown-up uses it.",
+          "es": "La boca encaja alrededor del tornillo, y la usa una persona mayor.",
+          "de": "Die Öffnung passt um den Bolzen, und ein Erwachsener benutzt ihn."
+        }
+      ]
+    },
+    {
+      "id": "tape-measure",
+      "group": "building",
+      "image": "things/tape-measure.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "tape measure",
+          "full": "the tape measure"
+        },
+        "es": {
+          "article": "la",
+          "noun": "cinta métrica",
+          "full": "la cinta métrica",
+          "gender": "f"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Maßband",
+          "full": "das Maßband",
+          "gender": "n"
+        }
+      },
+      "facts": [
+        {
+          "en": "A tape measure shows how long something is.",
+          "es": "La cinta métrica dice lo largo que es algo.",
+          "de": "Ein Maßband zeigt, wie lang etwas ist."
+        },
+        {
+          "en": "The metal tape rolls back into the case.",
+          "es": "La cinta de metal se enrolla otra vez dentro de la caja.",
+          "de": "Das Metallband rollt zurück in das Gehäuse."
+        }
+      ]
+    },
+    {
+      "id": "ladder",
+      "group": "building",
+      "image": "things/ladder.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "ladder",
+          "full": "the ladder"
+        },
+        "es": {
+          "article": "la",
+          "noun": "escalera de mano",
+          "full": "la escalera de mano",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Leiter",
+          "full": "die Leiter",
+          "gender": "f"
+        }
+      },
+      "facts": [
+        {
+          "en": "A ladder helps a grown-up reach a high place.",
+          "es": "La escalera de mano ayuda a una persona mayor a llegar a un sitio alto.",
+          "de": "Eine Leiter hilft einem Erwachsenen, eine hohe Stelle zu erreichen."
+        },
+        {
+          "en": "It stands on firm ground, and a grown-up is the one who climbs it.",
+          "es": "Se apoya en suelo firme, y quien sube es una persona mayor.",
+          "de": "Sie steht auf festem Boden, und ein Erwachsener steigt hinauf."
+        }
+      ]
+    },
+    {
+      "id": "hard-hat",
+      "group": "building",
+      "image": "things/hard-hat.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "hard hat",
+          "full": "the hard hat"
+        },
+        "es": {
+          "article": "el",
+          "noun": "casco de obra",
+          "full": "el casco de obra",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Schutzhelm",
+          "full": "der Schutzhelm",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "A hard hat protects a builder’s head.",
+          "es": "El casco de obra protege la cabeza de quien construye.",
+          "de": "Ein Schutzhelm schützt den Kopf eines Bauarbeiters."
+        },
+        {
+          "en": "The strong shell takes the bump instead of the head.",
+          "es": "La cáscara dura recibe el golpe en lugar de la cabeza.",
+          "de": "Die feste Schale fängt den Stoß ab, nicht der Kopf."
+        }
+      ]
+    },
+    {
+      "id": "wheelbarrow",
+      "group": "building",
+      "image": "things/wheelbarrow.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "wheelbarrow",
+          "full": "the wheelbarrow"
+        },
+        "es": {
+          "article": "la",
+          "noun": "carretilla",
+          "full": "la carretilla",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Schubkarre",
+          "full": "die Schubkarre",
+          "gender": "f"
+        }
+      },
+      "facts": [
+        {
+          "en": "A wheelbarrow has one wheel and two handles.",
+          "es": "La carretilla tiene una rueda y dos asas.",
+          "de": "Eine Schubkarre hat ein Rad und zwei Griffe."
+        },
+        {
+          "en": "It carries soil, bricks or tools.",
+          "es": "Lleva tierra, ladrillos o herramientas.",
+          "de": "Sie trägt Erde, Ziegel oder Werkzeug."
+        }
+      ]
+    },
+    {
+      "id": "traffic-cone",
+      "group": "building",
+      "image": "things/traffic-cone.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "traffic cone",
+          "full": "the traffic cone"
+        },
+        "es": {
+          "article": "el",
+          "noun": "cono",
+          "full": "el cono",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Leitkegel",
+          "full": "der Leitkegel",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "An orange cone shows where not to walk or drive.",
+          "es": "Un cono naranja indica por dónde no se camina ni se conduce.",
+          "de": "Ein oranger Kegel zeigt, wo man nicht gehen oder fahren soll."
+        },
+        {
+          "en": "The bright colour makes it easy to see.",
+          "es": "El color vivo hace que se vea enseguida.",
+          "de": "Die leuchtende Farbe macht ihn leicht zu sehen."
+        }
+      ]
+    },
+    {
+      "id": "watering-can",
+      "group": "garden",
+      "image": "things/watering-can.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "watering can",
+          "full": "the watering can"
+        },
+        "es": {
+          "article": "la",
+          "noun": "regadera",
+          "full": "la regadera",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Gießkanne",
+          "full": "die Gießkanne",
+          "gender": "f"
+        }
+      },
+      "facts": [
+        {
+          "en": "A watering can holds water for plants.",
+          "es": "La regadera guarda agua para las plantas.",
+          "de": "Eine Gießkanne hält Wasser für die Pflanzen."
+        },
+        {
+          "en": "The spout has little holes, so the water comes out gently.",
+          "es": "El pico tiene agujeritos, y el agua sale con suavidad.",
+          "de": "Die Tülle hat kleine Löcher, darum kommt das Wasser sanft heraus."
+        }
+      ]
+    },
+    {
+      "id": "spade",
+      "group": "garden",
+      "image": "things/spade.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "spade",
+          "full": "the spade"
+        },
+        "es": {
+          "article": "la",
+          "noun": "pala",
+          "full": "la pala",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Spaten",
+          "full": "der Spaten",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "A spade is for digging soil.",
+          "es": "La pala sirve para cavar la tierra.",
+          "de": "Ein Spaten ist zum Umgraben der Erde."
+        },
+        {
+          "en": "A grown-up pushes it into the ground.",
+          "es": "Una persona mayor la clava en el suelo.",
+          "de": "Ein Erwachsener drückt ihn in den Boden."
+        }
+      ]
+    },
+    {
+      "id": "rake",
+      "group": "garden",
+      "image": "things/rake.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "rake",
+          "full": "the rake"
+        },
+        "es": {
+          "article": "el",
+          "noun": "rastrillo",
+          "full": "el rastrillo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Rechen",
+          "full": "der Rechen",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "A rake gathers leaves and smooths the soil.",
+          "es": "El rastrillo junta las hojas y allana la tierra.",
+          "de": "Ein Rechen sammelt Blätter und glättet die Erde."
+        },
+        {
+          "en": "The long handle reaches the ground.",
+          "es": "El mango largo llega hasta el suelo.",
+          "de": "Der lange Stiel reicht bis zum Boden."
+        }
+      ]
+    },
+    {
+      "id": "flowerpot",
+      "group": "garden",
+      "image": "things/flowerpot.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "flowerpot",
+          "full": "the flowerpot"
+        },
+        "es": {
+          "article": "la",
+          "noun": "maceta",
+          "full": "la maceta",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Blumentopf",
+          "full": "der Blumentopf",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "A flowerpot holds soil and a plant.",
+          "es": "La maceta contiene tierra y una planta.",
+          "de": "Ein Blumentopf hält Erde und eine Pflanze."
+        },
+        {
+          "en": "A hole in the bottom lets extra water run out.",
+          "es": "Un agujero en el fondo deja salir el agua que sobra.",
+          "de": "Ein Loch unten lässt überschüssiges Wasser ablaufen."
+        }
+      ]
+    },
+    {
+      "id": "hose",
+      "group": "garden",
+      "image": "things/hose.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "hose",
+          "full": "the hose"
+        },
+        "es": {
+          "article": "la",
+          "noun": "manguera",
+          "full": "la manguera",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Gartenschlauch",
+          "full": "der Gartenschlauch",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "A hose brings water from the tap to the garden.",
+          "es": "La manguera lleva el agua del grifo al jardín.",
+          "de": "Ein Gartenschlauch bringt Wasser vom Hahn in den Garten."
+        },
+        {
+          "en": "The water comes out of the end so the plants can drink.",
+          "es": "El agua sale por el extremo para que las plantas beban.",
+          "de": "Das Wasser kommt am Ende heraus, damit die Pflanzen trinken können."
+        }
+      ]
+    },
+    {
+      "id": "wooden-spoon",
+      "group": "kitchen",
+      "image": "things/wooden-spoon.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "wooden spoon",
+          "full": "the wooden spoon"
+        },
+        "es": {
+          "article": "la",
+          "noun": "cuchara de madera",
+          "full": "la cuchara de madera",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Holzlöffel",
+          "full": "der Holzlöffel",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "A wooden spoon stirs food in a pot.",
+          "es": "La cuchara de madera remueve la comida en la olla.",
+          "de": "Ein Holzlöffel rührt das Essen im Topf um."
+        },
+        {
+          "en": "Wood stays cooler in the hand than a metal spoon.",
+          "es": "La madera se queda más fresca en la mano que una cuchara de metal.",
+          "de": "Holz bleibt in der Hand kühler als ein Metalllöffel."
+        }
+      ]
+    },
+    {
+      "id": "whisk",
+      "group": "kitchen",
+      "image": "things/whisk.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "whisk",
+          "full": "the whisk"
+        },
+        "es": {
+          "article": "el",
+          "noun": "batidor",
+          "full": "el batidor",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Schneebesen",
+          "full": "der Schneebesen",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "A whisk mixes eggs or cream and puts air into them.",
+          "es": "El batidor mezcla los huevos o la nata y les mete aire.",
+          "de": "Ein Schneebesen mischt Eier oder Sahne und bringt Luft hinein."
+        },
+        {
+          "en": "The wire loops move through the food.",
+          "es": "Los aros de alambre se mueven por la comida.",
+          "de": "Die Drahtschlaufen bewegen sich durch das Essen."
+        }
+      ]
+    },
+    {
+      "id": "rolling-pin",
+      "group": "kitchen",
+      "image": "things/rolling-pin.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "rolling pin",
+          "full": "the rolling pin"
+        },
+        "es": {
+          "article": "el",
+          "noun": "rodillo",
+          "full": "el rodillo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Nudelholz",
+          "full": "das Nudelholz",
+          "gender": "n"
+        }
+      },
+      "facts": [
+        {
+          "en": "A rolling pin flattens dough for bread or biscuits.",
+          "es": "El rodillo aplana la masa del pan o de las galletas.",
+          "de": "Ein Nudelholz macht Teig für Brot oder Kekse flach."
+        },
+        {
+          "en": "It rolls back and forth over the dough.",
+          "es": "Se pasa adelante y atrás por encima de la masa.",
+          "de": "Man rollt es vor und zurück über den Teig."
+        }
+      ]
+    },
+    {
+      "id": "saucepan",
+      "group": "kitchen",
+      "image": "things/saucepan.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "saucepan",
+          "full": "the saucepan"
+        },
+        "es": {
+          "article": "la",
+          "noun": "cacerola",
+          "full": "la cacerola",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Kochtopf",
+          "full": "der Kochtopf",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "A saucepan holds food on the cooker.",
+          "es": "La cacerola contiene la comida sobre la cocina.",
+          "de": "Ein Kochtopf hält das Essen auf dem Herd."
+        },
+        {
+          "en": "The cooker is hot, so a grown-up does the cooking.",
+          "es": "La cocina quema, así que cocina una persona mayor.",
+          "de": "Der Herd ist heiß, darum kocht ein Erwachsener."
+        }
+      ]
+    },
+    {
+      "id": "oven-mitt",
+      "group": "kitchen",
+      "image": "things/oven-mitt.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "oven mitt",
+          "full": "the oven mitt"
+        },
+        "es": {
+          "article": "el",
+          "noun": "guante de horno",
+          "full": "el guante de horno",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Topfhandschuh",
+          "full": "der Topfhandschuh",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "An oven mitt is a thick glove for hot pans.",
+          "es": "El guante de horno es un guante grueso para las ollas calientes.",
+          "de": "Ein Topfhandschuh ist ein dicker Handschuh für heiße Töpfe."
+        },
+        {
+          "en": "It keeps a grown-up’s hand safe when food comes out of the oven.",
+          "es": "Protege la mano de una persona mayor cuando la comida sale del horno.",
+          "de": "Er schützt die Hand eines Erwachsenen, wenn das Essen aus dem Ofen kommt."
+        }
+      ]
+    },
+    {
+      "id": "magnifying-glass",
+      "group": "explore",
+      "image": "things/magnifying-glass.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "magnifying glass",
+          "full": "the magnifying glass"
+        },
+        "es": {
+          "article": "la",
+          "noun": "lupa",
+          "full": "la lupa",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Lupe",
+          "full": "die Lupe",
+          "gender": "f"
+        }
+      },
+      "facts": [
+        {
+          "en": "A magnifying glass makes small things look bigger.",
+          "es": "La lupa hace que las cosas pequeñas se vean más grandes.",
+          "de": "Eine Lupe lässt kleine Dinge größer aussehen."
+        },
+        {
+          "en": "The curved glass bends the light.",
+          "es": "El cristal curvado desvía la luz.",
+          "de": "Das gewölbte Glas biegt das Licht."
+        }
+      ]
+    },
+    {
+      "id": "binoculars",
+      "group": "explore",
+      "image": "things/binoculars.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "binoculars",
+          "full": "the binoculars",
+          "number": "pl"
+        },
+        "es": {
+          "article": "los",
+          "noun": "prismáticos",
+          "full": "los prismáticos",
+          "gender": "m",
+          "number": "pl"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Fernglas",
+          "full": "das Fernglas",
+          "gender": "n",
+          "number": "sg"
+        }
+      },
+      "facts": [
+        {
+          "en": "Binoculars make far-away birds and animals look closer.",
+          "es": "Los prismáticos hacen que los pájaros y los animales lejanos se vean más cerca.",
+          "de": "Ein Fernglas lässt weit entfernte Vögel und Tiere näher aussehen."
+        },
+        {
+          "en": "You hold them up to both eyes.",
+          "es": "Se sujetan delante de los dos ojos.",
+          "de": "Man hält es vor beide Augen."
+        }
+      ]
+    },
+    {
+      "id": "compass",
+      "group": "explore",
+      "image": "things/compass.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "compass",
+          "full": "the compass"
+        },
+        "es": {
+          "article": "la",
+          "noun": "brújula",
+          "full": "la brújula",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Kompass",
+          "full": "der Kompass",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "A compass shows which way is north.",
+          "es": "La brújula indica dónde está el norte.",
+          "de": "Ein Kompass zeigt, wo Norden ist."
+        },
+        {
+          "en": "The needle always swings to point the same way.",
+          "es": "La aguja siempre gira para señalar el mismo lado.",
+          "de": "Die Nadel dreht sich immer so, dass sie in dieselbe Richtung zeigt."
+        }
+      ]
+    },
+    {
+      "id": "crayon",
+      "group": "explore",
+      "image": "things/crayon.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "crayon",
+          "full": "the crayon"
+        },
+        "es": {
+          "article": "el",
+          "noun": "crayón",
+          "full": "el crayón",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Buntstift",
+          "full": "der Buntstift",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "A crayon draws and colours on paper.",
+          "es": "El crayón dibuja y colorea en el papel.",
+          "de": "Ein Buntstift zeichnet und malt auf Papier."
+        },
+        {
+          "en": "Each crayon is a different colour.",
+          "es": "Cada crayón es de un color distinto.",
+          "de": "Jeder Buntstift hat eine andere Farbe."
+        }
+      ]
+    }
+  ]
+}

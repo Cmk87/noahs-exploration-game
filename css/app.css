@@ -331,6 +331,8 @@
   #dinoCard{display:none;margin:14px 14px 0;background:#fff;color:var(--ink);border:4px solid var(--ink);box-shadow:6px 6px 0 var(--ink);
     padding:10px 14px 12px;text-align:center;max-width:470px;width:calc(100% - 28px);transform:rotate(-1deg)}
   #dinoCard.on{display:block;animation:slam .55s cubic-bezier(.2,1.7,.4,1)}
+  #dinoLive{display:none;width:min(56vw,220px);aspect-ratio:1;object-fit:cover;border-radius:16px;border:4px solid var(--ink);margin:0 auto 8px}
+  #dinoCard.on #dinoLive{display:block}
   #dinoName{font-size:min(7vw,30px)}
   #dinoFact{font-size:min(4.4vw,18px);margin-top:4px}
   .tools button.armed{background:var(--blaze);color:#fff;animation:pulse .3s ease-in-out infinite alternate}
@@ -556,7 +558,7 @@ button,.btn,input,select{font-family:'Nunito',system-ui,sans-serif}
 #homeBtn:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(10,14,55,.30)}
 header{padding-top:max(9px,env(safe-area-inset-top));padding-bottom:8px}
 #v-home{padding:4px 14px 18px}
-#homeHello{font-size:min(7.4vw,30px);color:#fff;text-shadow:0 3px 0 rgba(5,8,40,.35);margin:6px 0 12px;text-align:center}
+#homeHello{font-size:min(6.4vw,28px);color:#fff;text-shadow:0 3px 0 rgba(5,8,40,.35);margin:0 0 4px;text-align:center}
 #homeGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%}
 .hcard{position:relative;border:none;border-radius:26px;color:#fff;cursor:pointer;overflow:hidden;
   min-height:min(30vw,128px);padding:12px 10px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
@@ -662,7 +664,8 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .stkDinos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .stkDino{border:none;border-radius:16px;padding:4px 4px 6px;background:#EEF1F8;cursor:pointer;color:#9AA4B8}
 .stkDino.got{background:linear-gradient(#FFF6D8,#E9D49B);color:var(--ink)}
-.stkDino canvas{width:100%;aspect-ratio:4/3;display:block}
+.stkDino canvas,.stkDino img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;border-radius:10px}
+.stkBig img.stkLive{width:min(70vw,280px);height:min(70vw,280px);object-fit:cover;border-radius:18px;display:block;margin:0 auto}
 .stkDino:active{transform:translateY(2px) scale(.98)}
 .stkTreasures{margin:10px 4px 0;font-size:15px;color:var(--ink);text-align:center}
 .stkTreasures span,.stkTre{margin:0 4px}
@@ -676,9 +679,9 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 #qsStay{background:var(--good);color:#fff}
 /* ---------- big and small screens ----------
    Home: the cards shrink a little on short screens so all of them fit without scrolling. */
-.hcard{min-height:min(30vw,128px,calc((100vh - 230px)/7 - 14px));min-height:min(30vw,128px,calc((100dvh - 230px)/7 - 14px));padding:8px 10px}
+.hcard{min-height:min(30vw,128px,calc((100vh - 230px)/9 - 14px));min-height:min(30vw,128px,calc((100dvh - 230px)/9 - 14px));padding:8px 10px}
 .hcard .hi{font-size:min(13vw,56px,6vh);font-size:min(13vw,56px,6dvh)}
-.hcard.wide{min-height:min(26vw,108px,calc((100vh - 230px)/7 - 14px));min-height:min(26vw,108px,calc((100dvh - 230px)/7 - 14px))}
+.hcard.wide{min-height:min(26vw,108px,calc((100vh - 230px)/9 - 14px));min-height:min(26vw,108px,calc((100dvh - 230px)/9 - 14px))}
 .hcard.wide .hi{font-size:min(16vw,66px,7vh);font-size:min(16vw,66px,7dvh)}
 /* Landscape tablets and computers: use the width. Home cards in four columns, game screens a bit wider. */
 @media (orientation:landscape) and (min-width:700px){
@@ -692,7 +695,7 @@ header{gap:6px;padding-left:10px;padding-right:10px}
   #mapWrap,#geoBox{max-width:min(1000px,100%)}
   #map{height:min(calc(100vh - 370px),560px);height:min(calc(100dvh - 370px),560px)}
   #homeGrid{grid-template-columns:repeat(4,1fr);max-width:1000px;margin:0 auto}
-  .hcard{min-height:min(19vw,calc((100vh - 190px)/4 - 14px));min-height:min(19vw,calc((100dvh - 190px)/4 - 14px))}
+  .hcard{min-height:min(19vw,calc((100vh - 190px)/5 - 14px));min-height:min(19vw,calc((100dvh - 190px)/5 - 14px))}
   .hcard.wide{grid-column:span 2;min-height:0}
   .hcard .hi{font-size:min(6vw,10vh,64px);font-size:min(6vw,10dvh,64px)}
   .hcard .hl{font-size:min(2.6vw,26px)}
@@ -791,18 +794,18 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .jLetter{left:50%;top:20%;font-size:min(10vw,52px)}.jLetter b{font:800 min(6vw,28px)/1 'Baloo 2',sans-serif;color:#C0473A;margin-left:4px}
 .jBoard{position:absolute;left:50%;top:22%;transform:translate(-50%,-50%);background:#1E3D2E;border:6px solid #9A6440;border-radius:8px;color:#fff;font:800 min(14vw,72px)/1 'Baloo 2',sans-serif;padding:6px 26px}
 .jEnd{display:flex;gap:12px;justify-content:center}
-/* seventeen sections: three columns upright (Abenteuer across the top, Preise two wide at the end), five on a landscape screen */
-#homeGrid{grid-template-columns:repeat(3,1fr);gap:8px}
+/* nineteen sections: three columns upright (Abenteuer across the top, Preise two wide at the end), five on a landscape screen */
+#homeGrid{grid-template-columns:repeat(3,1fr);gap:4px}
 #v-home{padding-bottom:2px}
-.hcard{min-height:min(30vw,128px,calc((100vh - 220px)/7 - 8px));min-height:min(30vw,128px,calc((100dvh - 220px)/7 - 8px));padding:6px 4px;border-radius:22px}
-.hcard .hi{font-size:min(10vw,52px,6vh);font-size:min(10vw,52px,6dvh)}
-.hcard .hl{font-size:min(4.3vw,21px)}
+.hcard{min-height:min(28vw,112px,calc((100vh - 200px)/8 - 6px));min-height:min(28vw,112px,calc((100dvh - 200px)/8 - 6px));padding:4px 4px;border-radius:22px}
+.hcard .hi{font-size:min(9vw,44px,5vh);font-size:min(9vw,44px,5dvh)}
+.hcard .hl{font-size:min(3.6vw,18px);white-space:nowrap}
 .hcard .hx{font-size:12px;padding:0 8px}
 .hcard.last{grid-column:span 2;flex-direction:row;gap:12px}
 .hcard.last .hi{font-size:min(13vw,60px,7vh);font-size:min(13vw,60px,7dvh)}.hcard.last .hl{font-size:min(5.6vw,26px)}
 @media (orientation:landscape) and (min-width:700px){
   #homeGrid{grid-template-columns:repeat(5,1fr);max-width:1100px}
-  .hcard,.hcard.wide{min-height:min(19vw,calc((100vh - 190px)/4 - 12px));min-height:min(19vw,calc((100dvh - 190px)/4 - 12px))}
+  .hcard,.hcard.wide{min-height:min(19vw,calc((100vh - 190px)/5 - 12px));min-height:min(19vw,calc((100dvh - 190px)/5 - 12px))}
   .hcard.wide{grid-column:span 3}.hcard.last{grid-column:span 2}
   .hcard .hl{font-size:min(2.2vw,24px)}
 }
@@ -860,7 +863,14 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 /* =====================================================================
    ANIMAL KINGDOM + PEOPLE OF THE WORLD
 ===================================================================== */
-#v-king,#v-folk{padding:4px 0 16px;align-items:stretch}
+#v-king,#v-folk,#v-ride,#v-things,#v-dinos{padding:4px 0 16px;align-items:stretch}
+.phHead{position:sticky;top:0;z-index:5;width:100%;padding-bottom:4px;background:rgba(11,16,48,.94)}
+.phNow{display:flex;align-items:center;gap:8px;min-height:68px;margin:0 12px 8px;padding:8px 8px 8px 14px;
+  background:#fff;color:#132048;border-radius:20px;box-shadow:var(--lift),var(--soft)}
+.phNow .phName{flex:1;margin:0;text-align:left;color:#132048;text-shadow:none;font-size:min(5.4vw,26px)}
+.phNow .phLangs{margin:0;flex:0 0 auto}
+.phNow .phLang{min-width:48px;min-height:48px;background:#F4F1EA;box-shadow:0 3px 0 rgba(10,14,55,.18)}
+.phAn.on{box-shadow:0 0 0 6px #FFE14A,0 8px 16px rgba(0,0,0,.35)}
 .phTools{display:flex;gap:10px;width:100%;padding:2px 12px 10px;justify-content:center}
 .phTool{flex:1;max-width:140px;height:76px;border:none;border-radius:22px;background:#fff;font-size:40px;line-height:1;
   box-shadow:var(--lift),var(--soft);cursor:pointer}
@@ -929,7 +939,7 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .phTouchGo:active,.phTouchCard:active{transform:translateY(4px)}
 /* photo books on a tablet: use the width — more pictures per row, bigger hero picture */
 @media (min-width:700px){
-  #v-king,#v-folk,#v-ride,#v-baby,#v-body{max-width:min(100%,1100px)}
+  #v-king,#v-folk,#v-ride,#v-things,#v-dinos,#v-baby,#v-body{max-width:min(100%,1100px)}
   .phGrid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
   .phGroups{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
   .phStamps{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}

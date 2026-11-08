@@ -98,11 +98,7 @@
           "gender": "f"
         }
       },
-      "sound": {
-        "en": "moo",
-        "es": "mu",
-        "de": "muh"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Cows have best friends, and they feel calmer when their friend is close by!",
@@ -139,11 +135,7 @@
           "gender": "n"
         }
       },
-      "sound": {
-        "en": "neigh",
-        "es": "iiiih",
-        "de": "wieher"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Horses can sleep standing up!",
@@ -180,11 +172,7 @@
           "gender": "n"
         }
       },
-      "sound": {
-        "en": "oink",
-        "es": "oinc",
-        "de": "grunz"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Pigs roll in mud to keep cool, because they can hardly sweat!",
@@ -221,11 +209,7 @@
           "gender": "n"
         }
       },
-      "sound": {
-        "en": "baa",
-        "es": "bee",
-        "de": "mäh"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Sheep can remember the faces of about 50 other sheep!",
@@ -262,11 +246,7 @@
           "gender": "f"
         }
       },
-      "sound": {
-        "en": "maa",
-        "es": "bee",
-        "de": "meck meck"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Goats have pupils shaped like little rectangles!",
@@ -303,11 +283,7 @@
           "gender": "n"
         }
       },
-      "sound": {
-        "en": "cluck cluck",
-        "es": "co co co",
-        "de": "gack gack"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Chickens are relatives of the dinosaurs!",
@@ -344,11 +320,7 @@
           "gender": "f"
         }
       },
-      "sound": {
-        "en": "quack",
-        "es": "cuac cuac",
-        "de": "quak quak"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Duck feathers are waterproof, so ducks stay dry in the water!",
@@ -385,11 +357,7 @@
           "gender": "m"
         }
       },
-      "sound": {
-        "en": "woof",
-        "es": "guau",
-        "de": "wau wau"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "A dog's nose can smell thousands of times better than yours!",
@@ -426,11 +394,7 @@
           "gender": "f"
         }
       },
-      "sound": {
-        "en": "meow",
-        "es": "miau",
-        "de": "miau"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Cats sleep for more than half of the day!",
@@ -578,11 +542,7 @@
           "gender": "m"
         }
       },
-      "sound": {
-        "en": "grrr",
-        "es": "grrr",
-        "de": "brumm"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Bears sleep through the winter in a cozy den!",
@@ -731,11 +691,7 @@
           "gender": "m"
         }
       },
-      "sound": {
-        "en": "awooo",
-        "es": "auuuu",
-        "de": "auuuu"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "A wolf's howl can be heard many kilometers away!",
@@ -772,11 +728,7 @@
           "gender": "m"
         }
       },
-      "sound": {
-        "en": "ooh ooh aah aah",
-        "es": "u u a a",
-        "de": "uh uh ah ah"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Capuchin monkeys can crack nuts open with stones, like a hammer!",
@@ -814,11 +766,7 @@
           "gender": "m"
         }
       },
-      "sound": {
-        "en": "roar",
-        "es": "grrr",
-        "de": "grrr"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "A tiger's skin is striped too, not just its fur!",
@@ -892,11 +840,7 @@
           "gender": "f"
         }
       },
-      "sound": {
-        "en": "hiss",
-        "es": "sss",
-        "de": "zisch"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Snakes smell with their tongue!",
@@ -933,11 +877,7 @@
           "gender": "m"
         }
       },
-      "sound": {
-        "en": "ribbit",
-        "es": "croac",
-        "de": "quak"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Frogs drink water through their skin!",
@@ -974,11 +914,7 @@
           "gender": "m"
         }
       },
-      "sound": {
-        "en": "roar",
-        "es": "grrr",
-        "de": "roar"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "A lion's roar can be heard about 8 kilometers away!",
@@ -1015,11 +951,7 @@
           "gender": "m"
         }
       },
-      "sound": {
-        "en": "toot",
-        "es": "pruuu",
-        "de": "törööö"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Elephants are the biggest animals that live on land!",
@@ -1278,11 +1210,7 @@
           "gender": "m"
         }
       },
-      "sound": {
-        "en": "click click",
-        "es": "clic clic",
-        "de": "klick klick"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Every dolphin has its own special whistle, like a name!",
@@ -1729,11 +1657,7 @@
           "gender": "m"
         }
       },
-      "sound": {
-        "en": "hello!",
-        "es": "¡hola!",
-        "de": "hallo!"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Some parrots can copy words that people say!",
@@ -1844,11 +1768,7 @@
           "gender": "f"
         }
       },
-      "sound": {
-        "en": "buzz",
-        "es": "bzzz",
-        "de": "summ"
-      },
+      "sound": null,
       "facts": [
         {
           "en": "Bees dance to show their friends where the flowers are!",
@@ -2044,6 +1964,1560 @@
           "en": "A panda has a special bump on its paw that works like a thumb to hold bamboo!",
           "es": "¡El panda tiene un bultito en la pata que usa como un pulgar para sujetar el bambú!",
           "de": "Ein Panda hat einen kleinen Knubbel an der Pfote, der wie ein Daumen hilft, Bambus zu halten!"
+        }
+      ]
+    },
+    {
+      "id": "donkey",
+      "habitat": "farm",
+      "image": "animals/donkey.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "donkey",
+          "full": "the donkey"
+        },
+        "es": {
+          "article": "el",
+          "noun": "burro",
+          "full": "el burro",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Esel",
+          "full": "der Esel",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A donkey has long ears and can carry a heavy pack on a rocky path.",
+          "es": "El burro tiene las orejas largas y puede llevar una carga pesada por un camino de piedras.",
+          "de": "Ein Esel hat lange Ohren und kann eine schwere Last über einen steinigen Weg tragen."
+        },
+        {
+          "en": "A donkey can turn its ears to hear what is behind it.",
+          "es": "El burro puede girar las orejas para oír lo que hay detrás.",
+          "de": "Ein Esel kann die Ohren drehen und hört so, was hinter ihm ist."
+        }
+      ]
+    },
+    {
+      "id": "rooster",
+      "habitat": "farm",
+      "image": "animals/rooster.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "rooster",
+          "full": "the rooster"
+        },
+        "es": {
+          "article": "el",
+          "noun": "gallo",
+          "full": "el gallo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Hahn",
+          "full": "der Hahn",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A rooster has a red comb on his head and long, shiny tail feathers.",
+          "es": "El gallo tiene una cresta roja en la cabeza y plumas largas y brillantes en la cola.",
+          "de": "Ein Hahn hat einen roten Kamm auf dem Kopf und lange, glänzende Schwanzfedern."
+        },
+        {
+          "en": "The rooster stays with the hens and watches the farmyard.",
+          "es": "El gallo se queda con las gallinas y vigila el corral.",
+          "de": "Der Hahn bleibt bei den Hennen und passt auf den Hof auf."
+        }
+      ]
+    },
+    {
+      "id": "goose",
+      "habitat": "farm",
+      "image": "animals/goose.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "goose",
+          "full": "the goose"
+        },
+        "es": {
+          "article": "el",
+          "noun": "ganso",
+          "full": "el ganso",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Gans",
+          "full": "die Gans",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A goose has a long neck and big webbed feet for swimming.",
+          "es": "El ganso tiene el cuello largo y unas patas grandes con membrana para nadar.",
+          "de": "Eine Gans hat einen langen Hals und große Schwimmfüße."
+        },
+        {
+          "en": "When geese fly a long way, they travel together in a V shape.",
+          "es": "Cuando los gansos vuelan muy lejos, van juntos formando una V.",
+          "de": "Wenn Gänse weit fliegen, ziehen sie gemeinsam in einer V-Form."
+        }
+      ]
+    },
+    {
+      "id": "guinea-pig",
+      "habitat": "pets",
+      "image": "animals/guinea-pig.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "guinea pig",
+          "full": "the guinea pig"
+        },
+        "es": {
+          "article": "el",
+          "noun": "conejillo de indias",
+          "full": "el conejillo de indias",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Meerschweinchen",
+          "full": "das Meerschweinchen",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A guinea pig is a small pet that likes to eat hay.",
+          "es": "El conejillo de indias es una mascota pequeña a la que le gusta el heno.",
+          "de": "Ein Meerschweinchen ist ein kleines Haustier und frisst gern Heu."
+        },
+        {
+          "en": "A guinea pig’s teeth never stop growing, so hay helps wear them down.",
+          "es": "Los dientes del conejillo de indias no dejan de crecer, y el heno ayuda a desgastarlos.",
+          "de": "Die Zähne eines Meerschweinchens wachsen immer weiter, und Heu nutzt sie ab."
+        }
+      ]
+    },
+    {
+      "id": "goldfish",
+      "habitat": "pets",
+      "image": "animals/goldfish.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "goldfish",
+          "full": "the goldfish"
+        },
+        "es": {
+          "article": "el",
+          "noun": "pez dorado",
+          "full": "el pez dorado",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Goldfisch",
+          "full": "der Goldfisch",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A goldfish lives in water and steers with its fins.",
+          "es": "El pez dorado vive en el agua y se dirige con las aletas.",
+          "de": "Ein Goldfisch lebt im Wasser und steuert mit seinen Flossen."
+        },
+        {
+          "en": "A goldfish can remember things for months.",
+          "es": "Un pez dorado puede acordarse de las cosas durante meses.",
+          "de": "Ein Goldfisch kann sich monatelang an Dinge erinnern."
+        }
+      ]
+    },
+    {
+      "id": "badger",
+      "habitat": "forest",
+      "image": "animals/badger.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "badger",
+          "full": "the badger"
+        },
+        "es": {
+          "article": "el",
+          "noun": "tejón",
+          "full": "el tejón",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Dachs",
+          "full": "der Dachs",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A badger has a white stripe on its head, so you can tell it is a badger.",
+          "es": "El tejón tiene una raya blanca en la cabeza, y así se reconoce.",
+          "de": "Ein Dachs hat einen weißen Streifen auf dem Kopf, daran erkennt man ihn."
+        },
+        {
+          "en": "Badgers live in a big underground home with many tunnels.",
+          "es": "Los tejones viven en una casa grande bajo tierra, con muchos túneles.",
+          "de": "Dachse wohnen in einem großen Bau unter der Erde, mit vielen Gängen."
+        }
+      ]
+    },
+    {
+      "id": "wild-boar",
+      "habitat": "forest",
+      "image": "animals/wild-boar.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "wild boar",
+          "full": "the wild boar"
+        },
+        "es": {
+          "article": "el",
+          "noun": "jabalí",
+          "full": "el jabalí",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Wildschwein",
+          "full": "das Wildschwein",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A wild boar is a wild pig with a bristly coat and a long snout.",
+          "es": "El jabalí es un cerdo salvaje con el pelo duro y un hocico largo.",
+          "de": "Ein Wildschwein ist ein wildes Schwein mit borstigem Fell und einer langen Schnauze."
+        },
+        {
+          "en": "Wild boars sniff the ground to find roots and nuts.",
+          "es": "Los jabalíes olfatean el suelo para encontrar raíces y nueces.",
+          "de": "Wildschweine schnüffeln am Boden und finden so Wurzeln und Nüsse."
+        }
+      ]
+    },
+    {
+      "id": "beaver",
+      "habitat": "forest",
+      "image": "animals/beaver.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "beaver",
+          "full": "the beaver"
+        },
+        "es": {
+          "article": "el",
+          "noun": "castor",
+          "full": "el castor",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Biber",
+          "full": "der Biber",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A beaver has big front teeth and a flat tail.",
+          "es": "El castor tiene los dientes de delante muy grandes y la cola plana.",
+          "de": "Ein Biber hat große Vorderzähne und einen flachen Schwanz."
+        },
+        {
+          "en": "Beavers build a dam of sticks so their home sits in a quiet pond.",
+          "es": "Los castores construyen una presa con palos para que su casa esté en un estanque tranquilo.",
+          "de": "Biber bauen einen Damm aus Ästen, damit ihr Zuhause in einem ruhigen Teich liegt."
+        }
+      ]
+    },
+    {
+      "id": "bat",
+      "habitat": "forest",
+      "image": "animals/bat.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "bat",
+          "full": "the bat"
+        },
+        "es": {
+          "article": "el",
+          "noun": "murciélago",
+          "full": "el murciélago",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Fledermaus",
+          "full": "die Fledermaus",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A bat is the only mammal that can really fly.",
+          "es": "El murciélago es el único mamífero que puede volar de verdad.",
+          "de": "Die Fledermaus ist das einzige Säugetier, das wirklich fliegen kann."
+        },
+        {
+          "en": "Bats fly at night and find insects by listening to echoes.",
+          "es": "Los murciélagos vuelan de noche y encuentran insectos escuchando los ecos.",
+          "de": "Fledermäuse fliegen nachts und finden Insekten, indem sie auf Echos hören."
+        }
+      ]
+    },
+    {
+      "id": "leopard",
+      "habitat": "jungle",
+      "image": "animals/leopard.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "leopard",
+          "full": "the leopard"
+        },
+        "es": {
+          "article": "el",
+          "noun": "leopardo",
+          "full": "el leopardo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Leopard",
+          "full": "der Leopard",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A leopard has spots and can pull its food up into a tree.",
+          "es": "El leopardo tiene manchas y puede subir su comida a un árbol.",
+          "de": "Ein Leopard hat Flecken und kann sein Futter auf einen Baum ziehen."
+        },
+        {
+          "en": "A black panther is this same cat, with black fur.",
+          "es": "Una pantera negra es este mismo gato, con el pelo negro.",
+          "de": "Ein schwarzer Panther ist dieselbe Katze, mit schwarzem Fell."
+        }
+      ]
+    },
+    {
+      "id": "black-panther",
+      "habitat": "jungle",
+      "image": "animals/black-panther.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "black panther",
+          "full": "the black panther"
+        },
+        "es": {
+          "article": "la",
+          "noun": "pantera negra",
+          "full": "la pantera negra",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "schwarze Panther",
+          "full": "der schwarze Panther",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A black panther is a leopard with black fur.",
+          "es": "Una pantera negra es un leopardo con el pelo negro.",
+          "de": "Ein schwarzer Panther ist ein Leopard mit schwarzem Fell."
+        },
+        {
+          "en": "A jaguar can be black too. The spots are still there if you look closely.",
+          "es": "Un jaguar también puede ser negro. Las manchas siguen ahí si miras de cerca.",
+          "de": "Ein Jaguar kann auch schwarz sein. Die Flecken sind noch da, wenn man genau hinschaut."
+        }
+      ]
+    },
+    {
+      "id": "toucan",
+      "habitat": "jungle",
+      "image": "animals/toucan.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "toucan",
+          "full": "the toucan"
+        },
+        "es": {
+          "article": "el",
+          "noun": "tucán",
+          "full": "el tucán",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Tukan",
+          "full": "der Tukan",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A toucan has a huge colourful beak that is lighter than it looks.",
+          "es": "El tucán tiene un pico enorme y de colores, más ligero de lo que parece.",
+          "de": "Ein Tukan hat einen riesigen bunten Schnabel, der leichter ist, als er aussieht."
+        },
+        {
+          "en": "The beak helps the toucan reach fruit on thin branches.",
+          "es": "El pico ayuda al tucán a alcanzar la fruta de las ramas finas.",
+          "de": "Mit dem Schnabel erreicht der Tukan Früchte an dünnen Zweigen."
+        }
+      ]
+    },
+    {
+      "id": "bird-of-paradise",
+      "habitat": "jungle",
+      "image": "animals/bird-of-paradise.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "bird-of-paradise",
+          "full": "the bird-of-paradise"
+        },
+        "es": {
+          "article": "el",
+          "noun": "ave del paraíso",
+          "full": "el ave del paraíso",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Paradiesvogel",
+          "full": "der Paradiesvogel",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A male bird-of-paradise shows off bright feathers with a dance.",
+          "es": "El ave del paraíso macho enseña sus plumas brillantes con un baile.",
+          "de": "Ein männlicher Paradiesvogel zeigt seine leuchtenden Federn mit einem Tanz."
+        },
+        {
+          "en": "These birds live in the rainforest.",
+          "es": "Estas aves viven en la selva tropical.",
+          "de": "Diese Vögel leben im Regenwald."
+        }
+      ]
+    },
+    {
+      "id": "sloth",
+      "habitat": "jungle",
+      "image": "animals/sloth.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "sloth",
+          "full": "the sloth"
+        },
+        "es": {
+          "article": "el",
+          "noun": "perezoso",
+          "full": "el perezoso",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Faultier",
+          "full": "das Faultier",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A sloth moves very slowly and spends most of the day in the trees.",
+          "es": "El perezoso se mueve muy despacio y pasa casi todo el día en los árboles.",
+          "de": "Ein Faultier bewegt sich sehr langsam und verbringt den Tag meist in den Bäumen."
+        },
+        {
+          "en": "A sloth’s fur can look a little green because tiny plants grow on it.",
+          "es": "El pelo del perezoso puede verse un poco verde porque le crecen plantitas.",
+          "de": "Das Fell eines Faultiers kann etwas grün aussehen, weil winzige Pflanzen darauf wachsen."
+        }
+      ]
+    },
+    {
+      "id": "orangutan",
+      "habitat": "jungle",
+      "image": "animals/orangutan.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "orangutan",
+          "full": "the orangutan"
+        },
+        "es": {
+          "article": "el",
+          "noun": "orangután",
+          "full": "el orangután",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Orang-Utan",
+          "full": "der Orang-Utan",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "An orangutan has long red hair and very long arms.",
+          "es": "El orangután tiene el pelo largo y rojo, y los brazos muy largos.",
+          "de": "Ein Orang-Utan hat langes rotes Haar und sehr lange Arme."
+        },
+        {
+          "en": "Orangutans live in the trees and make a nest to sleep in.",
+          "es": "Los orangutanes viven en los árboles y se hacen un nido para dormir.",
+          "de": "Orang-Utans leben in den Bäumen und bauen sich ein Nest zum Schlafen."
+        }
+      ]
+    },
+    {
+      "id": "chameleon",
+      "habitat": "jungle",
+      "image": "animals/chameleon.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "chameleon",
+          "full": "the chameleon"
+        },
+        "es": {
+          "article": "el",
+          "noun": "camaleón",
+          "full": "el camaleón",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Chamäleon",
+          "full": "das Chamäleon",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A chameleon can change colour, and its eyes look in different directions.",
+          "es": "El camaleón puede cambiar de color, y sus ojos miran hacia lados distintos.",
+          "de": "Ein Chamäleon kann die Farbe wechseln, und seine Augen schauen in verschiedene Richtungen."
+        },
+        {
+          "en": "Its tongue shoots out very fast to catch an insect.",
+          "es": "Su lengua sale disparada muy rápido para cazar un insecto.",
+          "de": "Seine Zunge schnellt sehr schnell heraus und fängt ein Insekt."
+        }
+      ]
+    },
+    {
+      "id": "tarantula",
+      "habitat": "jungle",
+      "image": "animals/tarantula.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "tarantula",
+          "full": "the tarantula"
+        },
+        "es": {
+          "article": "la",
+          "noun": "tarántula",
+          "full": "la tarántula",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Vogelspinne",
+          "full": "die Vogelspinne",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A tarantula is a big spider with a hairy body and eight legs.",
+          "es": "La tarántula es una araña grande, con el cuerpo peludo y ocho patas.",
+          "de": "Eine Vogelspinne ist eine große Spinne mit einem haarigen Körper und acht Beinen."
+        },
+        {
+          "en": "It lives in a burrow and waits quietly for insects.",
+          "es": "Vive en una madriguera y espera quieta a los insectos.",
+          "de": "Sie wohnt in einer Höhle und wartet still auf Insekten."
+        }
+      ]
+    },
+    {
+      "id": "tapir",
+      "habitat": "jungle",
+      "image": "animals/tapir.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "tapir",
+          "full": "the tapir"
+        },
+        "es": {
+          "article": "el",
+          "noun": "tapir",
+          "full": "el tapir",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Tapir",
+          "full": "der Tapir",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A tapir has a short trunk that is really a long nose.",
+          "es": "El tapir tiene una trompa corta que en realidad es una nariz larga.",
+          "de": "Ein Tapir hat einen kurzen Rüssel, der eigentlich eine lange Nase ist."
+        },
+        {
+          "en": "Tapirs like the water and are good swimmers.",
+          "es": "A los tapires les gusta el agua y nadan muy bien.",
+          "de": "Tapire mögen das Wasser und können gut schwimmen."
+        }
+      ]
+    },
+    {
+      "id": "anteater",
+      "habitat": "jungle",
+      "image": "animals/anteater.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "anteater",
+          "full": "the anteater"
+        },
+        "es": {
+          "article": "el",
+          "noun": "oso hormiguero",
+          "full": "el oso hormiguero",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Ameisenbär",
+          "full": "der Ameisenbär",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "An anteater has a long snout and a very long sticky tongue.",
+          "es": "El oso hormiguero tiene el hocico largo y una lengua muy larga y pegajosa.",
+          "de": "Ein Ameisenbär hat eine lange Schnauze und eine sehr lange klebrige Zunge."
+        },
+        {
+          "en": "It eats ants and termites, and it does not have teeth.",
+          "es": "Come hormigas y termitas, y no tiene dientes.",
+          "de": "Er frisst Ameisen und Termiten und hat keine Zähne."
+        }
+      ]
+    },
+    {
+      "id": "ostrich",
+      "habitat": "savanna",
+      "image": "animals/ostrich.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "ostrich",
+          "full": "the ostrich"
+        },
+        "es": {
+          "article": "el",
+          "noun": "avestruz",
+          "full": "el avestruz",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Strauß",
+          "full": "der Strauß",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "An ostrich is the biggest bird, and it cannot fly.",
+          "es": "El avestruz es el ave más grande, y no puede volar.",
+          "de": "Ein Strauß ist der größte Vogel und kann nicht fliegen."
+        },
+        {
+          "en": "An ostrich runs very fast on its long, strong legs.",
+          "es": "El avestruz corre muy rápido con sus patas largas y fuertes.",
+          "de": "Ein Strauß rennt sehr schnell auf seinen langen, starken Beinen."
+        }
+      ]
+    },
+    {
+      "id": "meerkat",
+      "habitat": "savanna",
+      "image": "animals/meerkat.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "meerkat",
+          "full": "the meerkat"
+        },
+        "es": {
+          "article": "la",
+          "noun": "suricata",
+          "full": "la suricata",
+          "gender": "f"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Erdmännchen",
+          "full": "das Erdmännchen",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Meerkats stand up tall to watch for danger.",
+          "es": "Las suricatas se ponen de pie para vigilar si hay peligro.",
+          "de": "Erdmännchen stellen sich hoch auf und halten nach Gefahr Ausschau."
+        },
+        {
+          "en": "They live together, and they take turns as the lookout.",
+          "es": "Viven juntas y se turnan para hacer de vigía.",
+          "de": "Sie leben zusammen und wechseln sich als Wache ab."
+        }
+      ]
+    },
+    {
+      "id": "warthog",
+      "habitat": "savanna",
+      "image": "animals/warthog.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "warthog",
+          "full": "the warthog"
+        },
+        "es": {
+          "article": "el",
+          "noun": "facóquero",
+          "full": "el facóquero",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Warzenschwein",
+          "full": "das Warzenschwein",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A warthog has tusks and warts on its face.",
+          "es": "El facóquero tiene colmillos y verrugas en la cara.",
+          "de": "Ein Warzenschwein hat Hauer und Warzen im Gesicht."
+        },
+        {
+          "en": "Warthogs kneel on their front knees to dig for food.",
+          "es": "Los facóqueros se arrodillan sobre las patas delanteras para buscar comida.",
+          "de": "Warzenschweine knien sich auf die Vorderbeine, um nach Futter zu graben."
+        }
+      ]
+    },
+    {
+      "id": "clownfish",
+      "habitat": "ocean",
+      "image": "animals/clownfish.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "clownfish",
+          "full": "the clownfish"
+        },
+        "es": {
+          "article": "el",
+          "noun": "pez payaso",
+          "full": "el pez payaso",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Clownfisch",
+          "full": "der Clownfisch",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A clownfish is orange with white stripes.",
+          "es": "El pez payaso es naranja y tiene rayas blancas.",
+          "de": "Ein Clownfisch ist orange und hat weiße Streifen."
+        },
+        {
+          "en": "It lives among the tentacles of a sea anemone, where it is safe.",
+          "es": "Vive entre los tentáculos de una anémona de mar, donde está a salvo.",
+          "de": "Er lebt zwischen den Armen einer Seeanemone, und dort ist er sicher."
+        }
+      ]
+    },
+    {
+      "id": "seahorse",
+      "habitat": "ocean",
+      "image": "animals/seahorse.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "seahorse",
+          "full": "the seahorse"
+        },
+        "es": {
+          "article": "el",
+          "noun": "caballito de mar",
+          "full": "el caballito de mar",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Seepferdchen",
+          "full": "das Seepferdchen",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A seahorse has a head like a little horse and a curly tail.",
+          "es": "El caballito de mar tiene la cabeza como un caballito y la cola rizada.",
+          "de": "Ein Seepferdchen hat einen Kopf wie ein kleines Pferd und einen geringelten Schwanz."
+        },
+        {
+          "en": "The father seahorse carries the babies in a pouch.",
+          "es": "El papá caballito de mar lleva a las crías en una bolsa.",
+          "de": "Der Vater der Seepferdchen trägt die Babys in einem Beutel."
+        }
+      ]
+    },
+    {
+      "id": "manta-ray",
+      "habitat": "ocean",
+      "image": "animals/manta-ray.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "manta ray",
+          "full": "the manta ray"
+        },
+        "es": {
+          "article": "la",
+          "noun": "mantarraya",
+          "full": "la mantarraya",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Mantarochen",
+          "full": "der Mantarochen",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A manta ray has wide fins that look like wings.",
+          "es": "La mantarraya tiene unas aletas anchas que parecen alas.",
+          "de": "Ein Mantarochen hat breite Flossen, die wie Flügel aussehen."
+        },
+        {
+          "en": "Mantas swim with their mouths open and eat tiny animals in the water.",
+          "es": "Las mantarrayas nadan con la boca abierta y comen animalitos diminutos del agua.",
+          "de": "Mantas schwimmen mit offenem Maul und fressen winzige Tiere im Wasser."
+        }
+      ]
+    },
+    {
+      "id": "starfish",
+      "habitat": "ocean",
+      "image": "animals/starfish.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "starfish",
+          "full": "the starfish"
+        },
+        "es": {
+          "article": "la",
+          "noun": "estrella de mar",
+          "full": "la estrella de mar",
+          "gender": "f"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Seestern",
+          "full": "der Seestern",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A starfish has five arms and no head.",
+          "es": "La estrella de mar tiene cinco brazos y no tiene cabeza.",
+          "de": "Ein Seestern hat fünf Arme und keinen Kopf."
+        },
+        {
+          "en": "Many starfish can grow a new arm if one is lost.",
+          "es": "Muchas estrellas de mar pueden hacer crecer un brazo nuevo si pierden uno.",
+          "de": "Viele Seesterne können einen neuen Arm wachsen lassen, wenn einer verloren geht."
+        }
+      ]
+    },
+    {
+      "id": "walrus",
+      "habitat": "polar",
+      "image": "animals/walrus.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "walrus",
+          "full": "the walrus"
+        },
+        "es": {
+          "article": "la",
+          "noun": "morsa",
+          "full": "la morsa",
+          "gender": "f"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Walross",
+          "full": "das Walross",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A walrus has two long tusks and lots of whiskers.",
+          "es": "La morsa tiene dos colmillos largos y muchos bigotes.",
+          "de": "Ein Walross hat zwei lange Hauer und viele Schnurrhaare."
+        },
+        {
+          "en": "The tusks help a walrus pull itself up onto the ice.",
+          "es": "Los colmillos ayudan a la morsa a subirse al hielo.",
+          "de": "Mit den Hauern zieht sich ein Walross auf das Eis."
+        }
+      ]
+    },
+    {
+      "id": "reindeer",
+      "habitat": "polar",
+      "image": "animals/reindeer.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "reindeer",
+          "full": "the reindeer"
+        },
+        "es": {
+          "article": "el",
+          "noun": "reno",
+          "full": "el reno",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Rentier",
+          "full": "das Rentier",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Reindeer have antlers, and the females have them too.",
+          "es": "Los renos tienen cornamenta, y las hembras también.",
+          "de": "Rentiere haben ein Geweih, und die Weibchen auch."
+        },
+        {
+          "en": "Their wide hooves help them walk on snow.",
+          "es": "Sus pezuñas anchas les ayudan a caminar sobre la nieve.",
+          "de": "Ihre breiten Hufe helfen ihnen, über Schnee zu laufen."
+        }
+      ]
+    },
+    {
+      "id": "arctic-fox",
+      "habitat": "polar",
+      "image": "animals/arctic-fox.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "arctic fox",
+          "full": "the arctic fox"
+        },
+        "es": {
+          "article": "el",
+          "noun": "zorro ártico",
+          "full": "el zorro ártico",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Polarfuchs",
+          "full": "der Polarfuchs",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "An arctic fox has a thick white coat in the snow.",
+          "es": "El zorro ártico tiene un pelaje blanco y grueso en la nieve.",
+          "de": "Ein Polarfuchs hat im Schnee ein dickes weißes Fell."
+        },
+        {
+          "en": "In summer its coat turns brown, so it can hide among the rocks.",
+          "es": "En verano el pelaje se vuelve marrón, y así se esconde entre las rocas.",
+          "de": "Im Sommer wird das Fell braun, dann kann er sich zwischen den Steinen verstecken."
+        }
+      ]
+    },
+    {
+      "id": "peacock",
+      "habitat": "birds",
+      "image": "animals/peacock.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "peacock",
+          "full": "the peacock"
+        },
+        "es": {
+          "article": "el",
+          "noun": "pavo real",
+          "full": "el pavo real",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Pfau",
+          "full": "der Pfau",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A peacock can fan out a huge tail covered in eye spots.",
+          "es": "El pavo real puede abrir una cola enorme llena de ocelos.",
+          "de": "Ein Pfau kann einen riesigen Schwanz aufschlagen, voller Augenflecken."
+        },
+        {
+          "en": "The bright tail is how he shows off.",
+          "es": "Con esa cola brillante se luce.",
+          "de": "Mit dem leuchtenden Schwanz zeigt er sich."
+        }
+      ]
+    },
+    {
+      "id": "puffin",
+      "habitat": "birds",
+      "image": "animals/puffin.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "puffin",
+          "full": "the puffin"
+        },
+        "es": {
+          "article": "el",
+          "noun": "frailecillo",
+          "full": "el frailecillo",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Papageitaucher",
+          "full": "der Papageitaucher",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A puffin has a colourful beak and black and white feathers.",
+          "es": "El frailecillo tiene el pico de colores y plumas blancas y negras.",
+          "de": "Ein Papageitaucher hat einen bunten Schnabel und schwarz-weiße Federn."
+        },
+        {
+          "en": "A puffin can carry several fish in its beak at once.",
+          "es": "Un frailecillo puede llevar varios peces en el pico a la vez.",
+          "de": "Ein Papageitaucher kann mehrere Fische auf einmal im Schnabel tragen."
+        }
+      ]
+    },
+    {
+      "id": "pelican",
+      "habitat": "birds",
+      "image": "animals/pelican.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "pelican",
+          "full": "the pelican"
+        },
+        "es": {
+          "article": "el",
+          "noun": "pelícano",
+          "full": "el pelícano",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Pelikan",
+          "full": "der Pelikan",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A pelican has a big pouch under its beak.",
+          "es": "El pelícano tiene una bolsa grande debajo del pico.",
+          "de": "Ein Pelikan hat einen großen Beutel unter dem Schnabel."
+        },
+        {
+          "en": "It scoops up fish in that pouch.",
+          "es": "Recoge los peces con esa bolsa.",
+          "de": "Mit dem Beutel schöpft er Fische."
+        }
+      ]
+    },
+    {
+      "id": "hummingbird",
+      "habitat": "birds",
+      "image": "animals/hummingbird.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "hummingbird",
+          "full": "the hummingbird"
+        },
+        "es": {
+          "article": "el",
+          "noun": "colibrí",
+          "full": "el colibrí",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Kolibri",
+          "full": "der Kolibri",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A hummingbird is tiny and can hover in one place.",
+          "es": "El colibrí es diminuto y puede quedarse quieto en el aire.",
+          "de": "Ein Kolibri ist winzig und kann an einer Stelle in der Luft stehen."
+        },
+        {
+          "en": "It drinks nectar from flowers while it flies.",
+          "es": "Bebe el néctar de las flores mientras vuela.",
+          "de": "Er trinkt Nektar aus Blüten, während er fliegt."
+        }
+      ]
+    },
+    {
+      "id": "swan",
+      "habitat": "birds",
+      "image": "animals/swan.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "swan",
+          "full": "the swan"
+        },
+        "es": {
+          "article": "el",
+          "noun": "cisne",
+          "full": "el cisne",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Schwan",
+          "full": "der Schwan",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A swan has a long curved neck and white feathers.",
+          "es": "El cisne tiene el cuello largo y curvado, y plumas blancas.",
+          "de": "Ein Schwan hat einen langen gebogenen Hals und weiße Federn."
+        },
+        {
+          "en": "Baby swans are grey, not white.",
+          "es": "Los cisnes bebés son grises, no blancos.",
+          "de": "Schwanenbabys sind grau, nicht weiß."
+        }
+      ]
+    },
+    {
+      "id": "snowy-owl",
+      "habitat": "birds",
+      "image": "animals/snowy-owl.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "snowy owl",
+          "full": "the snowy owl"
+        },
+        "es": {
+          "article": "el",
+          "noun": "búho nival",
+          "full": "el búho nival",
+          "gender": "m"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Schneeeule",
+          "full": "die Schneeeule",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A snowy owl is white, so it can hide in the snow.",
+          "es": "El búho nival es blanco, y así se esconde en la nieve.",
+          "de": "Eine Schneeeule ist weiß und kann sich so im Schnee verstecken."
+        },
+        {
+          "en": "It has bright yellow eyes and often hunts in the daytime.",
+          "es": "Tiene los ojos amarillos y brillantes, y a menudo caza de día.",
+          "de": "Sie hat leuchtend gelbe Augen und jagt oft am Tag."
+        }
+      ]
+    },
+    {
+      "id": "garden-spider",
+      "habitat": "bugs",
+      "image": "animals/garden-spider.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "garden spider",
+          "full": "the garden spider"
+        },
+        "es": {
+          "article": "la",
+          "noun": "araña de jardín",
+          "full": "la araña de jardín",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Kreuzspinne",
+          "full": "die Kreuzspinne",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A garden spider builds a round web to catch flying insects.",
+          "es": "La araña de jardín teje una tela redonda para cazar insectos que vuelan.",
+          "de": "Eine Kreuzspinne baut ein rundes Netz und fängt damit fliegende Insekten."
+        },
+        {
+          "en": "The pale cross on its back makes it easy to recognise.",
+          "es": "La cruz clara de su espalda hace que sea fácil de reconocer.",
+          "de": "Das helle Kreuz auf dem Rücken macht sie leicht zu erkennen."
+        }
+      ]
+    },
+    {
+      "id": "ant",
+      "habitat": "bugs",
+      "image": "animals/ant.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "ant",
+          "full": "the ant"
+        },
+        "es": {
+          "article": "la",
+          "noun": "hormiga",
+          "full": "la hormiga",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Ameise",
+          "full": "die Ameise",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "Ants live together in a big nest and work as a team.",
+          "es": "Las hormigas viven juntas en un nido grande y trabajan en equipo.",
+          "de": "Ameisen wohnen zusammen in einem großen Nest und arbeiten als Team."
+        },
+        {
+          "en": "An ant can lift many times its own weight.",
+          "es": "Una hormiga puede levantar mucho más de lo que pesa.",
+          "de": "Eine Ameise kann ein Vielfaches ihres eigenen Gewichts heben."
+        }
+      ]
+    },
+    {
+      "id": "rhino-beetle",
+      "habitat": "bugs",
+      "image": "animals/rhino-beetle.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "rhinoceros beetle",
+          "full": "the rhinoceros beetle"
+        },
+        "es": {
+          "article": "el",
+          "noun": "escarabajo rinoceronte",
+          "full": "el escarabajo rinoceronte",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Nashornkäfer",
+          "full": "der Nashornkäfer",
+          "gender": "m"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A male rhinoceros beetle has a horn on its head.",
+          "es": "El escarabajo rinoceronte macho tiene un cuerno en la cabeza.",
+          "de": "Ein männlicher Nashornkäfer hat ein Horn auf dem Kopf."
+        },
+        {
+          "en": "The horn is for pushing other beetles, not for hurting people.",
+          "es": "El cuerno sirve para empujar a otros escarabajos, no para hacer daño a las personas.",
+          "de": "Das Horn ist dazu da, andere Käfer wegzuschieben, nicht um Menschen wehzutun."
+        }
+      ]
+    },
+    {
+      "id": "dragonfly",
+      "habitat": "bugs",
+      "image": "animals/dragonfly.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "dragonfly",
+          "full": "the dragonfly"
+        },
+        "es": {
+          "article": "la",
+          "noun": "libélula",
+          "full": "la libélula",
+          "gender": "f"
+        },
+        "de": {
+          "article": "die",
+          "noun": "Libelle",
+          "full": "die Libelle",
+          "gender": "f"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A dragonfly has four wings and huge eyes.",
+          "es": "La libélula tiene cuatro alas y unos ojos enormes.",
+          "de": "Eine Libelle hat vier Flügel und riesige Augen."
+        },
+        {
+          "en": "Dragonflies are excellent fliers and catch insects in the air.",
+          "es": "Las libélulas vuelan muy bien y cazan insectos en el aire.",
+          "de": "Libellen fliegen ausgezeichnet und fangen Insekten in der Luft."
+        }
+      ]
+    },
+    {
+      "id": "camel",
+      "habitat": "world",
+      "image": "animals/camel.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "camel",
+          "full": "the camel"
+        },
+        "es": {
+          "article": "el",
+          "noun": "camello",
+          "full": "el camello",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Kamel",
+          "full": "das Kamel",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "This camel has one hump, which stores fat for times with little food.",
+          "es": "Este camello tiene una joroba, que guarda grasa para cuando hay poca comida.",
+          "de": "Dieses Kamel hat einen Höcker, der Fett speichert für Zeiten mit wenig Futter."
+        },
+        {
+          "en": "Camels can walk for days in the desert.",
+          "es": "Los camellos pueden caminar varios días por el desierto.",
+          "de": "Kamele können tagelang durch die Wüste laufen."
+        }
+      ]
+    },
+    {
+      "id": "llama",
+      "habitat": "world",
+      "image": "animals/llama.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "llama",
+          "full": "the llama"
+        },
+        "es": {
+          "article": "la",
+          "noun": "llama",
+          "full": "la llama",
+          "gender": "f"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Lama",
+          "full": "das Lama",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A llama has a long neck and a woolly coat.",
+          "es": "La llama tiene el cuello largo y un pelaje de lana.",
+          "de": "Ein Lama hat einen langen Hals und ein wolliges Fell."
+        },
+        {
+          "en": "Llamas live in the mountains and can carry a small pack.",
+          "es": "Las llamas viven en las montañas y pueden llevar una carga pequeña.",
+          "de": "Lamas leben in den Bergen und können ein kleines Gepäck tragen."
+        }
+      ]
+    },
+    {
+      "id": "platypus",
+      "habitat": "world",
+      "image": "animals/platypus.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "platypus",
+          "full": "the platypus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "ornitorrinco",
+          "full": "el ornitorrinco",
+          "gender": "m"
+        },
+        "de": {
+          "article": "das",
+          "noun": "Schnabeltier",
+          "full": "das Schnabeltier",
+          "gender": "n"
+        }
+      },
+      "sound": null,
+      "facts": [
+        {
+          "en": "A platypus has a beak like a duck, a tail like a beaver, and fur.",
+          "es": "El ornitorrinco tiene el pico como un pato, la cola como un castor, y pelo.",
+          "de": "Ein Schnabeltier hat einen Schnabel wie eine Ente, einen Schwanz wie ein Biber und Fell."
+        },
+        {
+          "en": "It lays eggs, and it lives in rivers in Australia.",
+          "es": "Pone huevos y vive en los ríos de Australia.",
+          "de": "Es legt Eier und lebt in Flüssen in Australien."
         }
       ]
     }

@@ -119,16 +119,18 @@ function stkMuseum(book){
   DINOS.forEach(d=>{
     const got=found.includes(d.k);
     const b=document.createElement('button');b.type='button';b.className='stkDino'+(got?' got':'')+(got&&rd>1?' gold':'');
-    const cn=document.createElement('canvas');b.appendChild(cn);
+    let cn=null;
+    if(got){const im=document.createElement('img');im.src=dinoSrc(d.k);im.alt='';im.draggable=false;b.appendChild(im);}
+    else{cn=document.createElement('canvas');b.appendChild(cn);}
     const lb=document.createElement('span');lb.className='stkName';
-    lb.textContent=got?d[lang][0].replace(/^(el|la|the|der|die|das)\s+/i,''):'?';
+    lb.textContent=got?d[lang][0].replace(/^(el|la|los|las|the|der|die|das)\s+/i,''):'?';
     b.appendChild(lb);
     b.onclick=()=>{ac();
-      if(got){const cn=document.createElement('canvas');
-        stkShow({el:cn,draw:()=>drawThumb(cn,d,false)},{de:d.de[0],en:d.en[0],es:d.es[0]},{de:d.de[0]+'. '+d.de[1],en:d.en[0]+'. '+d.en[1],es:d.es[0]+'. '+d.es[1]});}
+      if(got){const im=document.createElement('img');im.src=dinoSrc(d.k);im.alt='';im.className='stkLive';
+        stkShow({el:im},{de:d.de[0],en:d.en[0],es:d.es[0]},{de:d.de[0]+'. '+d.de[1],en:d.en[0]+'. '+d.en[1],es:d.es[0]+'. '+d.es[1]});}
       else say({es:'¿Quién será? ¡Sigue excavando!',en:'Who could it be? Keep digging!',de:'Wer das wohl ist? Grab weiter!'}[lang]);};
     grid.appendChild(b);
-    requestAnimationFrame(()=>drawThumb(cn,d,!got));
+    if(cn)requestAnimationFrame(()=>drawThumb(cn,d,true));
   });
   sec.appendChild(grid);
   const tr=TREASURES.filter(t=>treasure[t.k]);

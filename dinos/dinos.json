@@ -1,0 +1,458 @@
+{
+  "version": 1,
+  "imageSize": 512,
+  "format": "webp",
+  "note": "Picture-book dinosaurs only. dinos/ptera.webp is the pterosaur reconstruction for the dig and the museum, and is not listed here.",
+  "dinos": [
+    {
+      "id": "trex",
+      "image": "dinos/trex.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Tyrannosaurus rex",
+          "full": "the Tyrannosaurus rex"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Tiranosaurio rex",
+          "full": "el Tiranosaurio rex",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Tyrannosaurus rex",
+          "full": "der Tyrannosaurus rex",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It had teeth as big as bananas and tiny little arms.",
+          "es": "Tenía dientes tan grandes como plátanos y unos brazos pequeñitos.",
+          "de": "Er hatte Zähne so groß wie Bananen und winzige Ärmchen."
+        }
+      ]
+    },
+    {
+      "id": "raptor",
+      "image": "dinos/raptor.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Velociraptor",
+          "full": "the Velociraptor"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Velociraptor",
+          "full": "el Velociraptor",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Velociraptor",
+          "full": "der Velociraptor",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It was about as big as a turkey, had feathers, and a curved claw on each foot.",
+          "es": "Era más o menos del tamaño de un pavo, tenía plumas y una garra curva en cada pie.",
+          "de": "Er war ungefähr so groß wie ein Truthahn, hatte Federn und eine gebogene Kralle an jedem Fuß."
+        }
+      ]
+    },
+    {
+      "id": "trike",
+      "image": "dinos/trike.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Triceratops",
+          "full": "the Triceratops"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Triceratops",
+          "full": "el Triceratops",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Triceratops",
+          "full": "der Triceratops",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It had three horns and a big shield behind its head.",
+          "es": "Tenía tres cuernos y un gran escudo detrás de la cabeza.",
+          "de": "Er hatte drei Hörner und einen großen Schild hinter dem Kopf."
+        }
+      ]
+    },
+    {
+      "id": "stego",
+      "image": "dinos/stego.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Stegosaurus",
+          "full": "the Stegosaurus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Estegosaurio",
+          "full": "el Estegosaurio",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Stegosaurus",
+          "full": "der Stegosaurus",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It had plates on its back and spikes on its tail.",
+          "es": "Tenía placas en la espalda y pinchos en la cola.",
+          "de": "Er hatte Platten auf dem Rücken und Stacheln am Schwanz."
+        }
+      ]
+    },
+    {
+      "id": "brachio",
+      "image": "dinos/brachio.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Brachiosaurus",
+          "full": "the Brachiosaurus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Braquiosaurio",
+          "full": "el Braquiosaurio",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Brachiosaurus",
+          "full": "der Brachiosaurus",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It was taller than a house and ate leaves from tall trees.",
+          "es": "Era más alto que una casa y comía hojas de los árboles altos.",
+          "de": "Er war größer als ein Haus und fraß Blätter von hohen Bäumen."
+        }
+      ]
+    },
+    {
+      "id": "diplo",
+      "image": "dinos/diplo.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Diplodocus",
+          "full": "the Diplodocus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Diplodocus",
+          "full": "el Diplodocus",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Diplodocus",
+          "full": "der Diplodocus",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It was as long as two buses, and its tail was like a whip.",
+          "es": "Era tan largo como dos autobuses, y su cola era como un látigo.",
+          "de": "Er war so lang wie zwei Busse, und sein Schwanz war wie eine Peitsche."
+        }
+      ]
+    },
+    {
+      "id": "anky",
+      "image": "dinos/anky.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Ankylosaurus",
+          "full": "the Ankylosaurus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Anquilosaurio",
+          "full": "el Anquilosaurio",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Ankylosaurus",
+          "full": "der Ankylosaurus",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It had armour on its back and a club at the end of its tail.",
+          "es": "Tenía una armadura en la espalda y un mazo en la punta de la cola.",
+          "de": "Er hatte einen Panzer auf dem Rücken und eine Keule am Schwanzende."
+        }
+      ]
+    },
+    {
+      "id": "para",
+      "image": "dinos/para.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Parasaurolophus",
+          "full": "the Parasaurolophus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Parasaurolophus",
+          "full": "el Parasaurolophus",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Parasaurolophus",
+          "full": "der Parasaurolophus",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It had a long hollow crest on its head.",
+          "es": "Tenía una cresta larga y hueca en la cabeza.",
+          "de": "Er hatte einen langen hohlen Kamm auf dem Kopf."
+        }
+      ]
+    },
+    {
+      "id": "spino",
+      "image": "dinos/spino.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Spinosaurus",
+          "full": "the Spinosaurus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Espinosaurio",
+          "full": "el Espinosaurio",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Spinosaurus",
+          "full": "der Spinosaurus",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It had a huge sail on its back and ate fish.",
+          "es": "Tenía una vela enorme en la espalda y comía peces.",
+          "de": "Er hatte ein riesiges Segel auf dem Rücken und fraß Fische."
+        }
+      ]
+    },
+    {
+      "id": "pachy",
+      "image": "dinos/pachy.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Pachycephalosaurus",
+          "full": "the Pachycephalosaurus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Paquicefalosaurio",
+          "full": "el Paquicefalosaurio",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Pachycephalosaurus",
+          "full": "der Pachycephalosaurus",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It had a very hard, round head, like a helmet.",
+          "es": "Tenía la cabeza redonda y muy dura, como un casco.",
+          "de": "Er hatte einen sehr harten, runden Kopf, wie ein Helm."
+        }
+      ]
+    },
+    {
+      "id": "carno",
+      "image": "dinos/carno.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Carnotaurus",
+          "full": "the Carnotaurus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Carnotauro",
+          "full": "el Carnotauro",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Carnotaurus",
+          "full": "der Carnotaurus",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It had two horns over its eyes and even tinier arms than Tyrannosaurus.",
+          "es": "Tenía dos cuernos sobre los ojos y unos brazos aún más pequeños que el tiranosaurio.",
+          "de": "Er hatte zwei Hörner über den Augen und noch kleinere Ärmchen als der Tyrannosaurus."
+        }
+      ]
+    },
+    {
+      "id": "dilo",
+      "image": "dinos/dilo.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Dilophosaurus",
+          "full": "the Dilophosaurus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Dilofosaurio",
+          "full": "el Dilofosaurio",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Dilophosaurus",
+          "full": "der Dilophosaurus",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It had two thin crests on its head, like two fans.",
+          "es": "Tenía dos crestas finas en la cabeza, como dos abanicos.",
+          "de": "Er hatte zwei dünne Kämme auf dem Kopf, wie zwei Fächer."
+        }
+      ]
+    },
+    {
+      "id": "styraco",
+      "image": "dinos/styraco.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Styracosaurus",
+          "full": "the Styracosaurus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Estiracosaurio",
+          "full": "el Estiracosaurio",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Styracosaurus",
+          "full": "der Styracosaurus",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It had a long horn on its nose and a shield with lots of spikes.",
+          "es": "Tenía un cuerno largo en la nariz y un escudo con muchos pinchos.",
+          "de": "Er hatte ein langes Horn auf der Nase und einen Schild mit vielen Stacheln."
+        }
+      ]
+    },
+    {
+      "id": "iguano",
+      "image": "dinos/iguano.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Iguanodon",
+          "full": "the Iguanodon"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Iguanodonte",
+          "full": "el Iguanodonte",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Iguanodon",
+          "full": "der Iguanodon",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It had a spike on each thumb.",
+          "es": "Tenía un pincho en cada pulgar.",
+          "de": "Er hatte einen Stachel an jedem Daumen."
+        }
+      ]
+    },
+    {
+      "id": "theriz",
+      "image": "dinos/theriz.webp",
+      "names": {
+        "en": {
+          "article": "the",
+          "noun": "Therizinosaurus",
+          "full": "the Therizinosaurus"
+        },
+        "es": {
+          "article": "el",
+          "noun": "Terizinosaurio",
+          "full": "el Terizinosaurio",
+          "gender": "m"
+        },
+        "de": {
+          "article": "der",
+          "noun": "Therizinosaurus",
+          "full": "der Therizinosaurus",
+          "gender": "m"
+        }
+      },
+      "facts": [
+        {
+          "en": "It had giant claws, longer than your arm, and it ate plants.",
+          "es": "Tenía unas garras enormes, más largas que tu brazo, y comía plantas.",
+          "de": "Er hatte riesige Krallen, länger als dein Arm, und er fraß Pflanzen."
+        }
+      ]
+    }
+  ]
+}

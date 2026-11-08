@@ -1,0 +1,9 @@
+{
+  "created": "2026-11-08",
+  "project": "Noah's exploration game",
+  "what": "Original images made for this app. They are not copies of a published photograph and carry no third-party licence.",
+  "animalsVehiclesThings": "Photorealistic pictures, saved as 512×512 WebP quality 70.",
+  "dinosaurs": "Photorealistic paleoart reconstructions of living animals. They are not photographs of real dinosaurs, not fossils, and not cartoons. Colours are plausible earth tones, not a claim that the species was known to be that exact colour. Pteranodon is a flying reptile; its picture is used only after it is dug up, and it is not listed in the dinosaur picture book.",
+  "blackPanther": "The black-panther picture is a slender melanistic leopard, with the rosettes still visible. The spoken facts match that: it is a leopard with black fur, and a jaguar can be black too.",
+  "files": "animals/*.webp, vehicles/*.webp, things/*.webp and dinos/*.webp added in this change. Older pictures in those folders were already in the app."
+}

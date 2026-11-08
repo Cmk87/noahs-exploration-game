@@ -70,21 +70,21 @@ const FAKE = () => {
       showTab('king');
       document.querySelector('#v-king [data-id="forest"]').click();
       document.querySelector('#v-king [data-id="fox"]').click();
-      want = [fox.names.de.full, fox.names.es.full, fox.names.en.full].concat(fox.sound && fox.sound.de ? [fox.sound.de] : []).concat([fox.facts[0].de]);
+      want = [fox.names.de.full, fox.facts[0].de];
     } else if (label === 'person') {
       showTab('folk');
       document.querySelector('#v-folk [data-id="' + person.group + '"]').click();
       document.querySelector('#v-folk [data-id="' + person.id + '"]').click();
-      want = [person.names.de.full, person.names.es.full, person.names.en.full];
+      want = [person.names.de.full, person.where.de, person.facts[0].de];
     } else if (label === 'truck') {
       showTab('ride');
       document.querySelector('#v-ride [data-id="' + truck.group + '"]').click();
       document.querySelector('#v-ride [data-id="' + truck.id + '"]').click();
-      want = [truck.names.de.full, truck.names.es.full, truck.names.en.full].concat(truck.sound && truck.sound.de ? [truck.sound.de] : []);
+      want = [truck.names.de.full, truck.sound.de, truck.facts[0].de];
     } else {
       showTab('baby');
       document.querySelector('#v-baby [data-id="dog"]').click();
-      want = [pup.baby.names.de.full, pup.baby.names.es.full, pup.baby.names.en.full, pup.adult.names.de.full];
+      want = [pup.baby.names.de.full, pup.adult.names.de.full, pup.facts[0].de];
     }
     const deadline = performance.now() + 22000;
     while (performance.now() < deadline) {
@@ -110,6 +110,32 @@ const FAKE = () => {
       label + ': each language plays out before the next line starts'
       + (inOrder && !r.startedEarly && !r.early.length ? '' : ' ' + JSON.stringify({ want: r.want, said: r.said, early: r.early, startedEarly: r.startedEarly })));
   }
+  const cut = await page.evaluate(async () => {
+    showTab('king');
+    document.querySelector('#v-king [data-id="forest"]').click();
+    window.__SPEECH.length = 0;
+    document.querySelector('#v-king [data-id="fox"]').click();
+    await new Promise(r => setTimeout(r, 80));
+    document.querySelector('#v-king [data-id="bear"]').click();
+    const deadline = performance.now() + 8000;
+    const bear = PHOTO_PACK.animals.find(a => a.id === 'bear');
+    while (performance.now() < deadline) {
+      const said = window.__SPEECH.filter(e => e.ev === 'speak').map(e => e.text);
+      if (said.includes(bear.names.de.full)) break;
+      await new Promise(r => setTimeout(r, 40));
+    }
+    const speaks = window.__SPEECH.filter(e => e.ev === 'speak');
+    const cancels = window.__SPEECH.filter(e => e.ev === 'cancel');
+    const foxFact = PHOTO_PACK.animals.find(a => a.id === 'fox').facts[0].de;
+    const factAfterBear = (() => {
+      const i = speaks.findIndex(s => s.text === bear.names.de.full);
+      return i >= 0 && speaks.slice(i).some(s => s.text === foxFact);
+    })();
+    return { said: speaks.map(s => s.text), cancelled: cancels.length > 0, factAfterBear, on: document.querySelector('#v-king .phAn.on')?.dataset.id };
+  });
+  check(cut.cancelled && cut.said.includes('der Bär') && !cut.factAfterBear && cut.on === 'bear',
+    'a new animal tap cancels the previous explanation'
+    + (cut.cancelled && cut.on === 'bear' && !cut.factAfterBear ? '' : ' ' + JSON.stringify(cut)));
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors[0] : ''));
   await browser.close();
   console.log(failures ? `\n${failures} check(s) failed` : '\nSpeech chain passed');

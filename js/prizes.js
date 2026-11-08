@@ -586,6 +586,9 @@ function prepParts(sp){
   });
   return {parts,box:[bx0-0.035,by0-0.035,bx1+0.035,by1+0.035]};
 }
+function dinoSrc(k){return 'dinos/'+k+'.webp';}
+const DINO_IMG={};
+function dinoImg(k){if(!DINO_IMG[k]){const im=new Image();im.src=dinoSrc(k);DINO_IMG[k]=im;}return DINO_IMG[k];}
 const thumbCache={};
 function drawThumb(cn,d,silh){
   const r=cn.getBoundingClientRect();if(!r.width)return;const dpr=DPRX(2);
@@ -727,7 +730,7 @@ function chooseDino(){
 }
 function startDig(){
   let fresh=false;if(dinoHave()>=DINOS.length){dinoRound++;found=[];fresh=true;try{localStorage.setItem('sl_dinoround',dinoRound);localStorage.setItem('sl_dinos','[]');}catch(e){}}
-  digPtr=false;digLast=null;const sp=chooseDino();lastDino=sp.k;
+  digPtr=false;digLast=null;const sp=chooseDino();lastDino=sp.k;dinoImg(sp.k);
   const {parts,box}=prepParts(sp);
   const K=Math.min(0.88/(box[2]-box[0]),0.7/(box[3]-box[1]));
   const home={K,ox:0.5-(box[0]+box[2])/2*K,oy:0.53-(box[1]+box[3])/2*K};
@@ -743,6 +746,7 @@ function startDig(){
        phase:'dig',lastFound:now,fx:[],hint:null,roarT:-9,done:false};
   DIG.covG=DIG.cov.getContext('2d');
   $('dinoCard').classList.remove('on');
+  const live0=$('dinoLive');if(live0){live0.removeAttribute('src');live0.hidden=true;}
   $('digPrompt').textContent={es:'Frota para excavar',en:'Rub to dig',de:'Reibe zum Graben'}[lang];
   boneCount(false);
   say(fresh?{es:`¡Ronda ${dinoRound}! El museo está vacío otra vez. ¡Vamos a desenterrar todos los dinosaurios de nuevo!`,en:`Round ${dinoRound}! The museum is empty again. Let us dig up all the dinosaurs once more!`,de:`Runde ${dinoRound}! Das Museum ist wieder leer. Wir graben alle Dinos nochmal aus!`}[lang]
@@ -826,6 +830,7 @@ function goAlive(){
   D.parts.forEach(pt=>sparkle(pt.H.x,pt.H.y,5,pick(['#FFD400','#FFFFFF','#7DF9FF'])));
   setTimeout(()=>{bigWin();rainEmoji(['🦴','⭐','🦖','🦕','✨'],24);},1200);
   const nm=D.sp[lang];
+  const live=$('dinoLive');if(live){live.src=dinoSrc(D.sp.k);live.alt=nm[0];live.hidden=false;}
   $('dinoName').textContent=nm[0];$('dinoFact').textContent=nm[1];$('dinoCard').classList.add('on');
   $('digPrompt').textContent=D.sp.k==='ptera'
     ?{es:'¡Tócalo para que chille!',en:'Tap it to make it screech!',de:'Tippe, damit er kreischt!'}[lang]
@@ -883,6 +888,15 @@ function digLoop(now){
   drawBones(dx,D.parts,xf,dinoRound>1?GOLD_BONES:undefined);
   const ca=D.phase==='dig'?1:D.phase==='reveal'?1-(now-D.revealT)/700:0;
   if(ca>0){dx.globalAlpha=Math.max(0,ca);dx.drawImage(D.cov,0,0,W,W);dx.globalAlpha=1;}
+  if(D.phase==='alive'){                         // bones have come alive; then the living animal fades in
+    const img=dinoImg(D.sp.k);
+    if(img&&img.complete&&img.naturalWidth){
+      const u=Math.max(0,Math.min(1,(now-D.aliveT-1600)/700));
+      if(u>0){dx.save();dx.globalAlpha=u;dx.fillStyle='#1A140E';dx.fillRect(0,0,W,W);
+        const s=Math.min(W/img.naturalWidth,W/img.naturalHeight),dw=img.naturalWidth*s,dh=img.naturalHeight*s;
+        dx.drawImage(img,(W-dw)/2,(W-dh)/2,dw,dh);dx.restore();}
+    }
+  }
   if(D.phase==='dig'){
     dx.save();dx.strokeStyle='rgba(255,255,255,.3)';dx.lineWidth=1;dx.setLineDash([5,5]);   // the site's string grid
     for(let i=1;i<4;i++){dx.beginPath();dx.moveTo(i*W/4,0);dx.lineTo(i*W/4,W);dx.moveTo(0,i*W/4);dx.lineTo(W,i*W/4);dx.stroke();}
