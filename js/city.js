@@ -146,11 +146,14 @@ const W={found:['Gefunden!','Found it!','¡Lo encontraste!'],yes:['Ja, richtig!'
 let SAVE={found:[],stars:0};try{SAVE=Object.assign(SAVE,JSON.parse(localStorage.getItem('sl_city')||'{}'));}catch(e){}
 const FOUND=new Set(SAVE.found);
 const store=()=>{SAVE.found=[...FOUND];try{localStorage.setItem('sl_city',JSON.stringify(SAVE));}catch(e){}};
-const paws=()=>{const left=ANIMALS.length-FOUND.size;$('cPaws').textContent=`🐾 ${FOUND.size}/${ANIMALS.length}`;$('cPaws').classList.toggle('close',left>0&&left<=10);};
+/* only animals that are still in the world count. An old or stray id stays
+   saved, but it must not light a sticker or make the book look finished. */
+function foundN(){let n=0;for(const a of ANIMALS)if(FOUND.has(a[0]))n++;return n;}
+const paws=()=>{const n=foundN(),left=ANIMALS.length-n;$('cPaws').textContent=`🐾 ${n}/${ANIMALS.length}`;$('cPaws').classList.toggle('close',left>0&&left<=10);};
 /* a newly found animal: how many are still missing — said at round numbers, and every one from 5 down;
    from 3 down with a hint where one of them hides */
 function leftLine(){
-  const left=ANIMALS.length-FOUND.size,L=li();if(!left)return '';
+  const left=ANIMALS.length-foundN(),L=li();if(!left)return '';
   if(left<=5||[10,15,20,30,40,50].includes(left)){
     let t=left===1?['Nur noch ein Tier fehlt!','Only one animal left!','¡Solo falta un animal!'][L]
       :left<=5?[`Nur noch ${left} Tiere fehlen!`,`Only ${left} animals left!`,`¡Solo faltan ${left} animales!`][L]
@@ -1114,7 +1117,7 @@ function trigger(id,b,x,y,ref){
   let line=quiet?'':typeof r==='string'?r:lineFor(e),fresh=false;
   if(e.animal&&!FOUND.has(id)){FOUND.add(id);store();paws();fresh=true;logFind('stk');line+=' '+W.found[li()];burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();
     if(typeof addPower==='function')addPower(2);
-    if(FOUND.size===ANIMALS.length)later(2.5,()=>{burst(x,y,'star',40,'#FFD23F',1.5);if(typeof fanfare==='function')fanfare();say(['Du hast alle Tiere gefunden! Dein Stickerbuch ist voll! Schau es dir an!','You found all the animals! Your sticker book is full! Go and have a look!','¡Encontraste todos los animales! ¡Tu álbum está completo! ¡Míralo!'][li()]);});
+    if(foundN()===ANIMALS.length)later(2.5,()=>{burst(x,y,'star',40,'#FFD23F',1.5);if(typeof fanfare==='function')fanfare();say(['Du hast alle Tiere gefunden! Dein Stickerbuch ist voll! Schau es dir an!','You found all the animals! Your sticker book is full! Go and have a look!','¡Encontraste todos los animales! ¡Tu álbum está completo! ¡Míralo!'][li()]);});
     else line+=leftLine();}
   if(line)say(line);
   bubble(e,b,ref&&ref.label);
@@ -1169,7 +1172,7 @@ function findTap(e,b,x,y,ref){
     burst((b[0]+b[2])/2,(b[1]+b[3])/2,'star',22,'#FFD23F');SND.yay();bubble(e,b,ref&&ref.label);say(W.yes[li()]+' '+cap(e.n[li()])+'!');later(3,()=>{if(FIND)findNext();});}
   else{bubble(e,b,ref&&ref.label);let got='';
     let fresh=false;
-    if(e.animal&&!FOUND.has(e.id)){FOUND.add(e.id);store();paws();fresh=true;logFind('stk');got=' '+W.found[li()]+(FOUND.size===ANIMALS.length?' '+['Dein Stickerbuch ist voll!','Your sticker book is full!','¡Tu álbum está completo!'][li()]:leftLine());if(FOUND.size===ANIMALS.length){burst(x,y,'star',40,'#FFD23F',1.5);if(typeof fanfare==='function')fanfare();}burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();if(typeof addPower==='function')addPower(2);}
+    if(e.animal&&!FOUND.has(e.id)){FOUND.add(e.id);store();paws();fresh=true;logFind('stk');got=' '+W.found[li()]+(foundN()===ANIMALS.length?' '+['Dein Stickerbuch ist voll!','Your sticker book is full!','¡Tu álbum está completo!'][li()]:leftLine());if(foundN()===ANIMALS.length){burst(x,y,'star',40,'#FFD23F',1.5);if(typeof fanfare==='function')fanfare();}burst((b[0]+b[2])/2,b[1],'star',14,'#FFD23F');SND.yay();if(typeof addPower==='function')addPower(2);}
     else{FIND.miss++;nope();}
     const sentence=W.that(e.n[li()])+got+' '+W.where(ENT[FIND.id].n[li()]);
     say(sentence);}}
@@ -1280,6 +1283,6 @@ if(typeof cityEdge==='function')cityEdge(K);
 paws();
 if(document.fonts)document.fonts.load(FONT(20)).catch(()=>{});
 requestAnimationFrame(frame);
-window.CITY={newRound,round:()=>SAVE.round||1,done:()=>SAVE.done||0,total:()=>ANIMALS.length,animals:()=>ANIMALS.map(a=>a[0]),showAt,worldView,homeView,show,onLang,ENT,FOUND,HITS:()=>HITS,trigger,tapAt,toScreen:(x,y)=>[(x-CAM.x)*CAM.k,(y-CAM.y)*CAM.k],flyTo,viewOf,CAM,TRAIN,VEH,
+window.CITY={newRound,round:()=>SAVE.round||1,done:()=>SAVE.done||0,total:()=>ANIMALS.length,foundN,animals:()=>ANIMALS.map(a=>a[0]),showAt,worldView,homeView,show,onLang,ENT,FOUND,HITS:()=>HITS,trigger,tapAt,toScreen:(x,y)=>[(x-CAM.x)*CAM.k,(y-CAM.y)*CAM.k],flyTo,viewOf,CAM,TRAIN,VEH,
   setNight:v=>{nightOn=v;NIGHT=v?1:0;},act,FIND:()=>FIND,findNext,callTrain};
 })();

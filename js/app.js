@@ -38,8 +38,8 @@ function buildHome(){
     let extra='';
     if(t.id==='adv'&&ADV)extra=ADV.done?'✅':`${ADV.idx+1} / ${ADV.plan.length}`;
     if(t.id==='dig')extra=power>=DIG_COST?'🎁 !':`${power} / ${DIG_COST} ⚡`;
-    if(t.id==='city'&&window.CITY)extra='🐾 '+CITY.FOUND.size+' / '+CITY.total();
-    if(t.id==='stickers'&&window.CITY){const nw=stickersNew();extra=nw?`✨ ${nw} NEU`.replace('NEU',{es:'nuevos',en:'new',de:'neu'}[lang]):CITY.FOUND.size+' / '+CITY.total();}
+    if(t.id==='city'&&window.CITY)extra='🐾 '+CITY.foundN()+' / '+CITY.total();
+    if(t.id==='stickers'&&window.CITY){const nw=stickersNew();extra=nw?`✨ ${nw} NEU`.replace('NEU',{es:'nuevos',en:'new',de:'neu'}[lang]):CITY.foundN()+' / '+CITY.total();}
     if(t.id==='king'&&typeof photoCount==='function'&&photoCount('a'))extra='🛂 '+photoCount('a');
     if(t.id==='things'&&typeof photoCount==='function'&&photoCount('t'))extra='🛂 '+photoCount('t');
     if(t.id==='folk'&&typeof photoCount==='function'&&photoCount('p'))extra='🛂 '+photoCount('p');

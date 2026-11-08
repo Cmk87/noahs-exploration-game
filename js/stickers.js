@@ -21,16 +21,22 @@ const STK_AREAS=[
   ['industry','🏭',{es:'La zona industrial',en:'The industrial area',de:'Das Industriegebiet'},[4700,800],['rat','policedog','elephant']]];
 const STK_FALLBACK={jellyfish:'🎐',policedog:'🐩',beaver:'🦫',ptera:'🦅',raven:'🐦',blackcat:'🐈',polarbear:'🐻'};
 let STK_SEEN=new Set();try{STK_SEEN=new Set(JSON.parse(localStorage.getItem('sl_stkseen')||'[]'));}catch(e){}
-const stickersNew=()=>window.CITY?[...CITY.FOUND].filter(id=>!STK_SEEN.has(id)).length:0;
+function stkRoster(){
+  const ids=[];
+  for(const A of STK_AREAS)for(const id of A[4])if(window.CITY&&CITY.ENT[id]&&CITY.ENT[id].animal)ids.push(id);
+  return ids;
+}
+function stkEarned(){const F=CITY.FOUND;return stkRoster().filter(id=>F.has(id));}
+const stickersNew=()=>window.CITY?stkEarned().filter(id=>!STK_SEEN.has(id)).length:0;
 let stkOK={};
 function stkIcon(id){const e=CITY.ENT[id];if(stkOK[e.ic]===undefined)stkOK[e.ic]=typeof emojiOK!=='function'||emojiOK(e.ic);
   return stkOK[e.ic]?e.ic:(STK_FALLBACK[id]||'🐾');}
 function showStickers(){
-  const F=CITY.FOUND,tot=CITY.total(),L={de:0,en:1,es:2}[lang];
-  const round=CITY.round(),done=CITY.done(),left=tot-F.size;
-  $('stkHead').innerHTML={es:`Mi álbum: ${F.size} de ${tot}`,en:`My stickers: ${F.size} of ${tot}`,de:`Mein Stickerbuch: ${F.size} von ${tot}`}[lang]
+  const F=CITY.FOUND,roster=stkRoster(),earned=roster.filter(id=>F.has(id)),tot=roster.length,L={de:0,en:1,es:2}[lang];
+  const round=CITY.round(),done=CITY.done(),left=tot-earned.length;
+  $('stkHead').innerHTML={es:`Mi álbum: ${earned.length} de ${tot}`,en:`My stickers: ${earned.length} of ${tot}`,de:`Mein Stickerbuch: ${earned.length} von ${tot}`}[lang]
     +(round>1?`<div class="stkRound">${'🏆'.repeat(Math.min(done,5))}${done>5?'×'+done:''} ${{es:'Ronda',en:'Round',de:'Runde'}[lang]} ${round}</div>`:'');
-  $('stkFill').style.width=(F.size/tot*100)+'%';
+  $('stkFill').style.width=(earned.length/tot*100)+'%';
   const book=$('stkBook');book.innerHTML='';$('stkCard').classList.remove('on');
   if(left===0){   // the whole book: a big trophy, and the choice to start again from zero
     const top=document.createElement('div');top.className='stkFull';
@@ -63,11 +69,11 @@ function showStickers(){
     sec.appendChild(grid);book.appendChild(sec);}
   stkMuseum(book);
   // what was new is now seen (the badges stay visible until the book is opened again)
-  for(const id of F)STK_SEEN.add(id);try{localStorage.setItem('sl_stkseen',JSON.stringify([...STK_SEEN]));}catch(e){}
+  for(const id of earned)STK_SEEN.add(id);try{localStorage.setItem('sl_stkseen',JSON.stringify([...STK_SEEN]));}catch(e){}
   const nw=stickersNew();
   say(left===0?{es:'¡Tu álbum está completo! ¿Quieres buscarlos todos otra vez?',en:'Your sticker book is complete! Do you want to find them all again?',de:'Dein Stickerbuch ist voll! Willst du alle nochmal suchen?'}[lang]
-    :F.size&&left<=10?{es:`¡Tienes ${F.size} pegatinas! Solo faltan ${left}.`,en:`You have ${F.size} stickers! Only ${left} left.`,de:`Du hast schon ${F.size} Sticker! Nur noch ${left} fehlen.`}[lang]
-    :F.size?{es:`¡Tienes ${F.size} pegatinas!`,en:`You have ${F.size} stickers!`,de:`Du hast schon ${F.size} Sticker!`}[lang]
+    :earned.length&&left<=10?{es:`¡Tienes ${earned.length} pegatinas! Solo faltan ${left}.`,en:`You have ${earned.length} stickers! Only ${left} left.`,de:`Du hast schon ${earned.length} Sticker! Nur noch ${left} fehlen.`}[lang]
+    :earned.length?{es:`¡Tienes ${earned.length} pegatinas!`,en:`You have ${earned.length} stickers!`,de:`Du hast schon ${earned.length} Sticker!`}[lang]
     :{es:'Tu álbum está vacío. ¡Busca animales en la ciudad!',en:'Your book is empty. Look for animals in the town!',de:'Dein Stickerbuch ist noch leer. Suche Tiere in der Stadt!'}[lang]);
 }
 /* one language at a time: the card speaks the app language; small flags say the same in another */
