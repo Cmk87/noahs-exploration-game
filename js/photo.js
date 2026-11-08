@@ -378,7 +378,7 @@ const BV={k:1,x:0,y:0,fit:1,mode:'',moved:false,suppress:false,pts:new Map(),hot
 function bodyMetrics(){
   const box=document.getElementById('phZoom'),stage=document.getElementById('phMap');
   if(!box||!stage)return null;
-  return {box,stage,bw:box.clientWidth,bh:box.clientHeight,sw:stage.offsetWidth,sh:stage.offsetHeight||stage.offsetWidth*BODY_VB.h/BODY_VB.w};
+  return {box,stage,bw:box.clientWidth,bh:box.clientHeight,sw:stage.offsetWidth,sh:stage.offsetHeight||stage.offsetWidth};
 }
 function bodyApply(){const stage=document.getElementById('phMap');if(stage)stage.style.transform=`translate(${BV.x}px,${BV.y}px) scale(${BV.k})`;}
 function bodyClamp(){

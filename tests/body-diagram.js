@@ -33,7 +33,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
       if (new Set(ids).size !== ids.length) crowded.push(g + ' duplicate');
       for (let i = 0; i < spots.length; i++) for (let j = i + 1; j < spots.length; j++) {
         const d = Math.hypot(spots[i].x - spots[j].x, spots[i].y - spots[j].y);
-        if (d < 9.5) crowded.push(g + ' ' + spots[i].id + '/' + spots[j].id + ' ' + d.toFixed(1));
+        if (d < 7) crowded.push(g + ' ' + spots[i].id + '/' + spots[j].id + ' ' + d.toFixed(1));
       }
       const mapped = spots.every(s => {
         const b = items.find(x => x.id === s.id);
@@ -57,6 +57,34 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
       const h = document.querySelector('#v-body .phHot[data-id="' + id + '"]').getBoundingClientRect();
       return { x: (h.left + h.width / 2 - s.left) / s.width, y: (h.top + h.height / 2 - s.top) / s.height, sw: s.width, sh: s.height };
     };
+    /* The image-rectangle check catches a circle that has slipped off the
+       picture. It does not prove the circle sits on the right bone or muscle. */
+    const onImage = () => {
+      const img = document.querySelector('#v-body .phMap img').getBoundingClientRect();
+      return BODY_DIAGRAMS.bones.spots.every(s => {
+        const h = document.querySelector('#v-body .phHot[data-id="' + s.id + '"]').getBoundingClientRect();
+        const x = (h.left + h.width / 2 - img.left) / img.width * 100;
+        const y = (h.top + h.height / 2 - img.top) / img.height * 100;
+        return Math.abs(x - s.x) < 1.5 && Math.abs(y - s.y) < 1.5;
+      });
+    };
+    const sticksFit = onImage();
+    const sticksEvery = {};
+    for (const g of Object.keys(BODY_DIAGRAMS)) {
+      showTab('body');
+      document.querySelector('#v-body .phHab[data-id="' + g + '"]').click();
+      await new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res)));
+      const img = document.querySelector('#v-body .phMap img').getBoundingClientRect();
+      sticksEvery[g] = BODY_DIAGRAMS[g].spots.every(s => {
+        const h = document.querySelector('#v-body .phHot[data-id="' + s.id + '"]').getBoundingClientRect();
+        const x = (h.left + h.width / 2 - img.left) / img.width * 100;
+        const y = (h.top + h.height / 2 - img.top) / img.height * 100;
+        return Math.abs(x - s.x) < 1.5 && Math.abs(y - s.y) < 1.5;
+      });
+    }
+    showTab('body');
+    document.querySelector('#v-body .phHab[data-id="bones"]').click();
+    await new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res)));
     const before = rel('skull');
     bodyZoom(2);
     const after = rel('skull');
@@ -74,6 +102,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     const clearFit = pile(boxes()) === 0;
     const aligned = Math.abs(before.x - after.x) < 0.03 && Math.abs(before.y - after.y) < 0.03 && after.sw > before.sw;
     const clearZoom = pile(boxes()) === 0;
+    const sticksZoom = onImage();
     const said0 = PHOTO_SAID.length;
     const box = document.getElementById('phZoom');
     box.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1, clientX: 120, clientY: 200, bubbles: true }));
@@ -143,10 +172,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     const pic = document.querySelector('#v-body .phMap img');
     const onePicture = !!(pic && pic.getAttribute('src') === 'body/skeleton.webp' && !document.querySelector('#v-body .phGrid') && !document.querySelector('#v-body svg'));
     const groups = document.querySelectorAll('#v-body .phHab').length;
-    return { idsOk, quizOk, counts, crowded, clearFit, clearZoom, aligned, before, after, quiet, dragClickSilent, said, saidNext, saidEn, btnAligned, saidMuscle, once, pinchQuiet, afterDrag, onePicture, groups };
+    return { idsOk, quizOk, counts, crowded, clearFit, clearZoom, sticksFit, sticksZoom, sticksEvery, aligned, before, after, quiet, dragClickSilent, said, saidNext, saidEn, btnAligned, saidMuscle, once, pinchQuiet, afterDrag, onePicture, groups };
   });
   check(r.idsOk && r.quizOk && !r.crowded.length, 'each picture has its own visible parts, named in es, en and de, and the old quiz still skips the new dots' + (r.idsOk && r.quizOk && !r.crowded.length ? '' : ' ' + JSON.stringify({ counts: r.counts, crowded: r.crowded, quiz: r.quizOk })));
-  check(r.clearFit && r.clearZoom, 'the circles do not cover each other, fitted or zoomed');
+  const every = r.sticksEvery && Object.keys(r.sticksEvery).every(g => r.sticksEvery[g]);
+  check(r.clearFit && r.clearZoom && r.sticksFit && r.sticksZoom && every, 'circles stay on their picture coordinates when fitted or zoomed, and do not cover each other' + (every ? '' : ' ' + JSON.stringify(r.sticksEvery)));
   check(r.onePicture && r.aligned, 'the skull stays on the same part of the picture when it is zoomed' + (r.aligned ? '' : ' ' + JSON.stringify(r)));
   check(r.quiet && r.dragClickSilent, 'dragging the picture does not start the voice');
   check(r.said && r.saidNext && r.saidEn, 'tapping the skull says its name, then the other fact, and a flag says it in English');

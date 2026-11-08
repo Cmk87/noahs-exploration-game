@@ -8,7 +8,7 @@ const BODY_DIAGRAMS = {
     spots: [
       { id: 'skull', x: 50, y: 11 },
       { id: 'jaw', x: 50, y: 21 },
-      { id: 'collarbone', x: 45, y: 30 },
+      { id: 'collarbone', x: 47, y: 31 },
       { id: 'humerus', x: 39, y: 42 },
       { id: 'ribs', x: 56, y: 36 },
       { id: 'spine', x: 50, y: 45 },
@@ -22,14 +22,14 @@ const BODY_DIAGRAMS = {
     image: 'body/muscles.webp',
     spots: [
       { id: 'smile', x: 50, y: 30 },
-      { id: 'neck-muscle', x: 50, y: 40 },
-      { id: 'shoulder-muscle', x: 33, y: 36 },
+      { id: 'neck-muscle', x: 50, y: 38 },
+      { id: 'shoulder-muscle', x: 42, y: 40 },
       { id: 'chest-muscles', x: 60, y: 43 },
-      { id: 'biceps', x: 42, y: 46 },
+      { id: 'biceps', x: 40, y: 50 },
       { id: 'tummy-muscles', x: 50, y: 54 },
       { id: 'forearm-muscles', x: 66, y: 54 },
       { id: 'thigh-muscle', x: 46, y: 64 },
-      { id: 'calf', x: 44, y: 81 }
+      { id: 'calf', x: 42, y: 78 }
     ]
   },
   heart: {
@@ -51,7 +51,7 @@ const BODY_DIAGRAMS = {
     spots: [
       { id: 'brain', x: 50, y: 14 },
       { id: 'spinal-cord', x: 50, y: 42 },
-      { id: 'nerves', x: 36, y: 52 }
+      { id: 'nerves', x: 36, y: 49 }
     ]
   },
   tummy: {
@@ -59,8 +59,8 @@ const BODY_DIAGRAMS = {
     spots: [
       { id: 'mouth', x: 50, y: 27 },
       { id: 'food-pipe', x: 50, y: 38 },
-      { id: 'liver', x: 42, y: 50 },
-      { id: 'stomach', x: 58, y: 48 },
+      { id: 'liver', x: 43, y: 48 },
+      { id: 'stomach', x: 54, y: 48 },
       { id: 'intestines', x: 50, y: 58 }
     ]
   },
@@ -68,7 +68,7 @@ const BODY_DIAGRAMS = {
     image: 'body/senses.webp',
     spots: [
       { id: 'ear', x: 18, y: 40 },
-      { id: 'eye', x: 35, y: 42 },
+      { id: 'eye', x: 42.5, y: 42 },
       { id: 'nose', x: 52, y: 50 },
       { id: 'fingertips', x: 74, y: 68 }
     ]
@@ -77,7 +77,7 @@ const BODY_DIAGRAMS = {
     image: 'body/skin.webp',
     spots: [
       { id: 'hair', x: 16, y: 34 },
-      { id: 'teeth', x: 40, y: 46 },
+      { id: 'teeth', x: 40, y: 43 },
       { id: 'skin', x: 40, y: 80 }
     ]
   },
@@ -86,8 +86,8 @@ const BODY_DIAGRAMS = {
     spots: [
       { id: 'hand', x: 50, y: 14 },
       { id: 'head', x: 50, y: 26 },
-      { id: 'elbow', x: 22, y: 29 },
-      { id: 'arm', x: 33, y: 25 },
+      { id: 'elbow', x: 25, y: 32 },
+      { id: 'arm', x: 32, y: 23 },
       { id: 'neck', x: 50, y: 36 },
       { id: 'shoulders', x: 64, y: 37 }
     ]
