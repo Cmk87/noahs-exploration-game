@@ -194,6 +194,9 @@ function finishItem(){
      ~170ms per character at rate 0.72, plus engine start-up, clamped. */
   const hold=Math.max(2400,Math.min(3600,300+(spokenPhrase||'').length*190));
   clearTimeout(holdT);holdT=setTimeout(()=>{document.getElementById('praise').style.display='none';advance();},hold);
+  /* A finished word offers the same hold-to-launch as Play, tucked under the
+     picture. Letters and numbers stay as they were: the party, then the next one. */
+  if(mode==='words'&&typeof wordLaunchOffer==='function') wordLaunchOffer();
 }
 function letterSpoken(ch){
   if(mode==='123') return NUMWORD[lang][parseInt(ch,10)];
@@ -215,7 +218,7 @@ function sayCurrent(){
 
 function resetTrace(){strokeIdx=0;cpIdx=0;trail=[];tracing=false;}
 let holdT=null;              // the praise pause; a letter picked during it wins over the automatic next one
-function loadItem(k,speak){clearTimeout(holdT);document.getElementById('praise').style.display='none';cur=k;resetTrace();buildBar();if(speak)sayCurrent();}
+function loadItem(k,speak){clearTimeout(holdT);document.getElementById('praise').style.display='none';if(typeof wordLaunchHide==='function')wordLaunchHide();cur=k;resetTrace();buildBar();if(speak)sayCurrent();}
 const sayHere=()=>{if(activeTab==='trace'&&traceScreen==='play')sayCurrent();};
 function advance(){
   if(mode==='words'){
@@ -310,6 +313,7 @@ function renderTraceMenu(){
 function showTrace(speak){
   clearTimeout(holdT);
   const p=document.getElementById('praise');if(p)p.style.display='none';
+  if(typeof wordLaunchHide==='function') wordLaunchHide();
   tracing=false;trail=[];
   traceScreen='menu';
   const v=document.getElementById('v-trace');if(v)v.classList.remove('words');

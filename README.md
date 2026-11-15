@@ -11,6 +11,7 @@ The tabs are big icons that all fit on one row; tapping one also says its name.
 | Tab | What it does |
 | --- | --- |
 | 🗺️ Adventure | Daily guided path of 4–8 stops through the learning tabs, chest and bonus at the end (the app opens here) |
+| 🎮 Play | Free play, no reading: draw a road and a vehicle drives it, dress an animal in stickers, or hold a button until a rocket or balloon launches |
 | ✍️ Write | A menu of short words (cat, Hund, sol…), lowercase, capitals or digits, then trace them with stroke order and arrows |
 | 🖼️ Words | "Where is the …?" picture quiz, 15 categories, ~370 words, 8 difficulty levels |
 | 👂 Listen | Hear a word, tap the picture, 6 levels up to sound-alike distractors |
@@ -56,6 +57,14 @@ old brick factory, a waste incinerator with a grab crane over the fire, recyclin
 paper, plastic, metal and food waste, a warehouse with a forklift, a container crane, a garbage truck)
 and a jail you can look into (robbers in eight cells, a guard with keys, watchtowers with searchlights, a
 basketball yard, a vegetable patch, a police van that brings a new robber, a police dog). 59 animals.
+
+## Play
+
+🎮 on the home screen (`js/play.js`) opens three activities, each with the same back button as the picture books. Nothing has to be read to play them.
+
+- **Draw a road.** A finger paints a track on a little landscape. Letting go sends the vehicle he picked — the same pictures as 🚗 Vehicles, train, car, bus and the rest — along that line, with its noise and a cheer at the end. Drawing the line is the fine-motor practice.
+- **Dress up.** He picks an animal from the animal photos, then taps hats, glasses, scarves and colours. Each one snaps onto that animal and its name is spoken in the language selected at the top. ↺ clears the stickers, ✅ throws a little party.
+- **Hold to launch.** A big button fills a rocket or a balloon while it is held down. Letting go early lets it sag back down. Filling it all the way launches it. The same little rocket appears under the picture when a word is finished in Writing → Words, as an optional extra cheer before the next word.
 
 ## Sticker book
 
