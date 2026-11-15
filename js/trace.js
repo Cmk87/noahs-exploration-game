@@ -4,7 +4,9 @@
 const cv=document.getElementById('c'),ctx=cv.getContext('2d');
 let S=100,DPR=1,power=0;
 try{power=Math.max(0,parseInt(localStorage.getItem('sl_power')||'0',10)||0);}catch(e){}
-let mode='abc';                    // abc | ABC | 123 | name
+let mode='abc';                    // abc | ABC | 123 | name | words
+let traceScreen='menu';            // menu first; play once he picks a card
+let traceWant='';                  // 'name' when the name card sent him to the parent panel
 let playlist=[],cur='a',strokeIdx=0,cpIdx=0,tracing=false,trail=[];
 let nameIdx=0,kidName='',spokenPhrase='';
 const t0=performance.now();
@@ -151,6 +153,15 @@ function finishStroke(){
   else{strokeDone();boom(26,X(last[0]),Y(last[1]),.6);}
 }
 function finishItem(){
+  /* a word is one picture: each letter just moves on, and the party waits
+     until the whole word is written */
+  if(mode==='words'&&nameIdx<playlist.length-1){
+    strokeDone();boom(34);
+    nameIdx++;
+    loadItem(playlist[nameIdx],false);
+    setTimeout(()=>{if(activeTab==='trace'&&mode==='words'&&traceScreen==='play')say(letterSpoken(cur));},220);
+    return;
+  }
   bigWin();boom();
   setTimeout(()=>boom(70,S*0.25,S*0.58,.9),240);
   setTimeout(()=>boom(70,S*0.75,S*0.58,.9),440);
@@ -168,6 +179,11 @@ function finishItem(){
     faceEl.textContent='🦸';
     wordEl.textContent=kidName.slice(0,nameIdx+1);
     spokenPhrase=letterSpoken(cur); say(spokenPhrase);
+  }else if(mode==='words'){
+    faceEl.textContent=writeCur.e;
+    wordEl.textContent=writeCur[lang];
+    spokenPhrase=writeCur[lang]; say(spokenPhrase);
+    rainEmoji([writeCur.e,'⭐','✨'],18);
   }else{
     const key=cur.toLowerCase();
     const w=(LETTERWORD[lang]&&LETTERWORD[lang][key])||['⭐',key];
@@ -196,13 +212,24 @@ function letterSpoken(ch){
   if(lang==='de') return c;                 // German engines read the bare letter correctly
   return (lang==='es'?ES[c]:EN[c])||c;
 }
-function sayCurrent(){ say(letterSpoken(cur)); }
+function sayCurrent(){
+  if(traceScreen!=='play') return;
+  if(mode==='words'&&writeCur) say(writeCur[lang]);
+  else say(letterSpoken(cur));
+}
 
 function resetTrace(){strokeIdx=0;cpIdx=0;trail=[];tracing=false;}
 let holdT=null;              // the praise pause; a letter picked during it wins over the automatic next one
 function loadItem(k,speak){clearTimeout(holdT);document.getElementById('praise').style.display='none';cur=k;resetTrace();buildBar();if(speak)sayCurrent();}
-const sayHere=()=>{if(activeTab==='trace')sayCurrent();};
+const sayHere=()=>{if(activeTab==='trace'&&traceScreen==='play')sayCurrent();};
 function advance(){
+  if(mode==='words'){
+    nameIdx++;
+    if(nameIdx>=playlist.length){writeFresh(activeTab==='trace'&&traceScreen==='play');return;}
+    loadItem(playlist[nameIdx],false);
+    setTimeout(()=>{if(activeTab==='trace'&&mode==='words'&&traceScreen==='play')say(letterSpoken(cur));},250);
+    return;
+  }
   if(mode==='name'){
     nameIdx++;
     if(nameIdx>=playlist.length){        // whole name finished
@@ -225,15 +252,22 @@ function advance(){
 }
 function buildBar(){
   const bar=document.getElementById('letterbar');bar.innerHTML='';
+  const seq=mode==='name'||mode==='words';
   playlist.forEach((k,idx)=>{
     const b=document.createElement('button');
     b.textContent=k;
-    if(mode==='name'? idx===nameIdx : k===cur) b.className='on';
-    b.onclick=()=>{ac();if(mode==='name')nameIdx=idx;loadItem(k,true);};
+    if(seq?idx===nameIdx:k===cur) b.className='on';
+    b.onclick=()=>{
+      ac();
+      if(seq)nameIdx=idx;
+      loadItem(k,mode!=='words');
+      if(mode==='words')say(letterSpoken(k));
+    };
     bar.appendChild(b);
-    if((mode==='name'?idx===nameIdx:k===cur))
+    if(seq?idx===nameIdx:k===cur)
       setTimeout(()=>{try{bar.scrollTo({left:b.offsetLeft-bar.clientWidth/2+b.offsetWidth/2,behavior:'smooth'});}catch(e){}},0);
   });
+  if(mode==='words')renderWordHead();
 }
 function setMode(m){
   clearTimeout(holdT);document.getElementById('praise').style.display='none';
@@ -241,23 +275,122 @@ function setMode(m){
   if(m==='abc') playlist=ALPHA[lang];
   else if(m==='ABC') playlist=CAPS[lang];
   else if(m==='123') playlist=DIGITS;
-  else{
+  else if(m==='words'){
+    if(!writeCur||!writeWordOk(writeCur[lang])) writeCur=nextWriteWord(writeCur);
+    playlist=[...writeCur[lang]];
+  }else{
     const clean=(kidName||'').split('').filter(ch=>SHAPES[ch]);
-    if(!clean.length){                       // no name saved yet
-      playlist=ALPHA[lang];mode='abc';
-      buildSegs();buildBar();showTab('parent');
+    if(!clean.length){                       // no name saved yet: the parent types it
+      traceWant='name';
+      showTab('parent');
+      say({es:'Escribe aquí su nombre.',en:'Type his name here.',de:'Schreib hier seinen Namen.'}[lang]);
       return;
     }
     playlist=clean;
   }
-  buildSegs();loadItem(playlist[0],true);
+  const v=document.getElementById('v-trace');
+  if(v) v.classList.toggle('words',m==='words');
+  setTraceIcon(m);
+  loadItem(playlist[0],activeTab==='trace'&&traceScreen==='play');
 }
-function buildSegs(){
-  const box=document.getElementById('segs');box.innerHTML='';
-  [['abc','abc'],['ABC','ABC'],['123','123'],['name','🦸']].forEach(([m,label])=>{
+
+/* The writing menu: big cards, same idea as the photo-book pickers and the
+   home screen. Words is the wide card on top so it stays easy to find. */
+const TRACE_MODES=[
+  {id:'words',icon:'✏️',es:'Palabras',en:'Words',de:'Wörter',wide:true,bg:['#FFB938','#FF8A3D'],ex:'🐱 🐶 ☀️'},
+  {id:'abc',icon:'abc',es:'Minúsculas',en:'Lowercase',de:'Kleinbuchstaben',bg:['#FF8A8A','#E8455C']},
+  {id:'ABC',icon:'ABC',es:'Mayúsculas',en:'Uppercase',de:'Großbuchstaben',bg:['#7EB6FF','#3A6FE0']},
+  {id:'123',icon:'123',es:'Números',en:'Numbers',de:'Zahlen',bg:['#6FD86A','#2EA84F']},
+  {id:'name',icon:'🦸',es:'Mi nombre',en:'My name',de:'Mein Name',bg:['#C9A6FF','#7A5AE0']}
+];
+const TRACE_ASK={es:'¿Qué escribimos?',en:'What shall we write?',de:'Was schreibst du?'};
+const TRACE_BACK={es:'Volver',en:'Back',de:'Zurück'};
+const FLAG_NAME={es:'Español',en:'English',de:'Deutsch'};
+function letterIcon(icon){return icon.length<=3&&/[a-z0-9]/i.test(icon);}
+function setTraceIcon(m){
+  const t=TRACE_MODES.find(x=>x.id===m),el=document.getElementById('traceModeIcon');
+  if(!el)return;
+  el.textContent=t?t.icon:'';
+  el.classList.toggle('letters',!!(t&&letterIcon(t.icon)));
+  const back=document.getElementById('traceBack');
+  if(back) back.setAttribute('aria-label',TRACE_BACK[lang]);
+}
+function renderTraceMenu(){
+  const hello=document.getElementById('traceHello'),grid=document.getElementById('traceGrid');
+  if(!hello||!grid)return;
+  hello.textContent=TRACE_ASK[lang];
+  grid.innerHTML='';
+  TRACE_MODES.forEach(t=>{
     const b=document.createElement('button');
-    b.className='seg'+(mode===m?' on':'');b.textContent=label;
-    b.onclick=()=>{ac();setMode(m);};
+    b.type='button';
+    b.className='wcard'+(t.wide?' wide':'');
+    b.dataset.mode=t.id;
+    b.style.background=`linear-gradient(150deg,${t.bg[0]},${t.bg[1]})`;
+    b.style.setProperty('--edge',t.bg[1]);
+    b.setAttribute('aria-label',t[lang]);
+    const icon=document.createElement('span');
+    icon.className='wi'+(letterIcon(t.icon)?' letters':'');
+    icon.textContent=t.icon;
+    const lab=document.createElement('span');
+    lab.className='wl';lab.textContent=t[lang];
+    b.append(icon,lab);
+    if(t.ex){const ex=document.createElement('span');ex.className='wex';ex.textContent=t.ex;b.append(ex);}
+    b.onclick=()=>{ac();enterTrace(t.id);};
+    grid.appendChild(b);
+  });
+}
+function showTrace(speak){
+  clearTimeout(holdT);
+  const p=document.getElementById('praise');if(p)p.style.display='none';
+  tracing=false;trail=[];
+  traceScreen='menu';
+  const v=document.getElementById('v-trace');if(v)v.classList.remove('words');
+  document.getElementById('traceMenu').classList.add('on');
+  document.getElementById('tracePlay').classList.remove('on');
+  renderTraceMenu();
+  if(speak) say(TRACE_ASK[lang]);
+}
+function enterTrace(m){
+  traceScreen='play';
+  document.getElementById('traceMenu').classList.remove('on');
+  document.getElementById('tracePlay').classList.add('on');
+  setMode(m);
+  requestAnimationFrame(fit);
+}
+function renderWordFlags(){
+  const box=document.getElementById('wordFlags');if(!box)return;
+  box.innerHTML='';
+  if(mode!=='words')return;
+  ['es','en','de'].filter(c=>LANGS_ON.includes(c)).forEach(c=>{
+    const b=document.createElement('button');
+    b.type='button';b.className='wflag'+(c===lang?' on':'');b.dataset.lang=c;
+    b.textContent=BRIDGE_MARK[c];
+    b.setAttribute('aria-label',FLAG_NAME[c]);
+    b.onclick=()=>{ac();if(c!==lang)setLang(c,document.getElementById(c));else if(writeCur)say(writeCur[lang]);};
     box.appendChild(b);
   });
 }
+function renderWordHead(){
+  if(mode!=='words'||!writeCur){renderWordFlags();return;}
+  const emo=document.getElementById('wordEmoji');if(emo)emo.textContent=writeCur.e;
+  const box=document.getElementById('wordSpell');if(!box)return;
+  box.innerHTML='';
+  playlist.forEach((ch,idx)=>{
+    const b=document.createElement('button');
+    b.type='button';b.textContent=ch;
+    b.className=(idx<nameIdx?'done ':'')+(idx===nameIdx?'on':'');
+    b.setAttribute('aria-label',ch);
+    b.onclick=()=>{ac();nameIdx=idx;loadItem(playlist[idx],false);say(letterSpoken(ch));};
+    box.appendChild(b);
+  });
+  renderWordFlags();
+}
+/* the same picture, spelled in the language he just picked, from the first letter */
+function writeFresh(speak){
+  writeCur=nextWriteWord(writeCur);
+  nameIdx=0;
+  playlist=[...writeCur[lang]];
+  loadItem(playlist[0],false);
+  if(speak) say(writeCur[lang]);
+}
+document.getElementById('traceBack').onclick=()=>{ac();showTrace(false);};
