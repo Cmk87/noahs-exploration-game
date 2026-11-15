@@ -136,7 +136,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    check(r.ate && r.longer, 'caterpillar: crawls to the finger, eats the fruit and grows ' + JSON.stringify(r));}
   await page.evaluate(() => { showDigLock(); startGame('aq'); });
   await page.waitForTimeout(500);
-  check(await page.evaluate(() => pane === 'aqPlay' && AQ && AQ.fish.length > 0), 'aquarium fish swim in');
+  check(await page.evaluate(() => pane === 'aqPlay' && AQ && AQ.fish.length > 0 && AQ.goal === 18 && document.getElementById('aqPrompt').textContent.indexOf('0 / 18') >= 0), 'aquarium fish swim in, and the round counts to 18');
   await page.evaluate(() => { power = 45; savePower(); showDigLock(); startGame('mem'); document.querySelector('#memPlay .quitBtn').click(); $('qsLeave').click(); });
   check(await page.evaluate(() => power === 45 && pane === 'digLock'), 'leaving a prize game right after starting gives the points back');
   await page.evaluate(() => { DINOS.forEach(d => prepParts(d)); showDigLock(); });
@@ -684,8 +684,8 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
       };
     });
     check(menu.menu && !menu.play && menu.noSegs, 'writing opens on a menu, with no mode buttons above the canvas');
-    check(menu.modes.join() === 'words,abc,ABC,123,name' && menu.wordsLabel === 'Wörter' && menu.hello === 'Was schreibst du?',
-      'the menu offers words, lowercase, uppercase, numbers and his name (' + menu.modes.join() + ')');
+    check(menu.modes.join() === 'words,abc,ABC,123' && menu.wordsLabel === 'Wörter' && menu.hello === 'Was schreibst du?',
+      'the menu offers words, lowercase, uppercase and numbers (' + menu.modes.join() + ')');
     check(menu.back, 'writing practice uses the same back button as the picture books');
     const letters = await page.evaluate(() => {
       document.querySelector('#traceGrid [data-mode="abc"]').click();
@@ -743,15 +743,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
       return { word, emoji, praised, face };
     });
     check(finished.praised === finished.word && finished.face === finished.emoji, 'finishing the last letter celebrates the whole word');
-    const named = await page.evaluate(() => {
-      kidName = '';
-      showTab('trace');
-      document.querySelector('#traceGrid [data-mode="name"]').click();
-      const at = activeTab;
-      showTab('home');
-      return at;
-    });
-    check(named === 'parent', 'my name, before a name is saved, opens the parent panel');
+    check(await page.evaluate(() => !document.querySelector('#traceGrid [data-mode="name"]')), 'the writing menu has no name card');
   }
 
   {const bad = await page.evaluate(() => JSON.parse(sessionStorage.getItem('ALLSAID') || '[]').filter(t => /\[object|undefined|null/.test(t)));

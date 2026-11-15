@@ -54,7 +54,6 @@ function buildHome(){
 }
 $('homeBtn').onclick=()=>{ac();if(activeTab!=='home')showTab('home');};
 function showTab(id, opt){
-  if(id!=='parent'&&typeof traceWant!=='undefined') traceWant='';
   if(activeTab==='act'&&id!=='act'&&typeof stopRec==='function'){stopRec(true);unCall();}   // no microphone left open behind another screen
   if((activeTab==='king'||activeTab==='dinos'||activeTab==='folk'||activeTab==='ride'||activeTab==='things'||activeTab==='baby'||activeTab==='body')&&id!==activeTab&&typeof photoStop==='function')photoStop();
   activeTab=id;$('homeBtn').classList.toggle('on',id==='home');if(id==='home')buildHome();window.scrollTo(0,0);if(typeof renderAdvBar==='function')renderAdvBar();
@@ -172,9 +171,9 @@ function renderNote(recs){
   box.innerHTML=h;
 }
 function renderParent(){
-  const L={es:['Nombre para la pestaña 🦸','Niveles','Palabras que más falla','Borrar'],
-           en:['Name for the 🦸 tab','Levels','Most-missed words','Reset'],
-           de:['Name für den 🦸 Tab','Level','Meist verfehlte Wörter','Zurücksetzen']}[lang];
+  const L={es:['Su nombre','Niveles','Palabras que más falla','Borrar'],
+           en:['His name','Levels','Most-missed words','Reset'],
+           de:['Sein Name','Level','Meist verfehlte Wörter','Zurücksetzen']}[lang];
   document.getElementById('pNameTitle').textContent=L[0];
   renderVoices();
   /* ---- this week ---- */
@@ -257,13 +256,6 @@ function renderParent(){
 document.getElementById('saveName').onclick=()=>{
   kidName=(document.getElementById('nameInput').value||'').trim();
   try{localStorage.setItem('sl_name',kidName);}catch(e){}
-  const want=traceWant;
-  if(want==='name'){
-    traceWant='';
-    const clean=(kidName||'').split('').filter(ch=>SHAPES[ch]);
-    if(clean.length){showTab('trace',{traceMode:'name'});beep(880,0,0.15,'square',0.2);return;}
-  }
-  if(mode==='name')setMode('name');
   beep(880,0,0.15,'square',0.2);
 };
 $('pPlus').onclick=()=>{power+=10;savePower();renderPower(true);renderParent();};
