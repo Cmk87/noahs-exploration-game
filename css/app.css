@@ -998,3 +998,50 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .cakeBit.want{animation:fwWant .6s ease-in-out infinite alternate}
 .cakeBit.cakeFlav{width:min(26vw,104px);height:min(26vw,104px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
 .cakeBit.cakeFlav small{font:800 min(3.4vw,15px) 'Baloo 2',system-ui,sans-serif;color:var(--ink)}
+
+/* =====================================================================
+   WRITING — a menu of modes, then the tracing canvas.
+   Words keeps the picture, the spelling and a big flag for each language.
+===================================================================== */
+#traceMenu{width:100%;padding-bottom:8px}
+#traceHello{font-size:min(6.2vw,28px);color:#fff;text-shadow:0 3px 0 rgba(5,8,40,.35);margin:6px 14px 10px;text-align:center}
+#traceGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;padding:0 14px 12px}
+.wcard{position:relative;border:none;border-radius:26px;color:#fff;cursor:pointer;overflow:hidden;
+  min-height:min(30vw,128px,calc((100dvh - 240px)/3.3));padding:10px 8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  box-shadow:0 6px 0 var(--edge),0 14px 26px rgba(5,8,40,.30);font-family:'Baloo 2','Nunito',sans-serif}
+.wcard::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 20% 0%,rgba(255,255,255,.35),transparent 55%);pointer-events:none}
+.wcard:active{transform:translateY(5px);box-shadow:0 1px 0 var(--edge),0 6px 12px rgba(5,8,40,.25)}
+.wcard .wi{font-size:min(12vw,52px);line-height:1;filter:drop-shadow(0 4px 3px rgba(0,0,0,.22));position:relative}
+.wcard .wi.letters{font-weight:800;font-size:min(10vw,44px);letter-spacing:-0.5px;filter:none;text-shadow:0 3px 0 rgba(0,0,0,.18)}
+.wcard .wl{position:relative;font-weight:800;font-size:min(4.2vw,18px);line-height:1.05;text-align:center;text-shadow:0 2px 0 rgba(0,0,0,.22)}
+.wcard.wide{grid-column:1 / -1;flex-direction:row;gap:12px;min-height:min(24vw,108px);padding:12px 18px;justify-content:flex-start}
+.wcard.wide .wi{font-size:min(14vw,60px)}
+.wcard.wide .wl{font-size:min(6.4vw,28px);text-align:left}
+.wcard .wex{position:relative;margin-left:auto;font-size:min(7vw,32px);letter-spacing:1px;line-height:1}
+#tracePlay{width:100%}
+#traceBar{width:100%}
+#traceModeIcon.letters{font-family:'Baloo 2','Nunito',sans-serif;font-weight:800;font-size:28px;letter-spacing:-0.5px;filter:none;text-shadow:0 2px 0 rgba(0,0,0,.25)}
+#wordFlags{display:none;margin-left:auto;gap:6px;padding-right:2px}
+#v-trace.words #wordFlags{display:flex}
+.wflag{width:48px;height:48px;border:none;border-radius:16px;background:#fff;font-size:26px;line-height:1;padding:0;cursor:pointer;
+  box-shadow:var(--lift-sm);filter:saturate(.25) opacity(.5)}
+.wflag.on{filter:none;background:var(--bolt);box-shadow:0 4px 0 #C99600,var(--soft)}
+.wflag:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(10,14,55,.3)}
+#wordHead{display:none;width:100%;align-items:center;gap:8px;padding:0 12px 8px}
+#v-trace.words #wordHead{display:flex}
+#wordEmoji{flex:0 0 auto;width:min(18vw,72px);height:min(18vw,72px);display:flex;align-items:center;justify-content:center;
+  font-size:min(12vw,46px);line-height:1;background:#fff;border-radius:22px;box-shadow:var(--lift),var(--soft)}
+#wordSpell{flex:1 1 auto;display:flex;gap:6px;justify-content:center;min-width:0}
+#wordSpell button{flex:1 1 0;min-width:0;height:64px;border:none;border-radius:16px;background:#fff;color:var(--ink);
+  font:800 min(8vw,36px)/1 'Baloo 2',sans-serif;box-shadow:var(--lift-sm);padding:0;cursor:pointer}
+#wordSpell button.done{background:#C8F5D8}
+#wordSpell button.on{background:var(--bolt);box-shadow:0 4px 0 #C99600,var(--soft);transform:translateY(-2px)}
+#wordSpell button:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(10,14,55,.3)}
+#v-trace.words #letterbar{display:none}
+#wrap{width:min(94vw,470px,calc(100vh - 380px));width:min(94vw,470px,calc(100dvh - 380px))}
+#v-trace.words #wrap{width:min(94vw,440px,calc(100vh - 420px));width:min(94vw,440px,calc(100dvh - 420px))}
+@media (min-width:700px){
+  #traceGrid{grid-template-columns:repeat(4,1fr);max-width:920px;margin:0 auto}
+  .wcard.wide{grid-column:1 / -1}
+}

@@ -61,18 +61,32 @@
 
 <!-- ============ TRACE ============ -->
 <div class="view" id="v-trace">
-  <div class="segs" id="segs"></div>
-  <div id="stage"><div id="wrap">
-    <canvas id="c"></canvas>
-    <div id="praise"><div id="praiseCol">
-      <div id="burst"><div id="face">💥</div></div>
-      <div id="wordText" class="display"></div>
+  <div id="traceMenu" class="pane on">
+    <div id="traceHello" class="display"></div>
+    <div id="traceGrid"></div>
+  </div>
+  <div id="tracePlay" class="pane">
+    <div class="phBar" id="traceBar">
+      <button type="button" class="phBack" id="traceBack" aria-label="back">⬅️</button>
+      <span class="phTitle" id="traceModeIcon"></span>
+      <div id="wordFlags"></div>
+    </div>
+    <div id="wordHead">
+      <div id="wordEmoji"></div>
+      <div id="wordSpell"></div>
+    </div>
+    <div id="stage"><div id="wrap">
+      <canvas id="c"></canvas>
+      <div id="praise"><div id="praiseCol">
+        <div id="burst"><div id="face">💥</div></div>
+        <div id="wordText" class="display"></div>
+      </div></div>
     </div></div>
-  </div></div>
-  <div id="voiceWarn"></div>
-  <div class="letterbar" id="letterbar"></div>
-  <div class="tools">
-    <button id="sayBtn">🔊</button><button id="againBtn">↺</button><button id="nextBtn">➜</button>
+    <div id="voiceWarn"></div>
+    <div class="letterbar" id="letterbar"></div>
+    <div class="tools">
+      <button id="sayBtn">🔊</button><button id="againBtn">↺</button><button id="nextBtn">➜</button>
+    </div>
   </div>
 </div>
 
@@ -364,6 +378,7 @@
 <script src="js/shapes.js"></script>
 <script src="js/vocab.js"></script>
 <script src="js/audio.js"></script>
+<script src="js/write-words.js"></script>
 <script src="js/trace.js"></script>
 <script src="js/learn.js"></script>
 <script src="js/read.js"></script>

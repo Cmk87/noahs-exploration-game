@@ -664,6 +664,96 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    });
    check(r.station === 'spacestation', 'tapping the space station names the space station' + (r.station === 'spacestation' ? '' : ' (got ' + r.station + ')'));
    check(r.ratio > 1.05 && r.ratio <= 1.55, 'a tap on the map zooms in only a little (at most 1.5×)' + ' ' + r.ratio.toFixed(2));}
+  console.log('Writing');
+  {
+    const menu = await page.evaluate(() => {
+      LANGS_ON = ['de', 'en', 'es'];
+      try { localStorage.setItem('sl_langs', 'de,en,es'); } catch (e) {}
+      applyLangs();
+      setLang('de', document.getElementById('de'));
+      showTab('trace');
+      const cards = [...document.querySelectorAll('#traceGrid [data-mode]')];
+      return {
+        menu: document.getElementById('traceMenu').classList.contains('on'),
+        play: document.getElementById('tracePlay').classList.contains('on'),
+        modes: cards.map(b => b.dataset.mode),
+        wordsLabel: cards.find(b => b.dataset.mode === 'words').getAttribute('aria-label'),
+        hello: document.getElementById('traceHello').textContent,
+        noSegs: !document.getElementById('segs'),
+        back: document.getElementById('traceBack').classList.contains('phBack')
+      };
+    });
+    check(menu.menu && !menu.play && menu.noSegs, 'writing opens on a menu, with no mode buttons above the canvas');
+    check(menu.modes.join() === 'words,abc,ABC,123,name' && menu.wordsLabel === 'Wörter' && menu.hello === 'Was schreibst du?',
+      'the menu offers words, lowercase, uppercase, numbers and his name (' + menu.modes.join() + ')');
+    check(menu.back, 'writing practice uses the same back button as the picture books');
+    const letters = await page.evaluate(() => {
+      document.querySelector('#traceGrid [data-mode="abc"]').click();
+      const bar = [...document.querySelectorAll('#letterbar button')].map(b => b.textContent);
+      return {
+        mode, play: document.getElementById('tracePlay').classList.contains('on'),
+        menu: document.getElementById('traceMenu').classList.contains('on'),
+        words: document.getElementById('v-trace').classList.contains('words'),
+        bar: bar.join(''), alpha: ALPHA.de.join(''), cur, shape: !!SHAPES[cur]
+      };
+    });
+    check(letters.mode === 'abc' && letters.play && !letters.menu && !letters.words && letters.bar === letters.alpha && letters.shape,
+      'lowercase still traces the German alphabet, one letter at a time');
+    await page.evaluate(() => document.getElementById('traceBack').click());
+    check(await page.evaluate(() => document.getElementById('traceMenu').classList.contains('on') && !document.getElementById('tracePlay').classList.contains('on')),
+      'back from a letter returns to the writing menu');
+    const words = await page.evaluate(() => {
+      const bad = [];
+      WRITE_WORDS.forEach(w => ['en', 'de', 'es'].forEach(L => {
+        const cs = [...w[L]];
+        if (cs.length < 2 || cs.length > 5 || cs.some(ch => !SHAPES[ch])) bad.push(L + ':' + w[L]);
+      }));
+      document.querySelector('#traceGrid [data-mode="words"]').click();
+      const spelled = [...document.querySelectorAll('#wordSpell button')].map(b => b.textContent).join('');
+      const flags = [...document.querySelectorAll('#wordFlags button')].map(b => b.dataset.lang);
+      return {
+        bad, spelled, word: writeCur.de, emoji: document.getElementById('wordEmoji').textContent,
+        shown: writeCur.e, flags: flags.join(), on: document.querySelector('#wordFlags .on').dataset.lang,
+        wordsClass: document.getElementById('v-trace').classList.contains('words'),
+        letterbar: getComputedStyle(document.getElementById('letterbar')).display
+      };
+    });
+    check(words.bad.length === 0, 'every writing word is 2–5 traceable letters in English, German and Spanish' + (words.bad.length ? ': ' + words.bad.slice(0, 4).join(', ') : ''));
+    check(words.wordsClass && words.spelled === words.word && words.emoji === words.shown && words.emoji.length > 0 && words.letterbar === 'none',
+      'words mode shows the picture and the spelling, letter by letter');
+    check(words.flags === 'es,en,de' && words.on === 'de', 'words mode shows a big flag for each language, with German on');
+    const switched = await page.evaluate(() => {
+      const emoji = writeCur.e;
+      document.querySelector('#wordFlags [data-lang="en"]').click();
+      const spelled = [...document.querySelectorAll('#wordSpell button')].map(b => b.textContent).join('');
+      return { lang, spelled, word: writeCur.en, emoji, still: document.getElementById('wordEmoji').textContent, header: document.getElementById('en').classList.contains('on') };
+    });
+    check(switched.lang === 'en' && switched.spelled === switched.word && switched.still === switched.emoji && switched.header,
+      'the flag switches the spelling and keeps the same picture (' + switched.word + ')');
+    const finished = await page.evaluate(() => {
+      power = 5;
+      const word = writeCur.en, emoji = writeCur.e, steps = playlist.length;
+      for (let i = 0; i < steps; i++) finishItem();
+      const praised = document.getElementById('wordText').textContent;
+      const face = document.getElementById('face').textContent;
+      clearTimeout(holdT);
+      document.getElementById('praise').style.display = 'none';
+      showTab('home');
+      setLang('de', document.getElementById('de'));
+      return { word, emoji, praised, face };
+    });
+    check(finished.praised === finished.word && finished.face === finished.emoji, 'finishing the last letter celebrates the whole word');
+    const named = await page.evaluate(() => {
+      kidName = '';
+      showTab('trace');
+      document.querySelector('#traceGrid [data-mode="name"]').click();
+      const at = activeTab;
+      showTab('home');
+      return at;
+    });
+    check(named === 'parent', 'my name, before a name is saved, opens the parent panel');
+  }
+
   {const bad = await page.evaluate(() => JSON.parse(sessionStorage.getItem('ALLSAID') || '[]').filter(t => /\[object|undefined|null/.test(t)));
    check(bad.length === 0, 'the voice never reads out "[object Object]", "undefined" or "null"' + (bad.length ? ': ' + bad.slice(0, 3).join(' | ') : ''));}
   check(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
