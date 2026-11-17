@@ -23,11 +23,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await hookSay();
   await page.mouse.click(180, 320);
   await page.waitForTimeout(300);
-  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 19), 'opens on the home screen with 19 sections');
+  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 20), 'opens on the home screen with 20 sections');
   check(await page.evaluate(() => lang === 'de'), 'starts in German');
 
   console.log('Layout');
-  for (const t of ['home', 'adv', 'city', 'stickers', 'king', 'dinos', 'things', 'folk', 'ride', 'baby', 'body', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
+  for (const t of ['home', 'adv', 'play', 'city', 'stickers', 'king', 'dinos', 'things', 'folk', 'ride', 'baby', 'body', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
     await page.evaluate(t => showTab(t), t);
     await page.waitForTimeout(150);
     await page.evaluate(() => { window.scrollTo(0, 500); const v = document.querySelector('.view.on'); v.lastElementChild && v.lastElementChild.scrollIntoView(); });
@@ -744,6 +744,99 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     });
     check(finished.praised === finished.word && finished.face === finished.emoji, 'finishing the last letter celebrates the whole word');
     check(await page.evaluate(() => !document.querySelector('#traceGrid [data-mode="name"]')), 'the writing menu has no name card');
+    const reward = await page.evaluate(() => {
+      setLang('de', document.getElementById('de'));
+      showTab('trace');
+      document.querySelector('#traceGrid [data-mode="words"]').click();
+      for (let i = 0; i < playlist.length; i++) finishItem();
+      const offered = document.getElementById('wordLaunch').classList.contains('on');
+      const btn = document.getElementById('wlBtn');
+      btn.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 7, buttons: 1 }));
+      WL.base = 0; WL.holdAt = performance.now() - 4000; WL.phase = 'hold'; WL.holding = true;
+      const launched = pumpTick(WL);
+      if (launched) wlGo();
+      return { offered, launched, celebrated: !!WL.celebrated };
+    });
+    check(reward.offered && reward.launched && reward.celebrated, 'finishing a word offers the hold-to-launch reward');
+  }
+
+  console.log('Play');
+  {
+    const menu = await page.evaluate(() => {
+      showTab('play');
+      const cards = [...document.querySelectorAll('#playGrid [data-play]')];
+      return {
+        n: document.querySelectorAll('#homeGrid [data-id="play"]').length,
+        menu: document.getElementById('playMenu').classList.contains('on'),
+        modes: cards.map(b => b.dataset.play).join(),
+        label: cards.find(b => b.dataset.play === 'track').getAttribute('aria-label'),
+        back: document.getElementById('trackBack').classList.contains('phBack')
+      };
+    });
+    check(menu.n === 1 && menu.menu && menu.modes === 'track,dress,launch' && menu.label === 'Strecke' && menu.back,
+      'Play is one home card and opens a menu of track, dress-up and launch');
+    const track = await page.evaluate(() => {
+      document.querySelector('#playGrid [data-play="track"]').click();
+      const cv = document.getElementById('trackCv');
+      const r = cv.getBoundingClientRect();
+      const fire = (type, x, y) => cv.dispatchEvent(new PointerEvent(type, {
+        bubbles: true, clientX: r.left + x, clientY: r.top + y, pointerId: 3, buttons: type === 'pointerup' ? 0 : 1
+      }));
+      fire('pointerdown', r.width * 0.12, r.height * 0.72);
+      fire('pointermove', r.width * 0.4, r.height * 0.5);
+      fire('pointermove', r.width * 0.78, r.height * 0.28);
+      fire('pointerup', r.width * 0.78, r.height * 0.28);
+      const riding = TRACK.phase === 'ride' && TRACK.road && TRACK.road.len > 48;
+      const veh = document.querySelector('#trackVehs .trackVeh.on');
+      if (riding) { TRACK.dur = 0.01; trackFrame(1); }
+      return { w: Math.round(r.width), h: Math.round(r.height), riding, arrived: TRACK.celebrated && TRACK.phase === 'celebrate', veh: veh && veh.dataset.veh };
+    });
+    check(track.w > 100 && track.h > 100 && track.riding && track.arrived && track.veh === 'car',
+      'a drawn road sends the chosen vehicle along it ' + JSON.stringify(track));
+    const early = await page.evaluate(() => {
+      playBack();
+      document.querySelector('#playGrid [data-play="launch"]').click();
+      const btn = document.getElementById('launchBtn');
+      btn.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 4, buttons: 1 }));
+      LAUNCH.base = 0; LAUNCH.holdAt = performance.now() - 700; LAUNCH.phase = 'hold'; LAUNCH.holding = true;
+      pumpTick(LAUNCH); launchFrame();
+      const mid = LAUNCH.fill;
+      btn.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 4, buttons: 0 }));
+      LAUNCH.relAt = performance.now() - 600;
+      pumpTick(LAUNCH);
+      return { mid, later: LAUNCH.fill, phase: LAUNCH.phase };
+    });
+    check(early.mid > 0.2 && early.later < early.mid && early.phase !== 'fly',
+      'letting go of the launcher early lets it sink back down ' + JSON.stringify(early));
+    const flew = await page.evaluate(() => {
+      const btn = document.getElementById('launchBtn');
+      btn.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 5, buttons: 1 }));
+      LAUNCH.base = 0.2; LAUNCH.holdAt = performance.now() - 5000; LAUNCH.phase = 'hold'; LAUNCH.holding = true;
+      const full = pumpTick(LAUNCH);
+      if (full) launchGo();
+      const rocket = document.getElementById('launchCraft').classList.contains('fly');
+      return { full, rocket, flights: LAUNCH.flights, kind: LAUNCH.kind, phase: LAUNCH.phase };
+    });
+    check(flew.full && flew.rocket && flew.flights >= 1, 'holding the button until it is full launches the rocket ' + JSON.stringify(flew));
+    const dress = await page.evaluate(() => {
+      // a launch is in progress; the kind button ignores taps until it lands, so wait it out
+      LAUNCH.phase = 'idle'; LAUNCH.fill = 0;
+      playBack();
+      document.querySelector('#playGrid [data-play="dress"]').click();
+      document.querySelector('#dressTray [data-dress="hat"]').click();
+      const hat = DRESS.worn.head === 'hat' && !!document.querySelector('#dressStickers .dressSticker');
+      const said = JSON.parse(sessionStorage.getItem('ALLSAID') || '[]').slice(-3);
+      document.querySelector('#dressTray [data-dress="red"]').click();
+      const color = DRESS.worn.glow === 'red' && !!document.querySelector('#dressStickers .dressGlow');
+      document.getElementById('dressReset').click();
+      const cleared = !DRESS.worn.head && !DRESS.worn.glow && !document.querySelector('#dressStickers .dressSticker');
+      document.querySelector('#dressAnimals [data-animal="dog"]').click();
+      document.querySelector('#dressTray [data-dress="glasses"]').click();
+      document.getElementById('dressDone').click();
+      return { hat, color, cleared, animal: DRESS.id, glasses: DRESS.worn.face, celebrated: DRESS.celebrated, said: said.join('|') };
+    });
+    check(dress.hat && dress.color && dress.cleared && dress.animal === 'dog' && dress.glasses === 'glasses' && dress.celebrated && /Hut/.test(dress.said),
+      'stickers snap onto the animal, are named aloud, and done celebrates ' + JSON.stringify(dress));
   }
 
   {const bad = await page.evaluate(() => JSON.parse(sessionStorage.getItem('ALLSAID') || '[]').filter(t => /\[object|undefined|null/.test(t)));

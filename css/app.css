@@ -794,7 +794,7 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .jLetter{left:50%;top:20%;font-size:min(10vw,52px)}.jLetter b{font:800 min(6vw,28px)/1 'Baloo 2',sans-serif;color:#C0473A;margin-left:4px}
 .jBoard{position:absolute;left:50%;top:22%;transform:translate(-50%,-50%);background:#1E3D2E;border:6px solid #9A6440;border-radius:8px;color:#fff;font:800 min(14vw,72px)/1 'Baloo 2',sans-serif;padding:6px 26px}
 .jEnd{display:flex;gap:12px;justify-content:center}
-/* nineteen sections: three columns upright (Abenteuer across the top, Preise two wide at the end), five on a landscape screen */
+/* twenty sections: three columns upright (Abenteuer across the top, Preise two wide at the end), five on a landscape screen */
 #homeGrid{grid-template-columns:repeat(3,1fr);gap:4px}
 #v-home{padding-bottom:2px}
 .hcard{min-height:min(28vw,112px,calc((100vh - 200px)/8 - 6px));min-height:min(28vw,112px,calc((100dvh - 200px)/8 - 6px));padding:4px 4px;border-radius:22px}
@@ -1041,4 +1041,78 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 @media (min-width:700px){
   #traceGrid{grid-template-columns:repeat(4,1fr);max-width:920px;margin:0 auto}
   .wcard{min-height:min(22vw,160px)}
+}
+
+/* =====================================================================
+   PLAY — draw a road, dress an animal, hold to launch.
+   The menu reuses the writing cards. Each toy fills the screen, with
+   the same back button as the picture books.
+===================================================================== */
+#v-play{overflow:hidden;touch-action:none;padding-bottom:0}
+#v-play .pane.on{flex:1;min-height:0;width:100%}
+#playMenu.on{overflow-y:auto;touch-action:pan-y;align-items:center}
+#playHello{font-size:min(6.2vw,28px);color:#fff;text-shadow:0 3px 0 rgba(5,8,40,.35);margin:6px 14px 10px;text-align:center}
+#playGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;padding:0 14px 18px}
+/* Writing is four equal cards. The track card is the one wide row in Play. */
+#playGrid .wcard.wide{grid-column:1 / -1;flex-direction:row;gap:12px;min-height:min(24vw,120px);padding:12px 18px;justify-content:flex-start}
+#playGrid .wcard.wide .wi{font-size:min(14vw,60px)}
+#playGrid .wcard.wide .wl{font-size:min(6.4vw,28px);text-align:left}
+#playGrid .wcard.wide .wex{margin-left:auto;margin-top:0;font-size:min(7vw,32px)}
+#trackPlay.on,#dressPlay.on,#launchPlay.on{align-items:stretch}
+#trackCv{flex:1 1 auto;min-height:180px;width:calc(100% - 16px);margin:0 auto 4px;display:block;border-radius:26px;
+  touch-action:none;box-shadow:var(--lift),var(--soft);background:#8ED36A}
+#trackVehs,#dressAnimals,#dressTray{display:flex;gap:8px;overflow-x:auto;width:100%;padding:8px 12px 12px;touch-action:pan-x;scrollbar-width:none}
+#trackVehs::-webkit-scrollbar,#dressAnimals::-webkit-scrollbar,#dressTray::-webkit-scrollbar{display:none}
+.trackVeh,.dressAn{flex:0 0 auto;width:76px;height:76px;padding:0;border:none;border-radius:22px;background:#fff;overflow:hidden;
+  box-shadow:var(--lift-sm);cursor:pointer}
+.trackVeh img,.dressAn img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.trackVeh.on,.dressAn.on{outline:4px solid var(--bolt);transform:translateY(-3px)}
+.trackVeh:active,.dressAn:active,.dressBit:active{transform:translateY(2px)}
+#dressStage{container-type:size;position:relative;flex:0 1 auto;width:min(92vw,calc(100dvh - 340px),480px);aspect-ratio:1/1;margin:0 auto;
+  border-radius:28px;overflow:hidden;background:#FFF6E8;box-shadow:var(--lift),var(--soft)}
+#dressPhoto{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}
+#dressStickers{position:absolute;inset:0;pointer-events:none}
+.dressGlow{position:absolute;width:46cqmin;height:46cqmin;border-radius:50%;transform:translate(-50%,-50%);opacity:.9}
+.dressSticker{position:absolute;transform:translate(-50%,-50%);font-size:min(16vw,74px);font-size:20cqmin;line-height:1;
+  filter:drop-shadow(0 3px 0 rgba(0,0,0,.28));animation:stickerPop .35s cubic-bezier(.2,1.5,.4,1)}
+@keyframes stickerPop{0%{transform:translate(-50%,-50%) scale(.15)}70%{transform:translate(-50%,-50%) scale(1.18)}100%{transform:translate(-50%,-50%) scale(1)}}
+.dressBit{flex:0 0 auto;width:68px;height:68px;border:none;border-radius:20px;background:#fff;font-size:36px;line-height:1;padding:0;cursor:pointer;box-shadow:var(--lift-sm)}
+.dressBit.on{outline:4px solid var(--bolt);transform:translateY(-3px)}
+.dressBit.swatch{box-shadow:var(--lift-sm),inset 0 0 0 4px #fff}
+#dressDone{background:var(--good);color:#fff}
+#launchPick{display:flex;gap:8px;margin-left:auto}
+.lk{width:64px;height:64px;border:none;border-radius:18px;background:rgba(255,255,255,.22);font-size:34px;line-height:1;cursor:pointer;padding:0}
+.lk.on{background:#fff;box-shadow:var(--lift-sm)}
+.lk:active{transform:translateY(2px)}
+#launchStage{position:relative;flex:1 1 auto;min-height:220px;margin:0 12px 12px;border-radius:28px;overflow:hidden;
+  background:linear-gradient(#1B2A6B,#7EC8FF 52%,#8FD18A);box-shadow:var(--lift),var(--soft);touch-action:none}
+#launchMeter{position:absolute;left:14px;top:16px;bottom:16px;width:30px;border-radius:999px;background:rgba(255,255,255,.35);
+  border:3px solid #fff;overflow:hidden;z-index:2}
+#launchFill{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(#FF5A5A,#FFD400);border-radius:999px}
+/* the craft sits above the hold button, so a small finger never covers what is about to fly */
+#launchSky{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:calc(min(44vw, 196px) + 36px)}
+#launchCraft{font-size:min(28vw,140px);line-height:1;transform-origin:50% 100%;filter:drop-shadow(0 8px 0 rgba(0,0,0,.18));z-index:1}
+#launchCraft.fly{animation:craftAway 1.15s cubic-bezier(.2,.7,.2,1) forwards}
+#launchCraft.balloon.fly{animation:balloonAway 1.25s ease-in forwards}
+@keyframes craftAway{to{transform:translateY(-120%) scale(1.3) rotate(-12deg);opacity:0}}
+@keyframes balloonAway{40%{transform:translateY(-28%) scale(1.25)}100%{transform:translateY(-130%) scale(.7);opacity:0}}
+#launchBtn{position:absolute;z-index:3;left:50%;bottom:16px;transform:translateX(-50%);width:min(44vw,196px);height:min(44vw,196px);
+  border:none;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFE56A,#FFB000 62%,#F08A00);
+  box-shadow:0 8px 0 #C47A00,var(--soft);font-size:min(16vw,72px);line-height:1;cursor:pointer;touch-action:none;padding:0}
+#launchBtn.pump{transform:translateX(-50%) scale(.94);box-shadow:0 3px 0 #C47A00}
+#launchBtn:active{transform:translateX(-50%) scale(.94)}
+/* the little rocket under a finished word. The praise card ignores taps except this button. */
+#wordLaunch{display:none;pointer-events:auto;align-items:center;gap:10px;margin-top:8px}
+#wordLaunch.on{display:flex}
+#v-trace.words #praise:has(#wordLaunch.on) #burst{width:54%}
+.wlMeter{width:22px;height:64px;border-radius:999px;background:rgba(255,255,255,.45);border:3px solid var(--ink);overflow:hidden;position:relative}
+#wlFill{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(#FF5A5A,#FFD400)}
+#wlBtn{width:72px;height:72px;border:none;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFE56A,#FFB000);font-size:40px;line-height:1;
+  box-shadow:0 5px 0 #C47A00;cursor:pointer;touch-action:none;padding:0}
+#wlBtn.pump{box-shadow:0 2px 0 #C47A00}
+#wlBtn.fly{animation:craftAway .8s ease-in forwards}
+@media (min-width:700px){
+  #v-play{max-width:min(100%,920px)}
+  #playGrid{grid-template-columns:repeat(4,1fr);max-width:920px}
+  #playGrid .wcard.wide{grid-column:1 / -1}
 }

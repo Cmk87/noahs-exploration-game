@@ -80,6 +80,10 @@
       <div id="praise"><div id="praiseCol">
         <div id="burst"><div id="face">💥</div></div>
         <div id="wordText" class="display"></div>
+        <div id="wordLaunch">
+          <div class="wlMeter" aria-hidden="true"><div id="wlFill"></div></div>
+          <button type="button" id="wlBtn" aria-label="rocket">🚀</button>
+        </div>
       </div></div>
     </div></div>
     <div id="voiceWarn"></div>
@@ -278,6 +282,50 @@
 <!-- ============ MY BODY ============ -->
 <div class="view" id="v-body"></div>
 
+<!-- ============ PLAY: draw a track, dress-up, hold to launch ============ -->
+<div class="view" id="v-play">
+  <div id="playMenu" class="pane on">
+    <div id="playHello" class="display"></div>
+    <div id="playGrid"></div>
+  </div>
+  <div id="trackPlay" class="pane">
+    <div class="phBar">
+      <button type="button" class="phBack" id="trackBack" aria-label="back">⬅️</button>
+      <span class="phTitle" id="trackTitle">✏️</span>
+    </div>
+    <canvas id="trackCv"></canvas>
+    <div id="trackVehs"></div>
+  </div>
+  <div id="dressPlay" class="pane">
+    <div class="phBar">
+      <button type="button" class="phBack" id="dressBack" aria-label="back">⬅️</button>
+      <span class="phTitle">🎩</span>
+    </div>
+    <div id="dressAnimals"></div>
+    <div id="dressStage">
+      <img id="dressPhoto" alt="" draggable="false">
+      <div id="dressStickers"></div>
+    </div>
+    <div id="dressTray"></div>
+    <div class="tools">
+      <button type="button" id="dressReset" aria-label="reset">↺</button>
+      <button type="button" id="dressDone" aria-label="done">✅</button>
+    </div>
+  </div>
+  <div id="launchPlay" class="pane">
+    <div class="phBar">
+      <button type="button" class="phBack" id="launchBack" aria-label="back">⬅️</button>
+      <span class="phTitle" id="launchTitle">🚀</span>
+      <div id="launchPick"></div>
+    </div>
+    <div id="launchStage">
+      <div id="launchMeter" aria-hidden="true"><div id="launchFill"></div></div>
+      <div id="launchSky"><div id="launchCraft">🚀</div></div>
+      <button type="button" id="launchBtn" aria-label="hold">✋</button>
+    </div>
+  </div>
+</div>
+
 <!-- ============ STICKER BOOK ============ -->
 <div class="view" id="v-stickers">
   <div id="stkHead" class="display"></div>
@@ -398,6 +446,7 @@
 <script src="js/photo-pack.js"></script>
 <script src="js/body-diagrams.js"></script>
 <script src="js/photo.js"></script>
+<script src="js/play.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
