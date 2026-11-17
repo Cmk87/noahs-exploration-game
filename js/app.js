@@ -110,7 +110,7 @@ function setLang(code,btn){
   else if(activeTab==='king'||activeTab==='dinos'||activeTab==='folk'||activeTab==='ride'||activeTab==='things'||activeTab==='baby'||activeTab==='body')photoRelang();
   else if(activeTab==='play'){if(typeof playOnLang==='function')playOnLang();}
   else if(activeTab==='home'){}
-  else if(activeTab==='dig'){if(pane==='digLock')showDigLock();}
+  else if(activeTab==='dig'){if(pane==='digLock')showDigLock();else if(pane==='supPlay'&&typeof slingText==='function')slingText();}
   else if(activeTab==='adv')renderAdv();
   else renderParent();
 }
