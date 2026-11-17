@@ -783,6 +783,60 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
       return { offered, launched, celebrated: !!WL.celebrated };
     });
     check(reward.offered && reward.launched && reward.celebrated, 'finishing a word offers the hold-to-launch reward');
+    const tracked = await page.evaluate(() => {
+      setLang('de', document.getElementById('de'));
+      showTab('trace');
+      document.querySelector('#traceGrid [data-mode="words"]').click();
+      writeTrackClear();
+      const en = writeCur.en;
+      const cv = document.getElementById('c');
+      const r = cv.getBoundingClientRect();
+      const start = SHAPES[cur].pts[0][0];
+      const sx = X(start[0]), sy = Y(start[1]);
+      const x = sx < r.width / 2 ? r.right - 6 : r.left + 6;
+      const y = sy < r.height / 2 ? r.bottom - 6 : r.top + 6;
+      cv.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: x, clientY: y, pointerId: 9, buttons: 1 }));
+      cv.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, clientX: x, clientY: y, pointerId: 9 }));
+      document.getElementById('againBtn').click();
+      document.getElementById('nextBtn').click();
+      const mid = Object.assign({}, WRITE_TRACK['de|' + en] || {});
+      writeFresh(false);
+      const doneEn = writeCur.en;
+      for (let i = 0; i < playlist.length; i++) finishItem();
+      const ok = (WRITE_TRACK['de|' + doneEn] || {}).ok || 0;
+      const stored = localStorage.getItem('sl_write') || '';
+      /* Spanish is his home language and is switched off. English and German stay on.
+         A word that is only hard in Spanish must not be chosen; one that is hard in English must. */
+      LANGS_ON = ['de', 'en'];
+      lang = 'de';
+      WRITE_TRACK = {
+        'es|cat': { miss: 20, retry: 0, ok: 0 },
+        'en|dog': { miss: 6, retry: 0, ok: 0 },
+        'de|sun': { miss: 5, retry: 0, ok: 0 },
+        'de|house': { miss: 4, retry: 0, ok: 0 },
+        'de|ball': { miss: 3, retry: 0, ok: 0 },
+        'de|hat': { miss: 1, retry: 0, ok: 0 },
+        'de|moon': { miss: 0, retry: 0, ok: 5 }
+      };
+      const off = { cat: writeWeakScore('cat'), dog: writeWeakScore('dog') };
+      const picks = slingChoose().map(w => w.en);
+      LANGS_ON = ['es'];
+      WRITE_TRACK = { 'es|rose': { miss: 4, retry: 0, ok: 0 }, 'de|rose': { miss: 9, retry: 0, ok: 0 }, 'en|bee': { miss: 8, retry: 0, ok: 0 } };
+      const onlyEs = { rose: writeWeakScore('rose'), bee: writeWeakScore('bee'), picks: slingChoose().map(w => w.en) };
+      WRITE_TRACK = {};
+      const fresh = slingChoose().map(w => w.en);
+      LANGS_ON = ['de', 'en', 'es'];
+      try { localStorage.setItem('sl_langs', 'de,en,es'); } catch (e) {}
+      applyLangs();
+      setLang('de', document.getElementById('de'));
+      return { w: Math.round(r.width), en, mid, ok, stored: stored.indexOf('de|') >= 0, off, picks, onlyEs, fresh };
+    });
+    check(tracked.w > 50 && tracked.mid.miss >= 1 && tracked.mid.retry >= 1 && tracked.mid.skip >= 1 && tracked.ok >= 1 && tracked.stored,
+      'writing a word records a miss, a retry, a skip and a success on this device ' + JSON.stringify(tracked.mid) + ' ok=' + tracked.ok);
+    check(tracked.off.cat === 0 && tracked.off.dog === 6 && tracked.picks.length === 6 && ['dog', 'sun', 'house', 'ball'].every(w => tracked.picks.includes(w)) && new Set(tracked.picks).size === 6,
+      'with Spanish switched off, the sling uses German and English trouble only ' + tracked.picks.join(','));
+    check(tracked.onlyEs.rose === 4 && tracked.onlyEs.bee === 0 && tracked.onlyEs.picks.includes('rose') && new Set(tracked.fresh).size === 6,
+      'a language that is the only one switched on is the only one that chooses pictures');
   }
 
   console.log('Play');

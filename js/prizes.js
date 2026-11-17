@@ -1774,11 +1774,24 @@ function supLoop(now){
   slingTick(dt);slingDraw();
   requestAnimationFrame(supLoop);
 }
+/* Up to four pictures he still struggles to write in a learning language
+   that is switched on, then the rest are random. Spanish can be off
+   because he already speaks it: those records stay on the device and
+   do not pick the pictures until Spanish is switched on again.
+   No history, or only history in a switched-off language, means all six
+   are random. Only the sling's own pictures are used. */
+function slingChoose(){
+  const pool=SLING_POOL.slice();
+  const score=w=>typeof writeWeakScore==='function'?writeWeakScore(w.en):0;
+  const weak=pool.map(w=>({w,s:score(w)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s||a.w.en.localeCompare(b.w.en));
+  const picked=weak.slice(0,4).map(x=>x.w);
+  const rest=shuffle(pool.filter(w=>picked.indexOf(w)<0));
+  return shuffle(picked.concat(rest).slice(0,6));
+}
 function startSup(){
-  const bag=SLING_POOL.slice();
-  for(let i=bag.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=bag[i];bag[i]=bag[j];bag[j]=t;}
+  const bag=slingChoose();
   SLING={targets:[],got:0,goal:6,done:false,holding:false,flying:false,pull:null,vx:0,vy:0,x:0,y:0,sparks:[],phrase:'',banner:null,cheered:false,clock:0,preview:[],W:360,H:480,last:0,ptr:null,wordT:0};
-  bag.slice(0,6).forEach((w,i)=>{const s=SLING_SPOTS[i];SLING.targets.push({w,fx:s.x,fy:s.y,cloud:s.cloud,alive:true,x:0,y:0,r:36});});
+  bag.forEach((w,i)=>{const s=SLING_SPOTS[i];SLING.targets.push({w,fx:s.x,fy:s.y,cloud:s.cloud,alive:true,x:0,y:0,r:36});});
   showPane('supPlay');slingText();
   say({es:'¡Lánzalo!',en:'Launch him!',de:'Schleuder ihn!'}[lang]);
   requestAnimationFrame(supLoop);

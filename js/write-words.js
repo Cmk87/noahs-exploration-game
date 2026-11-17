@@ -95,3 +95,51 @@ WRITE_WORDS.forEach(w=>{
     if(!writeWordOk(w[L])) throw new Error('Writing word needs 2–5 traceable letters: '+L+' '+w[L]);
   });
 });
+
+/* How the writing-words practice is going, one record per learning language.
+   Nothing on screen changes, and nothing leaves the device: a wrong start,
+   a retry, a skip, a slow finish and a completed word are counted in
+   localStorage so the sling can prefer words that are still hard.
+   The key is the language plus the English spelling, which stays the same
+   picture in German, English or Spanish. A language the parent has switched
+   off (Spanish is often off, because that is the language he already speaks)
+   is still stored, but it is not used until it is switched on again. */
+let WRITE_TRACK={};
+try{WRITE_TRACK=JSON.parse(localStorage.getItem('sl_write')||'{}')||{};}catch(e){WRITE_TRACK={};}
+if(!WRITE_TRACK||typeof WRITE_TRACK!=='object')WRITE_TRACK={};
+function writeTrackSave(){try{localStorage.setItem('sl_write',JSON.stringify(WRITE_TRACK));}catch(e){}}
+function writeTrackClear(){WRITE_TRACK={};writeTrackSave();}
+function writeLangsOn(){
+  const all=['de','en','es'];
+  const on=(typeof LANGS_ON!=='undefined'&&Array.isArray(LANGS_ON)?LANGS_ON:all).filter(c=>all.includes(c));
+  return on.length?on:all;
+}
+function writeTrackKey(word,L){word=word||(typeof writeCur!=='undefined'?writeCur:null);L=L||lang;return word&&word.en?L+'|'+word.en:'';}
+let writeSit={id:'',t0:0,done:false};
+function writeSitBegin(){writeSit={id:writeTrackKey(),t0:performance.now(),done:false};}
+function writeTrackAdd(field){
+  if(typeof mode!=='undefined'&&mode!=='words')return;
+  if(typeof traceScreen!=='undefined'&&traceScreen!=='play')return;
+  if(!writeLangsOn().includes(lang))return;
+  const id=writeTrackKey();if(!id)return;
+  const r=WRITE_TRACK[id]||(WRITE_TRACK[id]={miss:0,retry:0,skip:0,slow:0,ok:0});
+  r[field]=(r[field]||0)+1;r.at=Date.now();
+  writeTrackSave();
+}
+function writeTrackDone(){
+  const id=writeTrackKey();if(!id)return;
+  writeSit.done=true;
+  writeTrackAdd('ok');
+  const letters=(typeof playlist!=='undefined'&&playlist.length)||String((writeCur&&writeCur[lang])||'').length||1;
+  if(writeSit.id===id&&performance.now()-writeSit.t0>Math.max(12000,letters*8000))writeTrackAdd('slow');
+}
+function writeWeakOne(en,L){
+  const r=WRITE_TRACK[L+'|'+en];
+  if(!r)return 0;
+  return (r.miss||0)+(r.retry||0)*2+(r.skip||0)+(r.slow||0)-(r.ok||0);
+}
+/* One language, or the sum across every learning language that is switched on. */
+function writeWeakScore(en,L){
+  if(L)return writeWeakOne(en,L);
+  return writeLangsOn().reduce((s,c)=>s+writeWeakOne(en,c),0);
+}
