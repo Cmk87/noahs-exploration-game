@@ -116,6 +116,7 @@ Prize games (40 ⚡ each, no way to fail):
 - **🃏 Pairs.** Memory game with 6 pairs; every flip says the word.
 - **🎈 Balloons.** Pop 20 balloons; each one says the picture painted on it. Gold balloons count ×3.
 - **🎆 Fireworks.** Tap the night sky 20 times, then watch the finale.
+- **🦸 Superman Launch.** Pull him back in a sling and let go. A dotted arc shows where he will fly. Six pictures from the writing words (cat, ball, sun, house…) sit on blocks and clouds; each one he hits says its word, with der/die/das for the German nouns, then the round ends in a cheer.
 
 Leaving an unfinished prize game takes two taps on 🏠, so a stray tap cannot waste 40 ⚡.
 

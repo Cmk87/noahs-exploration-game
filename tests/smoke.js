@@ -102,10 +102,10 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.waitForTimeout(900);
   check(await page.evaluate(p0 => power === p0, p0), 'guessing (3 misses) earns no points');
   await page.evaluate(() => { power = 400; savePower(); showTab('dig'); });
-  for (const g of ['dig', 'mem', 'bal', 'fw', 'bag', 'aq', 'fed', 'cake', 'rp']) {
+  for (const g of ['dig', 'mem', 'bal', 'fw', 'bag', 'aq', 'fed', 'cake', 'rp', 'sup']) {
     await page.evaluate(g => { showDigLock(); startGame(g); }, g);
     await page.waitForTimeout(300);
-    check(await page.evaluate(g => pane === { dig: 'digPlay', mem: 'memPlay', bal: 'balPlay', fw: 'fwPlay', bag: 'bagPlay', aq: 'aqPlay', fed: 'fedPlay', cake: 'cakePlay', rp: 'rpPlay' }[g], g), `prize game starts: ${g}`);
+    check(await page.evaluate(g => pane === { dig: 'digPlay', mem: 'memPlay', bal: 'balPlay', fw: 'fwPlay', bag: 'bagPlay', aq: 'aqPlay', fed: 'fedPlay', cake: 'cakePlay', rp: 'rpPlay', sup: 'supPlay' }[g], g), `prize game starts: ${g}`);
   }
   await page.evaluate(() => { power = 160; savePower(); showDigLock(); startGame('fed');
     [...document.querySelectorAll('#fedAnimals .fedAn')].find((b, i) => FED.opts[i] !== FED.want).click(); });
@@ -137,6 +137,31 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.evaluate(() => { showDigLock(); startGame('aq'); });
   await page.waitForTimeout(500);
   check(await page.evaluate(() => pane === 'aqPlay' && AQ && AQ.fish.length > 0 && AQ.goal === 18 && document.getElementById('aqPrompt').textContent.indexOf('0 / 18') >= 0), 'aquarium fish swim in, and the round counts to 18');
+  {const r = await page.evaluate(() => {
+     const p0 = power; power = 999; savePower(); showDigLock(); startGame('sup'); power = p0; savePower();
+     slingLayout(360, 480);
+     const rest = slingRest();
+     SLING.holding = true;
+     slingSetPull({ x: rest.x, y: rest.y + 150 });
+     const preview = slingPreview().length;
+     SLING.pull = { x: rest.x + 4, y: rest.y + 6 };
+     const tiny = slingRelease();
+     const t = SLING.targets[0];
+     const de = slingPhrase(t.w);
+     SLING.flying = true; SLING.x = t.x; SLING.y = t.y; SLING.vx = 0; SLING.vy = 0;
+     slingTick(0.05);
+     const hit = { left: SLING.targets.filter(x => x.alive).length, phrase: SLING.phrase, shown: document.getElementById('supWord').textContent, de };
+     lang = 'en';
+     const u = SLING.targets.find(x => x.alive);
+     const en = slingPhrase(u.w);
+     SLING.flying = true; SLING.x = u.x; SLING.y = u.y; SLING.vx = 0; SLING.vy = 0;
+     slingTick(0.05);
+     SLING.targets.forEach(x => { if (!x.alive) return; SLING.flying = true; SLING.x = x.x; SLING.y = x.y; SLING.vx = 0; SLING.vy = 0; slingTick(0.05); });
+     lang = 'de';
+     return { goal: SLING.goal, n: SLING.targets.length, preview, tiny, hit, en, word: u.w.en, done: SLING.done, got: SLING.got };
+   });
+   check(r.goal === 6 && r.n === 6 && r.preview >= 4 && r.tiny === false && r.hit.left === 5 && r.hit.phrase === r.hit.shown && r.hit.phrase === r.hit.de && /^(der|die|das) /.test(r.hit.phrase) && r.en === r.word && r.done && r.got === 6,
+     'superman sling previews the arc, names a hit in the current language, and a round is six targets ' + JSON.stringify(r));}
   await page.evaluate(() => { power = 45; savePower(); showDigLock(); startGame('mem'); document.querySelector('#memPlay .quitBtn').click(); $('qsLeave').click(); });
   check(await page.evaluate(() => power === 45 && pane === 'digLock'), 'leaving a prize game right after starting gives the points back');
   await page.evaluate(() => { DINOS.forEach(d => prepParts(d)); showDigLock(); });
