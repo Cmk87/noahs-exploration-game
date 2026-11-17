@@ -4,9 +4,8 @@
 const cv=document.getElementById('c'),ctx=cv.getContext('2d');
 let S=100,DPR=1,power=0;
 try{power=Math.max(0,parseInt(localStorage.getItem('sl_power')||'0',10)||0);}catch(e){}
-let mode='abc';                    // abc | ABC | 123 | name | words
+let mode='abc';                    // abc | ABC | 123 | words
 let traceScreen='menu';            // menu first; play once he picks a card
-let traceWant='';                  // 'name' when the name card sent him to the parent panel
 let playlist=[],cur='a',strokeIdx=0,cpIdx=0,tracing=false,trail=[];
 let nameIdx=0,kidName='',spokenPhrase='';
 const t0=performance.now();
@@ -175,10 +174,6 @@ function finishItem(){
     faceEl.textContent=cur;                 // just the numeral, nothing to decode
     wordEl.textContent=NUMWORD[lang][n];
     spokenPhrase=NUMWORD[lang][n]; say(spokenPhrase);
-  }else if(mode==='name'){
-    faceEl.textContent='🦸';
-    wordEl.textContent=kidName.slice(0,nameIdx+1);
-    spokenPhrase=letterSpoken(cur); say(spokenPhrase);
   }else if(mode==='words'){
     faceEl.textContent=writeCur.e;
     wordEl.textContent=writeCur[lang];
@@ -230,29 +225,13 @@ function advance(){
     setTimeout(()=>{if(activeTab==='trace'&&mode==='words'&&traceScreen==='play')say(letterSpoken(cur));},250);
     return;
   }
-  if(mode==='name'){
-    nameIdx++;
-    if(nameIdx>=playlist.length){        // whole name finished
-      if(activeTab!=='trace'){nameIdx=0;loadItem(playlist[0],false);return;}   // he has gone elsewhere: no party on another screen
-      nameIdx=0;
-      const f=document.getElementById('face'),w=document.getElementById('wordText');
-      f.textContent='🏆';w.textContent=kidName;
-      document.getElementById('praise').style.display='flex';
-      bigWin();boom(140);say(kidName);
-      holdT=setTimeout(()=>{document.getElementById('praise').style.display='none';
-        loadItem(playlist[0],false);setTimeout(sayHere,250);},2400);
-      return;
-    }
-    loadItem(playlist[nameIdx],false);setTimeout(sayHere,250);
-    return;
-  }
   const i=playlist.indexOf(cur);
   loadItem(playlist[(i+1)%playlist.length],false);
   setTimeout(sayHere,250);
 }
 function buildBar(){
   const bar=document.getElementById('letterbar');bar.innerHTML='';
-  const seq=mode==='name'||mode==='words';
+  const seq=mode==='words';
   playlist.forEach((k,idx)=>{
     const b=document.createElement('button');
     b.textContent=k;
@@ -271,37 +250,26 @@ function buildBar(){
 }
 function setMode(m){
   clearTimeout(holdT);document.getElementById('praise').style.display='none';
+  if(m!=='abc'&&m!=='ABC'&&m!=='123'&&m!=='words') m='abc';
   mode=m;nameIdx=0;
-  if(m==='abc') playlist=ALPHA[lang];
-  else if(m==='ABC') playlist=CAPS[lang];
+  if(m==='ABC') playlist=CAPS[lang];
   else if(m==='123') playlist=DIGITS;
   else if(m==='words'){
     if(!writeCur||!writeWordOk(writeCur[lang])) writeCur=nextWriteWord(writeCur);
     playlist=[...writeCur[lang]];
-  }else{
-    const clean=(kidName||'').split('').filter(ch=>SHAPES[ch]);
-    if(!clean.length){                       // no name saved yet: the parent types it
-      traceWant='name';
-      showTab('parent');
-      say({es:'Escribe aquí su nombre.',en:'Type his name here.',de:'Schreib hier seinen Namen.'}[lang]);
-      return;
-    }
-    playlist=clean;
-  }
+  }else playlist=ALPHA[lang];
   const v=document.getElementById('v-trace');
   if(v) v.classList.toggle('words',m==='words');
   setTraceIcon(m);
   loadItem(playlist[0],activeTab==='trace'&&traceScreen==='play');
 }
 
-/* The writing menu: big cards, same idea as the photo-book pickers and the
-   home screen. Words is the wide card on top so it stays easy to find. */
+/* The writing menu: four equal cards, same idea as the home screen. */
 const TRACE_MODES=[
-  {id:'words',icon:'✏️',es:'Palabras',en:'Words',de:'Wörter',wide:true,bg:['#FFB938','#FF8A3D'],ex:'🐱 🐶 ☀️'},
+  {id:'words',icon:'✏️',es:'Palabras',en:'Words',de:'Wörter',bg:['#FFB938','#FF8A3D'],ex:'🐱🐶☀️'},
   {id:'abc',icon:'abc',es:'Minúsculas',en:'Lowercase',de:'Kleinbuchstaben',bg:['#FF8A8A','#E8455C']},
   {id:'ABC',icon:'ABC',es:'Mayúsculas',en:'Uppercase',de:'Großbuchstaben',bg:['#7EB6FF','#3A6FE0']},
-  {id:'123',icon:'123',es:'Números',en:'Numbers',de:'Zahlen',bg:['#6FD86A','#2EA84F']},
-  {id:'name',icon:'🦸',es:'Mi nombre',en:'My name',de:'Mein Name',bg:['#C9A6FF','#7A5AE0']}
+  {id:'123',icon:'123',es:'Números',en:'Numbers',de:'Zahlen',bg:['#6FD86A','#2EA84F']}
 ];
 const TRACE_ASK={es:'¿Qué escribimos?',en:'What shall we write?',de:'Was schreibst du?'};
 const TRACE_BACK={es:'Volver',en:'Back',de:'Zurück'};

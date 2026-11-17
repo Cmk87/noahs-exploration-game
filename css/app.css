@@ -1007,7 +1007,7 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 #traceHello{font-size:min(6.2vw,28px);color:#fff;text-shadow:0 3px 0 rgba(5,8,40,.35);margin:6px 14px 10px;text-align:center}
 #traceGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;padding:0 14px 12px}
 .wcard{position:relative;border:none;border-radius:26px;color:#fff;cursor:pointer;overflow:hidden;
-  min-height:min(30vw,128px,calc((100dvh - 240px)/3.3));padding:10px 8px;
+  min-height:min(40vw,176px,calc((100dvh - 190px)/2.3));padding:12px 8px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
   box-shadow:0 6px 0 var(--edge),0 14px 26px rgba(5,8,40,.30);font-family:'Baloo 2','Nunito',sans-serif}
 .wcard::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 20% 0%,rgba(255,255,255,.35),transparent 55%);pointer-events:none}
@@ -1015,10 +1015,7 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .wcard .wi{font-size:min(12vw,52px);line-height:1;filter:drop-shadow(0 4px 3px rgba(0,0,0,.22));position:relative}
 .wcard .wi.letters{font-weight:800;font-size:min(10vw,44px);letter-spacing:-0.5px;filter:none;text-shadow:0 3px 0 rgba(0,0,0,.18)}
 .wcard .wl{position:relative;font-weight:800;font-size:min(4.2vw,18px);line-height:1.05;text-align:center;text-shadow:0 2px 0 rgba(0,0,0,.22)}
-.wcard.wide{grid-column:1 / -1;flex-direction:row;gap:12px;min-height:min(24vw,108px);padding:12px 18px;justify-content:flex-start}
-.wcard.wide .wi{font-size:min(14vw,60px)}
-.wcard.wide .wl{font-size:min(6.4vw,28px);text-align:left}
-.wcard .wex{position:relative;margin-left:auto;font-size:min(7vw,32px);letter-spacing:1px;line-height:1}
+.wcard .wex{position:relative;font-size:min(5.6vw,26px);letter-spacing:1px;line-height:1;margin-top:2px}
 #tracePlay{width:100%}
 #traceBar{width:100%}
 #traceModeIcon.letters{font-family:'Baloo 2','Nunito',sans-serif;font-weight:800;font-size:28px;letter-spacing:-0.5px;filter:none;text-shadow:0 2px 0 rgba(0,0,0,.25)}
@@ -1043,5 +1040,5 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 #v-trace.words #wrap{width:min(94vw,440px,calc(100vh - 420px));width:min(94vw,440px,calc(100dvh - 420px))}
 @media (min-width:700px){
   #traceGrid{grid-template-columns:repeat(4,1fr);max-width:920px;margin:0 auto}
-  .wcard.wide{grid-column:1 / -1}
+  .wcard{min-height:min(22vw,160px)}
 }

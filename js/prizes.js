@@ -1254,14 +1254,14 @@ function prizePool(es){const p=es.filter(e=>typeof emojiOK!=='function'||emojiOK
 ============================================================= */
 const aqC=$('aq'),aqX=aqC.getContext('2d');let AQ=null;
 function startAq(){
-  AQ={fish:[],bub:[],pops:0,goal:10,done:false,last:0,next:0,pool:prizePool(['🐟','🦈','🐬','🐳','🐙','🐢','🦀','🦭','🐡','🐚'])};
+  AQ={fish:[],bub:[],pops:0,goal:18,done:false,last:0,next:0,pool:prizePool(['🐟','🦈','🐬','🐳','🐙','🐢','🦀','🦭','🐡','🐚'])};
   showPane('aqPlay');aqText();
   say({es:'¡Toca los animalitos del agua!',en:'Tap the animals in the water!',de:'Tipp die Tiere im Wasser an!'}[lang]);
   requestAnimationFrame(aqLoop);
 }
 function aqText(){$('aqPrompt').textContent=AQ.done?'🏆 '+{es:'¡Todos!',en:'All of them!',de:'Alle!'}[lang]:'🐠 '+AQ.pops+' / '+AQ.goal;}
 function aqWin(){if(!AQ||AQ.done||pane!=='aqPlay')return;AQ.done=true;pgClear();aqText();
-  setTimeout(()=>{if(!AQ||pane!=='aqPlay')return;bigWin();rainEmoji(['🐟','🫧','⭐','🐬'],24);
+  setTimeout(()=>{if(!AQ||pane!=='aqPlay')return;bigWin();rainEmoji(['🐟','🫧','⭐','🐬','🐙'],32);
     say({es:'¡Todos los animalitos!',en:'All the animals!',de:'Alle Tiere!'}[lang]);},500);}
 function aqLoop(now){
   if(!AQ||pane!=='aqPlay'||activeTab!=='dig')return;
@@ -1277,7 +1277,8 @@ function aqLoop(now){
     g.beginPath();g.moveTo(x*W-10,H);g.quadraticCurveTo(x*W+sway-18,H*(1-h*0.5),x*W+sway,H*(1-h));
     g.quadraticCurveTo(x*W+sway+22,H*(1-h*0.45),x*W+12,H);g.closePath();g.fill();});
   g.fillStyle='#D7B07A';g.fillRect(0,H*0.9,W,H*0.12);
-  if(!AQ.done&&now>AQ.next&&AQ.fish.length<4){AQ.next=now+rnd(650,1100);
+  /* a few more fish, a little sooner, so an 18-tap round never leaves the tank empty */
+  if(!AQ.done&&now>AQ.next&&AQ.fish.length<5){AQ.next=now+rnd(520,900);
     const r=W*rnd(0.09,0.12),dir=Math.random()<0.5?1:-1;
     AQ.fish.push({x:dir>0?r*0.8:W-r*0.8,y:H*pick([0.28,0.46,0.64,0.78]),vx:dir*W*rnd(0.07,0.13),r,it:pick(AQ.pool),ph:rnd(0,6),dy:0});}
   AQ.fish.forEach(f=>{f.x+=f.vx*dt;f.ph+=dt*2;f.dy=Math.sin(f.ph)*f.r*0.3;
@@ -1293,6 +1294,7 @@ aqC.addEventListener('pointerdown',e=>{
   for(let i=AQ.fish.length-1;i>=0;i--){const f=AQ.fish[i];
     if(Math.hypot(x-f.x,y-(f.y+f.dy))<=f.r*1.25){AQ.fish.splice(i,1);AQ.pops++;say(f.it[lang][1]);popFx();
       for(let k=0;k<8;k++)AQ.bub.push({x:f.x,y:f.y,r:rnd(4,10),v:rnd(40,90),ph:k});
+      if(AQ.pops*2===AQ.goal){chime();rainEmoji(['🐟','🫧','⭐'],10);}   // a small cheer at halfway
       if(AQ.pops>=AQ.goal)aqWin();else aqText();return;}}
 });
 

@@ -11,7 +11,7 @@ The tabs are big icons that all fit on one row; tapping one also says its name.
 | Tab | What it does |
 | --- | --- |
 | 🗺️ Adventure | Daily guided path of 4–8 stops through the learning tabs, chest and bonus at the end (the app opens here) |
-| ✍️ Write | A menu of lowercase, capitals, digits, his name, or short words (cat, Hund, sol…), then trace them with stroke order and arrows |
+| ✍️ Write | A menu of short words (cat, Hund, sol…), lowercase, capitals or digits, then trace them with stroke order and arrows |
 | 🖼️ Words | "Where is the …?" picture quiz, 15 categories, ~370 words, 8 difficulty levels |
 | 👂 Listen | Hear a word, tap the picture, 6 levels up to sound-alike distractors |
 | 🦖 Dino Show | Verbs and adjectives acted out by an animated dino (43 verbs, 22 adjectives); "how many dinos…?" (plural verbs) and "who is NOT…?" (negation) rounds; answers echoed as full sentences; 🎮 free-play sentence builder; act-it-out breaks |
