@@ -116,11 +116,11 @@ Prize games (40 ⚡ each, no way to fail):
 - **🃏 Pairs.** Memory game with 6 pairs; every flip says the word.
 - **🎈 Balloons.** Pop 20 balloons; each one says the picture painted on it. Gold balloons count ×3.
 - **🎆 Fireworks.** Tap the night sky 20 times, then watch the finale.
-- **🦸 Superman Launch.** Pull him back in a sling and let go. A dotted arc shows where he will fly. Six pictures from the writing words (cat, ball, sun, house…) sit on blocks and clouds; each one he hits says its word, with der/die/das for the German nouns, then the round ends in a cheer.
+- **🦸 Superman Launch.** Pull him back in a sling and let go. A dotted arc shows where he will fly. Six pictures from the writing words (cat, ball, sun, house…) sit on blocks and clouds; each one he hits says its word, with der/die/das for the German nouns, then the round ends in a cheer. When he has been practising words, up to four of the pictures are ones he still misses, retries or skips in a learning language that is switched on (German and English count together; Spanish, often switched off because he already speaks it, does not choose pictures until it is on again). The rest stay random. A brand-new game, with no practice yet, is all random. The counts stay on the device.
 
 Leaving an unfinished prize game takes two taps on 🏠, so a stray tap cannot waste 40 ⚡.
 
 ## Saved data (localStorage)
 
-`sl_power` (⚡ points), `sl_skill` (difficulty levels), `sl_srs` (spaced repetition), `sl_adv`/`sl_advsize` (adventure), `sl_log` (daily minutes and accuracy), `sl_limit` (time limit), `sl_voice_*`, `sl_dinos` (museum), `sl_treasure` (treasure counts), `sl_name`, `sl_stats`
+`sl_power` (⚡ points), `sl_skill` (difficulty levels), `sl_srs` (spaced repetition), `sl_adv`/`sl_advsize` (adventure), `sl_log` (daily minutes and accuracy), `sl_limit` (time limit), `sl_voice_*`, `sl_dinos` (museum), `sl_treasure` (treasure counts), `sl_name`, `sl_stats`, `sl_write` (writing-words misses, retries and successes, per language)
 (missed words).

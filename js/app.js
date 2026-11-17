@@ -343,14 +343,14 @@ $('backupFile').onchange=e=>{
 };
 $('resetLevels').onclick=()=>{SKILL={};try{localStorage.removeItem('sl_skill');}catch(e){}renderParent();};
 document.getElementById('resetStats').onclick=()=>{
-  stats={};saveStats();PJ={};pjSave();renderParent();
+  stats={};saveStats();PJ={};pjSave();if(typeof writeTrackClear==='function')writeTrackClear();renderParent();
 };
 try{kidName=localStorage.getItem('sl_name')||'';}catch(e){}
 
 /* ---- buttons ---- */
 document.getElementById('sayBtn').onclick=()=>{ac();sayCurrent();};
-document.getElementById('againBtn').onclick=()=>{ac();resetTrace();if(mode==='words')say(letterSpoken(cur));else sayCurrent();};
-document.getElementById('nextBtn').onclick=()=>{ac();advance();};
+document.getElementById('againBtn').onclick=()=>{ac();if(mode==='words'&&!writeSit.done)writeTrackAdd('retry');resetTrace();if(mode==='words')say(letterSpoken(cur));else sayCurrent();};
+document.getElementById('nextBtn').onclick=()=>{ac();if(mode==='words'&&traceScreen==='play'&&!writeSit.done)writeTrackAdd('skip');advance();};
 document.getElementById('repeatBtn').onclick=()=>{ac();sayPrompt();};
 document.getElementById('skipBtn').onclick=()=>{ac();newRound();};
 /* 🔊 repeats the word; pressed again straight away, it says it slowly */

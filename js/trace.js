@@ -126,9 +126,9 @@ cv.addEventListener('pointerdown',e=>{
       tracing=true;cpIdx=1;trail=[p];blip();
       while(cpIdx<path.length&&near(p,path[cpIdx],tol()))cpIdx++;
       if(cpIdx>=path.length)finishStroke();
-    }else{nope();shake();}
+    }else{if(mode==='words')writeTrackAdd('miss');nope();shake();}
   }else if(near(p,path[cpIdx-1],startTol()*1.2)){tracing=true;trail=[p];}
-  else{nope();shake();}
+  else{if(mode==='words')writeTrackAdd('miss');nope();shake();}
 });
 cv.addEventListener('pointermove',e=>{
   if(!tracing)return;e.preventDefault();
@@ -179,6 +179,7 @@ function finishItem(){
     wordEl.textContent=writeCur[lang];
     spokenPhrase=writeCur[lang]; say(spokenPhrase);
     rainEmoji([writeCur.e,'⭐','✨'],18);
+    writeTrackDone();
   }else{
     const key=cur.toLowerCase();
     const w=(LETTERWORD[lang]&&LETTERWORD[lang][key])||['⭐',key];
@@ -241,6 +242,7 @@ function buildBar(){
     if(seq?idx===nameIdx:k===cur) b.className='on';
     b.onclick=()=>{
       ac();
+      if(seq&&idx<nameIdx)writeTrackAdd('retry');
       if(seq)nameIdx=idx;
       loadItem(k,mode!=='words');
       if(mode==='words')say(letterSpoken(k));
@@ -264,6 +266,7 @@ function setMode(m){
   const v=document.getElementById('v-trace');
   if(v) v.classList.toggle('words',m==='words');
   setTraceIcon(m);
+  if(m==='words')writeSitBegin();
   loadItem(playlist[0],activeTab==='trace'&&traceScreen==='play');
 }
 
@@ -352,7 +355,7 @@ function renderWordHead(){
     b.type='button';b.textContent=ch;
     b.className=(idx<nameIdx?'done ':'')+(idx===nameIdx?'on':'');
     b.setAttribute('aria-label',ch);
-    b.onclick=()=>{ac();nameIdx=idx;loadItem(playlist[idx],false);say(letterSpoken(ch));};
+    b.onclick=()=>{ac();if(idx<nameIdx)writeTrackAdd('retry');nameIdx=idx;loadItem(playlist[idx],false);say(letterSpoken(ch));};
     box.appendChild(b);
   });
   renderWordFlags();
@@ -362,6 +365,7 @@ function writeFresh(speak){
   writeCur=nextWriteWord(writeCur);
   nameIdx=0;
   playlist=[...writeCur[lang]];
+  writeSitBegin();
   loadItem(playlist[0],false);
   if(speak) say(writeCur[lang]);
 }
