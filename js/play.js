@@ -1,19 +1,9 @@
 /* =============================================================
-   PLAY
-   Three free-play toys behind one home card, so the home screen
-   gains a single tile instead of three. No words are required:
-   every control is a picture, and the voice names whatever he taps.
+   DRAW A ROAD, and the little rocket after a written word.
+   The road is a prize game. The rocket is only the extra cheer
+   under a finished word, not its own activity.
 ============================================================= */
-const TOY_ASK={es:'¿A qué jugamos?',en:'What shall we play?',de:'Was spielen wir?'};
-const TOY_BACK={es:'Volver',en:'Back',de:'Zurück'};
-const TOY_MODES=[
-  {id:'track',icon:'✏️',es:'Pista',en:'Track',de:'Strecke',wide:true,bg:['#5EB0FF','#2A6FD0'],ex:'🚗 🚂 ✈️'},
-  {id:'dress',icon:'🎩',es:'Disfraz',en:'Dress up',de:'Verkleiden',bg:['#FFB347','#E07B1A']},
-  {id:'launch',icon:'🚀',es:'Lanzar',en:'Launch',de:'Start',bg:['#C9A6FF','#7A5AE0']}
-];
-const TOY={screen:'menu'};
-
-/* ---- shared "hold to fill" pump. Release early and it sags back. ---- */
+/* ---- shared "hold to fill" pump, used by the little rocket after a written word. ---- */
 function pumpMake(rate,leak){
   return {fill:0,base:0,holding:false,phase:'idle',holdAt:0,relAt:0,relFill:0,fx:0,rate:rate||2.4,leak:leak||1.8};
 }
@@ -42,10 +32,10 @@ function pumpTick(p){
 }
 
 let playRaf=0,playLast=0;
+function roadOn(){return activeTab==='dig'&&pane==='roadPlay';}
 function playNeeds(){
   if(WL.on&&WL.phase!=='idle')return true;
-  if(activeTab==='play'&&TOY.screen==='track')return true;
-  if(activeTab==='play'&&TOY.screen==='launch'&&LAUNCH.phase!=='idle')return true;
+  if(roadOn())return true;
   return false;
 }
 function playKick(){
@@ -53,8 +43,7 @@ function playKick(){
   playLast=performance.now();
   const loop=now=>{
     const dt=Math.min(0.05,(now-playLast)/1000)||0;playLast=now;
-    if(activeTab==='play'&&TOY.screen==='track')trackFrame(dt);
-    if(activeTab==='play'&&TOY.screen==='launch'&&LAUNCH.phase!=='idle'){if(pumpTick(LAUNCH))launchGo();launchFrame();}
+    if(roadOn())trackFrame(dt);
     if(WL.on&&WL.phase!=='idle'){if(pumpTick(WL))wlGo();wlFrame();}
     if(playNeeds())playRaf=requestAnimationFrame(loop);
     else playRaf=0;
@@ -62,63 +51,7 @@ function playKick(){
   playRaf=requestAnimationFrame(loop);
 }
 function playStopLoops(){if(playRaf){cancelAnimationFrame(playRaf);playRaf=0;}}
-
-function showPlay(){
-  TOY.screen='menu';
-  ['playMenu','trackPlay','dressPlay','launchPlay'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.classList.toggle('on',id==='playMenu');
-  });
-  renderPlayMenu();
-  if(appStarted)say(TOY_ASK[lang]);
-}
-function renderPlayMenu(){
-  const hello=document.getElementById('playHello'),grid=document.getElementById('playGrid');
-  if(!hello||!grid)return;
-  hello.textContent=TOY_ASK[lang];
-  grid.innerHTML='';
-  TOY_MODES.forEach(t=>{
-    const b=document.createElement('button');
-    b.type='button';b.className='wcard'+(t.wide?' wide':'');b.dataset.play=t.id;
-    b.style.background=`linear-gradient(150deg,${t.bg[0]},${t.bg[1]})`;
-    b.style.setProperty('--edge',t.bg[1]);
-    b.setAttribute('aria-label',t[lang]);
-    const icon=document.createElement('span');icon.className='wi';icon.textContent=t.icon;
-    const lab=document.createElement('span');lab.className='wl';lab.textContent=t[lang];
-    b.append(icon,lab);
-    if(t.ex){const ex=document.createElement('span');ex.className='wex';ex.textContent=t.ex;b.append(ex);}
-    b.onclick=()=>{ac();playOpen(t.id);};
-    grid.appendChild(b);
-  });
-}
-function playOpen(id){
-  TOY.screen=id;
-  ['playMenu','trackPlay','dressPlay','launchPlay'].forEach(k=>{
-    document.getElementById(k).classList.toggle('on',k===(id==='track'?'trackPlay':id==='dress'?'dressPlay':'launchPlay'));
-  });
-  document.querySelectorAll('#v-play .phBack').forEach(b=>b.setAttribute('aria-label',TOY_BACK[lang]));
-  if(id==='track')trackOpen();
-  else if(id==='dress')dressOpen();
-  else launchOpen();
-}
-function playBack(){ac();playStopLoops();TOY.screen='menu';
-  ['playMenu','trackPlay','dressPlay','launchPlay'].forEach(id=>{
-    document.getElementById(id).classList.toggle('on',id==='playMenu');
-  });
-  renderPlayMenu();
-}
-function playHide(){playStopLoops();TRACK.ptr=null;if(LAUNCH.holding)pumpUp(LAUNCH);}
-function playOnLang(){
-  if(TOY.screen==='menu')renderPlayMenu();
-  else{
-    document.querySelectorAll('#v-play .phBack').forEach(b=>b.setAttribute('aria-label',TOY_BACK[lang]));
-    if(TOY.screen==='track')trackLabels();
-    if(TOY.screen==='dress')dressLabels();
-    if(TOY.screen==='launch')launchLabels();
-  }
-}
-['trackBack','dressBack','launchBack'].forEach(id=>{
-  const b=document.getElementById(id);if(b)b.onclick=playBack;
-});
+function playHide(){playStopLoops();if(typeof TRACK!=='undefined')TRACK.ptr=null;}
 
 /* =============================================================
    DRAW A ROAD, THEN THE VEHICLE DRIVES IT
@@ -127,18 +60,19 @@ function playOnLang(){
    way it is heading; the photo itself stays upright and readable.
 ============================================================= */
 const TRACK_IDS=[
-  {id:'car',fx:'beep',emoji:'🚗'},
-  {id:'steam-train',fx:'chug',emoji:'🚂'},
-  {id:'city-bus',fx:'beep',emoji:'🚌'},
-  {id:'fire-truck',fx:'siren',emoji:'🚒'},
-  {id:'airplane',fx:'whoosh',emoji:'✈️'},
-  {id:'helicopter',fx:'chop',emoji:'🚁'},
-  {id:'sailboat',fx:'splash',emoji:'⛵'},
-  {id:'tractor',fx:'chug',emoji:'🚜'}
+  {id:'car',fx:'beep',emoji:'🚗',scene:'town'},
+  {id:'steam-train',fx:'chug',emoji:'🚂',scene:'rails'},
+  {id:'city-bus',fx:'beep',emoji:'🚌',scene:'town'},
+  {id:'fire-truck',fx:'siren',emoji:'🚒',scene:'town'},
+  {id:'airplane',fx:'whoosh',emoji:'✈️',scene:'sky'},
+  {id:'helicopter',fx:'chop',emoji:'🚁',scene:'sky'},
+  {id:'sailboat',fx:'splash',emoji:'⛵',scene:'water'},
+  {id:'tractor',fx:'chug',emoji:'🚜',scene:'field'}
 ];
+const TRACK_MAX=2400;
 const TRACK_SAY={es:'¡Dibuja un camino!',en:'Draw a road!',de:'Mal eine Straße!'};
 const TRACK_YAY={es:'¡Lo lograste!',en:'You did it!',de:'Geschafft!'};
-const TRACK={veh:'car',raw:[],road:null,phase:'draw',t:0,dur:2,celebrated:false,ptr:null,clock:0,fxAt:0};
+const TRACK={veh:'car',raw:[],road:null,phase:'draw',t:0,dur:2,celebrated:false,ptr:null,clock:0,fxAt:0,full:false,trips:0};
 const trackCv=$('trackCv'),trackG=trackCv.getContext('2d');
 const trackImgs={};
 function trackVeh(id){return (PHOTO_PACK.vehicles||[]).find(v=>v.id===(id||TRACK.veh));}
@@ -147,16 +81,17 @@ function trackImg(id){
   const v=trackVeh(id);if(!v)return null;
   if(!trackImgs[v.image]){
     const im=new Image();im.src=v.image;trackImgs[v.image]=im;
-    im.onload=()=>{if(TOY.screen==='track')trackFrame(0);};
+    im.onload=()=>{if(roadOn())trackFrame(0);};
   }
   return trackImgs[v.image];
 }
 function trackOpen(){
-  TRACK.phase='draw';TRACK.raw=[];TRACK.road=null;TRACK.celebrated=false;TRACK.ptr=null;
+  TRACK.phase='draw';TRACK.raw=[];TRACK.road=null;TRACK.celebrated=false;TRACK.ptr=null;TRACK.full=false;TRACK.trips=0;
   trackLabels();
   TRACK_IDS.forEach(v=>trackImg(v.id));
+  const p=$('roadPrompt');if(p)p.textContent=TRACK_SAY[lang];
   say(TRACK_SAY[lang]);
-  trackFrame(0);requestAnimationFrame(()=>{if(TOY.screen==='track')trackFrame(0);});playKick();
+  trackFrame(0);requestAnimationFrame(()=>{if(roadOn())trackFrame(0);});playKick();
 }
 function trackLabels(){
   const box=document.getElementById('trackVehs');if(!box)return;
@@ -172,7 +107,7 @@ function trackLabels(){
     b.onclick=()=>{
       ac();TRACK.veh=meta.id;trackLabels();
       say(v.names[lang].full);
-      if(TOY.screen==='track')trackFrame(0);
+      if(roadOn())trackFrame(0);
     };
     box.appendChild(b);
   });
@@ -218,22 +153,36 @@ function trackAt(pts,dist){
   const a=pts[Math.max(0,pts.length-2)],b=pts[pts.length-1];
   return {x:b.x,y:b.y,ang:Math.atan2(b.y-a.y,b.x-a.x)};
 }
+/* Stop accepting more ink once the road is long enough. The start of the
+   line stays put: shifting old points off made a long scribble look like it reset. */
+function trackPush(p){
+  const prev=TRACK.raw[TRACK.raw.length-1];
+  if(!prev){TRACK.raw.push(p);return;}
+  const d=Math.hypot(p.x-prev.x,p.y-prev.y);
+  if(d<3)return;
+  const have=trackLen(TRACK.raw);
+  if(have>=TRACK_MAX){TRACK.full=true;return;}
+  if(have+d>=TRACK_MAX){
+    const t=(TRACK_MAX-have)/d;
+    TRACK.raw.push({x:prev.x+(p.x-prev.x)*t,y:prev.y+(p.y-prev.y)*t});
+    if(!TRACK.full){TRACK.full=true;chime();}
+    return;
+  }
+  TRACK.raw.push(p);
+}
 trackCv.addEventListener('pointerdown',e=>{
-  if(TOY.screen!=='track')return;
+  if(!roadOn())return;
   if(TRACK.ptr!=null)return;
   e.preventDefault();
   TRACK.ptr=e.pointerId;
   try{trackCv.setPointerCapture(e.pointerId);}catch(err){}
-  TRACK.phase='draw';TRACK.road=null;TRACK.celebrated=false;TRACK.raw=[trackPos(e)];
+  TRACK.phase='draw';TRACK.road=null;TRACK.celebrated=false;TRACK.full=false;TRACK.raw=[trackPos(e)];
   trackFrame(0);
 });
 trackCv.addEventListener('pointermove',e=>{
   if(e.pointerId!==TRACK.ptr||TRACK.phase!=='draw')return;
   e.preventDefault();
-  const p=trackPos(e),prev=TRACK.raw[TRACK.raw.length-1];
-  if(prev&&Math.hypot(p.x-prev.x,p.y-prev.y)<3)return;
-  TRACK.raw.push(p);
-  if(TRACK.raw.length>800)TRACK.raw.shift();
+  trackPush(trackPos(e));
   trackFrame(0);
 });
 function trackLift(e){
@@ -271,33 +220,88 @@ function trackArrive(){
   rainEmoji([trackMeta().emoji,'⭐','✨'],16);
   if(typeof mascot==='function')mascot('cheer');
   say(TRACK_YAY[lang]+(v?' '+v.names[lang].noun:''));
-  setTimeout(()=>{if(TRACK.phase==='celebrate'){TRACK.phase='draw';if(TOY.screen==='track')trackFrame(0);}},1700);
+  TRACK.trips=(TRACK.trips||0)+1;
+  setTimeout(()=>{if(TRACK.phase==='celebrate'){TRACK.phase='draw';if(roadOn())trackFrame(0);}},1700);
 }
 function trackRoadStroke(g,pts,w){
   if(!pts||pts.length<2)return;
+  const scene=trackMeta().scene;
+  const ink=scene==='sky'?'#16325C':scene==='water'?'#14506A':'#6B3A16';
+  const fill=scene==='sky'?'#FFFFFF':scene==='water'?'#F4FEFF':'#F6C945';
   g.lineCap='round';g.lineJoin='round';
-  g.strokeStyle='#6B3A16';g.lineWidth=w+10;
+  g.strokeStyle=ink;g.lineWidth=w+10;
   g.beginPath();g.moveTo(pts[0].x,pts[0].y);
   for(let i=1;i<pts.length;i++)g.lineTo(pts[i].x,pts[i].y);
   g.stroke();
-  g.strokeStyle='#F6C945';g.lineWidth=w;g.stroke();
+  g.strokeStyle=fill;g.lineWidth=w;g.stroke();
   g.strokeStyle='rgba(255,255,255,.92)';g.lineWidth=Math.max(2,w*0.16);
   g.setLineDash([w*0.55,w*0.85]);g.stroke();g.setLineDash([]);
 }
+function trackCloud(g,x,y,s){
+  g.beginPath();
+  [[0,0,1],[0.9,-0.25,0.85],[1.7,0.08,0.95]].forEach(([a,b,r])=>{g.moveTo(x+a*s+r*s*0.5,y+b*s);g.arc(x+a*s,y+b*s,r*s*0.5,0,7);});
+  g.fill();
+}
 function trackScene(g,W,H,clock){
+  const scene=trackMeta().scene;
   const sky=g.createLinearGradient(0,0,0,H);
-  sky.addColorStop(0,'#6EB6FF');sky.addColorStop(0.46,'#D4F0FF');sky.addColorStop(0.46,'#8ED36A');sky.addColorStop(1,'#3C9A45');
+  if(scene==='sky'){
+    sky.addColorStop(0,'#4FA0F0');sky.addColorStop(1,'#D7F3FF');
+    g.fillStyle=sky;g.fillRect(0,0,W,H);
+    g.fillStyle='#FFE14A';g.beginPath();g.arc(W*0.82,H*0.16,Math.min(W,H)*0.07,0,7);g.fill();
+    g.fillStyle='rgba(255,255,255,.95)';
+    trackCloud(g,(0.1+clock*0.02)%1.4*W-W*0.15,H*0.28,42);
+    trackCloud(g,(0.55+clock*0.012)%1.4*W-W*0.15,H*0.48,34);
+    trackCloud(g,(0.3+clock*0.016)%1.4*W-W*0.15,H*0.7,28);
+    return;
+  }
+  if(scene==='water'){
+    sky.addColorStop(0,'#7EC8FF');sky.addColorStop(0.42,'#E4F6FF');sky.addColorStop(0.42,'#2E9FE0');sky.addColorStop(1,'#1668A8');
+    g.fillStyle=sky;g.fillRect(0,0,W,H);
+    g.fillStyle='#FFE14A';g.beginPath();g.arc(W*0.84,H*0.14,Math.min(W,H)*0.06,0,7);g.fill();
+    g.fillStyle='rgba(255,255,255,.9)';trackCloud(g,W*0.2,H*0.16,30);
+    g.strokeStyle='rgba(255,255,255,.45)';g.lineWidth=3;
+    for(let i=0;i<4;i++){
+      const y=H*(0.55+i*0.1);
+      g.beginPath();g.moveTo(0,y);
+      for(let x=0;x<=W;x+=24)g.lineTo(x,y+Math.sin((x/40)+clock*2+i)*4);
+      g.stroke();
+    }
+    return;
+  }
+  if(scene==='field'){
+    sky.addColorStop(0,'#8ED0FF');sky.addColorStop(0.4,'#E7F8C8');sky.addColorStop(0.4,'#C6E36A');sky.addColorStop(1,'#7CB342');
+    g.fillStyle=sky;g.fillRect(0,0,W,H);
+    g.fillStyle='#FFE14A';g.beginPath();g.arc(W*0.16,H*0.14,Math.min(W,H)*0.06,0,7);g.fill();
+    g.strokeStyle='rgba(90,140,40,.45)';g.lineWidth=8;
+    for(let y=H*0.48;y<H;y+=H*0.08){g.beginPath();g.moveTo(0,y);g.lineTo(W,y+8);g.stroke();}
+    g.fillStyle='#C96B4A';g.fillRect(W*0.72,H*0.28,W*0.16,H*0.14);
+    g.fillStyle='#8B3A2A';g.beginPath();g.moveTo(W*0.70,H*0.28);g.lineTo(W*0.80,H*0.18);g.lineTo(W*0.90,H*0.28);g.fill();
+    return;
+  }
+  if(scene==='rails'){
+    sky.addColorStop(0,'#7EC8FF');sky.addColorStop(0.5,'#E7F6FF');sky.addColorStop(0.5,'#8FCB6A');sky.addColorStop(1,'#3E9A48');
+    g.fillStyle=sky;g.fillRect(0,0,W,H);
+    g.fillStyle='#67B85A';g.beginPath();g.moveTo(0,H*0.55);g.quadraticCurveTo(W*0.4,H*0.4,W,H*0.52);g.lineTo(W,H*0.62);g.lineTo(0,H*0.62);g.fill();
+    g.fillStyle='#C96B4A';g.fillRect(W*0.08,H*0.4,W*0.18,H*0.16);
+    g.fillStyle='#7EC8FF';g.fillRect(W*0.12,H*0.44,W*0.05,H*0.06);g.fillRect(W*0.19,H*0.44,W*0.05,H*0.06);
+    const y=H*0.72;
+    g.strokeStyle='#5C4632';g.lineWidth=4;g.beginPath();g.moveTo(0,y-10);g.lineTo(W,y-10);g.moveTo(0,y+10);g.lineTo(W,y+10);g.stroke();
+    g.strokeStyle='#8B6844';g.lineWidth=5;
+    for(let x=8;x<W;x+=22){g.beginPath();g.moveTo(x,y-16);g.lineTo(x,y+16);g.stroke();}
+    return;
+  }
+  sky.addColorStop(0,'#7EC8FF');sky.addColorStop(0.48,'#E7F4FF');sky.addColorStop(0.48,'#B9C4CE');sky.addColorStop(1,'#8E99A6');
   g.fillStyle=sky;g.fillRect(0,0,W,H);
-  g.fillStyle='#FFE14A';g.beginPath();g.arc(W*0.84,H*0.16,Math.min(W,H)*0.075,0,7);g.fill();
-  g.fillStyle='rgba(255,255,255,.92)';
-  const cloud=(x,y,s)=>{[[0,0,1],[0.85,-0.28,0.82],[1.6,0.05,0.95]].forEach(([a,b,r])=>{g.beginPath();g.arc(x+a*s,y+b*s,r*s*0.55,0,7);g.fill();});};
-  cloud((0.12+clock*0.012)%1.3*W-W*0.1,H*0.16,46);
-  cloud((0.55+clock*0.008)%1.3*W-W*0.1,H*0.28,34);
-  g.fillStyle='#67B85A';g.beginPath();g.moveTo(0,H*0.62);g.quadraticCurveTo(W*0.3,H*0.48,W*0.55,H*0.58);g.quadraticCurveTo(W*0.8,H*0.68,W,H*0.5);g.lineTo(W,H*0.72);g.lineTo(0,H*0.72);g.fill();
-  g.fillStyle='#2F8A48';
-  g.beginPath();g.moveTo(W*0.08,H*0.78);g.lineTo(W*0.08,H*0.62);g.lineTo(W*0.2,H*0.5);g.lineTo(W*0.32,H*0.62);g.lineTo(W*0.32,H*0.78);g.fill();
-  g.fillStyle='#C96B4A';g.fillRect(W*0.16,H*0.66,W*0.08,H*0.1);
-  g.fillStyle='#7EC8FF';g.fillRect(W*0.175,H*0.69,W*0.05,H*0.045);
+  g.fillStyle='#FFE14A';g.beginPath();g.arc(W*0.86,H*0.14,Math.min(W,H)*0.055,0,7);g.fill();
+  g.fillStyle='rgba(255,255,255,.92)';trackCloud(g,W*0.18,H*0.16,26);
+  [[0.08,'#F07A6A',0.22],[0.38,'#F2C14E',0.3],[0.62,'#7EB6E0',0.18]].forEach(([x,c,h])=>{
+    g.fillStyle=c;g.fillRect(W*x,H*(0.48-h),W*0.16,H*h);
+    g.fillStyle='#fff';g.fillRect(W*(x+0.03),H*(0.5-h*0.6),W*0.04,H*0.05);
+  });
+  g.fillStyle='#6E7784';g.fillRect(0,H*0.78,W,H*0.08);
+  g.strokeStyle='#F6E27A';g.lineWidth=3;g.setLineDash([16,14]);
+  g.beginPath();g.moveTo(0,H*0.82);g.lineTo(W,H*0.82);g.stroke();g.setLineDash([]);
 }
 function trackToken(g,x,y){
   const meta=trackMeta(),im=trackImg(meta.id),s=78;
@@ -345,211 +349,15 @@ function trackFrame(dt){
     trackG.font='42px sans-serif';trackG.textAlign='center';
     trackG.fillText('⭐',pos.x-36,pos.y-56);trackG.fillText('✨',pos.x+40,pos.y-48);
   }
-}
-
-/* =============================================================
-   DRESS AN ANIMAL
-   Anchors are percentages of the square photo, tuned per animal
-   so a hat lands on that animal's head. One sticker per place:
-   a new hat replaces the old hat.
-============================================================= */
-const DRESS_ANIMALS=[
-  {id:'cat',    head:[50,24],face:[50,36],neck:[50,54],side:[20,34],glow:[50,32]},
-  {id:'dog',    head:[50,13],face:[50,30],neck:[50,50],side:[18,32],glow:[50,28]},
-  {id:'rabbit', head:[42,20],face:[40,40],neck:[44,58],side:[24,22],glow:[42,36]},
-  {id:'panda',  head:[50,16],face:[50,32],neck:[50,50],side:[78,28],glow:[50,28]},
-  {id:'owl',    head:[47,16],face:[47,34],neck:[47,54],side:[74,32],glow:[47,30]},
-  {id:'frog',   head:[50,30],face:[50,42],neck:[50,56],side:[74,40],glow:[50,40]},
-  {id:'monkey', head:[48,16],face:[48,30],neck:[48,46],side:[72,24],glow:[48,26]},
-  {id:'bear',   head:[54,20],face:[56,32],neck:[52,46],side:[74,28],glow:[54,30]}
-];
-const DRESS_ITEMS=[
-  {id:'hat',emoji:'🎩',slot:'head',en:'hat',de:'Hut',es:'sombrero'},
-  {id:'crown',emoji:'👑',slot:'head',en:'crown',de:'Krone',es:'corona'},
-  {id:'cap',emoji:'🧢',slot:'head',en:'cap',de:'Mütze',es:'gorra'},
-  {id:'glasses',emoji:'👓',slot:'face',en:'glasses',de:'Brille',es:'gafas'},
-  {id:'sun',emoji:'🕶️',slot:'face',en:'sunglasses',de:'Sonnenbrille',es:'gafas de sol'},
-  {id:'scarf',emoji:'🧣',slot:'neck',en:'scarf',de:'Schal',es:'bufanda'},
-  {id:'bow',emoji:'🎀',slot:'side',en:'bow',de:'Schleife',es:'lazo'},
-  {id:'flower',emoji:'🌸',slot:'side',en:'flower',de:'Blume',es:'flor'},
-  {id:'red',slot:'glow',color:'#FF4B4B',en:'red',de:'rot',es:'rojo'},
-  {id:'blue',slot:'glow',color:'#3D8BFF',en:'blue',de:'blau',es:'azul'},
-  {id:'yellow',slot:'glow',color:'#FFD000',en:'yellow',de:'gelb',es:'amarillo'},
-  {id:'green',slot:'glow',color:'#3DDC6A',en:'green',de:'grün',es:'verde'},
-  {id:'pink',slot:'glow',color:'#FF7AB8',en:'pink',de:'rosa',es:'rosa'}
-];
-const DRESS_HI={es:'¡Vístelo!',en:'Dress it up!',de:'Zieh es an!'};
-const DRESS_YAY={es:'¡Qué guapo!',en:'So fancy!',de:'So hübsch!'};
-const DRESS={id:'cat',worn:{},celebrated:false};
-function dressAnimal(){return (PHOTO_PACK.animals||[]).find(a=>a.id===DRESS.id);}
-function dressAnchor(){return DRESS_ANIMALS.find(a=>a.id===DRESS.id)||DRESS_ANIMALS[0];}
-function dressItem(id){return DRESS_ITEMS.find(it=>it.id===id);}
-function dressOpen(){
-  DRESS.celebrated=false;
-  dressLabels();dressRender();
-  say(DRESS_HI[lang]);
-  const a=dressAnimal();if(a)setTimeout(()=>{if(TOY.screen==='dress')say(a.names[lang].full);},700);
-}
-function dressLabels(){
-  const animals=document.getElementById('dressAnimals');
-  const tray=document.getElementById('dressTray');
-  if(!animals||!tray)return;
-  animals.innerHTML='';
-  DRESS_ANIMALS.forEach(meta=>{
-    const a=(PHOTO_PACK.animals||[]).find(x=>x.id===meta.id);if(!a)return;
-    const b=document.createElement('button');
-    b.type='button';b.className='dressAn'+(meta.id===DRESS.id?' on':'');
-    b.dataset.animal=meta.id;
-    b.setAttribute('aria-label',a.names[lang].full);
-    const img=document.createElement('img');img.alt='';img.draggable=false;img.src=a.image;
-    b.appendChild(img);
-    b.onclick=()=>{
-      ac();if(DRESS.id!==meta.id){DRESS.id=meta.id;DRESS.worn={};DRESS.celebrated=false;}
-      dressLabels();dressRender();say(a.names[lang].full);
-    };
-    animals.appendChild(b);
-  });
-  tray.innerHTML='';
-  DRESS_ITEMS.forEach(it=>{
-    const on=DRESS.worn[it.slot]===it.id;
-    const b=document.createElement('button');
-    b.type='button';b.className='dressBit'+(it.color?' swatch':'')+(on?' on':'');
-    b.dataset.dress=it.id;
-    b.setAttribute('aria-label',it[lang]);
-    b.setAttribute('aria-pressed',on?'true':'false');
-    if(it.color)b.style.background=it.color;
-    else b.textContent=it.emoji;
-    b.onclick=()=>dressTap(it.id);
-    tray.appendChild(b);
-  });
-  const reset=document.getElementById('dressReset'),done=document.getElementById('dressDone');
-  if(reset)reset.setAttribute('aria-label',{es:'Otra vez',en:'Again',de:'Nochmal'}[lang]);
-  if(done)done.setAttribute('aria-label',{es:'Listo',en:'Done',de:'Fertig'}[lang]);
-}
-function dressTap(id){
-  ac();
-  const it=dressItem(id);if(!it)return;
-  if(DRESS.worn[it.slot]===id)delete DRESS.worn[it.slot];
-  else DRESS.worn[it.slot]=id;
-  DRESS.celebrated=false;
-  blip();say(it[lang]);
-  dressLabels();dressRender();
-}
-function dressPlace(el,pt){el.style.left=pt[0]+'%';el.style.top=pt[1]+'%';}
-function dressRender(){
-  const a=dressAnimal(),img=document.getElementById('dressPhoto'),box=document.getElementById('dressStickers');
-  if(!a||!img||!box)return;
-  if(img.getAttribute('src')!==a.image)img.src=a.image;
-  img.alt=a.names[lang].full;
-  const anchor=dressAnchor();
-  box.innerHTML='';
-  if(DRESS.worn.glow){
-    const it=dressItem(DRESS.worn.glow);
-    const s=document.createElement('div');s.className='dressGlow';s.style.background=it.color;
-    dressPlace(s,anchor.glow||anchor.head);box.appendChild(s);
+  if(TRACK.full&&TRACK.phase==='draw'&&TRACK.raw.length){
+    const end=TRACK.raw[TRACK.raw.length-1];
+    trackG.fillStyle='#FFD24A';trackG.beginPath();trackG.arc(end.x,end.y,10+Math.sin(TRACK.clock*6)*2,0,7);trackG.fill();
   }
-  ['head','face','neck','side'].forEach(slot=>{
-    const id=DRESS.worn[slot];if(!id)return;
-    const it=dressItem(id);
-    const s=document.createElement('div');s.className='dressSticker pop';s.textContent=it.emoji;
-    dressPlace(s,anchor[slot]||[50,40]);box.appendChild(s);
-  });
 }
-document.getElementById('dressReset').onclick=()=>{
-  ac();DRESS.worn={};DRESS.celebrated=false;blip();dressLabels();dressRender();
-};
-document.getElementById('dressDone').onclick=()=>{
-  ac();DRESS.celebrated=true;
-  bigWin();boom(80);
-  const bits=['⭐','✨'];
-  Object.keys(DRESS.worn).forEach(slot=>{const it=dressItem(DRESS.worn[slot]);if(it&&it.emoji)bits.push(it.emoji);});
-  rainEmoji(bits,18);
-  if(typeof mascot==='function')mascot('cheer');
-  const a=dressAnimal();
-  say(DRESS_YAY[lang]+(a?' '+a.names[lang].noun:''));
-};
-
-/* =============================================================
-   HOLD TO LAUNCH
-   The meter climbs only while the big button is held. Letting go
-   early lets it sink. Full sends the rocket (or balloon) off.
-============================================================= */
-const LAUNCH=pumpMake(2.35,1.7);
-LAUNCH.kind='rocket';
-const LAUNCH_SAY={es:'¡Aprieta!',en:'Hold it!',de:'Festhalten!'};
-const LAUNCH_WORDS={
-  rocket:{es:'cohete',en:'rocket',de:'Rakete',go:{es:'¡Despegue!',en:'Liftoff!',de:'Abflug!'}},
-  balloon:{es:'globo',en:'balloon',de:'Ballon',go:{es:'¡Vuela, globo!',en:'Fly, balloon!',de:'Flieg, Ballon!'}}
-};
-function launchOpen(){
-  LAUNCH.phase='idle';LAUNCH.fill=0;LAUNCH.holding=false;
-  const craft=document.getElementById('launchCraft');
-  if(craft)craft.classList.remove('fly');
-  launchLabels();launchFrame();
-  say(LAUNCH_SAY[lang]);
+function startRoad(){
+  showPane('roadPlay');
+  trackOpen();
 }
-function launchLabels(){
-  const box=document.getElementById('launchPick');if(!box)return;
-  box.innerHTML='';
-  [['rocket','🚀'],['balloon','🎈']].forEach(([id,emoji])=>{
-    const b=document.createElement('button');
-    b.type='button';b.className='lk'+(LAUNCH.kind===id?' on':'');
-    b.dataset.kind=id;b.textContent=emoji;
-    b.setAttribute('aria-label',LAUNCH_WORDS[id][lang]);
-    b.onclick=()=>{
-      if(LAUNCH.phase==='fly')return;
-      ac();LAUNCH.kind=id;LAUNCH.fill=0;LAUNCH.phase='idle';LAUNCH.holding=false;
-      launchLabels();launchFrame();say(LAUNCH_WORDS[id][lang]);
-    };
-    box.appendChild(b);
-  });
-  const title=document.getElementById('launchTitle');
-  if(title)title.textContent=LAUNCH.kind==='balloon'?'🎈':'🚀';
-  const btn=document.getElementById('launchBtn');
-  if(btn)btn.setAttribute('aria-label',LAUNCH_SAY[lang]);
-}
-function launchFrame(){
-  const craft=document.getElementById('launchCraft'),fill=document.getElementById('launchFill'),btn=document.getElementById('launchBtn');
-  if(!craft||!fill)return;
-  fill.style.height=(LAUNCH.fill*100)+'%';
-  craft.textContent=LAUNCH.kind==='balloon'?'🎈':'🚀';
-  craft.classList.toggle('balloon',LAUNCH.kind==='balloon');
-  if(btn)btn.classList.toggle('pump',!!LAUNCH.holding);
-  if(LAUNCH.phase==='fly')return;
-  const s=LAUNCH.kind==='balloon'?(0.55+LAUNCH.fill*0.85):(0.85+LAUNCH.fill*0.35);
-  const lift=LAUNCH.kind==='rocket'?-LAUNCH.fill*90:-LAUNCH.fill*16;
-  const wob=LAUNCH.holding?Math.sin(performance.now()/45)*(2+LAUNCH.fill*8):0;
-  craft.style.transform=`translateY(${lift}px) scale(${s}) rotate(${wob}deg)`;
-}
-function launchGo(){
-  const craft=document.getElementById('launchCraft');
-  if(craft){craft.style.transform='';craft.classList.add('fly');}
-  LAUNCH.flights=(LAUNCH.flights||0)+1;LAUNCH.celebrated=true;
-  bigWin();boom(120);fanfare();
-  rainEmoji(LAUNCH.kind==='balloon'?['🎈','⭐','✨']:['🚀','⭐','✨'],20);
-  if(typeof mascot==='function')mascot('cheer',2200);
-  say(LAUNCH_WORDS[LAUNCH.kind].go[lang]);
-  setTimeout(()=>{
-    LAUNCH.phase='idle';LAUNCH.fill=0;LAUNCH.holding=false;LAUNCH.celebrated=false;
-    if(craft)craft.classList.remove('fly');
-    if(TOY.screen==='launch')launchFrame();
-  },2000);
-}
-const launchBtn=document.getElementById('launchBtn');
-function launchPointerDown(e){
-  if(TOY.screen!=='launch')return;
-  if(LAUNCH.phase==='fly')return;
-  e.preventDefault();
-  try{launchBtn.setPointerCapture(e.pointerId);}catch(err){}
-  ac();pumpDown(LAUNCH);launchFrame();playKick();
-}
-function launchPointerUp(e){
-  if(!LAUNCH.holding)return;
-  pumpUp(LAUNCH);launchFrame();playKick();
-}
-launchBtn.addEventListener('pointerdown',launchPointerDown);
-launchBtn.addEventListener('pointerup',launchPointerUp);
-launchBtn.addEventListener('pointercancel',launchPointerUp);
 
 /* =============================================================
    WORD REWARD

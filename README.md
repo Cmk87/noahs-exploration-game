@@ -11,14 +11,13 @@ The tabs are big icons that all fit on one row; tapping one also says its name.
 | Tab | What it does |
 | --- | --- |
 | 🗺️ Adventure | Daily guided path of 4–8 stops through the learning tabs, chest and bonus at the end (the app opens here) |
-| 🎮 Play | Free play, no reading: draw a road and a vehicle drives it, dress an animal in stickers, or hold a button until a rocket or balloon launches |
 | ✍️ Write | A menu of short words (cat, Hund, sol…), lowercase, capitals or digits, then trace them with stroke order and arrows |
 | 🖼️ Words | "Where is the …?" picture quiz, 15 categories, ~370 words, 8 difficulty levels |
 | 👂 Listen | Hear a word, tap the picture, 6 levels up to sound-alike distractors |
 | 🦖 Dino Show | Verbs and adjectives acted out by an animated dino (43 verbs, 22 adjectives); "how many dinos…?" (plural verbs) and "who is NOT…?" (negation) rounds; answers echoed as full sentences; 🎮 free-play sentence builder; act-it-out breaks |
 | 🪐 Space | Orrery of the solar system with facts and a quiz |
 | 🌍 World | Zoomable real map (pinch, drag, double-tap): continents → 223 countries with flags and names; quizzes for continents, countries, flags and the five oceans |
-| 🎁 Prizes | Spend 40 ⚡ on a prize game (see below) |
+| 🎁 Prizes | Spend 40 ⚡ on a prize game: dig, pairs, balloons, fireworks, digger, aquarium, feed, cake, caterpillar, Superman sling, or draw a road |
 | ⚙ (top bar, hold 1 s) | Parent panel: weekly report, play-time limit, adventure length, voice, backup/restore, levels, most-missed words, prize points |
 
 ## Home screen and City
@@ -58,13 +57,11 @@ paper, plastic, metal and food waste, a warehouse with a forklift, a container c
 and a jail you can look into (robbers in eight cells, a guard with keys, watchtowers with searchlights, a
 basketball yard, a vegetable patch, a police van that brings a new robber, a police dog). 59 animals.
 
-## Play
+## Draw a road
 
-🎮 on the home screen (`js/play.js`) opens three activities, each with the same back button as the picture books. Nothing has to be read to play them.
+✏️ Straße / Road / Camino is a prize game (`js/play.js`), unlocked the same way as the others. A finger paints a track. Letting go sends the vehicle he picked — the same pictures as 🚗 Vehicles — along that line, with its noise and a cheer at the end. The background follows the vehicle: a town for cars, countryside and rails for the train, sky for the plane and helicopter, water for the boat, and fields for the tractor. A very long scribble stops growing once the road is full, and the start of the line stays. Drawing the line is the fine-motor practice.
 
-- **Draw a road.** A finger paints a track on a little landscape. Letting go sends the vehicle he picked — the same pictures as 🚗 Vehicles, train, car, bus and the rest — along that line, with its noise and a cheer at the end. Drawing the line is the fine-motor practice.
-- **Dress up.** He picks an animal from the animal photos, then taps hats, glasses, scarves and colours. Each one snaps onto that animal and its name is spoken in the language selected at the top. ↺ clears the stickers, ✅ throws a little party.
-- **Hold to launch.** A big button fills a rocket or a balloon while it is held down. Letting go early lets it sag back down. Filling it all the way launches it. The same little rocket appears under the picture when a word is finished in Writing → Words, as an optional extra cheer before the next word.
+A small rocket still appears under the picture when a word is finished in Writing → Words. It is an optional extra cheer before the next word, not its own game.
 
 ## Sticker book
 
@@ -116,7 +113,7 @@ Prize games (40 ⚡ each, no way to fail):
 - **🃏 Pairs.** Memory game with 6 pairs; every flip says the word.
 - **🎈 Balloons.** Pop 20 balloons; each one says the picture painted on it. Gold balloons count ×3.
 - **🎆 Fireworks.** Tap the night sky 20 times, then watch the finale.
-- **🦸 Superman Launch.** Pull him back in a sling and let go. A dotted arc shows where he will fly. Six pictures from the writing words (cat, ball, sun, house…) sit on blocks and clouds; each one he hits says its word, with der/die/das for the German nouns, then the round ends in a cheer. When he has been practising words, up to four of the pictures are ones he still misses, retries or skips in a learning language that is switched on (German and English count together; Spanish, often switched off because he already speaks it, does not choose pictures until it is on again). The rest stay random. A brand-new game, with no practice yet, is all random. The counts stay on the device.
+- **🦸 Superman Launch.** Pull him back in a sling and let go. A dotted arc shows where he will fly. A full pull reaches every picture, including the highest ones, on a phone or an iPad. Two rounds of six pictures (twelve hits) from the writing words sit on blocks and clouds. Each hit says its word, with der/die/das for the German nouns. A small cheer starts the second round, and the big celebration waits until all twelve are hit. Pictures are not repeated in the same game. When he has been practising words, up to four of the twelve are ones he still misses, retries or skips in a learning language that is switched on (German and English count together; Spanish, often switched off because he already speaks it, does not choose pictures until it is on again). The rest stay random. A brand-new game, with no practice yet, is all random. The counts stay on the device.
 
 Leaving an unfinished prize game takes two taps on 🏠, so a stray tap cannot waste 40 ⚡.
 

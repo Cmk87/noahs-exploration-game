@@ -3,7 +3,6 @@
 ============================================================= */
 const TABS=[
   {id:'adv',   icon:'🗺️', es:'Aventura',en:'Adventure',de:'Abenteuer'},
-  {id:'play',  icon:'🎮', es:'Jugar',   en:'Play',    de:'Spielen'},
   {id:'trace', icon:'✍️', es:'Escribir',en:'Write',   de:'Schreiben'},
   {id:'read',  icon:'📚', es:'Leer',    en:'Reading', de:'Lesen'},
   {id:'words', icon:'🖼️', es:'Palabras',en:'Words',   de:'Wörter'},
@@ -23,10 +22,10 @@ const TABS=[
   {id:'body',  icon:'🧒', es:'Mi cuerpo',en:'My body', de:'Mein Körper'},
   {id:'dig',   icon:'🎁', es:'Premios', en:'Prizes',  de:'Preise'}
 ];
-const ALLVIEWS=['home','adv','play','trace','read','jobs','words','ear','act','city','space','geo','stickers','king','dinos','folk','ride','things','baby','body','dig','parent'];
+const ALLVIEWS=['home','adv','trace','read','jobs','words','ear','act','city','space','geo','stickers','king','dinos','folk','ride','things','baby','body','dig','parent'];
 activeTab='home';                  // declared in core.js; the app always starts on the home screen
 /* The home screen: one big card per section. 🏠 in the header always comes back here. */
-const CARD_COL={adv:['#FFB938','#FF8A3D'],play:['#FF9A3C','#E23B6A'],trace:['#FF7A7A','#E8445A'],read:['#FFD54F','#F29A16'],jobs:['#8FA8D6','#4A6AA8'],words:['#4FC3F7','#2F7FE0'],ear:['#B58CFF','#7A5AE0'],
+const CARD_COL={adv:['#FFB938','#FF8A3D'],trace:['#FF7A7A','#E8445A'],read:['#FFD54F','#F29A16'],jobs:['#8FA8D6','#4A6AA8'],words:['#4FC3F7','#2F7FE0'],ear:['#B58CFF','#7A5AE0'],
   act:['#6FD86A','#2EA84F'],city:['#3DD6C0','#1C9E9A'],stickers:['#FFB347','#E07B1A'],geo:['#4FD1F5','#2A8BD0'],space:['#7A7FF0','#4A3FB8'],
   king:['#8FD46A','#2E8B57'],dinos:['#8FBF6A','#3E7A45'],folk:['#F0B07A','#C46B3A'],ride:['#5EB0FF','#2A6FD0'],things:['#F0C36A','#C4842A'],baby:['#F7A8C8','#E06A9A'],body:['#F7A8B8','#E2557A'],dig:['#FF8FC8','#E0559A']};
 function buildHome(){
@@ -56,13 +55,13 @@ function buildHome(){
 $('homeBtn').onclick=()=>{ac();if(activeTab!=='home')showTab('home');};
 function showTab(id, opt){
   if(activeTab==='act'&&id!=='act'&&typeof stopRec==='function'){stopRec(true);unCall();}   // no microphone left open behind another screen
-  if(activeTab==='play'&&id!=='play'&&typeof playHide==='function') playHide();
+  if(activeTab==='dig'&&id!=='dig'&&typeof playHide==='function') playHide();
   if((activeTab==='king'||activeTab==='dinos'||activeTab==='folk'||activeTab==='ride'||activeTab==='things'||activeTab==='baby'||activeTab==='body')&&id!==activeTab&&typeof photoStop==='function')photoStop();
   activeTab=id;$('homeBtn').classList.toggle('on',id==='home');if(id==='home')buildHome();window.scrollTo(0,0);if(typeof renderAdvBar==='function')renderAdvBar();
   const vEl=document.getElementById('v-'+id);if(vEl)vEl.scrollTop=0;
   ALLVIEWS.forEach(v=>document.getElementById('v-'+v).classList.toggle('on',v===id));
   if(id==='adv'){renderAdv();}
-  if(id==='play'){showPlay();}
+  if(id==='dig'&&pane==='roadPlay'&&typeof playKick==='function')playKick();
   if(id==='trace'){if(opt&&opt.traceMode)enterTrace(opt.traceMode);else showTrace(true);}
   if(id==='read'){showRead();}
   if(id==='jobs'){showJobs();}
@@ -108,7 +107,7 @@ function setLang(code,btn){
   else if(activeTab==='city')CITY.onLang();
   else if(activeTab==='stickers')showStickers();
   else if(activeTab==='king'||activeTab==='dinos'||activeTab==='folk'||activeTab==='ride'||activeTab==='things'||activeTab==='baby'||activeTab==='body')photoRelang();
-  else if(activeTab==='play'){if(typeof playOnLang==='function')playOnLang();}
+  else if(activeTab==='dig'&&pane==='roadPlay'&&typeof trackLabels==='function'){trackLabels();const rp=$('roadPrompt');if(rp)rp.textContent=TRACK_SAY[lang];}
   else if(activeTab==='home'){}
   else if(activeTab==='dig'){if(pane==='digLock')showDigLock();else if(pane==='supPlay'&&typeof slingText==='function')slingText();}
   else if(activeTab==='adv')renderAdv();

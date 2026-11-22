@@ -794,7 +794,7 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 .jLetter{left:50%;top:20%;font-size:min(10vw,52px)}.jLetter b{font:800 min(6vw,28px)/1 'Baloo 2',sans-serif;color:#C0473A;margin-left:4px}
 .jBoard{position:absolute;left:50%;top:22%;transform:translate(-50%,-50%);background:#1E3D2E;border:6px solid #9A6440;border-radius:8px;color:#fff;font:800 min(14vw,72px)/1 'Baloo 2',sans-serif;padding:6px 26px}
 .jEnd{display:flex;gap:12px;justify-content:center}
-/* twenty sections: three columns upright (Abenteuer across the top, Preise two wide at the end), five on a landscape screen */
+/* nineteen sections: three columns upright (Abenteuer across the top, Preise two wide at the end), five on a landscape screen */
 #homeGrid{grid-template-columns:repeat(3,1fr);gap:4px}
 #v-home{padding-bottom:2px}
 .hcard{min-height:min(28vw,112px,calc((100vh - 200px)/8 - 6px));min-height:min(28vw,112px,calc((100dvh - 200px)/8 - 6px));padding:4px 4px;border-radius:22px}
@@ -833,7 +833,8 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 #gameGrid{grid-template-columns:repeat(6,1fr);gap:10px;max-width:520px;margin-top:10px}
 #gameGrid .gcard{grid-column:span 2;padding:8px 4px 10px}
 #gameGrid .gcard:nth-child(7):nth-last-child(2){grid-column:2/span 2}   /* 8 games: the last two centred; 9 games fill three rows */
-#gameGrid .gcard:nth-child(10):nth-last-child(1){grid-column:3 / span 2}   /* 10 games: the last card sits in the middle */
+#gameGrid .gcard:nth-child(10):nth-last-child(2){grid-column:2 / span 2}   /* 11 games: the last two sit in the middle */
+#gameGrid .gcard:nth-child(11):nth-last-child(1){grid-column:4 / span 2}
 #gameGrid .gl{line-height:1.05;text-align:center}
 #gameGrid .gi{font-size:min(14vw,64px,calc((100vh - 330px)/3*.5));font-size:min(14vw,64px,calc((100dvh - 330px)/3*.5))}
 #gameGrid .gl{font-size:min(4.6vw,22px)}
@@ -842,7 +843,7 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 @media (orientation:landscape) and (min-width:700px){
   #gameGrid{grid-template-columns:repeat(5,1fr);max-width:900px}
   #gameGrid .gl{font-size:min(1.5vw,15px);letter-spacing:0}
-  #gameGrid .gcard,#gameGrid .gcard:nth-child(7),#gameGrid .gcard:nth-child(10){grid-column:auto}
+  #gameGrid .gcard,#gameGrid .gcard:nth-child(7),#gameGrid .gcard:nth-child(10),#gameGrid .gcard:nth-child(11){grid-column:auto}
   #gameGrid .gi{font-size:min(8vw,72px,calc((100vh - 330px)/2*.5));font-size:min(8vw,72px,calc((100dvh - 330px)/2*.5))}
 }
 /* the 🐾 counter glows once ten or fewer animals are missing */
@@ -1061,7 +1062,8 @@ header{gap:6px;padding-left:10px;padding-right:10px}
 #playGrid .wcard.wide .wl{font-size:min(6.4vw,28px);text-align:left}
 #playGrid .wcard.wide .wex{margin-left:auto;margin-top:0;font-size:min(7vw,32px)}
 #trackPlay.on,#dressPlay.on,#launchPlay.on{align-items:stretch}
-#trackCv{flex:1 1 auto;min-height:180px;width:calc(100% - 16px);margin:0 auto 4px;display:block;border-radius:26px;
+#roadPlay.on{align-items:stretch;width:100%}
+#trackCv{flex:0 0 auto;height:min(52vh,460px);height:min(52dvh,460px);min-height:180px;width:calc(100% - 16px);margin:0 auto 4px;display:block;border-radius:26px;
   touch-action:none;box-shadow:var(--lift),var(--soft);background:#8ED36A}
 #trackVehs,#dressAnimals,#dressTray{display:flex;gap:8px;overflow-x:auto;width:100%;padding:8px 12px 12px;touch-action:pan-x;scrollbar-width:none}
 #trackVehs::-webkit-scrollbar,#dressAnimals::-webkit-scrollbar,#dressTray::-webkit-scrollbar{display:none}
