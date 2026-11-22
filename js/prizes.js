@@ -153,12 +153,11 @@ const GAMES=[
  {k:'bag',icon:'🚜',bg:'linear-gradient(160deg,#FFE066,#E0A21A)',es:'Excavadora',en:'Digger',de:'Bagger'},
  {k:'aq', icon:'🐠',bg:'linear-gradient(160deg,#5AD7FF,#1F7FE0)',es:'Acuario',en:'Aquarium',de:'Aquarium'},
  {k:'fed',icon:'🥕',bg:'linear-gradient(160deg,#9BE56A,#2EA84F)',es:'Comer',  en:'Feed',    de:'Füttern'},
- {k:'cake',icon:'🎂',bg:'linear-gradient(160deg,#FFB7D5,#FF6FA0)',es:'Tarta',en:'Cake',    de:'Kuchen'},
  {k:'rp',  icon:'🐛',bg:'linear-gradient(160deg,#C6F57A,#3FAE3A)',es:'Oruga',en:'Caterpillar',de:'Raupe'},
  {k:'sup', icon:'🦸',bg:'linear-gradient(160deg,#5EB0FF,#2040C8)',es:'Lanzar a Superman',en:'Superman Launch',de:'Superman-Schleuder'},
  {k:'road',icon:'✏️',bg:'linear-gradient(160deg,#5EB0FF,#2A6FD0)',es:'Camino',en:'Road',de:'Straße'}
 ];
-const PANES=['digLock','digPlay','memPlay','balPlay','fwPlay','bagPlay','aqPlay','fedPlay','cakePlay','rpPlay','supPlay','roadPlay'];
+const PANES=['digLock','digPlay','memPlay','balPlay','fwPlay','bagPlay','aqPlay','fedPlay','rpPlay','supPlay','roadPlay'];
 let pane='digLock';
 function showPane(id){pane=id;PANES.forEach(p=>$(p).classList.toggle('on',p===id));$('v-dig').scrollTop=0;}
 let found=[];try{found=JSON.parse(localStorage.getItem('sl_dinos')||'[]');}catch(e){}
@@ -168,7 +167,7 @@ let lastDino='';
 let dinoRound=1;try{dinoRound=Math.max(1,+(localStorage.getItem('sl_dinoround')||1));}catch(e){}
 const dinoHave=()=>DINOS.filter(d=>found.includes(d.k)).length;
 function showDigLock(){
-  DIG=null;MEM=null;BAL=null;FW=null;BAG=null;AQ=null;FED=null;CAKE=null;RP=null;SLING=null;if(typeof playHide==='function')playHide();$('quitSheet').classList.remove('on');
+  DIG=null;MEM=null;BAL=null;FW=null;BAG=null;AQ=null;FED=null;RP=null;SLING=null;if(typeof playHide==='function')playHide();$('quitSheet').classList.remove('on');
   const sw=$('supWord');if(sw)sw.classList.remove('on');
   showPane('digLock');
   const T={es:['¡Juegos de premio!','Te faltan','¡Elige tu premio!'],
@@ -196,7 +195,7 @@ function startGame(k,card){
   }
   spendPower(DIG_COST);pgMark(k);
   if(k==='dig')startDig();else if(k==='mem')startMem();else if(k==='bal')startBal();else if(k==='bag')startBag();
-  else if(k==='fw')startFw();else if(k==='aq')startAq();else if(k==='fed')startFed();else if(k==='cake')startCake();else if(k==='rp')startRp();
+  else if(k==='fw')startFw();else if(k==='aq')startAq();else if(k==='fed')startFed();else if(k==='rp')startRp();
   else if(k==='sup')startSup();
   else if(k==='road')startRoad();
 }
@@ -204,7 +203,7 @@ function resumeGame(){
   digPtr=false;digLast=null;if(BAG)BAG.touch=null;          // a finger lifted while away never sent its pointerup
   const over=(pane==='digPlay'&&(!DIG||DIG.done))||(pane==='memPlay'&&(!MEM||MEM.done))||
              (pane==='balPlay'&&(!BAL||BAL.done))||(pane==='fwPlay'&&(!FW||FW.done))||(pane==='bagPlay'&&(!BAG||BAG.done))||
-             (pane==='aqPlay'&&(!AQ||AQ.done))||(pane==='fedPlay'&&(!FED||FED.done))||(pane==='cakePlay'&&(!CAKE||CAKE.done))||(pane==='rpPlay'&&(!RP||RP.done))||(pane==='supPlay'&&(!SLING||SLING.done));
+             (pane==='aqPlay'&&(!AQ||AQ.done))||(pane==='fedPlay'&&(!FED||FED.done))||(pane==='rpPlay'&&(!RP||RP.done))||(pane==='supPlay'&&(!SLING||SLING.done));
   if(over){showDigLock();return;}            // a finished game is never resumed — back to the prize menu
   if(pane==='digPlay'&&DIG)requestAnimationFrame(digLoop);
   else if(pane==='balPlay'&&BAL){BAL.last=0;requestAnimationFrame(balLoop);}
@@ -212,7 +211,6 @@ function resumeGame(){
   else if(pane==='bagPlay'&&BAG){BAG.last=0;requestAnimationFrame(bagLoop);}
   else if(pane==='aqPlay'&&AQ){AQ.last=0;requestAnimationFrame(aqLoop);}
   else if(pane==='fedPlay'&&FED){}
-  else if(pane==='cakePlay'&&CAKE){CAKE.last=0;requestAnimationFrame(cakeLoop);}
   else if(pane==='rpPlay'&&RP){RP.last=0;RP.tgt=null;requestAnimationFrame(rpLoop);}
   else if(pane==='supPlay'&&SLING){SLING.last=0;requestAnimationFrame(supLoop);}
   else if(pane==='roadPlay'&&typeof playKick==='function')playKick();
@@ -232,11 +230,10 @@ function gameProgress(){
   if(pane==='rpPlay'&&RP)return RP.eaten/RP.goal;
   if(pane==='supPlay'&&SLING)return SLING.got/SLING.goal;
   if(pane==='roadPlay'&&typeof TRACK!=='undefined')return TRACK.trips?0.8:(TRACK.raw&&TRACK.raw.length>8?0.3:0.05);
-  if(pane==='cakePlay'&&CAKE)return {base:0,ice:0.15,top:0.3+0.15*CAKE.reqs,candle:0.8,sing:0.9,blow:0.95,done:1}[CAKE.st];
   return 1;}
 function gameLive(){return (pane==='digPlay'&&DIG&&!DIG.done)||(pane==='memPlay'&&MEM&&!MEM.done)||
   (pane==='balPlay'&&BAL&&!BAL.done)||(pane==='fwPlay'&&FW&&!FW.done)||(pane==='bagPlay'&&BAG&&!BAG.done)||
-  (pane==='aqPlay'&&AQ&&!AQ.done)||(pane==='fedPlay'&&FED&&!FED.done)||(pane==='cakePlay'&&CAKE&&!CAKE.done)||(pane==='rpPlay'&&RP&&!RP.done)||(pane==='supPlay'&&SLING&&!SLING.done)||(pane==='roadPlay');}
+  (pane==='aqPlay'&&AQ&&!AQ.done)||(pane==='fedPlay'&&FED&&!FED.done)||(pane==='rpPlay'&&RP&&!RP.done)||(pane==='supPlay'&&SLING&&!SLING.done)||(pane==='roadPlay');}
 function quitGuard(btn){
   btn.onclick=()=>{ac();
     if(!gameLive()){showDigLock();return;}
@@ -1350,140 +1347,6 @@ function fedGive(it,el){
   f.addEventListener('pointerup',up);f.addEventListener('pointercancel',up);
 })();
 
-/* =============================================================
-   CAKE — a little bakery in five steps:
-   1. pick the cake (chocolate, strawberry, vanilla)
-   2. rub the cream on with a finger
-   3. decorate: the voice asks for a number of one topping
-      ("three strawberries!") and counts along as he puts them on
-   4. four candles, lit to a birthday tune
-   5. blow them out by tapping the flames
-   Nothing can go wrong; every step just waits for him.
-============================================================= */
-const cakeCv=$('cakeCv'),cakeX=cakeCv.getContext('2d');let CAKE=null;
-const CAKE_FLAV=[{k:'choc',ic:'🍫',body:'#7B4A2E',dark:'#5E3620',ice:'#FFF4F8',n:{de:'Schokolade',en:'chocolate',es:'chocolate'},cake:{de:'ein Schokoladenkuchen',en:'a chocolate cake',es:'una tarta de chocolate'}},
-  {k:'straw',ic:'🍓',body:'#F49AB6',dark:'#D9718F',ice:'#FFFFFF',n:{de:'Erdbeere',en:'strawberry',es:'fresa'},cake:{de:'ein Erdbeerkuchen',en:'a strawberry cake',es:'una tarta de fresa'}},
-  {k:'van',ic:'🍦',body:'#F6E3B4',dark:'#DCC48C',ice:'#FFD9EA',n:{de:'Vanille',en:'vanilla',es:'vainilla'},cake:{de:'ein Vanillekuchen',en:'a vanilla cake',es:'una tarta de vainilla'}}];
-const CAKE_TOPS={'🍓':{de:'Erdbeeren',en:'strawberries',es:'fresas'},'🍒':{de:'Kirschen',en:'cherries',es:'cerezas'},'🍬':{de:'Bonbons',en:'sweets',es:'caramelos'},
-  '🍪':{de:'Kekse',en:'cookies',es:'galletas'},'⭐':{de:'Sterne',en:'stars',es:'estrellas'},'🍌':{de:'Bananen',en:'bananas',es:'plátanos'},'🍊':{de:'Mandarinen',en:'tangerines',es:'mandarinas'}};
-const CAKE_NUM={de:['','eins','zwei','drei','vier','fünf'],en:['','one','two','three','four','five'],es:['','uno','dos','tres','cuatro','cinco']};
-const CAKE_N={de:['','eine','zwei','drei','vier'],en:['','one','two','three','four'],es:['','una','dos','tres','cuatro']};
-/* the cake in units of the (square) canvas width */
-const CK={bot:[0.16,0.56,0.84,0.82],top:[0.29,0.36,0.71,0.58]};
-function cakePath(g,W){const T=CK.top,B=CK.bot;g.beginPath();
-  g.ellipse(W*0.5,W*T[1],W*(T[2]-T[0])/2,W*0.045,0,Math.PI,0);g.lineTo(W*T[2],W*B[1]);g.ellipse(W*0.5,W*B[1],W*(B[2]-B[0])/2,W*0.055,0,Math.PI*1.5,Math.PI*2,false);
-  g.lineTo(W*B[2],W*B[3]);g.ellipse(W*0.5,W*B[3],W*(B[2]-B[0])/2,W*0.055,0,0,Math.PI);g.lineTo(W*B[0],W*B[1]);g.ellipse(W*0.5,W*B[1],W*(B[2]-B[0])/2,W*0.055,0,Math.PI,Math.PI*1.5);
-  g.lineTo(W*T[0],W*B[1]-W*0.04);g.lineTo(W*T[0],W*T[1]);g.closePath();}
-function onCake(x,y){const T=CK.top,B=CK.bot;return (x>=T[0]&&x<=T[2]&&y>=T[1]-0.05&&y<=T[3])||(x>=B[0]&&x<=B[2]&&y>=B[1]-0.06&&y<=B[3]+0.05);}
-function startCake(){
-  const tops=Object.keys(CAKE_TOPS).filter(e=>typeof emojiOK!=='function'||emojiOK(e)).slice(0,6);
-  const pts=[];for(let x=0.17;x<0.84;x+=0.045)for(let y=0.33;y<0.86;y+=0.045)if(onCake(x,y))pts.push([x,y]);
-  CAKE={st:'base',flav:null,rise:0,strokes:[],pts,cov:new Uint8Array(pts.length),tops,sel:0,placed:[],req:null,reqs:0,reqGoal:3,
-        candles:[],lit:0,done:false,last:0,t0:performance.now(),smoke:[],drag:false};
-  showPane('cakePlay');cakeTray();cakeText();
-  say({es:'¡Vamos a hacer una tarta! ¿Cuál quieres? ¿Chocolate, fresa o vainilla?',en:'Let us bake a cake! Which one? Chocolate, strawberry or vanilla?',de:'Wir backen einen Kuchen! Welchen? Schokolade, Erdbeere oder Vanille?'}[lang]);
-  requestAnimationFrame(cakeLoop);
-}
-function cakeText(){if(!CAKE)return;const P={base:{de:'Welcher Kuchen?',en:'Which cake?',es:'¿Qué tarta?'},ice:{de:'Sahne drauf! Reib mit dem Finger.',en:'Cream on! Rub with your finger.',es:'¡Nata! Frota con el dedo.'},
-  top:{de:'Schmück den Kuchen!',en:'Decorate the cake!',es:'¡Decora la tarta!'},candle:{de:'Vier Kerzen!',en:'Four candles!',es:'¡Cuatro velas!'},
-  sing:{de:'Zum Geburtstag viel Glück!',en:'Happy birthday!',es:'¡Feliz cumpleaños!'},blow:{de:'Puste die Kerzen aus!',en:'Blow out the candles!',es:'¡Sopla las velas!'},
-  done:{de:'Lecker!',en:'Yummy!',es:'¡Qué rica!'}}[CAKE.st][lang];
-  const st=['base','ice','top','candle','sing','blow','done'].indexOf(CAKE.st);
-  $('cakePrompt').textContent=(CAKE.st==='done'?'🏆 ':'🎂 ')+P+(CAKE.st==='done'?'':'  '+'●'.repeat(Math.min(st,5))+'○'.repeat(Math.max(0,5-st)));}
-function cakeTray(){
-  const tray=$('cakeTray');tray.innerHTML='';if(!CAKE)return;
-  if(CAKE.st==='base')CAKE_FLAV.forEach((f,i)=>{const b=document.createElement('button');b.type='button';b.className='cakeBit cakeFlav';b.innerHTML=`<span>${f.ic}</span><small>${f.n[lang]}</small>`;
-    b.onclick=()=>cakeFlavour(i);tray.appendChild(b);});
-  else if(CAKE.st==='top')CAKE.tops.forEach((e,i)=>{const b=document.createElement('button');b.type='button';b.className='cakeBit'+(i===CAKE.sel?' on':'')+(CAKE.req&&CAKE.req.e===e?' want':'');b.textContent=e;
-    b.onclick=()=>{ac();CAKE.sel=i;cakeTray();const w=prizeWord(e);say(w[lang][1]);};tray.appendChild(b);});
-  else if(CAKE.st==='candle'){const b=document.createElement('div');b.className='cakeBit on';b.textContent='🕯️';tray.appendChild(b);}
-}
-function cakeFlavour(i){ac();if(!CAKE||CAKE.st!=='base')return;CAKE.flav=CAKE_FLAV[i];CAKE.st='ice';CAKE.rise=performance.now();cakeTray();cakeText();
-  sweep(300,700,0.5,'sine',0.08);
-  say({de:`Mmm, ${CAKE.flav.cake.de}! Jetzt kommt die Sahne drauf: reib mit dem Finger über den Kuchen.`,en:`Mmm, ${CAKE.flav.cake.en}! Now the cream: rub your finger over the cake.`,es:`Mmm, ${CAKE.flav.cake.es}. Ahora la nata: frota con el dedo sobre la tarta.`}[lang]);}
-function cakeRub(x,y){
-  const C=CAKE;if(C.st!=='ice')return;const L=C.strokes[C.strokes.length-1];
-  if(!L||Math.hypot(L[0]-x,L[1]-y)>0.012){C.strokes.push([x,y]);
-    let n=0;C.pts.forEach((p,i)=>{if(!C.cov[i]&&Math.hypot(p[0]-x,p[1]-y)<0.07)C.cov[i]=1;if(C.cov[i])n++;});
-    if(C.strokes.length%6===0)beep(900+Math.random()*300,0,0.03,'sine',0.03);
-    if(n/C.pts.length>0.8){C.st='top';C.req=null;cakeTray();cakeText();chime();
-      say({de:'Schön cremig! Jetzt schmücken wir den Kuchen.',en:'Lovely and creamy! Now let us decorate it.',es:'¡Qué cremosa! Ahora vamos a decorarla.'}[lang]);
-      setTimeout(()=>{if(CAKE&&CAKE.st==='top'&&!CAKE.req)cakeAsk();},3200);}}
-}
-function cakeAsk(){const C=CAKE;let e;do{e=pick(C.tops);}while(C.req&&e===C.req.e&&C.tops.length>1);
-  C.req={e,n:2+Math.floor(Math.random()*3),got:0};C.sel=C.tops.indexOf(e);cakeTray();
-  const pl=CAKE_TOPS[e][lang],n=CAKE_N[lang][C.req.n];
-  say({de:`Leg ${n} ${pl} auf den Kuchen!`,en:`Put ${n} ${pl} on the cake!`,es:`¡Pon ${n} ${pl} en la tarta!`}[lang]);}
-function cakePlace(x,y){
-  const C=CAKE;
-  if(C.st==='top'){if(!onCake(x,y))return;const e=C.tops[C.sel];C.placed.push({e,x,y,t:performance.now()});beep(620+C.placed.length*20,0,0.08,'triangle',0.12);
-    if(C.req&&e===C.req.e){C.req.got++;
-      if(C.req.got>=C.req.n){const pl=CAKE_TOPS[e][lang],nn=CAKE_NUM[lang][C.req.n];C.reqs++;C.req=null;cakeTray();chime();
-        if(C.reqs>=C.reqGoal){say({de:`${fwCap(nn)} ${pl}! Super! Jetzt kommen die Kerzen.`,en:`${fwCap(nn)} ${pl}! Great! Now the candles.`,es:`¡${fwCap(nn)} ${pl}! ¡Genial! Ahora las velas.`}[lang]);
-          setTimeout(()=>{if(!CAKE||CAKE.st!=='top')return;CAKE.st='candle';cakeTray();cakeText();
-            say({de:'Steck vier Kerzen oben auf den Kuchen.',en:'Put four candles on top of the cake.',es:'Pon cuatro velas encima de la tarta.'}[lang]);},2600);}
-        else{say({de:`${fwCap(nn)} ${pl}! Super!`,en:`${fwCap(nn)} ${pl}! Great!`,es:`¡${fwCap(nn)} ${pl}! ¡Genial!`}[lang]);setTimeout(()=>{if(CAKE&&CAKE.st==='top'&&!CAKE.req)cakeAsk();},2400);}}
-      else say(CAKE_NUM[lang][C.req.got]);}
-    else say(prizeWord(e)[lang][1]);
-    return;}
-  if(C.st==='candle'){const T=CK.top;if(x<T[0]-0.02||x>T[2]+0.02||y>T[3]+0.04)return;
-    const cx=Math.max(T[0]+0.04,Math.min(T[2]-0.04,x));if(C.candles.some(c=>Math.abs(c.x-cx)<0.05))return;
-    C.candles.push({x:cx,lit:false,out:false});beep(700+C.candles.length*90,0,0.1,'triangle',0.14);say(CAKE_NUM[lang][C.candles.length]);
-    if(C.candles.length>=4){C.st='sing';cakeTray();cakeText();setTimeout(()=>{if(CAKE&&CAKE.st==='sing')cakeSing();},1200);}
-    return;}
-  if(C.st==='blow'){let best=null,bd=0.07;C.candles.forEach(c=>{if(c.out)return;const d=Math.hypot(c.x-x,(CK.top[1]-0.12)-y);if(d<bd){bd=d;best=c;}});
-    if(!best)return;best.out=true;noise(0.35,0.06);for(let k=0;k<6;k++)C.smoke.push({x:best.x,y:CK.top[1]-0.13,vx:rnd(-0.03,0.03),t:0});
-    if(C.candles.every(c=>c.out)){C.st='done';C.done=true;pgClear();cakeText();
-      setTimeout(()=>{if(!CAKE||pane!=='cakePlay')return;bigWin();rainEmoji(['🎂','🎉','⭐','🎈'],30);
-        say({de:'Alle aus! Alles Gute! Und jetzt: lecker Kuchen essen!',en:'All out! Happy birthday! And now: let us eat cake!',es:'¡Todas apagadas! ¡Feliz cumpleaños! ¡Y ahora a comer tarta!'}[lang]);},500);}}
-}
-/* the birthday tune (a traditional melody), the candles light one by one */
-function cakeSing(){const C=CAKE;C.candles.forEach((c,i)=>setTimeout(()=>{if(CAKE===C){c.lit=true;beep(1200,0,0.05,'sine',0.06);}},i*350));
-  const G=392,A=440,B=494,C5=523,D=587,E=659,F=698,G5=784,q=0.36;
-  const tune=[[G,.75],[G,.25],[A,1],[G,1],[C5,1],[B,2],[G,.75],[G,.25],[A,1],[G,1],[D,1],[C5,2],[G,.75],[G,.25],[G5,1],[E,1],[C5,1],[B,1],[A,2],[F,.75],[F,.25],[E,1],[C5,1],[D,1],[C5,2]];
-  let t=1.6;tune.forEach(([f,d])=>{beep(f,t,d*q*0.95,'triangle',0.16);t+=d*q;});
-  setTimeout(()=>{if(CAKE!==C||C.st!=='sing')return;C.st='blow';cakeText();
-    say({de:'Und jetzt: puste die Kerzen aus! Tipp auf die Flammen.',en:'And now: blow out the candles! Tap the flames.',es:'¡Y ahora sopla las velas! Toca las llamas.'}[lang]);},(t+0.4)*1000);}
-function cakeLoop(now){
-  if(!CAKE||pane!=='cakePlay'||activeTab!=='dig')return;
-  const s=fitCv(cakeCv,cakeX);if(!s){requestAnimationFrame(cakeLoop);return;}
-  const W=s.W,g=cakeX,C=CAKE,dt=C.last?Math.min(0.05,(now-C.last)/1000):0;C.last=now;
-  const bg=g.createLinearGradient(0,0,0,W);bg.addColorStop(0,'#FFF1E0');bg.addColorStop(1,'#FFD9C2');g.fillStyle=bg;g.fillRect(0,0,W,s.H);
-  g.fillStyle='rgba(255,255,255,.55)';for(let k=0;k<7;k++){g.beginPath();g.arc(W*(0.1+k*0.14),W*0.08,W*0.035,0,7);g.fill();}   // bunting dots
-  // the plate
-  g.fillStyle='#FFFFFF';g.beginPath();g.ellipse(W*0.5,W*0.84,W*0.42,W*0.07,0,0,7);g.fill();g.strokeStyle='#E7D6CC';g.lineWidth=2;g.stroke();
-  if(!C.flav){g.globalAlpha=0.35+0.15*Math.sin(now/400);g.fillStyle='#E9D2BF';cakePath(g,W);g.fill();g.globalAlpha=1;
-    g.font=`${W*0.16}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",serif`;g.textAlign='center';g.textBaseline='middle';g.fillText('❓',W*0.5,W*0.6);
-    requestAnimationFrame(cakeLoop);return;}
-  const rise=Math.min(1,(now-C.rise)/700),sy=0.6+0.4*(1-Math.pow(1-rise,3));
-  g.save();g.translate(0,W*0.84*(1-sy));g.scale(1,sy);
-  g.fillStyle=C.flav.body;cakePath(g,W);g.fill();g.strokeStyle=C.flav.dark;g.lineWidth=3;g.stroke();
-  g.fillStyle=C.flav.dark;g.globalAlpha=0.35;g.fillRect(W*CK.bot[0],W*0.7,W*(CK.bot[2]-CK.bot[0]),W*0.02);g.fillRect(W*CK.top[0],W*0.48,W*(CK.top[2]-CK.top[0]),W*0.015);g.globalAlpha=1;   // filling lines
-  // the cream: where he has rubbed, then all over with little drips
-  g.save();cakePath(g,W);g.clip();g.fillStyle=C.flav.ice;
-  if(C.st==='ice')C.strokes.forEach(([x,y])=>{g.beginPath();g.arc(W*x,W*y,W*0.07,0,7);g.fill();});
-  else{g.fillRect(0,W*0.3,W,W*0.07);g.fillRect(0,W*0.5,W,W*0.08);
-    for(let k=0;k<9;k++){const x=CK.bot[0]+0.03+k*0.075;g.beginPath();g.ellipse(W*x,W*(0.585+(k%3)*0.012),W*0.022,W*(0.035+(k%2)*0.02),0,0,7);g.fill();}
-    for(let k=0;k<6;k++){const x=CK.top[0]+0.03+k*0.075;g.beginPath();g.ellipse(W*x,W*(0.37+(k%2)*0.012),W*0.02,W*0.03,0,0,7);g.fill();}}
-  g.restore();g.restore();
-  if(C.st==='ice'){const p=Math.round(C.cov.reduce((a,b)=>a+b,0)/C.pts.length*100);if(p<8){g.globalAlpha=0.5+0.4*Math.sin(now/300);g.font=`${W*0.12}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",serif`;g.textAlign='center';g.fillText('👆',W*(0.5+0.18*Math.sin(now/500)),W*0.72);g.globalAlpha=1;}}
-  // toppings (they drop in with a little bounce)
-  g.textAlign='center';g.textBaseline='middle';
-  C.placed.forEach(p=>{const u=Math.min(1,(now-p.t)/260),d=(1-u)*W*0.06;g.font=`${W*0.075}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",serif`;g.fillText(p.e,W*p.x,W*p.y-d);});
-  // candles and flames
-  C.candles.forEach((c,i)=>{const x=W*c.x,y=W*(CK.top[1]-0.02);g.fillStyle=['#5AB0FF','#FF6FA0','#FFD400','#7ED957'][i%4];g.fillRect(x-W*0.012,y-W*0.09,W*0.024,W*0.09);
-    g.strokeStyle='rgba(255,255,255,.8)';g.lineWidth=2;for(let k=1;k<4;k++){g.beginPath();g.moveTo(x-W*0.012,y-W*0.02*k);g.lineTo(x+W*0.012,y-W*0.02*k-W*0.01);g.stroke();}
-    if(c.lit&&!c.out){const f=1+0.12*Math.sin(now/90+i);g.fillStyle='rgba(255,200,60,.35)';g.beginPath();g.arc(x,y-W*0.115,W*0.04*f,0,7);g.fill();
-      g.fillStyle='#FFB020';g.beginPath();g.ellipse(x,y-W*0.11,W*0.012*f,W*0.024*f,0,0,7);g.fill();g.fillStyle='#FFF3B0';g.beginPath();g.ellipse(x,y-W*0.104,W*0.006,W*0.012,0,0,7);g.fill();}});
-  C.smoke=C.smoke.filter(p=>{p.t+=dt;if(p.t>1.4)return false;p.x+=p.vx*dt;g.fillStyle=`rgba(160,160,170,${0.5*(1-p.t/1.4)})`;g.beginPath();g.arc(W*p.x,W*(p.y-p.t*0.12),W*(0.012+p.t*0.02),0,7);g.fill();return true;});
-  if(C.st==='candle'&&C.candles.length<4){g.globalAlpha=0.4+0.3*Math.sin(now/300);g.strokeStyle='#FF6FA0';g.setLineDash([6,6]);g.lineWidth=3;g.beginPath();g.ellipse(W*0.5,W*CK.top[1],W*0.2,W*0.04,0,0,7);g.stroke();g.setLineDash([]);g.globalAlpha=1;}
-  requestAnimationFrame(cakeLoop);
-}
-const cakePt=e=>{const r=cakeCv.getBoundingClientRect();return [(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.width];};
-cakeCv.addEventListener('pointerdown',e=>{e.preventDefault();ac();if(!CAKE||CAKE.done)return;const [x,y]=cakePt(e);
-  if(CAKE.st==='ice'){CAKE.drag=true;try{cakeCv.setPointerCapture(e.pointerId);}catch(_){}cakeRub(x,y);}else cakePlace(x,y);});
-cakeCv.addEventListener('pointermove',e=>{if(!CAKE||!CAKE.drag)return;e.preventDefault();const [x,y]=cakePt(e);cakeRub(x,y);});
-['pointerup','pointercancel'].forEach(ev=>cakeCv.addEventListener(ev,()=>{if(CAKE)CAKE.drag=false;}));
 
 /* =============================================================
    CATERPILLAR — it crawls to wherever he touches (tap, or keep the

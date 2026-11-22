@@ -81,7 +81,40 @@ const C_ART={
 function cNP(c){const a=(C_ART[lang]||{})[c.a2];return {np:(a?a[0]+' ':'')+cName(c),pl:!!(a&&a[1])};}
 const deDel=t=>t.replace(/\bde el\b/g,'del');
 const contOf=k=>CONTINENTS.find(c=>c.k===k);
-const WX0=-180,WX1=180,WY0=projY(84),WY1=projY(-72);   // world frame (Antarctica partly)
+const WX0=-180,WX1=180,WY0=projY(84),WY1=projY(-85);   // world frame, down over the ice
+function antEdge(lon){return -62+Math.sin(lon*DEG*2)*2.4+Math.sin(lon*DEG*5)*1.1;}
+const ANT_PTS=[];
+for(let lon=-180;lon<=180;lon+=12)ANT_PTS.push([lon,antEdge(lon)]);
+ANT_PTS.push([180,-85],[-180,-85]);
+function polyHas(pts,x,y){
+  let inside=false;
+  for(let i=0,j=pts.length-1;i<pts.length;j=i++){
+    const yi=pts[i][1],yj=pts[j][1];
+    if((yi>y)!==(yj>y)&&x<(pts[j][0]-pts[i][0])*(y-yi)/(yj-yi||0.00001)+pts[i][0])inside=!inside;
+  }
+  return inside;
+}
+/* Antarctica is ice, not a country outline. A tap on that ice is the continent. */
+function iceAt(lon,lat){return lat<-55&&polyHas(ANT_PTS,lon,lat)?'AN':null;}
+const ANT_PATH=new Path2D();
+ANT_PTS.forEach((p,i)=>{const x=p[0],y=projY(p[1]);i?ANT_PATH.lineTo(x,y):ANT_PATH.moveTo(x,y);});
+ANT_PATH.closePath();
+function geoOnMap(lon,lat){const y=projY(lat);return lon>=WX0&&lon<=WX1&&y>=WY0&&y<=WY1;}
+/* every quiz answer has a point that is on the map and that a tap would count */
+function geoQuizGaps(){
+  const bad=[];
+  CONTINENTS.forEach(ct=>{
+    if(ct.k==='AN'){if(iceAt(0,-75)!=='AN'||!geoOnMap(0,-75))bad.push('AN');return;}
+    const c=COUNTRIES.filter(x=>x.cont===ct.k).sort((a,b)=>b.area-a.area)[0];
+    if(!c){bad.push(ct.k);return;}
+    const lon=c.lab[0],lat=unprojY(c.lab[1]);
+    if(contAt(c,lon)!==ct.k||!geoOnMap(lon,lat))bad.push(ct.k);
+  });
+  OCEANS.forEach(o=>{const [lo,la]=o.lab[0];if(oceanAt(lo,la)!==o.k||!geoOnMap(lo,la))bad.push(o.k);});
+  GEO_Q.forEach(q=>{if(!CONTINENTS.some(c=>c.k===q.a))bad.push('q '+q.a);if(q.a==='AN'&&iceAt(0,-75)!=='AN')bad.push('q tap AN');});
+  countryPool(5).forEach(a=>{const c=C_BY[a];if(!c||!geoOnMap(c.lab[0],unprojY(c.lab[1])))bad.push(a);});
+  return bad;
+}
 let FLAGS_OK=true;
 function pointIn(c,x,y){
   if(x<c.box[0]||x>c.box[2]||y<c.box[1]||y>c.box[3])return false;
@@ -150,6 +183,12 @@ function drawMap(now){
   const sea=g.createLinearGradient(0,0,0,MH);sea.addColorStop(0,'#2C86D9');sea.addColorStop(1,'#165FAE');g.fillStyle=sea;g.fillRect(0,0,MW,MH);
   g.save();g.setTransform(dpr*CAM.k,0,0,dpr*CAM.k,-CAM.x*CAM.k*dpr,-CAM.y*CAM.k*dpr);
   if(GEO.mode==='oceans')drawOceans(now);
+  else{
+    const pulseIce=0.5+0.5*Math.sin(now/180);
+    g.fillStyle=GEO.hint==='AN'&&GEO.mode==='continents'?`rgba(255,212,0,${0.55+0.45*pulseIce})`:(GEO.selCont==='AN'?'#D5E8F4':'#F4FBFF');
+    g.fill(ANT_PATH);
+    g.strokeStyle='rgba(90,140,180,.85)';g.lineWidth=1.4/CAM.k;g.stroke(ANT_PATH);
+  }
   const vx0=CAM.x,vy0=CAM.y,vx1=CAM.x+MW/CAM.k,vy1=CAM.y+MH/CAM.k,zoomed=CAM.k>kWorld()*1.7;
   const pulse=0.5+0.5*Math.sin(now/180);
   for(const c of COUNTRIES){
@@ -235,10 +274,15 @@ function geoTap(sx,sy){
   const [wx,wy]=toWorld(sx,sy),lon=wx,lat=unprojY(wy),c=countryAt(wx,wy),zoomed=CAM.k>kWorld()*1.7;
   const m=GEO.mode;
   if(m==='countries'&&GEO.target)return answerCountry(c);
-  if(m==='continents'&&GEO.target)return answerContinent(contAt(c,lon));
+  if(m==='continents'&&GEO.target)return answerContinent(c?contAt(c,lon):iceAt(lon,lat));
   if(m==='oceans'&&GEO.target)return answerOcean(c?null:oceanAt(lon,lat),c);
   if(m==='flags')return;
-  if(!c||!zoomed&&!contAt(c,lon)){const o=OCEANS.find(o=>o.k===oceanAt(lon,lat));if(!o)return;geoInfo({ocean:o});say(o[lang][0]);return;}
+  if(!c){
+    const ice=iceAt(lon,lat);
+    if(ice){const ct=contOf(ice);GEO.selCont=ct.k;GEO.sel=null;if(!zoomed)flyTo(viewLL(...ct.view));geoInfo({cont:ct});say(ct[lang][0]+'. '+ct[lang][1]);beep(660,0,0.12,'square',0.14);return;}
+    const o=OCEANS.find(o=>o.k===oceanAt(lon,lat));if(!o)return;geoInfo({ocean:o});say(o[lang][0]);return;
+  }
+  if(!zoomed&&!contAt(c,lon)){const o=OCEANS.find(o=>o.k===oceanAt(lon,lat));if(!o)return;geoInfo({ocean:o});say(o[lang][0]);return;}
   if(!zoomed){const ct=contOf(contAt(c,lon));GEO.selCont=ct.k;GEO.sel=null;flyTo(viewLL(...ct.view));geoInfo({cont:ct});say(ct[lang][0]+'. '+ct[lang][1]);beep(660,0,0.12,'square',0.14);return;}
   GEO.sel=c.a2;redraw();geoInfo({country:c});say(cName(c));beep(880,0,0.1,'triangle',0.14);
 }
@@ -341,8 +385,9 @@ function answerFlag(a,b){
     say(deDel(isNow(lang)+({es:'la bandera de ',en:'the flag of ',de:'die Flagge von '}[lang])+cNP(C_BY[a]).np)+'. '+GEO.q);}
 }
 $('geoSay').onclick=()=>{ac();if(GEO.mode!=='explore'&&GEO.q)say(GEO.q);else{const t=$('geoName').textContent+'. '+$('geoText').textContent;say(t);}};
-function showGeo(){clearTimeout(geoT);
+function showGeo(quiz){clearTimeout(geoT);
   FLAGS_OK=emojiOK('🇩🇪');buildGeoModes();fitMap();
+  if(quiz){setGeoMode('countries');return;}
   if(GEO.mode==='explore'){geoInfo(GEO.sel&&C_BY[GEO.sel]?{country:C_BY[GEO.sel]}:null);$('geoLevel').style.visibility='hidden';}
   else if(GEO.mode==='flags'?!GEO.glow:!GEO.target)geoAsk();   // answered just before leaving: next question
   else if(GEO.q)say(GEO.q);

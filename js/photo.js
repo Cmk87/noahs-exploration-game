@@ -133,12 +133,7 @@ function langsHTML(item){
 function photoBind(){
   if(photoBound)return;photoBound=true;
   ['v-king','v-folk','v-ride','v-baby','v-body','v-things','v-dinos'].forEach(id=>{
-    const el=document.getElementById(id);
-    el.addEventListener('click',photoClick);
-    el.addEventListener('pointerdown',photoDown);
-    el.addEventListener('pointermove',photoMove);
-    el.addEventListener('pointerup',photoUp);
-    el.addEventListener('pointercancel',photoUp);
+    document.getElementById(id).addEventListener('click',photoClick);
   });
 }
 function showKing(){photoEnter('a');}
@@ -154,7 +149,8 @@ function showDinos(){
 }
 function photoEnter(kind){
   photoBind();photoStop();
-  PH.kind=kind;PH.screen='pick';PH.hab=null;PH.grp=null;PH.idx=0;PH.playId=null;PUZ=null;
+  PH.kind=kind;PH.screen='pick';PH.hab=null;PH.grp=null;PH.idx=0;PH.playId=null;PUZ=null;PH.quizOrder=null;
+  if(kind==='a'||kind==='t'){startHide();return;}
   renderPhoto();
 }
 function photoRelang(){
@@ -164,6 +160,7 @@ function photoRelang(){
     const bar=root.querySelector('#phNow');
     if(bar){if(item)fillNow(item);else fillGroupTitle();}
   }
+  if(PH.screen==='hide'&&PUZ&&PUZ.item){renderFind();photoSay(findQ(PUZ.item));return;}
   const item=PH.screen==='card'?photoList()[PH.idx]:null;
   const nm=root.querySelector('.phName');
   if(nm&&PH.screen==='touch'&&PUZ&&PUZ.item)nm.textContent=partNames(PUZ.item)[lang].full;
@@ -206,12 +203,11 @@ function photoClick(e){
   else if(act==='find')findAnswer(id,b);
   else if(act==='findSay'){if(PUZ&&PUZ.item)photoSay(findQ(PUZ.item));}
   else if(act==='hide')startHide();
-  else if(act==='live')startLive();
+  else if(act==='gallery'){photoStop();PUZ=null;PH.screen='pick';renderPhoto();}
   else if(act==='grow')startGrow();
   else if(act==='touch')startTouch();
   else if(act==='touched')touchYes();
   else if(act==='pass'){photoStop();PH.screen='pass';renderPhoto();}
-  else if(act==='drop')liveAnswer(b.dataset.ok==='1',b);
   else if(act==='growPick')growAnswer(b.dataset.ok==='1',b);
   else if(act==='stamp'){
     const it=stampItem(b.dataset.kind,id);
@@ -229,9 +225,12 @@ function stampItem(kind,id){
 /* back goes to where he was in the list, not to the top; if he paged on with the
    arrows, the picture he last looked at is brought into view */
 function photoBack(){
-  photoStop();PUZ=null;
+  photoStop();
   if(PH.kind==='d'&&PH.screen==='list'){showTab('home');return;}
   const from=PH.screen,root=photoRoot();
+  if((PH.kind==='a'||PH.kind==='t')&&(from==='hide'||from==='cheer')){PUZ=null;showTab('home');return;}
+  if((PH.kind==='a'||PH.kind==='t')&&from==='pick'){startHide();return;}
+  PUZ=null;
   let top=0;
   if(from==='card'&&PH.kind!=='b'){PH.screen='list';top=PH.listTop;}
   else{PH.screen='pick';top=from==='card'||from==='list'?PH.pickTop:0;}
@@ -284,10 +283,9 @@ function photoSpeakBaby(pair,L){
 
 function toolsHTML(){
   const hide=PH.kind==='b'?'':'<button type="button" class="phTool phHide" data-act="hide" aria-label="find">👂</button>';
-  const live=PH.kind==='a'?'<button type="button" class="phTool phLive" data-act="live" aria-label="habitat">🏡</button>':'';
   const grow=PH.kind==='b'?'<button type="button" class="phTool phGrow" data-act="grow" aria-label="match">🐣</button>':'';
   const touch=PH.kind==='y'?'<button type="button" class="phTool phTouch" data-act="touch" aria-label="touch">👆</button>':'';
-  return `<div class="phTools">${hide}${live}${grow}${touch}<button type="button" class="phTool" data-act="pass" aria-label="passport">🛂</button></div>`;
+  return `<div class="phTools">${hide}${grow}${touch}<button type="button" class="phTool" data-act="pass" aria-label="passport">🛂</button></div>`;
 }
 function barHTML(emoji){
   return `<div class="phBar"><button type="button" class="phBack" data-act="back" aria-label="back">⬅️</button><span class="phTitle">${emoji||''}</span></div>`;
@@ -299,7 +297,6 @@ function renderPhoto(){
   else if(PH.screen==='card'){const it=photoList()[PH.idx];if(it){if(PH.kind==='b')renderBabyCard(it,false);else renderCard(it,false);}}
   else if(PH.screen==='pass')renderPass();
   else if(PH.screen==='hide')renderFind();
-  else if(PH.screen==='live')renderLive();
   const root=photoRoot();if(root)root.scrollTop=0;
 }
 function renderPick(){
@@ -587,12 +584,42 @@ function startHide(){
   PUZ={got:0,miss:0,locked:false,item:null,opts:[],seen:[]};
   findRound();
 }
+function findCats(){
+  if(PH.kind==='a')return PHOTO_PACK.habitats.map(h=>h.id);
+  if(PH.kind==='t')return thingGroups().map(g=>g.id);
+  return null;
+}
+function findOfCat(id){
+  const all=findPool();
+  if(PH.kind==='a')return all.filter(x=>x.habitat===id);
+  if(PH.kind==='t')return all.filter(x=>x.group===id);
+  return all;
+}
+function shuffleIds(list){
+  const o=list.slice();
+  for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=o[i];o[i]=o[j];o[j]=t;}
+  return o;
+}
 function findRound(){
   const all=findPool(),mode='find:'+PH.kind;
-  const fresh=all.filter(x=>!PUZ.seen.includes(x.id));
-  const src=fresh.length?fresh:all;
-  const cb=comeBack(mode,k=>all.some(x=>x.id===k)&&(!PUZ.item||PUZ.item.id!==k));   // something he missed comes back soon
-  const item=cb?all.find(x=>x.id===cb):src[Math.floor(Math.random()*src.length)];PUZ.seen.push(item.id);
+  const cats=findCats();
+  let item;
+  if(cats){
+    if(!PH.quizOrder||!PH.quizOrder.length)PH.quizOrder=shuffleIds(cats);
+    const cat=PH.quizOrder.shift();
+    const from=findOfCat(cat);
+    const fresh=from.filter(x=>!PUZ.seen.includes(x.id));
+    const src=fresh.length?fresh:from;
+    const cb=comeBack(mode,k=>{const x=all.find(a=>a.id===k);return x&&((PH.kind==='a'&&x.habitat===cat)||(PH.kind==='t'&&x.group===cat))&&(!PUZ.item||PUZ.item.id!==k);});
+    const bag=src.length?src:all;
+    item=cb?all.find(x=>x.id===cb):bag[Math.floor(Math.random()*bag.length)];
+  }else{
+    const fresh=all.filter(x=>!PUZ.seen.includes(x.id));
+    const src=fresh.length?fresh:all;
+    const cb=comeBack(mode,k=>all.some(x=>x.id===k)&&(!PUZ.item||PUZ.item.id!==k));
+    item=cb?all.find(x=>x.id===cb):src[Math.floor(Math.random()*src.length)];
+  }
+  PUZ.seen.push(item.id);
   const pool=all.filter(x=>x.id!==item.id);
   const opts=[item],n=[0,3,4,6][level('find',3)];   // the level sets how many photos: 3, 4 or 6
   while(opts.length<n&&pool.length)opts.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
@@ -603,7 +630,8 @@ function findRound(){
 }
 function renderFind(){
   const opts=PUZ.opts.map(it=>`<button type="button" class="phChoice" data-act="find" data-id="${it.id}"><img src="${it.image}" alt="" draggable="false"></button>`).join('');
-  photoRoot().innerHTML=`${barHTML('👂')}<div class="phFindTop"><button type="button" class="phFindSay" data-act="findSay" aria-label="again">🔊</button><span class="phFindDots">${'●'.repeat(PUZ.got)}${'○'.repeat(Math.max(0,5-PUZ.got))}</span></div><div class="phChoices phFind${PUZ.opts.length>4?' six':''}">${opts}</div>`;
+  const gal=(PH.kind==='a'||PH.kind==='t')?'<button type="button" class="phFindSay" data-act="gallery" aria-label="pictures">🖼️</button>':'';
+  photoRoot().innerHTML=`${barHTML('👂')}<div class="phFindTop">${gal}<button type="button" class="phFindSay" data-act="findSay" aria-label="again">🔊</button><span class="phFindDots">${'●'.repeat(PUZ.got)}${'○'.repeat(Math.max(0,5-PUZ.got))}</span></div><div class="phChoices phFind${PUZ.opts.length>4?' six':''}">${opts}</div>`;
 }
 function findAnswer(id,btn){
   if(!PUZ||PUZ.locked||PH.screen!=='hide')return;
@@ -630,49 +658,6 @@ function findAnswer(id,btn){
   });
 }
 
-/* ---- Where do I live? Drag or tap the animal onto its habitat. ---- */
-function startLive(){
-  if(PH.kind!=='a')return;
-  photoStop();PH.screen='live';
-  PUZ={got:0,miss:0,locked:false,item:null,habs:[]};
-  liveRound();
-}
-function liveRound(){
-  const all=PHOTO_PACK.animals;
-  const item=all[Math.floor(Math.random()*all.length)];
-  const right=PHOTO_PACK.habitats.find(h=>h.id===item.habitat);
-  const pool=PHOTO_PACK.habitats.filter(h=>h.id!==item.habitat);
-  const extra=Math.random()<0.5?1:2;
-  const habs=[right];
-  while(habs.length<1+extra&&pool.length)habs.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
-  for(let i=habs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=habs[i];habs[i]=habs[j];habs[j]=t;}
-  PUZ.item=item;PUZ.habs=habs;PUZ.locked=false;PUZ.miss=0;
-  PH.screen='live';renderLive();
-}
-function renderLive(){
-  const habs=PUZ.habs.map(h=>`<button type="button" class="phLiveHab" data-act="drop" data-ok="${h.id===PUZ.item.habitat?'1':'0'}" style="background:${HAB_COL[h.id]||'#888'}" aria-label="${photoEsc(h[lang])}"><span class="phLiveEm">${h.emoji}</span></button>`).join('');
-  photoRoot().innerHTML=`${barHTML('🏡')}<div class="phStage"><div class="phDrag" data-act="drag"><img src="${PUZ.item.image}" alt="" draggable="false"></div><div class="phLiveRow">${habs}</div></div>`;
-}
-function liveAnswer(ok,btn){
-  if(!PUZ||PUZ.locked||PH.screen!=='live')return;
-  if(!ok){
-    PUZ.miss++;
-    if(btn){btn.classList.remove('phBad');void btn.offsetWidth;btn.classList.add('phBad');}
-    photoSay(photoLook());
-    if(PUZ.miss>=2){const c=photoRoot().querySelector('.phLiveHab[data-ok="1"]');if(c)c.classList.add('phHint');}
-    return;
-  }
-  PUZ.locked=true;if(btn)btn.classList.add('phGood');
-  if(typeof award==='function')award(0);
-  [523,659,784].forEach((f,i)=>beep(f,i*0.07,0.15,'triangle',0.15));
-  const gen=++photoGen,item=PUZ.item,got=PUZ.got;
-  photoSeq([item.names[lang].full,photoYay()],lang,()=>{
-    if(!PUZ)return;
-    PUZ.got=got+1;
-    if(PUZ.got>=4)photoCheer('🏡');
-    else liveRound();
-  });
-}
 /* ---- Baby and grown-up: the baby is showing, tap its grown-up photo. ---- */
 function startGrow(){
   if(PH.kind!=='b')return;
@@ -759,35 +744,9 @@ function touchYes(){
 }
 function photoCheer(emoji){
   PH.screen='cheer';PUZ=null;
-  const again=emoji==='🏡'?'live':emoji==='🐣'?'grow':emoji==='👆'?'touch':'hide';
+  const again=emoji==='🐣'?'grow':emoji==='👆'?'touch':'hide';
   photoRoot().innerHTML=`${barHTML('')}<div class="phCheer"><div class="phCup">🏆</div><button type="button" class="phAgain" data-act="${again}" aria-label="again">🔁</button></div>`;
   if(typeof rainEmoji==='function')rainEmoji(['⭐','🎉','🏆','✨'],16);
   if(typeof fanfare==='function')fanfare();
   photoSay(photoDoneLine());
-}
-
-function photoDown(e){
-  const el=e.target.closest('.phDrag');
-  if(!el||PH.screen!=='live'||!photoRoot().contains(el))return;
-  photoDrag={el,id:e.pointerId,x:e.clientX,y:e.clientY,moved:false};
-  try{el.setPointerCapture(e.pointerId);}catch(err){}
-}
-function photoMove(e){
-  const d=photoDrag;if(!d||e.pointerId!==d.id)return;
-  const dx=e.clientX-d.x,dy=e.clientY-d.y;
-  if(Math.hypot(dx,dy)>10)d.moved=true;
-  d.el.style.transform=`translate(${dx}px,${dy}px) scale(1.06)`;
-}
-function photoUp(e){
-  const d=photoDrag;if(!d||e.pointerId!==d.id)return;
-  photoDrag=null;
-  d.el.style.transform='';
-  if(!d.moved)return;
-  d.el.style.pointerEvents='none';
-  const under=document.elementFromPoint(e.clientX,e.clientY);
-  d.el.style.pointerEvents='';
-  const hab=under&&under.closest&&under.closest('.phLiveHab');
-  if(!hab)return;
-  photoSwallow=true;
-  liveAnswer(hab.dataset.ok==='1',hab);
 }
