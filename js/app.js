@@ -69,7 +69,7 @@ function showTab(id, opt){
   if(id==='ear'){newEarRound();}
   if(id==='act'){showAct();}
   if(id==='space'){fitSky();spaceQuiz=false;selectPlanet(selected);}
-  if(id==='geo'){showGeo();}
+  if(id==='geo'){showGeo(true);}
   if(id==='city'){CITY.show();}
   if(id==='stickers'){showStickers();}
   if(id==='king'){showKing();}

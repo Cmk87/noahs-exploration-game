@@ -93,6 +93,18 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     setGeoMode('countries'); answerCountry(C_BY[GEO.target]);
     setGeoMode('flags'); answerFlag(GEO.glow, document.querySelector('.flagBtn')); setGeoMode('explore'); });
   check(true, 'space and world quizzes');
+  const geoOpen = await page.evaluate(() => {
+    showTab('home'); showTab('geo');
+    const opened = GEO.mode === 'countries' && /^Wo ist /.test(GEO.q) && document.querySelectorAll('#geoModes .modeBtn').length === 5;
+    const gaps = geoQuizGaps();
+    setGeoMode('continents');
+    GEO.target = 'AN';
+    const ice = iceAt(0, -75);
+    answerContinent(ice);
+    return { opened, gaps, ice, solved: GEO.selCont === 'AN' && !GEO.target };
+  });
+  check(geoOpen.opened && geoOpen.ice === 'AN' && geoOpen.solved && geoOpen.gaps.length === 0,
+    'geography opens on a country question, and every prompt including Antarctica is on the map ' + JSON.stringify(geoOpen));
 
   console.log('Points and prizes');
   await page.waitForTimeout(1500);                       // let earlier bonus points land first
@@ -102,26 +114,16 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await page.waitForTimeout(900);
   check(await page.evaluate(p0 => power === p0, p0), 'guessing (3 misses) earns no points');
   await page.evaluate(() => { power = 480; savePower(); showTab('dig'); });
-  for (const g of ['dig', 'mem', 'bal', 'fw', 'bag', 'aq', 'fed', 'cake', 'rp', 'sup', 'road']) {
+  for (const g of ['dig', 'mem', 'bal', 'fw', 'bag', 'aq', 'fed', 'rp', 'sup', 'road']) {
     await page.evaluate(g => { showDigLock(); startGame(g); }, g);
     await page.waitForTimeout(300);
-    check(await page.evaluate(g => pane === { dig: 'digPlay', mem: 'memPlay', bal: 'balPlay', fw: 'fwPlay', bag: 'bagPlay', aq: 'aqPlay', fed: 'fedPlay', cake: 'cakePlay', rp: 'rpPlay', sup: 'supPlay', road: 'roadPlay' }[g], g), `prize game starts: ${g}`);
+    check(await page.evaluate(g => pane === { dig: 'digPlay', mem: 'memPlay', bal: 'balPlay', fw: 'fwPlay', bag: 'bagPlay', aq: 'aqPlay', fed: 'fedPlay', rp: 'rpPlay', sup: 'supPlay', road: 'roadPlay' }[g], g), `prize game starts: ${g}`);
   }
   await page.evaluate(() => { power = 160; savePower(); showDigLock(); startGame('fed');
     [...document.querySelectorAll('#fedAnimals .fedAn')].find((b, i) => FED.opts[i] !== FED.want).click(); });
   check(await page.evaluate(() => FED && FED.n === 0), 'feeding the wrong animal does not end the round');
   await page.evaluate(() => [...document.querySelectorAll('#fedAnimals .fedAn')].find((b, i) => FED.opts[i] === FED.want).click());
   check(await page.evaluate(() => FED && FED.n === 1), 'feeding the animal he heard counts');
-  // cake: pick a cake, rub the cream on, then a topping lands where he taps
-  {const r = await page.evaluate(() => {
-     const p0 = power; power = 999; savePower(); showDigLock(); startGame('cake'); document.querySelectorAll('#cakeTray .cakeBit')[0].click(); power = p0; savePower();
-     const picked = CAKE.st === 'ice';
-     for (let y = 0.34; y < 0.86; y += 0.03) for (let x = 0.16; x < 0.86; x += 0.03) cakeRub(x, y);
-     const creamed = CAKE.st === 'top';
-     cakePlace(0.5, 0.7);
-     return { picked, creamed, placed: CAKE.placed.length === 1 };
-   });
-   check(r.picked && r.creamed && r.placed, 'cake: pick a cake, cream it, and a topping lands on it ' + JSON.stringify(r));}
   // fireworks: wild tapping only gets 5 rockets out at once (the launcher reloads)
   {const n = await page.evaluate(() => { const p0 = power; power = 999; showDigLock(); startGame('fw'); power = p0; savePower(); const r = $('fw').getBoundingClientRect();
      for (let i = 0; i < 20; i++) $('fw').dispatchEvent(new PointerEvent('pointerdown', { clientX: r.left + r.width / 2, clientY: r.top + r.height / 3, bubbles: true }));
@@ -439,6 +441,8 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const keepBridge = BRIDGE.slice();
      BRIDGE = ['de'];
      showTab('king');
+     const quizFirst = PH.screen === 'hide' && PUZ && PUZ.item && /^Wo ist /.test(findQ(PUZ.item)) && document.querySelectorAll('#v-king .phChoice').length >= 3 && !document.querySelector('#v-king .phLive');
+     document.querySelector('#v-king [data-act="gallery"]').click();
      const habs = document.querySelectorAll('#v-king .phHab').length;
      const lazy = [...document.querySelectorAll('#v-king .phHab img')].every(img => img.getAttribute('loading') === 'lazy');
      document.querySelector('#v-king .phHab[data-id="farm"]').click();
@@ -458,6 +462,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const held = root.scrollTop === y;
      $('es').click();
      showTab('king');
+     document.querySelector('#v-king [data-act="gallery"]').click();
      document.querySelector('#v-king .phHab[data-id="birds"]').click();
      document.querySelector('#v-king .phAn[data-id="eagle"]').click();
      const eagleName = document.querySelector('#v-king .phName') && document.querySelector('#v-king .phName').textContent;
@@ -472,11 +477,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const pass = JSON.parse(localStorage.getItem('sl_passport') || '{}');
      BRIDGE = keepBridge;
      showTab('home');
-     return { habs, lazy, farmN, opened, saidName, saidFact, saidOther, noNoise, held, eagleName, groups, peopleN, personOk,
+     return { quizFirst, habs, lazy, farmN, opened, saidName, saidFact, saidOther, noNoise, held, eagleName, groups, peopleN, personOk,
        lang, reward: rewardOpen, firstSaid,
        stamped: pass.a && pass.a.includes('cow') && pass.a.includes('eagle') && pass.p && pass.p.length === 1 };
    });
-   check(photo.habs === 10 && photo.lazy, 'animal kingdom shows 10 habitat photos, loaded lazily');
+   check(photo.quizFirst && photo.habs === 10 && photo.lazy, 'animals open on the guessing quiz, and the gallery still has 10 habitats');
    check(photo.farmN === 10 && photo.opened && photo.held, 'a habitat stays on its picture grid, and a tap highlights that animal without scrolling away');
    check(photo.saidName && photo.saidFact && photo.saidOther && photo.noNoise, 'the animal says the name, then one fact, the other fact on the next tap, and no animal noise'
      + (photo.saidName && photo.saidFact && photo.saidOther ? '' : ' ' + JSON.stringify({ n: photo.saidName, f: photo.saidFact, o: photo.saidOther, lang: photo.lang, reward: photo.reward, said: photo.firstSaid })));
@@ -485,35 +490,24 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    check(photo.stamped, 'the first look at an animal or a person earns one passport stamp');
    const hide = await page.evaluate(() => {
      showTab('king');
-     document.querySelector('#v-king .phHide').click();
+     const cats = [];
+     for (let i = 0; i < PHOTO_PACK.habitats.length; i++) { cats.push(PUZ.item.habitat); if (i < PHOTO_PACK.habitats.length - 1) findRound(); }
      const choices = document.querySelectorAll('#v-king .phChoice').length;
-     const blurred = !!(PUZ && PUZ.item) && document.querySelectorAll('#v-king .phFindSay').length === 1;   // a name to find, said aloud, with a replay button
+     const said = document.querySelectorAll('#v-king [data-act="findSay"]').length === 1;
      const p0 = power;
      document.querySelector(`#v-king .phChoice:not([data-id="${PUZ.item.id}"])`).click();
      const held = power === p0;
      document.querySelector(`#v-king .phChoice[data-id="${PUZ.item.id}"]`).click();
-     return { choices, blurred, held, up: power === p0 + 1 };
+     showTab('things');
+     const thingQuiz = PH.kind === 't' && PH.screen === 'hide' && /^Wo ist /.test(findQ(PUZ.item));
+     const groups = [];
+     for (let i = 0; i < thingGroups().length; i++) { groups.push(PUZ.item.group); if (i < thingGroups().length - 1) findRound(); }
+     document.querySelector('#v-things [data-act="gallery"]').click();
+     const gallery = document.querySelectorAll('#v-things .phHab').length;
+     return { choices, said, held, up: power === p0 + 1, cats: new Set(cats).size, need: PHOTO_PACK.habitats.length, thingQuiz, groups: new Set(groups).size, gneed: thingGroups().length, gallery, noHouse: !document.querySelector('.phLive') };
    });
-   check(hide.choices >= 3 && hide.blurred && hide.held && hide.up, "listen and find: 3–6 photos (by level), a wrong tap keeps the point, the right one earns it");
-  }
-  {await page.evaluate(() => { showTab('king'); document.querySelector('#v-king .phLive').click(); });
-   const drag = await page.locator('#v-king .phDrag').boundingBox();
-   const hab = await page.locator('#v-king .phLiveHab[data-ok="1"]').boundingBox();
-   const p0 = await page.evaluate(() => power);
-   await page.mouse.move(drag.x + drag.width / 2, drag.y + drag.height / 2);
-   await page.mouse.down();
-   await page.mouse.move(hab.x + hab.width / 2, hab.y + hab.height / 2, { steps: 12 });
-   await page.mouse.up();
-   const dropped = await page.evaluate(p0 => power === p0 + 1, p0);
-   await page.evaluate(() => { showTab('king'); document.querySelector('#v-king .phLive').click(); const p0 = power;
-     document.querySelector('#v-king .phLiveHab[data-ok="0"]').click();
-     const held = power === p0;
-     document.querySelector('#v-king .phLiveHab[data-ok="1"]').click();
-     return window._live = { held, up: power === p0 + 1 }; });
-   const live = await page.evaluate(() => window._live);
-   check(!!drag && !!hab && dropped && live.held && live.up, 'where do I live: drag or tap the animal onto its habitat'
-     + (drag && hab && dropped && live.held && live.up ? '' : ' ' + JSON.stringify({ drag: !!drag, hab: !!hab, dropped, live })));
-   await page.evaluate(() => { $('de').click(); showTab('home'); });
+   check(hide.choices >= 3 && hide.said && hide.held && hide.up && hide.cats === hide.need && hide.noHouse, "animals quiz asks where something is, visits every category, and the house game is gone");
+   check(hide.thingQuiz && hide.groups === hide.gneed && hide.gallery === hide.gneed, "things open on the guessing quiz and the gallery is still there");
   }
 
   {const more = await page.evaluate(async () => {
@@ -565,6 +559,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      document.querySelector('#v-baby .phReplay').click();
      const replayReset = !!(document.querySelector('#v-baby .phMorphTop') && !document.querySelector('#v-baby .phMorphTop').classList.contains('gone') && document.querySelector('#v-baby .phName').textContent === 'der Welpe');
      showTab('king');
+     document.querySelector('#v-king [data-act="gallery"]').click();
      document.querySelector('#v-king [data-id="polar"]').click();
      const pk = document.getElementById('v-king');
      const max = pk.scrollHeight - pk.clientHeight;

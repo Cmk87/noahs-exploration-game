@@ -68,6 +68,7 @@ const FAKE = () => {
     let want;
     if (label === 'fox') {
       showTab('king');
+      document.querySelector('#v-king [data-act="gallery"]').click();
       document.querySelector('#v-king [data-id="forest"]').click();
       document.querySelector('#v-king [data-id="fox"]').click();
       want = [fox.names.de.full, fox.facts[0].de];
@@ -112,6 +113,7 @@ const FAKE = () => {
   }
   const cut = await page.evaluate(async () => {
     showTab('king');
+    document.querySelector('#v-king [data-act="gallery"]').click();
     document.querySelector('#v-king [data-id="forest"]').click();
     window.__SPEECH.length = 0;
     document.querySelector('#v-king [data-id="fox"]').click();
