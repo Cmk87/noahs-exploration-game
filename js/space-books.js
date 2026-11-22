@@ -89,7 +89,8 @@ const SPACE_BOOKS={
   planets:{icon:'🪐',en:'Planets',de:'Planeten',es:'Planetas',items:SPACE_PLANETS},
   pics:{icon:'🌌',en:'Famous pictures',de:'Berühmte Bilder',es:'Fotos famosas',items:SPACE_PICS}
 };
-let SPACEBOOK=null, SPACEPICK=null;
+let SPACEBOOK=null, SPACEPICK=null, spaceHist=false, spaceSkipPop=false;
+function spaceEsc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function spaceTabLabel(id){
   if(id==='sky')return {en:'Sky',de:'Himmel',es:'Cielo'}[lang];
   return SPACE_BOOKS[id][lang];
@@ -103,16 +104,22 @@ function spaceTabs(){
     b.setAttribute('aria-label',spaceTabLabel(id));
   });
 }
+function spaceDropHistory(){
+  if(!spaceHist)return;
+  spaceHist=false;spaceSkipPop=true;history.back();
+}
 function spaceHome(){
+  spaceDropHistory();
   SPACEBOOK=null;SPACEPICK=null;
   const sky=$('spaceSky'),book=$('spaceBook');
   if(sky)sky.hidden=false;
-  if(book)book.hidden=true;
+  if(book){book.hidden=true;book.classList.remove('hasPick');}
   spaceTabs();
   if(typeof fitSky==='function')fitSky();
 }
 function spaceOpen(kind){
   const book=SPACE_BOOKS[kind];if(!book)return;
+  spaceDropHistory();
   SPACEBOOK=kind;SPACEPICK=null;
   $('spaceSky').hidden=true;$('spaceBook').hidden=false;
   spaceTabs();
@@ -121,22 +128,47 @@ function spaceOpen(kind){
 }
 function spaceRender(){
   const book=SPACE_BOOKS[SPACEBOOK];if(!book)return;
-  $('spaceBookTitle').textContent=book.icon+' '+book[lang];
+  const bookEl=$('spaceBook');
+  bookEl.classList.toggle('hasPick',!!SPACEPICK);
   const grid=$('spaceGrid');
-  grid.innerHTML=book.items.map(it=>`<button type="button" class="phAn${SPACEPICK===it.id?' on':''}" data-space-id="${it.id}" aria-label="${it[lang][0]}"><img src="${it.img}" alt="" draggable="false"></button>`).join('');
-  const now=$('spaceNow');
+  const top=grid.scrollTop;
+  grid.innerHTML=book.items.map(it=>`<button type="button" class="phAn spaceThumb${SPACEPICK===it.id?' on':''}" data-space-id="${it.id}" aria-label="${spaceEsc(it[lang][0])}"><img src="${it.img}" alt="" draggable="false"><span class="spaceCap">${spaceEsc(it[lang][0])}</span></button>`).join('');
+  grid.scrollTop=top;
+  const stage=$('spaceStage'),now=$('spaceNow');
   const item=book.items.find(it=>it.id===SPACEPICK);
-  if(!item){now.hidden=true;now.innerHTML='';return;}
-  now.hidden=false;
-  now.innerHTML=`<img src="${item.img}" alt=""><div class="phName">${item[lang][0]}</div><p>${item[lang][1]}</p>`;
+  if(!item){stage.hidden=true;now.innerHTML='';return;}
+  stage.hidden=false;
+  now.innerHTML=`<img src="${item.img}" alt=""><div class="spaceCopy"><div class="spaceName">${spaceEsc(item[lang][0])}</div><p>${spaceEsc(item[lang][1])}</p><button type="button" class="spaceAgain" aria-label="again">🔊</button></div>`;
+}
+function spaceCloseDetail(){
+  const grid=$('spaceGrid');
+  const top=grid?grid.scrollTop:0;
+  SPACEPICK=null;
+  if(SPACEBOOK)spaceRender();
+  if(grid)grid.scrollTop=top;
+}
+/* The picture is one history step. Android back, the browser back button
+   and the in-app arrow all close it and stay on this tab. */
+function spaceDismiss(){
+  if(!SPACEPICK){spaceHome();return;}
+  spaceCloseDetail();
+  spaceDropHistory();
 }
 function spacePick(id){
   const book=SPACE_BOOKS[SPACEBOOK];if(!book)return;
   const item=book.items.find(it=>it.id===id);if(!item)return;
+  if(SPACEPICK===id){spaceDismiss();return;}
+  const grid=$('spaceGrid');
+  const top=grid.scrollTop;
+  const fresh=!spaceHist;
   SPACEPICK=id;spaceRender();
-  const el=$('spaceNow');if(el)el.scrollIntoView({block:'nearest'});
+  grid.scrollTop=top;
   say(item[lang][0]+'. '+item[lang][1]);
+  const state={spaceDetail:1,book:SPACEBOOK,id:id};
+  if(fresh){history.pushState(state,'');spaceHist=true;}
+  else history.replaceState(state,'');
 }
+function spaceLeave(){spaceDropHistory();}
 function spaceRelang(){
   spaceTabs();
   if(SPACEBOOK)spaceRender();
@@ -151,4 +183,18 @@ document.getElementById('spaceGrid').addEventListener('click',e=>{
   const b=e.target.closest('[data-space-id]');if(!b)return;
   ac();spacePick(b.dataset.spaceId);
 });
-document.getElementById('spaceBack').onclick=()=>{ac();spaceHome();};
+document.getElementById('spaceBack').onclick=()=>{ac();spaceDismiss();};
+document.getElementById('spaceNow').addEventListener('click',e=>{
+  if(!e.target.closest('.spaceAgain'))return;
+  ac();
+  const book=SPACE_BOOKS[SPACEBOOK];if(!book)return;
+  const item=book.items.find(it=>it.id===SPACEPICK);if(!item)return;
+  say(item[lang][0]+'. '+item[lang][1]);
+});
+window.addEventListener('popstate',()=>{
+  if(spaceSkipPop){spaceSkipPop=false;return;}
+  if(!spaceHist&&!SPACEPICK)return;
+  spaceHist=false;
+  if(activeTab!=='space'||!SPACEBOOK){SPACEPICK=null;return;}
+  spaceCloseDetail();
+});

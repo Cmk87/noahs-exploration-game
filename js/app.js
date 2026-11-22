@@ -54,6 +54,7 @@ function buildHome(){
 }
 $('homeBtn').onclick=()=>{ac();if(activeTab!=='home')showTab('home');};
 function showTab(id, opt){
+  if(activeTab==='space'&&id!=='space'&&typeof spaceLeave==='function')spaceLeave();
   if(activeTab==='act'&&id!=='act'&&typeof stopRec==='function'){stopRec(true);unCall();}   // no microphone left open behind another screen
   if(activeTab==='dig'&&id!=='dig'&&typeof playHide==='function') playHide();
   if((activeTab==='king'||activeTab==='dinos'||activeTab==='folk'||activeTab==='ride'||activeTab==='things'||activeTab==='baby'||activeTab==='body')&&id!==activeTab&&typeof photoStop==='function')photoStop();
