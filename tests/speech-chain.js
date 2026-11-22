@@ -86,6 +86,7 @@ const FAKE = () => {
       want = [person.names.de.full, person.where.de, person.facts[0].de];
     } else if (label === 'truck') {
       showTab('ride');
+      document.querySelector('#v-ride [data-act="gallery"]').click();
       document.querySelector('#v-ride [data-id="' + truck.group + '"]').click();
       document.querySelector('#v-ride [data-id="' + truck.id + '"]').click();
       want = [truck.names.de.full, truck.sound.de, truck.facts[0].de];
