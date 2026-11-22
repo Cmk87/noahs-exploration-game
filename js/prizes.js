@@ -155,9 +155,10 @@ const GAMES=[
  {k:'fed',icon:'🥕',bg:'linear-gradient(160deg,#9BE56A,#2EA84F)',es:'Comer',  en:'Feed',    de:'Füttern'},
  {k:'cake',icon:'🎂',bg:'linear-gradient(160deg,#FFB7D5,#FF6FA0)',es:'Tarta',en:'Cake',    de:'Kuchen'},
  {k:'rp',  icon:'🐛',bg:'linear-gradient(160deg,#C6F57A,#3FAE3A)',es:'Oruga',en:'Caterpillar',de:'Raupe'},
- {k:'sup', icon:'🦸',bg:'linear-gradient(160deg,#5EB0FF,#2040C8)',es:'Lanzar a Superman',en:'Superman Launch',de:'Superman-Schleuder'}
+ {k:'sup', icon:'🦸',bg:'linear-gradient(160deg,#5EB0FF,#2040C8)',es:'Lanzar a Superman',en:'Superman Launch',de:'Superman-Schleuder'},
+ {k:'road',icon:'✏️',bg:'linear-gradient(160deg,#5EB0FF,#2A6FD0)',es:'Camino',en:'Road',de:'Straße'}
 ];
-const PANES=['digLock','digPlay','memPlay','balPlay','fwPlay','bagPlay','aqPlay','fedPlay','cakePlay','rpPlay','supPlay'];
+const PANES=['digLock','digPlay','memPlay','balPlay','fwPlay','bagPlay','aqPlay','fedPlay','cakePlay','rpPlay','supPlay','roadPlay'];
 let pane='digLock';
 function showPane(id){pane=id;PANES.forEach(p=>$(p).classList.toggle('on',p===id));$('v-dig').scrollTop=0;}
 let found=[];try{found=JSON.parse(localStorage.getItem('sl_dinos')||'[]');}catch(e){}
@@ -167,7 +168,7 @@ let lastDino='';
 let dinoRound=1;try{dinoRound=Math.max(1,+(localStorage.getItem('sl_dinoround')||1));}catch(e){}
 const dinoHave=()=>DINOS.filter(d=>found.includes(d.k)).length;
 function showDigLock(){
-  DIG=null;MEM=null;BAL=null;FW=null;BAG=null;AQ=null;FED=null;CAKE=null;RP=null;SLING=null;$('quitSheet').classList.remove('on');
+  DIG=null;MEM=null;BAL=null;FW=null;BAG=null;AQ=null;FED=null;CAKE=null;RP=null;SLING=null;if(typeof playHide==='function')playHide();$('quitSheet').classList.remove('on');
   const sw=$('supWord');if(sw)sw.classList.remove('on');
   showPane('digLock');
   const T={es:['¡Juegos de premio!','Te faltan','¡Elige tu premio!'],
@@ -197,6 +198,7 @@ function startGame(k,card){
   if(k==='dig')startDig();else if(k==='mem')startMem();else if(k==='bal')startBal();else if(k==='bag')startBag();
   else if(k==='fw')startFw();else if(k==='aq')startAq();else if(k==='fed')startFed();else if(k==='cake')startCake();else if(k==='rp')startRp();
   else if(k==='sup')startSup();
+  else if(k==='road')startRoad();
 }
 function resumeGame(){
   digPtr=false;digLast=null;if(BAG)BAG.touch=null;          // a finger lifted while away never sent its pointerup
@@ -213,6 +215,7 @@ function resumeGame(){
   else if(pane==='cakePlay'&&CAKE){CAKE.last=0;requestAnimationFrame(cakeLoop);}
   else if(pane==='rpPlay'&&RP){RP.last=0;RP.tgt=null;requestAnimationFrame(rpLoop);}
   else if(pane==='supPlay'&&SLING){SLING.last=0;requestAnimationFrame(supLoop);}
+  else if(pane==='roadPlay'&&typeof playKick==='function')playKick();
   else if(pane!=='memPlay'||!MEM)showDigLock();
 }
 /* 🏠 in a running game asks: back to the prize games, or keep playing? Leaving a
@@ -228,11 +231,12 @@ function gameProgress(){
   if(pane==='fedPlay'&&FED)return FED.n/FED.goal;
   if(pane==='rpPlay'&&RP)return RP.eaten/RP.goal;
   if(pane==='supPlay'&&SLING)return SLING.got/SLING.goal;
+  if(pane==='roadPlay'&&typeof TRACK!=='undefined')return TRACK.trips?0.8:(TRACK.raw&&TRACK.raw.length>8?0.3:0.05);
   if(pane==='cakePlay'&&CAKE)return {base:0,ice:0.15,top:0.3+0.15*CAKE.reqs,candle:0.8,sing:0.9,blow:0.95,done:1}[CAKE.st];
   return 1;}
 function gameLive(){return (pane==='digPlay'&&DIG&&!DIG.done)||(pane==='memPlay'&&MEM&&!MEM.done)||
   (pane==='balPlay'&&BAL&&!BAL.done)||(pane==='fwPlay'&&FW&&!FW.done)||(pane==='bagPlay'&&BAG&&!BAG.done)||
-  (pane==='aqPlay'&&AQ&&!AQ.done)||(pane==='fedPlay'&&FED&&!FED.done)||(pane==='cakePlay'&&CAKE&&!CAKE.done)||(pane==='rpPlay'&&RP&&!RP.done)||(pane==='supPlay'&&SLING&&!SLING.done);}
+  (pane==='aqPlay'&&AQ&&!AQ.done)||(pane==='fedPlay'&&FED&&!FED.done)||(pane==='cakePlay'&&CAKE&&!CAKE.done)||(pane==='rpPlay'&&RP&&!RP.done)||(pane==='supPlay'&&SLING&&!SLING.done)||(pane==='roadPlay');}
 function quitGuard(btn){
   btn.onclick=()=>{ac();
     if(!gameLive()){showDigLock();return;}
@@ -1615,10 +1619,16 @@ const SLING_SPOTS=[
 let SLING=null;
 const supC=$('sup'),supX=supC.getContext('2d');
 function slingPhrase(w){return lang==='de'?(w.art+' '+w.de):w[lang];}
-function slingMax(){return Math.min(SLING.W,SLING.H)*0.22;}
-function slingSpeed(){return Math.min(SLING.W,SLING.H)*1.25;}
-function slingG(){return Math.min(SLING.W,SLING.H)*1.05;}
-function slingRest(){return {x:SLING.W*0.5,y:SLING.H*0.66};}
+/* Speed and gravity scale with the shorter side, and a full pull climbs
+   well above the highest picture on both a phone and an iPad. */
+function slingWorld(W,H){
+  const m=Math.min(W,H);
+  return {W,H,m,rest:{x:W*0.5,y:H*0.66},max:m*0.30,speed:m*2.15,g:m*1.02,R:Math.max(30,m*0.072)+22};
+}
+function slingMax(){return slingWorld(SLING.W,SLING.H).max;}
+function slingSpeed(){return slingWorld(SLING.W,SLING.H).speed;}
+function slingG(){return slingWorld(SLING.W,SLING.H).g;}
+function slingRest(){return slingWorld(SLING.W,SLING.H).rest;}
 function slingLayout(W,H){if(!SLING)return;SLING.W=W;SLING.H=H;slingPlace();}
 function slingPlace(){
   const R=Math.max(30,Math.min(SLING.W,SLING.H)*0.072);
@@ -1635,13 +1645,33 @@ function slingSetPull(p){
 }
 /* the same steps the flight will take, so the dots are the path he really flies */
 function slingArc(x,y,vx,vy){
-  const pts=[],g=slingG(),dt=0.045;
-  for(let i=0;i<28;i++){
-    pts.push({x,y});
+  const pts=[],g=slingG(),dt=0.03;
+  for(let i=0;i<90;i++){
+    if(i%2===0)pts.push({x,y});
     x+=vx*dt;y+=vy*dt;vy+=g*dt;
-    if(y>SLING.H*0.93)break;
+    if(y>SLING.H*0.93&&vy>0)break;
   }
   return pts;
+}
+/* True when some pull at this fraction of max power sends him through the spot.
+   Used by the game and by the test, on any canvas size. */
+function slingSpotReachable(W,H,fx,fy,power){
+  const world=slingWorld(W,H);
+  const tx=fx*W,ty=fy*H;
+  const pullLen=Math.max(28,Math.min(1,power)*world.max);
+  for(let a=0;a<48;a++){
+    const ang=a/48*Math.PI*2;
+    const px=world.rest.x+Math.cos(ang)*pullLen,py=world.rest.y+Math.sin(ang)*pullLen;
+    let dx=world.rest.x-px,dy=world.rest.y-py,len=Math.hypot(dx,dy)||1;
+    const sp=(len/world.max)*world.speed;
+    let x=px,y=py,vx=dx/len*sp,vy=dy/len*sp;
+    for(let i=0;i<250;i++){
+      if(Math.hypot(x-tx,y-ty)<=world.R)return true;
+      x+=vx*0.02;y+=vy*0.02;vy+=world.g*0.02;
+      if((vy>0&&y>H*0.9)||x<-80||x>W+80||y<-H)break;
+    }
+  }
+  return false;
 }
 function slingPreview(){
   if(!SLING||!SLING.pull)return [];
@@ -1672,14 +1702,34 @@ function slingShowWord(w){
 function slingText(){
   if(!SLING)return;
   const done=SLING.done;
-  $('supPrompt').textContent=done?'🏆 '+{es:'¡Lo lograste!',en:'You did it!',de:'Geschafft!'}[lang]:'🦸 '+SLING.got+' / '+SLING.goal;
+  const mid=SLING.between?({es:'¡Otra vez!',en:'Again!',de:'Nochmal!'}[lang]+' · '):'';
+  $('supPrompt').textContent=done?'🏆 '+{es:'¡Lo lograste!',en:'You did it!',de:'Geschafft!'}[lang]:mid+'🦸 '+SLING.got+' / '+SLING.goal;
   if(SLING.banner){$('supWord').textContent=slingPhrase(SLING.banner);}
+}
+function slingLay(words){
+  SLING.targets=words.map((w,i)=>{const s=SLING_SPOTS[i];return {w,fx:s.x,fy:s.y,cloud:s.cloud,alive:true,x:0,y:0,r:36};});
+  slingPlace();
+}
+function slingBeginRound(n){
+  if(!SLING)return;
+  SLING.round=n;SLING.between=false;
+  slingLay(SLING.deck.slice((n-1)*6,n*6));
+  slingText();
+}
+function slingRoundCheer(){
+  if(!SLING||SLING.done||SLING.between)return;
+  SLING.between=true;SLING.flying=false;SLING.holding=false;
+  chime();rainEmoji(['⭐','✨'],12);
+  say({es:'¡Otra vez!',en:'Again!',de:'Nochmal!'}[lang]);
+  slingText();
+  setTimeout(()=>{if(SLING&&!SLING.done)slingBeginRound(2);},900);
 }
 function slingPop(t){
   t.alive=false;SLING.flying=false;SLING.got++;
   for(let i=0;i<16;i++)SLING.sparks.push({x:t.x,y:t.y,vx:(Math.random()-.5)*220,vy:(Math.random()-.85)*220,life:.75,c:['#FFD400','#FF5A5F','#fff','#5EB0FF'][i%4]});
   chime();slingShowWord(t.w);slingText();
   if(SLING.got>=SLING.goal)slingWin();
+  else if(SLING.got%6===0)slingRoundCheer();
 }
 function slingMiss(){SLING.flying=false;beep(180,0,0.08,'sine',0.05);}
 function slingWin(){
@@ -1698,7 +1748,7 @@ function slingTick(dt){
     let hit=null;
     for(const t of SLING.targets){if(t.alive&&Math.hypot(SLING.x-t.x,SLING.y-t.y)<t.r+22){hit=t;break;}}
     if(hit)slingPop(hit);
-    else if((SLING.vy>0&&SLING.y>SLING.H*0.9)||SLING.x<-60||SLING.x>SLING.W+60||SLING.y<-90)slingMiss();
+    else if((SLING.vy>0&&SLING.y>SLING.H*0.9)||SLING.x<-80||SLING.x>SLING.W+80||SLING.y<-SLING.H)slingMiss();
   }
   SLING.sparks=SLING.sparks.filter(s=>{s.x+=s.vx*dt;s.y+=s.vy*dt;s.vy+=40*dt;s.life-=dt;return s.life>0;});
 }
@@ -1774,31 +1824,29 @@ function supLoop(now){
   slingTick(dt);slingDraw();
   requestAnimationFrame(supLoop);
 }
-/* Up to four pictures he still struggles to write in a learning language
-   that is switched on, then the rest are random. Spanish can be off
-   because he already speaks it: those records stay on the device and
-   do not pick the pictures until Spanish is switched on again.
-   No history, or only history in a switched-off language, means all six
-   are random. Only the sling's own pictures are used. */
+/* Twelve pictures for two rounds: up to four he still struggles to write
+   in a learning language that is switched on, then random ones. No picture
+   is repeated in the same game. Spanish can be off; those records stay on
+   the device and do not choose pictures until it is switched on again. */
 function slingChoose(){
   const pool=SLING_POOL.slice();
   const score=w=>typeof writeWeakScore==='function'?writeWeakScore(w.en):0;
   const weak=pool.map(w=>({w,s:score(w)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s||a.w.en.localeCompare(b.w.en));
   const picked=weak.slice(0,4).map(x=>x.w);
   const rest=shuffle(pool.filter(w=>picked.indexOf(w)<0));
-  return shuffle(picked.concat(rest).slice(0,6));
+  return shuffle(picked.concat(rest).slice(0,12));
 }
 function startSup(){
-  const bag=slingChoose();
-  SLING={targets:[],got:0,goal:6,done:false,holding:false,flying:false,pull:null,vx:0,vy:0,x:0,y:0,sparks:[],phrase:'',banner:null,cheered:false,clock:0,preview:[],W:360,H:480,last:0,ptr:null,wordT:0};
-  bag.forEach((w,i)=>{const s=SLING_SPOTS[i];SLING.targets.push({w,fx:s.x,fy:s.y,cloud:s.cloud,alive:true,x:0,y:0,r:36});});
-  showPane('supPlay');slingText();
+  const deck=slingChoose();
+  SLING={targets:[],deck,round:1,got:0,goal:12,done:false,between:false,holding:false,flying:false,pull:null,vx:0,vy:0,x:0,y:0,sparks:[],phrase:'',banner:null,cheered:false,clock:0,preview:[],W:360,H:480,last:0,ptr:null,wordT:0};
+  showPane('supPlay');
+  slingBeginRound(1);
   say({es:'¡Lánzalo!',en:'Launch him!',de:'Schleuder ihn!'}[lang]);
   requestAnimationFrame(supLoop);
 }
 function slingPos(e){const r=supC.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top};}
 supC.addEventListener('pointerdown',e=>{
-  if(!SLING||SLING.done||SLING.flying||pane!=='supPlay')return;
+  if(!SLING||SLING.done||SLING.flying||SLING.between||pane!=='supPlay')return;
   e.preventDefault();ac();
   const p=slingPos(e),rest=slingRest();
   if(p.y<SLING.H*0.52&&Math.hypot(p.x-rest.x,p.y-rest.y)>90)return;

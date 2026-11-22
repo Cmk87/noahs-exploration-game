@@ -23,11 +23,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await hookSay();
   await page.mouse.click(180, 320);
   await page.waitForTimeout(300);
-  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 20), 'opens on the home screen with 20 sections');
+  check(await page.evaluate(() => activeTab === 'home' && $('homeGrid').children.length === 19 && !document.querySelector('#homeGrid [data-id="play"]')), 'opens on the home screen with 19 sections and no Play card');
   check(await page.evaluate(() => lang === 'de'), 'starts in German');
 
   console.log('Layout');
-  for (const t of ['home', 'adv', 'play', 'city', 'stickers', 'king', 'dinos', 'things', 'folk', 'ride', 'baby', 'body', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
+  for (const t of ['home', 'adv', 'city', 'stickers', 'king', 'dinos', 'things', 'folk', 'ride', 'baby', 'body', 'trace', 'words', 'ear', 'act', 'space', 'geo', 'dig', 'parent']) {
     await page.evaluate(t => showTab(t), t);
     await page.waitForTimeout(150);
     await page.evaluate(() => { window.scrollTo(0, 500); const v = document.querySelector('.view.on'); v.lastElementChild && v.lastElementChild.scrollIntoView(); });
@@ -101,11 +101,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   await answerWords();
   await page.waitForTimeout(900);
   check(await page.evaluate(p0 => power === p0, p0), 'guessing (3 misses) earns no points');
-  await page.evaluate(() => { power = 400; savePower(); showTab('dig'); });
-  for (const g of ['dig', 'mem', 'bal', 'fw', 'bag', 'aq', 'fed', 'cake', 'rp', 'sup']) {
+  await page.evaluate(() => { power = 480; savePower(); showTab('dig'); });
+  for (const g of ['dig', 'mem', 'bal', 'fw', 'bag', 'aq', 'fed', 'cake', 'rp', 'sup', 'road']) {
     await page.evaluate(g => { showDigLock(); startGame(g); }, g);
     await page.waitForTimeout(300);
-    check(await page.evaluate(g => pane === { dig: 'digPlay', mem: 'memPlay', bal: 'balPlay', fw: 'fwPlay', bag: 'bagPlay', aq: 'aqPlay', fed: 'fedPlay', cake: 'cakePlay', rp: 'rpPlay', sup: 'supPlay' }[g], g), `prize game starts: ${g}`);
+    check(await page.evaluate(g => pane === { dig: 'digPlay', mem: 'memPlay', bal: 'balPlay', fw: 'fwPlay', bag: 'bagPlay', aq: 'aqPlay', fed: 'fedPlay', cake: 'cakePlay', rp: 'rpPlay', sup: 'supPlay', road: 'roadPlay' }[g], g), `prize game starts: ${g}`);
   }
   await page.evaluate(() => { power = 160; savePower(); showDigLock(); startGame('fed');
     [...document.querySelectorAll('#fedAnimals .fedAn')].find((b, i) => FED.opts[i] !== FED.want).click(); });
@@ -158,10 +158,27 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      slingTick(0.05);
      SLING.targets.forEach(x => { if (!x.alive) return; SLING.flying = true; SLING.x = x.x; SLING.y = x.y; SLING.vx = 0; SLING.vy = 0; slingTick(0.05); });
      lang = 'de';
-     return { goal: SLING.goal, n: SLING.targets.length, preview, tiny, hit, en, word: u.w.en, done: SLING.done, got: SLING.got };
+     const round1 = SLING.deck.slice(0, 6).map(w => w.en);
+     return { goal: SLING.goal, n: SLING.targets.length, preview, tiny, hit, en, word: u.w.en, done: SLING.done, got: SLING.got, between: SLING.between, round1 };
    });
-   check(r.goal === 6 && r.n === 6 && r.preview >= 4 && r.tiny === false && r.hit.left === 5 && r.hit.phrase === r.hit.shown && r.hit.phrase === r.hit.de && /^(der|die|das) /.test(r.hit.phrase) && r.en === r.word && r.done && r.got === 6,
-     'superman sling previews the arc, names a hit in the current language, and a round is six targets ' + JSON.stringify(r));}
+   check(r.goal === 12 && r.n === 6 && r.preview >= 4 && r.tiny === false && r.hit.left === 5 && r.hit.phrase === r.hit.shown && r.hit.phrase === r.hit.de && /^(der|die|das) /.test(r.hit.phrase) && r.en === r.word && !r.done && r.got === 6 && r.between,
+     'superman sling previews the arc, names a hit, and the first round is six of twelve ' + JSON.stringify(r));
+   const rounds = await page.evaluate(() => {
+     const first = SLING.deck.slice(0, 6).map(w => w.en);
+     slingBeginRound(2);
+     const second = SLING.targets.map(t => t.w.en);
+     const overlap = second.filter(w => first.includes(w));
+     SLING.targets.forEach(x => { SLING.flying = true; SLING.x = x.x; SLING.y = x.y; SLING.vx = 0; SLING.vy = 0; slingTick(0.05); });
+     const sizes = [[360, 480], [390, 520], [320, 427], [520, 693], [693, 520]];
+     const missed = [];
+     sizes.forEach(([W, H]) => SLING_SPOTS.forEach(s => {
+       if (!slingSpotReachable(W, H, s.x, s.y, 1)) missed.push('full ' + W + 'x' + H + ' ' + s.y);
+       if (s.y >= 0.3 && !slingSpotReachable(W, H, s.x, s.y, 0.55)) missed.push('mid ' + W + 'x' + H + ' ' + s.y);
+     }));
+     return { second: second.length, overlap: overlap.length, unique: new Set(SLING.deck.map(w => w.en)).size, done: SLING.done, got: SLING.got, missed };
+   });
+   check(rounds.second === 6 && rounds.overlap === 0 && rounds.unique === 12 && rounds.done && rounds.got === 12 && rounds.missed.length === 0,
+     'two rounds, no repeated picture, and every spot is reachable ' + JSON.stringify(rounds));}
   await page.evaluate(() => { power = 45; savePower(); showDigLock(); startGame('mem'); document.querySelector('#memPlay .quitBtn').click(); $('qsLeave').click(); });
   check(await page.evaluate(() => power === 45 && pane === 'digLock'), 'leaving a prize game right after starting gives the points back');
   await page.evaluate(() => { DINOS.forEach(d => prepParts(d)); showDigLock(); });
@@ -833,29 +850,17 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     });
     check(tracked.w > 50 && tracked.mid.miss >= 1 && tracked.mid.retry >= 1 && tracked.mid.skip >= 1 && tracked.ok >= 1 && tracked.stored,
       'writing a word records a miss, a retry, a skip and a success on this device ' + JSON.stringify(tracked.mid) + ' ok=' + tracked.ok);
-    check(tracked.off.cat === 0 && tracked.off.dog === 6 && tracked.picks.length === 6 && ['dog', 'sun', 'house', 'ball'].every(w => tracked.picks.includes(w)) && new Set(tracked.picks).size === 6,
+    check(tracked.off.cat === 0 && tracked.off.dog === 6 && tracked.picks.length === 12 && ['dog', 'sun', 'house', 'ball'].every(w => tracked.picks.includes(w)) && new Set(tracked.picks).size === 12,
       'with Spanish switched off, the sling uses German and English trouble only ' + tracked.picks.join(','));
-    check(tracked.onlyEs.rose === 4 && tracked.onlyEs.bee === 0 && tracked.onlyEs.picks.includes('rose') && new Set(tracked.fresh).size === 6,
+    check(tracked.onlyEs.rose === 4 && tracked.onlyEs.bee === 0 && tracked.onlyEs.picks.includes('rose') && new Set(tracked.fresh).size === 12,
       'a language that is the only one switched on is the only one that chooses pictures');
   }
 
-  console.log('Play');
+  console.log('Road');
   {
-    const menu = await page.evaluate(() => {
-      showTab('play');
-      const cards = [...document.querySelectorAll('#playGrid [data-play]')];
-      return {
-        n: document.querySelectorAll('#homeGrid [data-id="play"]').length,
-        menu: document.getElementById('playMenu').classList.contains('on'),
-        modes: cards.map(b => b.dataset.play).join(),
-        label: cards.find(b => b.dataset.play === 'track').getAttribute('aria-label'),
-        back: document.getElementById('trackBack').classList.contains('phBack')
-      };
-    });
-    check(menu.n === 1 && menu.menu && menu.modes === 'track,dress,launch' && menu.label === 'Strecke' && menu.back,
-      'Play is one home card and opens a menu of track, dress-up and launch');
     const track = await page.evaluate(() => {
-      document.querySelector('#playGrid [data-play="track"]').click();
+      showTab('dig');
+      const p0 = power; power = 999; savePower(); showDigLock(); startGame('road'); power = p0; savePower();
       const cv = document.getElementById('trackCv');
       const r = cv.getBoundingClientRect();
       const fire = (type, x, y) => cv.dispatchEvent(new PointerEvent(type, {
@@ -868,54 +873,16 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
       const riding = TRACK.phase === 'ride' && TRACK.road && TRACK.road.len > 48;
       const veh = document.querySelector('#trackVehs .trackVeh.on');
       if (riding) { TRACK.dur = 0.01; trackFrame(1); }
-      return { w: Math.round(r.width), h: Math.round(r.height), riding, arrived: TRACK.celebrated && TRACK.phase === 'celebrate', veh: veh && veh.dataset.veh };
+      TRACK.phase = 'draw'; TRACK.raw = []; TRACK.full = false; TRACK.ptr = 1;
+      for (let i = 0; i < 5000; i++) trackPush({ x: (i % 80) * 4, y: 40 + (i % 50) });
+      const kept = TRACK.raw.length > 20 && TRACK.raw[0].x < 30 && trackLen(TRACK.raw) <= TRACK_MAX + 1 && TRACK.full;
+      const scenes = {};
+      ['car', 'steam-train', 'airplane', 'sailboat', 'tractor'].forEach(id => { TRACK.veh = id; scenes[id] = trackMeta().scene; });
+      return { w: Math.round(r.width), h: Math.round(r.height), riding, arrived: TRACK.celebrated, veh: veh && veh.dataset.veh, kept, scenes, pane };
     });
-    check(track.w > 100 && track.h > 100 && track.riding && track.arrived && track.veh === 'car',
-      'a drawn road sends the chosen vehicle along it ' + JSON.stringify(track));
-    const early = await page.evaluate(() => {
-      playBack();
-      document.querySelector('#playGrid [data-play="launch"]').click();
-      const btn = document.getElementById('launchBtn');
-      btn.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 4, buttons: 1 }));
-      LAUNCH.base = 0; LAUNCH.holdAt = performance.now() - 700; LAUNCH.phase = 'hold'; LAUNCH.holding = true;
-      pumpTick(LAUNCH); launchFrame();
-      const mid = LAUNCH.fill;
-      btn.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 4, buttons: 0 }));
-      LAUNCH.relAt = performance.now() - 600;
-      pumpTick(LAUNCH);
-      return { mid, later: LAUNCH.fill, phase: LAUNCH.phase };
-    });
-    check(early.mid > 0.2 && early.later < early.mid && early.phase !== 'fly',
-      'letting go of the launcher early lets it sink back down ' + JSON.stringify(early));
-    const flew = await page.evaluate(() => {
-      const btn = document.getElementById('launchBtn');
-      btn.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 5, buttons: 1 }));
-      LAUNCH.base = 0.2; LAUNCH.holdAt = performance.now() - 5000; LAUNCH.phase = 'hold'; LAUNCH.holding = true;
-      const full = pumpTick(LAUNCH);
-      if (full) launchGo();
-      const rocket = document.getElementById('launchCraft').classList.contains('fly');
-      return { full, rocket, flights: LAUNCH.flights, kind: LAUNCH.kind, phase: LAUNCH.phase };
-    });
-    check(flew.full && flew.rocket && flew.flights >= 1, 'holding the button until it is full launches the rocket ' + JSON.stringify(flew));
-    const dress = await page.evaluate(() => {
-      // a launch is in progress; the kind button ignores taps until it lands, so wait it out
-      LAUNCH.phase = 'idle'; LAUNCH.fill = 0;
-      playBack();
-      document.querySelector('#playGrid [data-play="dress"]').click();
-      document.querySelector('#dressTray [data-dress="hat"]').click();
-      const hat = DRESS.worn.head === 'hat' && !!document.querySelector('#dressStickers .dressSticker');
-      const said = JSON.parse(sessionStorage.getItem('ALLSAID') || '[]').slice(-3);
-      document.querySelector('#dressTray [data-dress="red"]').click();
-      const color = DRESS.worn.glow === 'red' && !!document.querySelector('#dressStickers .dressGlow');
-      document.getElementById('dressReset').click();
-      const cleared = !DRESS.worn.head && !DRESS.worn.glow && !document.querySelector('#dressStickers .dressSticker');
-      document.querySelector('#dressAnimals [data-animal="dog"]').click();
-      document.querySelector('#dressTray [data-dress="glasses"]').click();
-      document.getElementById('dressDone').click();
-      return { hat, color, cleared, animal: DRESS.id, glasses: DRESS.worn.face, celebrated: DRESS.celebrated, said: said.join('|') };
-    });
-    check(dress.hat && dress.color && dress.cleared && dress.animal === 'dog' && dress.glasses === 'glasses' && dress.celebrated && /Hut/.test(dress.said),
-      'stickers snap onto the animal, are named aloud, and done celebrates ' + JSON.stringify(dress));
+    check(track.pane === 'roadPlay' && track.w > 100 && track.h > 100 && track.riding && track.arrived && track.veh === 'car' && track.kept
+      && track.scenes.car === 'town' && track.scenes['steam-train'] === 'rails' && track.scenes.airplane === 'sky' && track.scenes.sailboat === 'water' && track.scenes.tractor === 'field',
+      'the road is a prize, a long line keeps its start, and the background follows the vehicle ' + JSON.stringify(track));
   }
 
   {const bad = await page.evaluate(() => JSON.parse(sessionStorage.getItem('ALLSAID') || '[]').filter(t => /\[object|undefined|null/.test(t)));
