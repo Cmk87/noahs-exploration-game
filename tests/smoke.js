@@ -538,6 +538,10 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      BRIDGE = ['de'];
      window.PHOTO_SAID = [];
      showTab('ride');
+     const quizFirst = PH.screen === 'hide' && PUZ && PUZ.item && /^Wo ist /.test(findQ(PUZ.item)) && !!document.querySelector('#v-ride [data-act="gallery"]');
+     const vehGroups = [];
+     for (let i = 0; i < vehicleGroups().length; i++) { vehGroups.push(PUZ.item.group); if (i < vehicleGroups().length - 1) findRound(); }
+     document.querySelector('#v-ride [data-act="gallery"]').click();
      const ids = [...document.querySelectorAll('#v-ride .phHab')].map(b => b.dataset.id);
      const lazy = [...document.querySelectorAll('#v-ride .phHab img')].every(img => img.getAttribute('loading') === 'lazy');
      document.querySelector('#v-ride .phHab[data-id="helpers"]').click();
@@ -554,9 +558,8 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const amb = PHOTO_PACK.vehicles.find(x => x.id === 'ambulance').names.es.full;
      $('de').click();
      showTab('ride');
-     document.querySelector('#v-ride .phHide').click();
      const choices = document.querySelectorAll('#v-ride .phChoice').length;
-     const blurred = !!(PUZ && PUZ.item) && document.querySelectorAll('#v-ride .phFindSay').length === 1;   // a name to find, said aloud, with a replay button
+     const blurred = !!(PUZ && PUZ.item) && document.querySelectorAll('#v-ride [data-act="findSay"]').length === 1;
      const p0 = power;
      document.querySelector(`#v-ride .phChoice:not([data-id="${PUZ.item.id}"])`).click();
      const held = power === p0;
@@ -603,11 +606,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      document.querySelector('#v-baby .phChoice[data-ok="1"]').click();
      const pass = JSON.parse(localStorage.getItem('sl_passport') || '{}');
      showTab('home');
-     return { ids, lazy, n, opened, saidName, saidSound, saidFact, esName, amb, choices, blurred, held, up: power >= p0 + 1,
+     return { quizFirst, vehGroups: new Set(vehGroups).size, vehNeed: vehicleGroups().length, ids, lazy, n, opened, saidName, saidSound, saidFact, esName, amb, choices, blurred, held, up: power >= p0 + 1,
        pairs, pairLazy, morph, saidBaby, saidAdult, saidGrow, slid, replayReset, wrapped, stillCard, gChoices, babyShown, gHeld, hideUp, gUp: power === gp0 + 1,
        stamped: pass.v && pass.v.includes('fire-truck') && pass.b && pass.b.includes('dog') };
    });
-   check(more.ids.join() === 'helpers,buildingSite,road,rails,air,water' && more.lazy, 'vehicles shows the six groups, photos loaded lazily');
+   check(more.quizFirst && more.vehGroups === more.vehNeed && more.ids.join() === 'helpers,buildingSite,road,rails,air,water' && more.lazy, 'vehicles open on the guessing quiz, visit every group, and the gallery is still there');
    check(more.n === 6 && more.opened && more.saidName && more.saidSound && more.saidFact, 'a vehicle stays on the grid and says the name, the sound, and a fact');
    check(more.esName === 'el camión de bomberos' && more.amb === 'la ambulancia', 'vehicle cards use the Spanish article from the photo pack');
    check(more.choices >= 3 && more.blurred && more.held && more.hideUp, "listen and find works for vehicles");

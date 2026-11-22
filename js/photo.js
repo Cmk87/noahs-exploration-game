@@ -150,7 +150,7 @@ function showDinos(){
 function photoEnter(kind){
   photoBind();photoStop();
   PH.kind=kind;PH.screen='pick';PH.hab=null;PH.grp=null;PH.idx=0;PH.playId=null;PUZ=null;PH.quizOrder=null;
-  if(kind==='a'||kind==='t'){startHide();return;}
+  if(kind==='a'||kind==='t'||kind==='v'){startHide();return;}
   renderPhoto();
 }
 function photoRelang(){
@@ -228,8 +228,8 @@ function photoBack(){
   photoStop();
   if(PH.kind==='d'&&PH.screen==='list'){showTab('home');return;}
   const from=PH.screen,root=photoRoot();
-  if((PH.kind==='a'||PH.kind==='t')&&(from==='hide'||from==='cheer')){PUZ=null;showTab('home');return;}
-  if((PH.kind==='a'||PH.kind==='t')&&from==='pick'){startHide();return;}
+  if((PH.kind==='a'||PH.kind==='t'||PH.kind==='v')&&(from==='hide'||from==='cheer')){PUZ=null;showTab('home');return;}
+  if((PH.kind==='a'||PH.kind==='t'||PH.kind==='v')&&from==='pick'){startHide();return;}
   PUZ=null;
   let top=0;
   if(from==='card'&&PH.kind!=='b'){PH.screen='list';top=PH.listTop;}
@@ -587,11 +587,13 @@ function startHide(){
 function findCats(){
   if(PH.kind==='a')return PHOTO_PACK.habitats.map(h=>h.id);
   if(PH.kind==='t')return thingGroups().map(g=>g.id);
+  if(PH.kind==='v')return vehicleGroups().map(g=>g.id);
   return null;
 }
 function findOfCat(id){
   const all=findPool();
   if(PH.kind==='a')return all.filter(x=>x.habitat===id);
+  if(PH.kind==='v')return all.filter(x=>x.group===id);
   if(PH.kind==='t')return all.filter(x=>x.group===id);
   return all;
 }
@@ -610,7 +612,7 @@ function findRound(){
     const from=findOfCat(cat);
     const fresh=from.filter(x=>!PUZ.seen.includes(x.id));
     const src=fresh.length?fresh:from;
-    const cb=comeBack(mode,k=>{const x=all.find(a=>a.id===k);return x&&((PH.kind==='a'&&x.habitat===cat)||(PH.kind==='t'&&x.group===cat))&&(!PUZ.item||PUZ.item.id!==k);});
+    const cb=comeBack(mode,k=>{const x=all.find(a=>a.id===k);return x&&((PH.kind==='a'&&x.habitat===cat)||((PH.kind==='t'||PH.kind==='v')&&x.group===cat))&&(!PUZ.item||PUZ.item.id!==k);});
     const bag=src.length?src:all;
     item=cb?all.find(x=>x.id===cb):bag[Math.floor(Math.random()*bag.length)];
   }else{
@@ -630,7 +632,7 @@ function findRound(){
 }
 function renderFind(){
   const opts=PUZ.opts.map(it=>`<button type="button" class="phChoice" data-act="find" data-id="${it.id}"><img src="${it.image}" alt="" draggable="false"></button>`).join('');
-  const gal=(PH.kind==='a'||PH.kind==='t')?'<button type="button" class="phFindSay" data-act="gallery" aria-label="pictures">🖼️</button>':'';
+  const gal=(PH.kind==='a'||PH.kind==='t'||PH.kind==='v')?'<button type="button" class="phFindSay" data-act="gallery" aria-label="pictures">🖼️</button>':'';
   photoRoot().innerHTML=`${barHTML('👂')}<div class="phFindTop">${gal}<button type="button" class="phFindSay" data-act="findSay" aria-label="again">🔊</button><span class="phFindDots">${'●'.repeat(PUZ.got)}${'○'.repeat(Math.max(0,5-PUZ.got))}</span></div><div class="phChoices phFind${PUZ.opts.length>4?' six':''}">${opts}</div>`;
 }
 function findAnswer(id,btn){
