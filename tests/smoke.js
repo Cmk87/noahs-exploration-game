@@ -95,23 +95,105 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   check(true, 'space and world quizzes');
   const books = await page.evaluate(() => {
     showTab('home'); showTab('space');
+    history.replaceState({explorer:1}, '');
     const sky = !document.getElementById('spaceSky').hidden && document.getElementById('spaceBook').hidden;
     document.querySelector('#spaceTabs [data-space="planets"]').click();
     const planets = document.querySelectorAll('#spaceGrid .phAn').length;
+    const grid = document.getElementById('spaceGrid');
+    grid.scrollTop = 160;
+    const y = grid.scrollTop;
     document.querySelector('#spaceGrid .phAn[data-space-id="moon"]').click();
     const moon = document.getElementById('spaceNow').textContent;
-    document.getElementById('spaceBack').click();
-    const back = !document.getElementById('spaceSky').hidden;
+    const rgb = getComputedStyle(document.querySelector('#spaceNow .spaceName')).color.match(/\d+/g).map(Number);
+    const dark = rgb[0] < 90 && rgb[1] < 90 && rgb[2] < 140;
+    const still = document.querySelectorAll('#spaceGrid .phAn').length === 10 && grid.scrollTop === y;
+    return { sky, planets, moon: moon.length > 30, dark, still, y };
+  });
+  await page.evaluate(() => document.getElementById('spaceBack').click());
+  await page.waitForTimeout(200);
+  const stayed = await page.evaluate(y => (
+    document.getElementById('spaceSky').hidden && !document.getElementById('spaceBook').hidden &&
+    document.getElementById('spaceStage').hidden && activeTab === 'space' &&
+    document.getElementById('spaceGrid').scrollTop === y && !SPACEPICK
+  ), books.y);
+  await page.evaluate(() => document.querySelector('#spaceGrid .phAn[data-space-id="moon"]').click());
+  const pushed = await page.evaluate(() => !!(history.state && history.state.spaceDetail));
+  await page.goBack();
+  const afterBack = await page.evaluate(() => ({
+    closed: !SPACEPICK && document.getElementById('spaceStage').hidden && document.getElementById('spaceSky').hidden && activeTab === 'space',
+    scroll: document.getElementById('spaceGrid').scrollTop
+  }));
+  const pics = await page.evaluate(() => {
     document.querySelector('#spaceTabs [data-space="pics"]').click();
-    const pics = document.querySelectorAll('#spaceGrid .phAn').length;
+    const n = document.querySelectorAll('#spaceGrid .phAn').length;
     document.querySelector('#spaceGrid .phAn[data-space-id="m87"]').click();
     const hole = document.getElementById('spaceNow').textContent;
+    const onTab = document.getElementById('spaceSky').hidden && document.querySelector('#spaceTabs [data-space="pics"]').classList.contains('on');
     power = 80; savePower(); showDigLock();
     const road = [...document.querySelectorAll('#gameGrid .gcard')].find(c => /Straße|Road|Camino/.test(c.textContent));
-    return { sky, planets, moon: moon.length > 30, back, pics, hole: /Loch|hole|agujero/i.test(hole), road: !!(road && road.querySelector('svg') && !/✏/.test(road.textContent)) };
+    return { n, hole: /Loch|hole|agujero/i.test(hole), onTab, road: !!(road && road.querySelector('svg') && !/✏/.test(road.textContent)) };
   });
-  check(books.sky && books.planets === 10 && books.moon && books.back && books.pics === 10 && books.hole && books.road,
-    'the sky stays first, planets and famous pictures open in place, and the road prize shows a car ' + JSON.stringify(books));
+  check(books.sky && books.planets === 10 && books.moon && books.dark && books.still && stayed && pushed && afterBack.closed && afterBack.scroll === books.y && pics.n === 10 && pics.hole && pics.onTab && pics.road,
+    'the sky stays first, a picture opens in place, and back returns to the same gallery ' + JSON.stringify({ books, stayed, pushed, afterBack, pics }));
+  {const land = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+    land.on('pageerror', e => errors.push(e.message));
+    await land.goto(URL);
+    await land.evaluate(() => { localStorage.clear(); localStorage.setItem('sl_advsize', 'short'); });
+    await land.reload();
+    await land.mouse.click(640, 400);
+    await land.waitForTimeout(800);
+    const lay = await land.evaluate(() => {
+      showTab('space');
+      const sky = document.getElementById('sky').getBoundingClientRect();
+      const fact = document.getElementById('factBox').getBoundingClientRect();
+      document.querySelector('#spaceTabs [data-space="planets"]').click();
+      document.querySelector('#spaceGrid [data-space-id="earth"]').click();
+      const stage = document.getElementById('spaceStage').getBoundingClientRect();
+      const grid = document.getElementById('spaceGrid').getBoundingClientRect();
+      const name = document.querySelector('#spaceNow .spaceName');
+      document.querySelector('#spaceTabs [data-space="pics"]').click();
+      document.querySelector('#spaceGrid [data-space-id="earthrise"]').click();
+      const pic = document.getElementById('spaceStage').getBoundingClientRect();
+      const pgrid = document.getElementById('spaceGrid').getBoundingClientRect();
+      return {
+        skyW: Math.round(sky.width), skyH: Math.round(sky.height),
+        side: fact.left >= sky.right - 12,
+        split: grid.left >= stage.right - 12 && stage.height > 280 && grid.height > 280 && grid.top < stage.bottom,
+        thumbs: document.querySelectorAll('#spaceGrid .phAn').length,
+        name: name ? name.textContent : '',
+        picSplit: pgrid.left >= pic.right - 12 && pic.height > 280
+      };
+    });
+    check(lay.skyW >= 420 && lay.skyH >= 420 && lay.side && lay.split && lay.thumbs === 10 && /Erde|Earth|Tierra/.test(lay.name) && lay.picSplit,
+      'landscape universe uses the width, and a picture stays beside the grid ' + JSON.stringify(lay));
+    await land.close();
+  }
+  {const phone = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+    phone.on('pageerror', e => errors.push(e.message));
+    await phone.goto(URL);
+    await phone.evaluate(() => { localStorage.clear(); localStorage.setItem('sl_advsize', 'short'); });
+    await phone.reload();
+    await phone.mouse.click(195, 420);
+    await phone.waitForTimeout(800);
+    const port = await phone.evaluate(() => {
+      showTab('space');
+      document.querySelector('#spaceTabs [data-space="planets"]').click();
+      document.querySelector('#spaceGrid [data-space-id="sun"]').click();
+      const stage = document.getElementById('spaceStage').getBoundingClientRect();
+      const grid = document.getElementById('spaceGrid').getBoundingClientRect();
+      const view = document.getElementById('v-space').getBoundingClientRect();
+      return {
+        stacked: grid.top >= stage.bottom - 8,
+        gridShown: grid.height > 140 && grid.top < view.bottom,
+        thumbs: document.querySelectorAll('#spaceGrid .spaceThumb').length,
+        big: stage.height > 120
+      };
+    });
+    check(port.stacked && port.gridShown && port.thumbs === 10 && port.big,
+      'portrait planets keeps the big picture and the grid on screen ' + JSON.stringify(port));
+    await phone.close();
+  }
+  await page.goBack();
   const geoOpen = await page.evaluate(() => {
     showTab('home'); showTab('geo');
     const opened = GEO.mode === 'countries' && /^Wo ist /.test(GEO.q) && document.querySelectorAll('#geoModes .modeBtn').length === 5;
@@ -532,7 +614,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
 
   {const more = await page.evaluate(async () => {
      const sleep = ms => new Promise(res => setTimeout(res, ms));
-     const waitFor = async fn => { for (let i = 0; i < 60; i++) { if (fn()) return true; await sleep(100); } return false; };
+     const waitFor = async (fn, n = 60) => { for (let i = 0; i < n; i++) { if (fn()) return true; await sleep(100); } return false; };
      if (rewardOpen) closeReward(false);
      if (lang !== 'de') $('de').click();
      BRIDGE = ['de'];
@@ -574,11 +656,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const babyImg = document.querySelector('#v-baby .phMorphTop');
      const adultImg = document.querySelector('#v-baby .phAdult');
      const morph = !!(babyImg && adultImg && /dog-baby/.test(babyImg.getAttribute('src')) && /dog-adult/.test(adultImg.getAttribute('src')));
-     const saidBaby = await waitFor(() => PHOTO_SAID.some(t => t === 'der Welpe'));
-     const saidAdult = await waitFor(() => PHOTO_SAID.some(t => t === 'der Hund'));
+     const saidBaby = await waitFor(() => PHOTO_SAID.some(t => t === 'der Welpe'), 160);
+     const saidAdult = await waitFor(() => PHOTO_SAID.some(t => t === 'der Hund'), 160);
      const dog = PHOTO_PACK.pairs.find(p => p.id === 'dog');
-     const saidGrow = await waitFor(() => PHOTO_SAID.some(t => t === dog.facts[0].de));
-     const slid = document.querySelector('#v-baby .phMorphTop') && document.querySelector('#v-baby .phMorphTop').classList.contains('gone');
+     const saidGrow = await waitFor(() => PHOTO_SAID.some(t => t === dog.facts[0].de), 160);
+     const slid = await waitFor(() => { const top = document.querySelector('#v-baby .phMorphTop'); return !!(top && top.classList.contains('gone')); }, 40);
      document.querySelector('#v-baby .phReplay').click();
      const replayReset = !!(document.querySelector('#v-baby .phMorphTop') && !document.querySelector('#v-baby .phMorphTop').classList.contains('gone') && document.querySelector('#v-baby .phName').textContent === 'der Welpe');
      showTab('king');
@@ -614,7 +696,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    check(more.n === 6 && more.opened && more.saidName && more.saidSound && more.saidFact, 'a vehicle stays on the grid and says the name, the sound, and a fact');
    check(more.esName === 'el camión de bomberos' && more.amb === 'la ambulancia', 'vehicle cards use the Spanish article from the photo pack');
    check(more.choices >= 3 && more.blurred && more.held && more.hideUp, "listen and find works for vehicles");
-   check(more.pairs === 16 && more.pairLazy && more.morph && more.saidBaby && more.saidAdult && more.saidGrow && more.slid && more.replayReset, 'a baby photo slides to the grown-up, and replay starts from the baby again');
+   check(more.pairs === 16 && more.pairLazy && more.morph && more.saidBaby && more.saidAdult && more.saidGrow && more.slid && more.replayReset, 'a baby photo slides to the grown-up, and replay starts from the baby again ' + JSON.stringify({ pairs: more.pairs, pairLazy: more.pairLazy, morph: more.morph, saidBaby: more.saidBaby, saidAdult: more.saidAdult, saidGrow: more.saidGrow, slid: more.slid, replayReset: more.replayReset }));
    check(more.wrapped && more.stillCard, 'tapping another animal switches the explanation and leaves the grid where it was');
    check(more.gChoices === 3 && more.babyShown && more.gHeld && more.gUp, 'matching a baby to its grown-up: a wrong tap keeps the point');
    check(more.stamped, 'the first vehicle and the first baby earn a passport stamp');
