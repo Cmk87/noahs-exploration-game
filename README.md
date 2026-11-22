@@ -73,7 +73,7 @@ stickers carry a "neu" badge until the book is opened; complete areas get a 🏆
 
 ## Sync devices
 
-Behind the parent gear (hold 4 seconds). One device creates a family code such as `TIGER-4821-K7QM9P2X`. The other types that code once. Stars, points, stickers, weak words and settings then merge, and progress does not go backwards. The child's name is not sent. Until `js/sync-config.js` has a Supabase URL and anon key, the screen says it is not set up yet. The SQL is in `supabase/migrations/`.
+Behind the parent gear (hold 4 seconds). One device creates a family code such as `TIGER-4821-K7QM9P2X`. The other types that code once. Stars, points, stickers, weak words and settings then merge, and progress does not go backwards. The child's name is not sent. `js/sync-config.js` points at the Supabase project. The SQL is in `supabase/migrations/`.
 
 ## Automatic difficulty
 
