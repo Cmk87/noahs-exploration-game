@@ -13,40 +13,47 @@ const FAKE = () => {
   const DUR = 1600;
   window.__SPEECH = [];
   let current = null;
-  const synth = window.speechSynthesis;
-  try {
-    Object.defineProperty(synth, 'speaking', { configurable: true, get() { return !!(current && !current.done); } });
-    Object.defineProperty(synth, 'pending', { configurable: true, get() { return false; } });
-  } catch (e) { window.__SPEECH_LOCK = String(e); }
-  synth.getVoices = () => [];
-  synth.resume = () => {};
-  synth.cancel = () => {
-    const now = performance.now();
-    if (current && !current.done) {
-      const early = now < current.endAt - 30;
-      window.__SPEECH.push({ ev: 'cancel', text: current.text, early, at: now });
-      current.done = true;
-      clearTimeout(current.timer);
-      const u = current.u;
-      current = null;
-      try { if (u.onerror) u.onerror({ error: 'interrupted', utterance: u }); } catch (e) {}
-    }
+  const install = () => {
+    const synth = window.speechSynthesis;
+    if (!synth || synth.__fake) return;
+    synth.__fake = true;
+    try {
+      Object.defineProperty(synth, 'speaking', { configurable: true, get() { return !!(current && !current.done); } });
+      Object.defineProperty(synth, 'pending', { configurable: true, get() { return false; } });
+    } catch (e) { window.__SPEECH_LOCK = String(e); }
+    synth.getVoices = () => [];
+    synth.resume = () => {};
+    synth.cancel = () => {
+      const now = performance.now();
+      if (current && !current.done) {
+        const early = now < current.endAt - 30;
+        window.__SPEECH.push({ ev: 'cancel', text: current.text, early, at: now });
+        current.done = true;
+        clearTimeout(current.timer);
+        const u = current.u;
+        current = null;
+        try { if (u.onerror) u.onerror({ error: 'interrupted', utterance: u }); } catch (e) {}
+      }
+    };
+    synth.speak = (u) => {
+      const now = performance.now();
+      const rec = { text: String(u.text), lang: u.lang || '', u, start: now, endAt: now + DUR, done: false };
+      window.__SPEECH.push({ ev: 'speak', text: rec.text, lang: rec.lang, at: now, endAt: rec.endAt });
+      current = rec;
+      setTimeout(() => { if (!rec.done && u.onstart) u.onstart(); }, 20);
+      // iOS sometimes reports the end immediately, while the voice is still talking.
+      setTimeout(() => { if (!rec.done && u.onend) u.onend(); }, 40);
+      rec.timer = setTimeout(() => {
+        if (rec.done) return;
+        rec.done = true;
+        if (current === rec) current = null;
+        try { if (u.onend) u.onend(); } catch (e) {}
+      }, DUR);
+    };
   };
-  synth.speak = (u) => {
-    const now = performance.now();
-    const rec = { text: String(u.text), lang: u.lang || '', u, start: now, endAt: now + DUR, done: false };
-    window.__SPEECH.push({ ev: 'speak', text: rec.text, lang: rec.lang, at: now, endAt: rec.endAt });
-    current = rec;
-    setTimeout(() => { if (!rec.done && u.onstart) u.onstart(); }, 20);
-    // iOS sometimes reports the end immediately, while the voice is still talking.
-    setTimeout(() => { if (!rec.done && u.onend) u.onend(); }, 40);
-    rec.timer = setTimeout(() => {
-      if (rec.done) return;
-      rec.done = true;
-      if (current === rec) current = null;
-      try { if (u.onend) u.onend(); } catch (e) {}
-    }, DUR);
-  };
+  install();
+  const wait = setInterval(() => { if (window.speechSynthesis) { install(); clearInterval(wait); } }, 20);
+  setTimeout(() => clearInterval(wait), 5000);
 };
 
 (async () => {
@@ -57,7 +64,7 @@ const FAKE = () => {
   await page.addInitScript(FAKE);
   await page.goto(URL);
   await page.mouse.click(195, 500);
-  await page.waitForTimeout(800);
+  await page.waitForTimeout(1000);
 
   const runCard = async (label) => page.evaluate(async (label) => {
     window.__SPEECH.length = 0;

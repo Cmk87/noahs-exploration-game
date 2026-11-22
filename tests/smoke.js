@@ -236,6 +236,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
   console.log('Parent panel');
   await page.evaluate(() => showTab('parent'));
   check(await page.evaluate(() => $('repBars').children.length === 7), 'weekly report shows 7 days');
+  check(await page.evaluate(() => !!$('syncCreate') && !!$('syncJoin') && /Familiencode|family code|código familiar/.test($('syncBody').textContent)), 'sync is ready in parent settings');
   await page.evaluate(() => { [...$('langBtns').children].find(b => b.textContent.includes('🇪🇸')).click(); });
   check(await page.evaluate(() => $('es').style.display === 'none' && localStorage.getItem('sl_langs') === 'de,en'), 'parent can switch Spanish off');
   await page.evaluate(() => { setLang('en', $('en')); [...$('langBtns').children].find(b => b.textContent.includes('🇬🇧')).click(); });
