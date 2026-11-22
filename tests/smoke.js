@@ -614,7 +614,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
 
   {const more = await page.evaluate(async () => {
      const sleep = ms => new Promise(res => setTimeout(res, ms));
-     const waitFor = async fn => { for (let i = 0; i < 60; i++) { if (fn()) return true; await sleep(100); } return false; };
+     const waitFor = async (fn, n = 60) => { for (let i = 0; i < n; i++) { if (fn()) return true; await sleep(100); } return false; };
      if (rewardOpen) closeReward(false);
      if (lang !== 'de') $('de').click();
      BRIDGE = ['de'];
@@ -656,11 +656,11 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
      const babyImg = document.querySelector('#v-baby .phMorphTop');
      const adultImg = document.querySelector('#v-baby .phAdult');
      const morph = !!(babyImg && adultImg && /dog-baby/.test(babyImg.getAttribute('src')) && /dog-adult/.test(adultImg.getAttribute('src')));
-     const saidBaby = await waitFor(() => PHOTO_SAID.some(t => t === 'der Welpe'));
-     const saidAdult = await waitFor(() => PHOTO_SAID.some(t => t === 'der Hund'));
+     const saidBaby = await waitFor(() => PHOTO_SAID.some(t => t === 'der Welpe'), 160);
+     const saidAdult = await waitFor(() => PHOTO_SAID.some(t => t === 'der Hund'), 160);
      const dog = PHOTO_PACK.pairs.find(p => p.id === 'dog');
-     const saidGrow = await waitFor(() => PHOTO_SAID.some(t => t === dog.facts[0].de));
-     const slid = document.querySelector('#v-baby .phMorphTop') && document.querySelector('#v-baby .phMorphTop').classList.contains('gone');
+     const saidGrow = await waitFor(() => PHOTO_SAID.some(t => t === dog.facts[0].de), 160);
+     const slid = await waitFor(() => { const top = document.querySelector('#v-baby .phMorphTop'); return !!(top && top.classList.contains('gone')); }, 40);
      document.querySelector('#v-baby .phReplay').click();
      const replayReset = !!(document.querySelector('#v-baby .phMorphTop') && !document.querySelector('#v-baby .phMorphTop').classList.contains('gone') && document.querySelector('#v-baby .phName').textContent === 'der Welpe');
      showTab('king');
@@ -696,7 +696,7 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
    check(more.n === 6 && more.opened && more.saidName && more.saidSound && more.saidFact, 'a vehicle stays on the grid and says the name, the sound, and a fact');
    check(more.esName === 'el camión de bomberos' && more.amb === 'la ambulancia', 'vehicle cards use the Spanish article from the photo pack');
    check(more.choices >= 3 && more.blurred && more.held && more.hideUp, "listen and find works for vehicles");
-   check(more.pairs === 16 && more.pairLazy && more.morph && more.saidBaby && more.saidAdult && more.saidGrow && more.slid && more.replayReset, 'a baby photo slides to the grown-up, and replay starts from the baby again');
+   check(more.pairs === 16 && more.pairLazy && more.morph && more.saidBaby && more.saidAdult && more.saidGrow && more.slid && more.replayReset, 'a baby photo slides to the grown-up, and replay starts from the baby again ' + JSON.stringify({ pairs: more.pairs, pairLazy: more.pairLazy, morph: more.morph, saidBaby: more.saidBaby, saidAdult: more.saidAdult, saidGrow: more.saidGrow, slid: more.slid, replayReset: more.replayReset }));
    check(more.wrapped && more.stillCard, 'tapping another animal switches the explanation and leaves the grid where it was');
    check(more.gChoices === 3 && more.babyShown && more.gHeld && more.gUp, 'matching a baby to its grown-up: a wrong tap keeps the point');
    check(more.stamped, 'the first vehicle and the first baby earn a passport stamp');
