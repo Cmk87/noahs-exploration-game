@@ -71,6 +71,10 @@ industrial area). Found animals are colourful stickers (tap: hear the name and s
 in the town); missing ones are grey silhouettes that say which area to search and can fly there. New
 stickers carry a "neu" badge until the book is opened; complete areas get a 🏆.
 
+## Sync devices
+
+Behind the parent gear (hold 4 seconds). One device creates a family code such as `TIGER-4821-K7QM9P2X`. The other types that code once. Stars, points, stickers, weak words and settings then merge, and progress does not go backwards. The child's name is not sent. Until `js/sync-config.js` has a Supabase URL and anon key, the screen says it is not set up yet. The SQL is in `supabase/migrations/`.
+
 ## Automatic difficulty
 
 Words, Listen and Dino Show share one engine: a weighted up-down staircase. A round solved on the first

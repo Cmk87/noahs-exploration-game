@@ -240,6 +240,7 @@ function renderParent(){
   document.getElementById('resetStats').textContent=L[3];
   document.getElementById('backBtn').textContent={es:'← Volver al juego',en:'← Back to the game',de:'← Zurück zum Spiel'}[lang];
   document.getElementById('nameInput').value=kidName;
+  if (typeof syncRender === 'function') syncRender();
   $('pPowerTitle').textContent={es:'Puntos de premio (40 ⚡ = 1 premio)',en:'Prize points (40 ⚡ = 1 prize)',de:'Preispunkte (40 ⚡ = 1 Preis)'}[lang];
   $('pPowerVal').textContent='⚡ '+power;
   const lr=document.getElementById('levelRows');lr.innerHTML='';
