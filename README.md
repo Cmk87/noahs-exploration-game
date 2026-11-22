@@ -15,7 +15,7 @@ The tabs are big icons that all fit on one row; tapping one also says its name.
 | 🖼️ Words | "Where is the …?" picture quiz, 15 categories, ~370 words, 8 difficulty levels |
 | 👂 Listen | Hear a word, tap the picture, 6 levels up to sound-alike distractors |
 | 🦖 Dino Show | Verbs and adjectives acted out by an animated dino (43 verbs, 22 adjectives); "how many dinos…?" (plural verbs) and "who is NOT…?" (negation) rounds; answers echoed as full sentences; 🎮 free-play sentence builder; act-it-out breaks |
-| 🪐 Space | Orrery of the solar system with facts and a quiz |
+| 🪐 Space | Orrery of the solar system, plus a planets grid and famous space pictures, with a quiz |
 | 🌍 World | Opens on "Where is Germany?". The map still zooms, and the other quizzes (continents, flags, oceans, explore) stay on the buttons above it. Antarctica is a tappable ice cap |
 | 🎁 Prizes | Spend 40 ⚡ on a prize game: dig, pairs, balloons, fireworks, digger, aquarium, feed, caterpillar, Superman sling, or draw a road |
 | ⚙ (top bar, hold 1 s) | Parent panel: weekly report, play-time limit, adventure length, voice, backup/restore, levels, most-missed words, prize points |

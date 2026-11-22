@@ -93,6 +93,25 @@ const check = (ok, what) => { console.log((ok ? '  ✓ ' : '  ✗ ') + what); if
     setGeoMode('countries'); answerCountry(C_BY[GEO.target]);
     setGeoMode('flags'); answerFlag(GEO.glow, document.querySelector('.flagBtn')); setGeoMode('explore'); });
   check(true, 'space and world quizzes');
+  const books = await page.evaluate(() => {
+    showTab('home'); showTab('space');
+    const sky = !document.getElementById('spaceSky').hidden && document.getElementById('spaceBook').hidden;
+    document.querySelector('#spaceTabs [data-space="planets"]').click();
+    const planets = document.querySelectorAll('#spaceGrid .phAn').length;
+    document.querySelector('#spaceGrid .phAn[data-space-id="moon"]').click();
+    const moon = document.getElementById('spaceNow').textContent;
+    document.getElementById('spaceBack').click();
+    const back = !document.getElementById('spaceSky').hidden;
+    document.querySelector('#spaceTabs [data-space="pics"]').click();
+    const pics = document.querySelectorAll('#spaceGrid .phAn').length;
+    document.querySelector('#spaceGrid .phAn[data-space-id="m87"]').click();
+    const hole = document.getElementById('spaceNow').textContent;
+    power = 80; savePower(); showDigLock();
+    const road = [...document.querySelectorAll('#gameGrid .gcard')].find(c => /Straße|Road|Camino/.test(c.textContent));
+    return { sky, planets, moon: moon.length > 30, back, pics, hole: /Loch|hole|agujero/i.test(hole), road: !!(road && road.querySelector('svg') && !/✏/.test(road.textContent)) };
+  });
+  check(books.sky && books.planets === 10 && books.moon && books.back && books.pics === 10 && books.hole && books.road,
+    'the sky stays first, planets and famous pictures open in place, and the road prize shows a car ' + JSON.stringify(books));
   const geoOpen = await page.evaluate(() => {
     showTab('home'); showTab('geo');
     const opened = GEO.mode === 'countries' && /^Wo ist /.test(GEO.q) && document.querySelectorAll('#geoModes .modeBtn').length === 5;

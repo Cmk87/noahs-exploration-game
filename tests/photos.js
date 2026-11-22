@@ -76,7 +76,7 @@ for (const rel of expect) {
   if (!wh || wh[0] !== 512 || wh[1] !== 512) badImg.push(rel + ' ' + JSON.stringify(wh));
 }
 check(badImg.length === 0, 'every photo is a 512px WebP' + (badImg.length ? ': ' + badImg.slice(0, 4).join(', ') : ''));
-check(sw.includes("const CACHE='explorer-v65';") && sw.includes('./js/write-words.js') && sw.includes('./js/play.js') && sw.includes('./js/body-diagrams.js') && expect.every(rel => sw.includes('./' + rel)), 'the offline list names cache v65, the word list, the road game, the body diagrams, and every new picture');
+check(sw.includes("const CACHE='explorer-v66';") && sw.includes('./js/write-words.js') && sw.includes('./js/space-books.js') && sw.includes('./space/earth.webp') && sw.includes('./space/deep.webp') && expect.every(rel => sw.includes('./' + rel)), 'the offline list names cache v66, the word list, the space pictures, and every photo-book picture');
 const photoJs = fs.readFileSync(path.join(root, 'js/photo.js'), 'utf8');
 check(/PH\.kind==='a'\|\|PH\.kind==='t'\|\|PH\.kind==='d'\)return null/.test(photoJs), 'animals, things and dinosaurs do not speak a noise');
 

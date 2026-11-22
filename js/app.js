@@ -68,7 +68,7 @@ function showTab(id, opt){
   if(id==='words'){buildChips();if(!target)newRound();else sayPrompt();}
   if(id==='ear'){newEarRound();}
   if(id==='act'){showAct();}
-  if(id==='space'){fitSky();spaceQuiz=false;selectPlanet(selected);}
+  if(id==='space'){if(typeof spaceHome==='function')spaceHome();spaceQuiz=false;selectPlanet(selected);}
   if(id==='geo'){showGeo(true);}
   if(id==='city'){CITY.show();}
   if(id==='stickers'){showStickers();}
@@ -102,7 +102,7 @@ function setLang(code,btn){
   else if(activeTab==='read')readRound();
   else if(activeTab==='jobs')jobOnLang();
   else if(activeTab==='act')showAct();
-  else if(activeTab==='space'){spaceQuiz=false;selectPlanet(selected);}
+  else if(activeTab==='space'){if(typeof spaceRelang==='function'&&SPACEBOOK)spaceRelang();else{spaceQuiz=false;selectPlanet(selected);}}
   else if(activeTab==='geo'){if(GEO.mode!=='explore')setGeoMode(GEO.mode);else showGeo();}
   else if(activeTab==='city')CITY.onLang();
   else if(activeTab==='stickers')showStickers();

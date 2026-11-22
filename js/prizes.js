@@ -155,7 +155,7 @@ const GAMES=[
  {k:'fed',icon:'🥕',bg:'linear-gradient(160deg,#9BE56A,#2EA84F)',es:'Comer',  en:'Feed',    de:'Füttern'},
  {k:'rp',  icon:'🐛',bg:'linear-gradient(160deg,#C6F57A,#3FAE3A)',es:'Oruga',en:'Caterpillar',de:'Raupe'},
  {k:'sup', icon:'🦸',bg:'linear-gradient(160deg,#5EB0FF,#2040C8)',es:'Lanzar a Superman',en:'Superman Launch',de:'Superman-Schleuder'},
- {k:'road',icon:'✏️',bg:'linear-gradient(160deg,#5EB0FF,#2A6FD0)',es:'Camino',en:'Road',de:'Straße'}
+ {k:'road',icon:'🛣️',bg:'linear-gradient(160deg,#5EB0FF,#2A6FD0)',es:'Camino',en:'Road',de:'Straße'}
 ];
 const PANES=['digLock','digPlay','memPlay','balPlay','fwPlay','bagPlay','aqPlay','fedPlay','rpPlay','supPlay','roadPlay'];
 let pane='digLock';
@@ -181,7 +181,10 @@ function showDigLock(){
   GAMES.forEach(gm=>{
     const c=document.createElement('div');c.className='gcard'+(ready?'':' locked');c.style.background=gm.bg;
     c.innerHTML=`<div class="gc">${DIG_COST}⚡</div><div class="gi"></div><div class="gl"></div>`;
-    c.querySelector('.gi').textContent=gm.icon;c.querySelector('.gl').textContent=gm[lang];
+    const gi=c.querySelector('.gi');
+    if(gm.k==='road')gi.innerHTML='<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 50c12-18 12-18 22-6s12 10 30-12" fill="none" stroke="#243" stroke-width="14" stroke-linecap="round"/><path d="M6 50c12-18 12-18 22-6s12 10 30-12" fill="none" stroke="#FFE56A" stroke-width="4" stroke-dasharray="5 6" stroke-linecap="round"/><g transform="translate(30 18)"><rect x="2" y="8" width="26" height="10" rx="3" fill="#E23B3B"/><path d="M8 8l4-6h10l4 6" fill="#7EC8FF"/><circle cx="8" cy="19" r="3.2" fill="#1A1A2E"/><circle cx="22" cy="19" r="3.2" fill="#1A1A2E"/></g></svg>';
+    else gi.textContent=gm.icon;
+    c.querySelector('.gl').textContent=gm[lang];
     c.onclick=()=>{ac();startGame(gm.k,c);};
     gg.appendChild(c);
   });
